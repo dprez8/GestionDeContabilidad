@@ -14,7 +14,7 @@ public class TestJava {
         String contrasenia = "fortune12";
         try {
             Assert.assertEquals(
-                    "Hay que mejorar la contraseña!",
+                    "Hay que mejorar las contraseñas!",
                     "VALIDA",
                     ControladorUsuario.validarConstrasenia(contrasenia, "", "").toString());
         } catch (IOException e) {
