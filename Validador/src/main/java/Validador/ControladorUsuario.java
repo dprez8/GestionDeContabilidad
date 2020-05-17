@@ -1,4 +1,8 @@
 package Validador;
+import Exceptions.contraseniaCorta;
+import Exceptions.contraseniaMuyComun;
+import Exceptions.repiteContraseniaEnMailOUsuario;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -6,7 +10,6 @@ import java.io.IOException;
 public class ControladorUsuario {
     private static String rutaArchivo10KPeoresContras = "src/main/resources/10k-worst-passwords.txt";
     private static int LONGITUDMINIMA = 8;
-    static public enum EstadoContrasenia{CORTA, MUYCOMUN, INVALIDA, VALIDA}
 
     /**
      *
@@ -16,15 +19,14 @@ public class ControladorUsuario {
      * @return
      * @throws IOException
      */
-    static public EstadoContrasenia validarConstrasenia(String contrasenia, String user, String mail) throws IOException{
+    static public void validarConstrasenia(String contrasenia, String user, String mail) throws IOException, contraseniaCorta, contraseniaMuyComun, repiteContraseniaEnMailOUsuario {
 
         if(longitudCorta(contrasenia))
-            return EstadoContrasenia.CORTA;
+            throw new contraseniaCorta();
         if(estaEnElTopDiezK(contrasenia))
-            return EstadoContrasenia.MUYCOMUN;
+            throw new contraseniaMuyComun();
         if(esIgualAMailOUsuario(contrasenia, mail, user))
-            return EstadoContrasenia.INVALIDA;
-        return EstadoContrasenia.VALIDA;
+            throw new repiteContraseniaEnMailOUsuario();
     }
     static protected boolean longitudCorta(String contrasenia) {
         return contrasenia.length() < LONGITUDMINIMA;
