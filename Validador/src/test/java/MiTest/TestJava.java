@@ -1,25 +1,38 @@
 package MiTest;
 
+import Exceptions.contraseniaCorta;
+import Exceptions.contraseniaMuyComun;
+import Exceptions.repiteContraseniaEnMailOUsuario;
 import org.junit.Assert;
 import org.junit.Test;
 
 import Validador.ControladorUsuario;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Properties;
 
 public class TestJava {
     @Test
-    public void testValidador() {
+    public void testValidador() throws IOException {
+        Properties prop=new Properties();
+        FileInputStream ip= new FileInputStream("src/main/resources/config.properties");
         //"src/main/resources/10k-worst-passwords.txt"
         String contrasenia = "fortune12";
         try {
-            Assert.assertEquals(
-                    "Hay que mejorar las contraseñas!",
-                    "VALIDA",
-                    ControladorUsuario.validarConstrasenia(contrasenia, "", "").toString());
-        } catch (IOException e) {
+            prop.load(ip);
+            ControladorUsuario controla = new ControladorUsuario(prop.getProperty("dataFilePath"), Integer.parseInt(prop.getProperty("longitudMinima")));
+            controla.validarConstrasenia(contrasenia, "", "");
+            ip.close();
+        } catch (Exceptions.repiteContraseniaEnMailOUsuario repiteContraseniaEnMailOUsuario) {
+            repiteContraseniaEnMailOUsuario.printStackTrace();
+        } catch (Exceptions.contraseniaMuyComun contraseniaMuyComun) {
+            contraseniaMuyComun.printStackTrace();
+        } catch (Exceptions.contraseniaCorta contraseniaCorta) {
+            contraseniaCorta.printStackTrace();
+        }catch (IOException e) {
             System.out.println("Oops!");
-           // e.printStackTrace();
+            // e.printStackTrace();
         }
     }
 }

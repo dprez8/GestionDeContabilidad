@@ -11,7 +11,7 @@ public class ControladorUsuario {
     private static String rutaArchivo10KPeoresContras;
     private static int LONGITUDMINIMA;
 
-    ControladorUsuario(String _rutaArchivo10KPeoresContras, int longitudMininaContrasenia){
+    public ControladorUsuario(String _rutaArchivo10KPeoresContras, int longitudMininaContrasenia){
         rutaArchivo10KPeoresContras = _rutaArchivo10KPeoresContras;
         LONGITUDMINIMA = longitudMininaContrasenia;
     }
@@ -27,7 +27,7 @@ public class ControladorUsuario {
     static public void validarConstrasenia(String contrasenia, String user, String mail) throws IOException, contraseniaCorta, contraseniaMuyComun, repiteContraseniaEnMailOUsuario {
 
         if(longitudCorta(contrasenia))
-            throw new contraseniaCorta("La contrasenia ingresada es corta"));
+            throw new contraseniaCorta("La contrasenia ingresada es corta");
         if(estaEnElTopDiezK(contrasenia))
             throw new contraseniaMuyComun("La contrasenia es muy comun, dentro del top10k peores, pensar algo mas complejo");
         if(esIgualAMailOUsuario(contrasenia, mail, user))
