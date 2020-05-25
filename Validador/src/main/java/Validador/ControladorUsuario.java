@@ -8,8 +8,13 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class ControladorUsuario {
-    private static String rutaArchivo10KPeoresContras = "src/main/resources/10k-worst-passwords.txt";
-    private static int LONGITUDMINIMA = 8;
+    private static String rutaArchivo10KPeoresContras;
+    private static int LONGITUDMINIMA;
+
+    ControladorUsuario(String _rutaArchivo10KPeoresContras, int longitudMininaContrasenia){
+        rutaArchivo10KPeoresContras = _rutaArchivo10KPeoresContras;
+        LONGITUDMINIMA = longitudMininaContrasenia;
+    }
 
     /**
      *
@@ -22,11 +27,11 @@ public class ControladorUsuario {
     static public void validarConstrasenia(String contrasenia, String user, String mail) throws IOException, contraseniaCorta, contraseniaMuyComun, repiteContraseniaEnMailOUsuario {
 
         if(longitudCorta(contrasenia))
-            throw new contraseniaCorta();
+            throw new contraseniaCorta("La contrasenia ingresada es corta"));
         if(estaEnElTopDiezK(contrasenia))
-            throw new contraseniaMuyComun();
+            throw new contraseniaMuyComun("La contrasenia es muy comun, dentro del top10k peores, pensar algo mas complejo");
         if(esIgualAMailOUsuario(contrasenia, mail, user))
-            throw new repiteContraseniaEnMailOUsuario();
+            throw new repiteContraseniaEnMailOUsuario("Repite contraseña en mail o en el usuario");
     }
     static protected boolean longitudCorta(String contrasenia) {
         return contrasenia.length() < LONGITUDMINIMA;
