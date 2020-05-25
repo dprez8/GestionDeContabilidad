@@ -10,7 +10,7 @@ import java.io.IOException;
 public class TestJava {
     @Test
     public void testValidador() {
-
+        //"src/main/resources/10k-worst-passwords.txt"
         String contrasenia = "fortune12";
         try {
             Assert.assertEquals(
