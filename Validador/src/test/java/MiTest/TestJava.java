@@ -1,12 +1,7 @@
 package MiTest;
 
-import Exceptions.contraseniaCorta;
-import Exceptions.contraseniaMuyComun;
-import Exceptions.repiteContraseniaEnMailOUsuario;
-import org.junit.Assert;
-import org.junit.Test;
-
 import Validador.ControladorUsuario;
+import org.junit.Test;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -30,9 +25,6 @@ public class TestJava {
             contraseniaMuyComun.printStackTrace();
         } catch (Exceptions.contraseniaCorta contraseniaCorta) {
             contraseniaCorta.printStackTrace();
-        }catch (IOException e) {
-            System.out.println("Oops!");
-            // e.printStackTrace();
         }
     }
 }
