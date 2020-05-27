@@ -32,9 +32,14 @@ public class Usuario {
 	
 	public static void singUp() throws IOException, contraseniaCorta, contraseniaMuyComun, repiteContraseniaEnMailOUsuario { 
 		//Duda si este metodo deberia estar en usuario
-	boolean rehacer=false;
+	boolean rehacer;
+	boolean creado;
 		
-		do{	
+		do{	//Que permita Al usuario volver a ingresar los datos si salta alguna excepcion
+			
+			rehacer=false;
+			creado=false;
+			
 			try {
 				System.out.println("Ingrese un nombre de usuario: ");
 				String user= scanner.nextLine();
@@ -43,27 +48,25 @@ public class Usuario {
 				System.out.println("Ingrese su correo electronico: ");
 				String mail= scanner.nextLine();
 				validarContraseña(user,password, mail);
-				
+				creado=true;
 				Usuario nuevoUsuario=new Usuario(user,password,mail);
 			}
 			catch(contraseniaCorta cc){
 				cc.getMessage();
-				System.out.println("Ingrese las datos nuevamente: ");
-				scanner.next();
-				rehacer=true;
 			}
 			catch(contraseniaMuyComun cmc){
 				cmc.getMessage();
-				System.out.println("Ingrese los datos nuevamente: ");
-				scanner.next();
-				rehacer=true;
 			}
 			catch(repiteContraseniaEnMailOUsuario rcmu){
 				rcmu.getMessage();
+			}
+			
+			if(!creado){
 				System.out.println("Ingrese los datos nuevamente: ");
 				scanner.next();
 				rehacer=true;
 			}
+			
 		}while(rehacer);			
 	}
 	
