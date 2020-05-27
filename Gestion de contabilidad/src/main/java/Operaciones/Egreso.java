@@ -1,6 +1,8 @@
 package Operaciones;
 
 import DatosDeOperaciones.DocumentoComercial;
+
+import java.util.ArrayList;
 import java.util.List;
 import DatosDeOperaciones.Item;
 import DatosDeOperaciones.MedioDePago;
@@ -11,6 +13,10 @@ public class Egreso extends Operacion {
     private List<Item> items;
     private MedioDePago medioDePago;
     private Proveedor proveedor;
+
+    public Egreso() {
+        items = new ArrayList<>();
+    }
 
     public double valorTotal(){
         //desarrollar
