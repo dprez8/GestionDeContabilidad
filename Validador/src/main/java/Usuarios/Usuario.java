@@ -7,19 +7,12 @@ import Exceptions.contraseniaMuyComun;
 import Exceptions.repiteContraseniaEnMailOUsuario;
 import Validador.*;
 
-public class Usuario {
+public abstract class Usuario {
 	private String usuario;
 	private String contraseña;
 	private String mail;
 	//private static ControladorUsuario controlUsuario;
 	static Scanner scanner= new Scanner(System.in);
-	
-	public Usuario(String usuario, String contraseña,String mail) throws IOException, contraseniaCorta, contraseniaMuyComun, repiteContraseniaEnMailOUsuario {
-		super();
-		this.usuario = usuario;
-		this.contraseña = contraseña;
-		this.mail=mail;
-	}
 	
 	public static void iniciarSesion() { //Duda si este metodo deberia estar en usuario
 		
@@ -30,10 +23,10 @@ public class Usuario {
 		
 	}
 	
-	public static void singUp() throws IOException, contraseniaCorta, contraseniaMuyComun, repiteContraseniaEnMailOUsuario { 
+	public void singUp() throws IOException, contraseniaCorta, contraseniaMuyComun, repiteContraseniaEnMailOUsuario { 
 		//Duda si este metodo deberia estar en usuario
-	boolean rehacer;
-	boolean creado;
+		boolean rehacer;
+		boolean creado;
 		
 		do{	//Que permita Al usuario volver a ingresar los datos si salta alguna excepcion
 			
@@ -48,8 +41,8 @@ public class Usuario {
 				System.out.println("Ingrese su correo electronico: ");
 				String mail= scanner.nextLine();
 				validarContraseña(user,password, mail);
-				creado=true;
-				Usuario nuevoUsuario=new Usuario(user,password,mail);
+				creado=true; //si no salta ninguna excepcion se crea el usuario
+				this.generarUsuario(user,password,mail);
 			}
 			catch(contraseniaCorta cc){
 				cc.getMessage();
@@ -73,5 +66,11 @@ public class Usuario {
 	public static void validarContraseña(String usuario,String password, String mail) throws IOException, contraseniaCorta, contraseniaMuyComun, repiteContraseniaEnMailOUsuario{
 	
 		ControladorUsuario.validarConstrasenia(password, usuario, mail);
+	}
+	
+	public void generarUsuario(String user,String password,String email) {
+		usuario=user;
+		contraseña=password;
+		mail=email;
 	}
 }
