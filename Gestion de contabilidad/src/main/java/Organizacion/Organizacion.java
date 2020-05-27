@@ -1,4 +1,5 @@
 package Organizacion;
 
-public class Organizacion {
+public abstract class Organizacion {
+    private String nombreFicticio;
 }
