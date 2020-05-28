@@ -33,17 +33,6 @@ public void AddItem(Item item){
 	items.add(item);
 }	
 
-public void AddDocumento(DocumentoComercial document){
-	documento=document;
-}
-
-public void AddMedioDePagos(MedioDePago medio){
-	medioDePago=medio;
-} 
-
-public void AddProveedor(Proveedor prov){
-	proveedor=prov;
-}
 
 public void precioTotal(){
 	//precioTotal= this.valorTotal();
