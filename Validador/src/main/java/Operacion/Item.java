@@ -11,6 +11,6 @@ public class Item {
 	}
 	
 	public Double valorTotal(){
-		return producto.precio();
+		return cantidad*producto.precio();
 	}
 }

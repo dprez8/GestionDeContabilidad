@@ -1,10 +1,9 @@
 package Operaciones;
 
-import Organizacion.EntidadJuridica;
-
 import java.util.Date;
+import Usuarios.*;
 
 public abstract class Operacion {
-    private EntidadJuridica organizacion;
-    private Date fechaOperacion;
+	protected Estandar generadorOperacion; //quien genera las operaciones
+	protected Date fechaOperacion;
 }

@@ -1,6 +1,6 @@
 package Organizacion;
 
-public class Empresa extends EntidadJuridica{
+public class Empresa{
     private int cantidadDePersonal;
     private double ventasAnuales;
     private Categoria categoria;

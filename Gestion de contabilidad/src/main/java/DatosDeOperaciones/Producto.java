@@ -1,10 +1,17 @@
 package DatosDeOperaciones;
 
 public class Producto {
-    private String descripcion;
-    private double precio;
+	public String descripcion;
+	public Double precio;
+	
+	
+	public Producto(String descripcion, Double precio) {
+		super();
+		this.descripcion = descripcion;
+		this.precio = precio;
+	}
 
-    public double getPrecio() {
-        return precio;
-    }
+	public Double precio() {
+		return precio;
+	}
 }

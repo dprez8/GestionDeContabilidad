@@ -5,7 +5,6 @@ public class Producto {
 	public Double precio;
 	
 	
-	
 	public Producto(String descripcion, Double precio) {
 		super();
 		this.descripcion = descripcion;

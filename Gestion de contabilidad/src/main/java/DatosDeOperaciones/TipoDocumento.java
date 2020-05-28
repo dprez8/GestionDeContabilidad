@@ -1,5 +1,12 @@
 package DatosDeOperaciones;
 
+
 public class TipoDocumento {
-    private String nombreTipoDocumento;
+	String nombreTipoDeDocumento;
+
+	public TipoDocumento(String nombreTipoDeDocumento) {
+		super();
+		this.nombreTipoDeDocumento = nombreTipoDeDocumento;
+	}
+	
 }

@@ -1,7 +1,15 @@
 package DatosDeOperaciones;
 
 public class Proveedor {
-    private String nombre;
-    private int documento;
-    private int zipCode;
+	public String nombre;
+	public int documento;
+	public int zipcode;
+	
+	public Proveedor(String nombre, int documento, int zipcode) {
+		super();
+		this.nombre = nombre;
+		this.documento = documento;
+		this.zipcode = zipcode;
+	}
 }
+

@@ -1,5 +1,5 @@
 package Organizacion;
 
-public class Osc extends EntidadJuridica{
+public class Osc{
     private int codigoOsc;
 }

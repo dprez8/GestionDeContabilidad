@@ -32,6 +32,7 @@ public class ControladorUsuario {
             throw new contraseniaMuyComun("La contrasenia es muy comun, dentro del top10k peores, pensar algo mas complejo");
         if(esIgualAMailOUsuario(contrasenia, mail, user))
             throw new repiteContraseniaEnMailOUsuario("Repite contraseña en mail o en el usuario");
+        
     }
     static protected boolean longitudCorta(String contrasenia) {
         return contrasenia.length() < LONGITUDMINIMA;
@@ -40,10 +41,18 @@ public class ControladorUsuario {
         String unaContrasenia;
         FileReader archivo = new FileReader(rutaArchivo10KPeoresContras); //crea la ruta al archivo
         BufferedReader entrada = new BufferedReader(archivo);             //lee la entrada de texto
+        int verificador=0;
+        
         while((unaContrasenia = entrada.readLine()) != null) { //Vamos leyendo una linea del archivo. Verificar como funciona readLine()
             if(miContrasenia.equals(unaContrasenia))
-                return true;
+                verificador=1;
         }
+        entrada.close();
+        
+        if(verificador==1) { //realicé esta verificacion para poder cerrar el Buffer.
+        	return true;
+        }
+       
         return false;
     }
     static protected boolean esIgualAMailOUsuario(String contrasenia,String user, String mail){
