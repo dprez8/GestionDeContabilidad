@@ -19,4 +19,8 @@ public abstract class EntidadJuridica extends Organizacion {
         entidadesBase = new ArrayList<>();
         operaciones = new ArrayList<>();
     }
+
+    public String getActividad() {
+        return actividad;
+    }
 }
