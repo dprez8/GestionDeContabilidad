@@ -2,16 +2,15 @@ package DatosDeOperaciones;
 
 
 public class Item {
-	public Producto producto;
-	public int cantidad;
+	private Producto producto;
+	private int cantidad;
 	
 	public Item(Producto producto, int cantidad) {
-		super();
 		this.producto = producto;
 		this.cantidad = cantidad;
 	}
 	
-	public Double valorTotal(){
+	public double valorTotal(){
 		return cantidad*producto.precio();
 	}
 }

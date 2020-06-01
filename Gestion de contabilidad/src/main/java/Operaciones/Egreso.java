@@ -1,7 +1,10 @@
 package Operaciones;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.stream.Collectors;
+
 import DatosDeOperaciones.Item;
 import DatosDeOperaciones.MedioDePago;
 import DatosDeOperaciones.Proveedor;
@@ -15,38 +18,37 @@ public class Egreso extends Operacion {
 	private ArrayList<Item> items = new ArrayList<>();
 	private MedioDePago medioDePago;
 	private Proveedor proveedor;
-	private double precioTotal;
+
 	
 	public Egreso(Estandar generadorDeEgreso, Date fechaOperacion, DocumentoComercial documento,
 			MedioDePago medioDePago, Proveedor proveedor, Item ...items) {
-		super();
 		this.generadorOperacion = generadorDeEgreso;
 		this.fechaOperacion=fechaOperacion;
 		this.documento = documento;
 		this.medioDePago = medioDePago;
 		this.proveedor = proveedor;
-		this.AddItem(items);
+		this.agregarItems(items);
 	}
-
-public void AddItem(Item item[]){ //Quiero poder añadir los items directo desde el constructor...
-	for(int i=0;i<item.length;i++) {
-			//items.AddItem(item[i]);
+	
+	public Egreso() {
+	    items = new ArrayList<>();
 	}
-}			
-public void AddItem(Item item){
+				
+	public void AddItem(Item item){
 	items.add(item);
 }	
 
 
-public void precioTotal(){
-	//precioTotal= this.valorTotal();
-}
-
-public void generarEgreso() {
+	public void generarEgreso() {
 	
 	generadorOperacion.darAltaEgreso(this); //paso un Egreso ya formado par que el Usuario Estandar responsable lo de de alta
 }
-	/*private Double valorTotal(){
-	    return items.forEach(item->item.valorTotal()); hay q sumar los precios de cada item,pero no se como sumarlos luego del forEach
-	}*/
+
+public void agregarItems(Item ... unosItems){
+    Collections.addAll(this.items,unosItems);
+}
+public double valorTotal(){
+    return  items.stream().collect(Collectors.summingDouble(unItem->unItem.valorTotal()));
+    //Retorna la sumatoria del precio de cada item del egreso
+}
 }

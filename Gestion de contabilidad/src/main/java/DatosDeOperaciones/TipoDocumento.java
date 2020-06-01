@@ -2,7 +2,7 @@ package DatosDeOperaciones;
 
 
 public class TipoDocumento {
-	String nombreTipoDeDocumento;
+	private String nombreTipoDeDocumento;
 
 	public TipoDocumento(String nombreTipoDeDocumento) {
 		super();

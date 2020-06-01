@@ -11,7 +11,6 @@ public class DocumentoComercial {
 	
     public DocumentoComercial(TipoDocumento tipo, int numDocumento, Date fechaDePedido, Date fechaDeEntrega,
 			String descripcion) {
-		super();
 		this.tipo = tipo;
 		this.numDocumento = numDocumento;
 		this.fechaDePedido = fechaDePedido;
