@@ -1,8 +1,15 @@
 package Operaciones;
 
 import java.util.ArrayList;
+<<<<<<< HEAD
 import java.util.Collections;
 import java.util.Date;
+=======
+
+import java.util.Date;
+
+import java.util.Collections;
+>>>>>>> operaciones
 import java.util.stream.Collectors;
 
 import DatosDeOperaciones.Item;
@@ -18,7 +25,11 @@ public class Egreso extends Operacion {
 	private ArrayList<Item> items = new ArrayList<>();
 	private MedioDePago medioDePago;
 	private Proveedor proveedor;
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> operaciones
 	
 	public Egreso(Estandar generadorDeEgreso, Date fechaOperacion, DocumentoComercial documento,
 			MedioDePago medioDePago, Proveedor proveedor, Item ...items) {
@@ -31,6 +42,7 @@ public class Egreso extends Operacion {
 	}
 	
 	public Egreso() {
+<<<<<<< HEAD
 	    items = new ArrayList<>();
 	}
 				
@@ -51,4 +63,22 @@ public double valorTotal(){
     return  items.stream().collect(Collectors.summingDouble(unItem->unItem.valorTotal()));
     //Retorna la sumatoria del precio de cada item del egreso
 }
+=======
+        items = new ArrayList<>();
+    }
+
+	public void generarEgreso() {
+		
+		generadorOperacion.darAltaEgreso(this); //paso un Egreso ya formado par que el Usuario Estandar responsable lo de de alta
+	}
+    
+    public void agregarItems(Item ... unosItems){
+        Collections.addAll(this.items,unosItems);
+    }
+    public double valorTotal(){
+        return  items.stream().collect(Collectors.summingDouble(unItem->unItem.valorTotal()));
+        //Retorna la sumatoria del precio de cada item del egreso
+    }
+
+>>>>>>> operaciones
 }

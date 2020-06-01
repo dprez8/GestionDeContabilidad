@@ -7,7 +7,7 @@ public class DocumentoComercial {
     private int numDocumento;
     private Date fechaDePedido;
     private Date fechaDeEntrega;
-    public String descripcion;
+    private String descripcion;
 	
     public DocumentoComercial(TipoDocumento tipo, int numDocumento, Date fechaDePedido, Date fechaDeEntrega,
 			String descripcion) {

@@ -1,9 +1,9 @@
 package DatosDeOperaciones;
 
 public class Proveedor {
-	public String nombre;
-	public int documento;
-	public int zipcode;
+	private String nombre;
+	private int documento;
+	private int zipcode;
 	
 	public Proveedor(String nombre, int documento, int zipcode) {
 		super();
