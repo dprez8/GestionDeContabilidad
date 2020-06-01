@@ -3,6 +3,11 @@ package MiTest;
 import DatosDeOperaciones.Item;
 import DatosDeOperaciones.Producto;
 import Operaciones.Egreso;
+import Organizacion.Empresa;
+import Organizacion.EntidadJuridica;
+import Organizacion.Osc;
+import Usuarios.Administrador;
+import Usuarios.Estandar;
 import Validador.ControladorUsuario;
 import org.junit.Assert;
 import org.junit.Test;
@@ -47,5 +52,20 @@ public class TestJava {
 
         Assert.assertEquals(15000,unaCompra.valorTotal(),0);
 
+    }
+    @Test
+    public void testUsuarios(){
+        /****Parte administrador****/
+        Administrador viktor = new Administrador();
+
+        Empresa CocaCola = viktor.darAltaEmpresa();
+
+        Osc MercadoLibre = viktor.darAltaOsc();
+        System.out.print(CocaCola);
+        Estandar fernando = viktor.darAltaUsuario(CocaCola);
+        viktor.asociarUsuarioAOrganizacion(fernando,CocaCola);
+        /***************************/
+        /***Parte Estandar**********/
+        fernando.darAltaEgreso(new Egreso());
     }
 }
