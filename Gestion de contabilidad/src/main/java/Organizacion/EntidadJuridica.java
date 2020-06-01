@@ -2,8 +2,8 @@ package Organizacion;
 
 import java.util.ArrayList;
 import java.util.List;
-import Operaciones.Operacion;;
-
+import Operaciones.Operacion;
+import Usuarios.Estandar;
 
 public class EntidadJuridica extends Organizacion {
     private String razonSocial;
@@ -12,9 +12,11 @@ public class EntidadJuridica extends Organizacion {
     private int codigoDeInscripcionDefinitivaEnIGJ;
     private String actividad;
     private List<EntidadBase> entidadesBase;
+    private Estandar usuario;
 
-    //private Estandar usuario;   (esperar package de diego sobre los usuarios)
-
+    public void setUsuario(Estandar usuario) {
+        this.usuario = usuario;
+    }
 
     public EntidadJuridica() {
         entidadesBase = new ArrayList<>();

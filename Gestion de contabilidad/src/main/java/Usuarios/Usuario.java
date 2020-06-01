@@ -11,7 +11,7 @@ public abstract class Usuario {
 	private String usuario;
 	private String contraseña;
 	private String mail;
-	//private static ControladorUsuario controlUsuario;
+	private static ControladorUsuario controlUsuario;
 	static Scanner scanner= new Scanner(System.in);
 	
 	public static void iniciarSesion() { //Duda si este metodo deberia estar en usuario
