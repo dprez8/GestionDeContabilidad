@@ -5,8 +5,8 @@ public class MedioDePago {
     private String nombreMedioDePago;
     private MetodoPago metodoPago;
 
+
 	public MedioDePago(int numeroAsociado, String nombreMedioDePago, MetodoPago metodoPago) {
-		super();
 		this.numeroAsociado = numeroAsociado;
 		this.nombreMedioDePago = nombreMedioDePago;
 		this.metodoPago = metodoPago;
@@ -15,6 +15,7 @@ public class MedioDePago {
 
     public void instrumento(int numeroAsociado){
         //desarrollar
+
     }
 
 }
