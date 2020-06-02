@@ -13,6 +13,7 @@ public class EntidadJuridica extends Organizacion {
     private String actividad;
     private List<EntidadBase> entidadesBase;
     private Estandar usuario;
+    protected List<Operacion> operaciones;
 
     public void setUsuario(Estandar usuario) {
         this.usuario = usuario;
@@ -26,6 +27,10 @@ public class EntidadJuridica extends Organizacion {
 
     public String getActividad() {
         return actividad;
+    }
+
+    public void addOperacion(Operacion operacion){
+        operaciones.add(operacion);
     }
 }
 

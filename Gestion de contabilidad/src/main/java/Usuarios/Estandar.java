@@ -24,6 +24,5 @@ public class Estandar extends Usuario {
 
 		// Hacer algo con este egreso aparte, ABM
 	}
-	
 }
 
