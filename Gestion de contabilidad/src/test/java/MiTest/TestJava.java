@@ -1,9 +1,6 @@
 package MiTest;
 
-import DatosDeOperaciones.DocumentoComercial;
-import DatosDeOperaciones.Item;
-import DatosDeOperaciones.ItemEgreso;
-import DatosDeOperaciones.Producto;
+import DatosDeOperaciones.*;
 import Operaciones.Egreso;
 import Organizacion.Empresa;
 import Organizacion.EntidadJuridica;
@@ -17,17 +14,15 @@ import org.junit.Test;
 import javax.swing.text.Document;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
 public class TestJava {
-    //Momento de instanciacion
-    Producto RAM = new Producto("Memoria RAM 4 gb DDR3",3000);
-    ItemEgreso RAMs = new ItemEgreso(RAM,1);
 
-    Producto placaDeVideo = new Producto("4GB DDR5",6000);
-    ItemEgreso placasDeVideo = new ItemEgreso(placaDeVideo,2);
     @Test
     public void testValidador() throws IOException {
         Properties prop=new Properties();
@@ -47,16 +42,32 @@ public class TestJava {
             contraseniaCorta.printStackTrace();
         }
     }
+    //Momento de instanciacion
+    Producto RAM = new Producto("Memoria RAM 4 gb DDR3",3000);
+    ItemEgreso RAMs = new ItemEgreso(RAM,1);
+
+    Producto placaDeVideo = new Producto("4GB DDR5",6000);
+    ItemEgreso placasDeVideo = new ItemEgreso(placaDeVideo,2);
+
+    TipoDocumento FacturaA = new TipoDocumento("Factura A");
+    SimpleDateFormat parseador = new SimpleDateFormat("dd/MM/yy");
+    Date fechaDePedido = parseador.parse("31/01/20");
+    Date fechaDeEntrega = parseador.parse("05/02/20");
+    DocumentoComercial unDocumento = new DocumentoComercial(FacturaA,11111,fechaDePedido,fechaDeEntrega,"Ejemplo");
+
+    MedioDePago efectivo = new MedioDePago(1212,"Efectivo");
+
+    Proveedor lautaro = new Proveedor("Lautaro",41424242,1823);
+
+    public TestJava() throws ParseException {
+    }
     @Test
     public void testEgreso(){
 
-            
- //       Egreso unaCompra = new Egreso();
+        Empresa manaos = new Empresa();
+        Egreso unaCompra = new Egreso(unDocumento,efectivo,lautaro,manaos,RAMs,placasDeVideo);
 
- //       unaCompra.agregarItems(RAMs,placasDeVideo);
-
-  //      Assert.assertEquals(15000,unaCompra.valorTotal(),0);
-          Assert.assertEquals(true, true);
+        Assert.assertEquals(15000,unaCompra.valorTotal(),0);
     }
     @Test
     public void testUsuarios(){
@@ -66,11 +77,14 @@ public class TestJava {
         Empresa CocaCola = viktor.darAltaEmpresa();
 
         Osc MercadoLibre = viktor.darAltaOsc();
+
         System.out.print(CocaCola);
+        System.out.print(MercadoLibre);
+
         Estandar fernando = viktor.darAltaUsuario(CocaCola);
         viktor.asociarUsuarioAOrganizacion(fernando,CocaCola);
         /***************************/
         /***Parte Estandar**********/
-        //fernando.darAltaEgreso(new Egreso());
+        Egreso compraDePizzas = fernando.darAltaEgreso(unDocumento,efectivo,lautaro,placasDeVideo,RAMs);
     }
 }
