@@ -22,6 +22,12 @@ import java.util.Properties;
 import java.util.stream.Collectors;
 
 public class TestJava {
+    //Momento de instanciacion
+    Producto RAM = new Producto("Memoria RAM 4 gb DDR3",3000);
+    ItemEgreso RAMs = new ItemEgreso(RAM,1);
+
+    Producto placaDeVideo = new Producto("4GB DDR5",6000);
+    ItemEgreso placasDeVideo = new ItemEgreso(placaDeVideo,2);
     @Test
     public void testValidador() throws IOException {
         Properties prop=new Properties();
@@ -42,13 +48,9 @@ public class TestJava {
         }
     }
     @Test
-    public void testPrecioTotalItems(){
-        Producto RAM = new Producto("Memoria RAM 4 gb DDR3",3000);
-        ItemEgreso RAMs = new ItemEgreso(RAM,1);
+    public void testEgreso(){
 
-        Producto placaDeVideo = new Producto("4GB DDR5",6000);
-        ItemEgreso placasDeVideo = new ItemEgreso(placaDeVideo,2);
-
+            
  //       Egreso unaCompra = new Egreso();
 
  //       unaCompra.agregarItems(RAMs,placasDeVideo);
