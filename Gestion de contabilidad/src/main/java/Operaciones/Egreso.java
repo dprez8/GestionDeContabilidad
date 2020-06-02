@@ -8,22 +8,19 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import DatosDeOperaciones.Item;
-import DatosDeOperaciones.MedioDePago;
-import DatosDeOperaciones.Proveedor;
-import DatosDeOperaciones.DocumentoComercial;
+import DatosDeOperaciones.*;
 import Organizacion.EntidadJuridica;
 
 public class Egreso extends Operacion {
 	
 	private DocumentoComercial documento;
-	private List<Item> items = new ArrayList<>();
+	private List<ItemEgreso> items = new ArrayList<>();
 	private MedioDePago medioDePago;
 	private Proveedor proveedor;
 
 	public Egreso(DocumentoComercial documento,
 				  MedioDePago medioDePago, Proveedor proveedor, EntidadJuridica organizacion,
-				  Item ...items) {
+				  ItemEgreso ...items) {
 		this.fechaOperacion = new Date();
 		this.documento = documento;
 		this.medioDePago = medioDePago;
@@ -32,7 +29,7 @@ public class Egreso extends Operacion {
 		this.agregarItems(items);
 	}
 
-    public void agregarItems (Item ... unosItems) {
+    public void agregarItems (ItemEgreso ... unosItems) {
         Collections.addAll(this.items, unosItems);
     }
 

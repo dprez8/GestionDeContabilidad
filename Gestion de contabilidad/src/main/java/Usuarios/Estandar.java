@@ -15,14 +15,13 @@ public class Estandar extends Usuario {
 		this.miOrganizacion = unaOrganizacion;
 	}
 
-	public void darAltaEgreso(DocumentoComercial documentoComercial, MedioDePago medioDePago,
+	public Egreso darAltaEgreso(DocumentoComercial documentoComercial, MedioDePago medioDePago,
 							  Proveedor proveedor, ItemEgreso ... items) {
 		// Ingresar a la base de datos el egreso
 		Egreso egreso = new Egreso(documentoComercial, medioDePago, proveedor, this.miOrganizacion, items);
 
 		miOrganizacion.addOperacion(egreso);
-
-		// Hacer algo con este egreso aparte, ABM
+		return egreso;
 	}
 }
 

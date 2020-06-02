@@ -6,7 +6,6 @@ public class Proveedor {
 	private int zipcode;
 	
 	public Proveedor(String nombre, int documento, int zipcode) {
-		super();
 		this.nombre = nombre;
 		this.documento = documento;
 		this.zipcode = zipcode;
