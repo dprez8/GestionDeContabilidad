@@ -1,13 +1,20 @@
 package MiTest;
 
 import DatosDeOperaciones.*;
+import Exceptions.contraseniaCorta;
+import Exceptions.contraseniaMuyComun;
+import Exceptions.repiteContraseniaEnMailOUsuario;
 import Operaciones.Egreso;
 import Organizacion.Empresa;
 import Organizacion.EntidadJuridica;
 import Organizacion.Osc;
 import Usuarios.Administrador;
 import Usuarios.Estandar;
+import Usuarios.Usuario;
 import Validador.ControladorUsuario;
+import Validador.ValidarIgualAMailOUsuario;
+import Validador.ValidarLongitudCorta;
+import Validador.ValidarTop10k;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -24,23 +31,19 @@ import java.util.stream.Collectors;
 public class TestJava {
 
     @Test
-    public void testValidador() throws IOException {
+    public void testValidador() throws IOException, contraseniaCorta, contraseniaMuyComun, repiteContraseniaEnMailOUsuario {
         Properties prop=new Properties();
         FileInputStream ip= new FileInputStream("src/main/resources/config.properties");
         //"src/main/resources/10k-worst-passwords.txt"
-        String contrasenia = "fortune12";
-        try {
-            prop.load(ip);
-            ControladorUsuario controla = new ControladorUsuario(prop.getProperty("dataFilePath"), Integer.parseInt(prop.getProperty("longitudMinima")));
-            controla.validarConstrasenia(contrasenia, "", "");
-            ip.close();
-        } catch (Exceptions.repiteContraseniaEnMailOUsuario repiteContraseniaEnMailOUsuario) {
-            repiteContraseniaEnMailOUsuario.printStackTrace();
-        } catch (Exceptions.contraseniaMuyComun contraseniaMuyComun) {
-            contraseniaMuyComun.printStackTrace();
-        } catch (Exceptions.contraseniaCorta contraseniaCorta) {
-            contraseniaCorta.printStackTrace();
-        }
+        prop.load(ip);
+        Usuario.setNuevoControlUsuario(new ValidarLongitudCorta(Integer.parseInt(prop.getProperty("longitudMinima"))), new ValidarTop10k(prop.getProperty("dataFilePath")), new ValidarIgualAMailOUsuario());
+        //nose como hacer una config que devuelva objectos instanciados o que los instancie, creo que no puede
+        Administrador viktor = new Administrador();
+        Empresa CocaCola = viktor.darAltaEmpresa();
+        Estandar fernando = viktor.darAltaUsuario(CocaCola);
+        fernando.generarUsuario("Fernando", "fortune12", "Fer@asd.com");
+        fernando.validarContraseña();
+        ip.close();
     }
     //Momento de instanciacion
     Producto RAM = new Producto("Memoria RAM 4 gb DDR3",3000);
