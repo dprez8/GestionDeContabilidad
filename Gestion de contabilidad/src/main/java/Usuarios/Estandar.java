@@ -1,20 +1,28 @@
 package Usuarios;
 
-import Operaciones.Egreso; //Problema: Estandar importa de Egreso y Egreso de Usuario (solventar)
-import Organizacion.Organizacion;
+import DatosDeOperaciones.DocumentoComercial;
+import DatosDeOperaciones.ItemEgreso;
+import DatosDeOperaciones.MedioDePago;
+import DatosDeOperaciones.Proveedor;
+import Operaciones.Egreso; // Problema: Estandar importa de Egreso y Egreso de Usuario (solventar)
+import Organizacion.*;
 
-public class Estandar extends Usuario{
+public class Estandar extends Usuario {
 	
-	private Organizacion miOrganizacion;//conoce su organizacion
+	private EntidadJuridica miOrganizacion; // Conoce su organizacion
 
-	public Estandar(Organizacion unaOrganizacion){
+	public Estandar(EntidadJuridica unaOrganizacion){
 		this.miOrganizacion = unaOrganizacion;
 	}
 
-	public void darAltaEgreso(Egreso egreso) {
-		
-		//ingresar a la base de datos el egreso
-		miOrganizacion.AddOperacion(egreso);
+	public void darAltaEgreso(DocumentoComercial documentoComercial, MedioDePago medioDePago,
+							  Proveedor proveedor, ItemEgreso ... items) {
+		// Ingresar a la base de datos el egreso
+		Egreso egreso = new Egreso(documentoComercial, medioDePago, proveedor, this.miOrganizacion, items);
+
+		miOrganizacion.addOperacion(egreso);
+
+		// Hacer algo con este egreso aparte, ABM
 	}
 	
 }
