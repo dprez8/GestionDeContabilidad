@@ -5,6 +5,7 @@ import Exceptions.contraseniaCorta;
 import Exceptions.contraseniaMuyComun;
 import Exceptions.repiteContraseniaEnMailOUsuario;
 import Operaciones.Egreso;
+import Organizacion.Categoria;
 import Organizacion.Empresa;
 import Organizacion.EntidadJuridica;
 import Organizacion.Osc;
@@ -23,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -89,5 +91,18 @@ public class TestJava {
         /***************************/
         /***Parte Estandar**********/
         Egreso compraDePizzas = fernando.darAltaEgreso(unDocumento,efectivo,lautaro,placasDeVideo,RAMs);
+    }
+    @Test
+    public void testCategoria(){
+        Administrador viktor = new Administrador();
+        Empresa CocaCola = viktor.darAltaEmpresa();
+        List<Categoria> listaCategorias = new ArrayList<>();
+        listaCategorias.add(new Categoria("Mediana T1", 57000.0, 99999.0, 5, 9, "Agropecuario"));
+        listaCategorias.add(new Categoria("Micro", 0.0, 25000.0, 0, 2, "Agropecuario"));
+        listaCategorias.add(new Categoria("Pequenia", 25000.0, 57000.0, 2, 5, "Unico"));
+        listaCategorias.add(new Categoria("Pequenia", 25000.0, 57000.0, 2, 5, "Agropecuario"));
+        CocaCola.cacularCategoria(listaCategorias);
+        System.out.println(CocaCola.getCategoria().getCategoria());
+        System.out.println(CocaCola.getCategoria().getSector());
     }
 }

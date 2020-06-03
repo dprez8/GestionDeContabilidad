@@ -1,25 +1,32 @@
 package Organizacion;
 
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Empresa extends EntidadJuridica{
-
-    private int cantidadDePersonal;
-    private int ventasAnuales;
+    private int cantidadDePersonal=2;  //valores hardcodeados temporalmente para testeo
+    private double ventasAnuales=30000.0;  //valores hardcodeados temporalmente para testeo hay que crear setter
     private Categoria categoria;
+    private String rubro="Agropecuario";
 
-    public void cacularCategoria(List<Categoria> listaCategoriasPorMonto, List<Categoria> listaCategoriasPorPersonal){
-        String actividad = this.getActividad();
-        int promedio = this.promedioDeVentasAnuales();
-        Categoria encontrado = listaCategoriasPorMonto.stream().filter(a -> a.getActividad().equals(actividad) && a.dentroDelMinMax(promedio)).findAny().orElse(null);
-        Categoria encontrado2 = listaCategoriasPorPersonal.stream().filter(a -> a.getActividad().equals(actividad) && a.dentroDelMinMax(this.cantidadDePersonal)).findAny().orElse(null);
-        if (encontrado.nivelCategoria() >= encontrado2.nivelCategoria()) this.categoria = encontrado;
-        else this.categoria = encontrado2;
+    public void cacularCategoria(List<Categoria> listaCategorias){
+//        int promedio = this.promedioDeVentasAnuales(); //Todavia no podemos desarrollar esta funcion, usamos atributo ventasAnuales temporalmente
+//        Categoria listaCategoriasOrdenado = listaCategorias.sort(); //Se podria sortear con un criterio propio, o suponer que se la pasa ordenada, o tomando los resultados ver cual es mayor.
+        List<Categoria> listaCategoriasFiltrada = listaCategorias.stream().filter(a -> a.getSector().equals(this.rubro))
+                .filter(a -> a.dentroDelMinMax(this.ventasAnuales, this.cantidadDePersonal)).collect(Collectors.toList());
+        Categoria categoriaObtenida = listaCategoriasFiltrada.stream().max(Comparator.comparingInt(Categoria::getNivelCategoria)).get();
+        this.categoria = categoriaObtenida;
     }
 
     public int promedioDeVentasAnuales(){
         //desarrollar
         return 0;
+    }
+
+    public Categoria getCategoria() {
+        return categoria;
     }
 }

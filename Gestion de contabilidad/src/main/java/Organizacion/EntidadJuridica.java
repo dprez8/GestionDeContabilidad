@@ -10,7 +10,7 @@ public class EntidadJuridica extends Organizacion {
     private int cuit;
     private int direccionPostal;
     private int codigoDeInscripcionDefinitivaEnIGJ;
-    private String actividad;
+
     private List<EntidadBase> entidadesBase;
     private Estandar usuario;
     protected List<Operacion> operaciones;
@@ -22,11 +22,6 @@ public class EntidadJuridica extends Organizacion {
     public EntidadJuridica() {
         entidadesBase = new ArrayList<>();
         operaciones = new ArrayList<>();
-    }
-
-
-    public String getActividad() {
-        return actividad;
     }
 
     public void addOperacion(Operacion operacion){

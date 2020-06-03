@@ -1,32 +1,38 @@
 package Organizacion;
 
 public class Categoria {
-    private String categoria;
-    private Double montoMin = 0.0;
-    private Double montoMax;
-    private String actividad;
+    private String categoria;  //quizas es mejor usar una especie de enum?
+    private int nivelCategoria;
+    private double montoMin = 0.0;
+    private double montoMax;
+    private int personalMin = 0;
+    private int personalMax;
+    private String sector;
 
-    public Categoria(String categoria, Double montoMin, Double montoMax, String actividad){
+    public Categoria(String categoria, Double montoMin, Double montoMax, int personalMin, int personalMax, String sector){
         this.categoria = categoria;
+        this.setNivelCategoria();
         this.montoMin = montoMin;
         this.montoMax = montoMax;
-        this.actividad = actividad;
+        this.personalMin = personalMin;
+        this.personalMax = personalMax;
+        this.sector = sector;
     }
 
-    public String getCategoria() {
+    public String getCategoria(){
         return categoria;
     }
 
-    public String getActividad() {
-        return actividad;
+    public String getSector() {
+        return sector;
     }
 
-    public Boolean dentroDelMinMax(int valor){
-        if(montoMin < valor && valor >= montoMax) return true;
+    public Boolean dentroDelMinMax(double monto, int personal){
+        if((montoMin < monto && monto <= montoMax) || (personalMin < personal && personal <= personalMax)) return true;
         else return false;
     }
 
-    public int nivelCategoria(){
+    private void setNivelCategoria(){
         int nivel = 0;
         switch (this.categoria){
             case "Micro":
@@ -42,6 +48,10 @@ public class Categoria {
                 nivel = 4;
                 break;
         }
-        return nivel;
+        this.nivelCategoria = nivel;
+    }
+
+    public int getNivelCategoria() {
+        return nivelCategoria;
     }
 }
