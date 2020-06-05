@@ -94,13 +94,20 @@ public class TestJava {
     }
     @Test
     public void testCategoria(){
-        Administrador viktor = new Administrador();
-        Empresa CocaCola = viktor.darAltaEmpresa();
+        /**Cargo HashMap de nombre de Categorias que existirian con su respectivo tier para saber cual es mejor que el otro**/
+        Categoria.addCategoriaExistente("Micro", 1);
+        Categoria.addCategoriaExistente("Pequenia", 2);
+        Categoria.addCategoriaExistente("Mediana T1", 3);
+        Categoria.addCategoriaExistente("Mediana T2", 4);
+        /**Inicializo Categorias y las cargo en una lista**/
         List<Categoria> listaCategorias = new ArrayList<>();
         listaCategorias.add(new Categoria("Mediana T1", 57000.0, 99999.0, 5, 9, "Agropecuario"));
         listaCategorias.add(new Categoria("Micro", 0.0, 25000.0, 0, 2, "Agropecuario"));
         listaCategorias.add(new Categoria("Pequenia", 25000.0, 57000.0, 2, 5, "Unico"));
         listaCategorias.add(new Categoria("Pequenia", 25000.0, 57000.0, 2, 5, "Agropecuario"));
+        /**Faltaria crear constructor de Empresa, para este test se estan usando los valores hardcodeados solo para probar que anda**/
+        Administrador viktor = new Administrador();
+        Empresa CocaCola = viktor.darAltaEmpresa();
         CocaCola.cacularCategoria(listaCategorias);
         System.out.println(CocaCola.getCategoria().getCategoria());
         System.out.println(CocaCola.getCategoria().getSector());

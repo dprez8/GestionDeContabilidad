@@ -1,17 +1,18 @@
 package Organizacion;
 
+import java.util.HashMap;
+
 public class Categoria {
     private String categoria;  //quizas es mejor usar una especie de enum?
-    private int nivelCategoria;
     private double montoMin = 0.0;
     private double montoMax;
     private int personalMin = 0;
     private int personalMax;
     private String sector;
+    private static HashMap<String, Integer> categoriasExistentes = new HashMap<String, Integer>();
 
     public Categoria(String categoria, Double montoMin, Double montoMax, int personalMin, int personalMax, String sector){
         this.categoria = categoria;
-        this.setNivelCategoria();
         this.montoMin = montoMin;
         this.montoMax = montoMax;
         this.personalMin = personalMin;
@@ -32,26 +33,15 @@ public class Categoria {
         else return false;
     }
 
-    private void setNivelCategoria(){
-        int nivel = 0;
-        switch (this.categoria){
-            case "Micro":
-                nivel = 1;
-                break;
-            case "Pequenia":
-                nivel = 2;
-                break;
-            case "Mediana T1":
-                nivel = 3;
-                break;
-            case "Mediana T2":
-                nivel = 4;
-                break;
-        }
-        this.nivelCategoria = nivel;
+    public static void addCategoriaExistente(String key, Integer value) {
+        categoriasExistentes.put(key, value);
     }
 
-    public int getNivelCategoria() {
-        return nivelCategoria;
+    public static void removeCategoriaExistente(String key){
+        categoriasExistentes.remove(key);
+    }
+
+    public Integer getCategoriaLevel(){
+        return categoriasExistentes.get(categoria);
     }
 }

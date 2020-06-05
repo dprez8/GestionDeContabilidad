@@ -17,7 +17,7 @@ public class Empresa extends EntidadJuridica{
 //        Categoria listaCategoriasOrdenado = listaCategorias.sort(); //Se podria sortear con un criterio propio, o suponer que se la pasa ordenada, o tomando los resultados ver cual es mayor.
         List<Categoria> listaCategoriasFiltrada = listaCategorias.stream().filter(a -> a.getSector().equals(this.rubro))
                 .filter(a -> a.dentroDelMinMax(this.ventasAnuales, this.cantidadDePersonal)).collect(Collectors.toList());
-        Categoria categoriaObtenida = listaCategoriasFiltrada.stream().max(Comparator.comparingInt(Categoria::getNivelCategoria)).get();
+        Categoria categoriaObtenida = listaCategoriasFiltrada.stream().max(Comparator.comparingInt(Categoria::getCategoriaLevel)).get();
         this.categoria = categoriaObtenida;
     }
 
