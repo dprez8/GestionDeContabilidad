@@ -7588,7 +7588,7 @@
 											"top": 658,
 											"width": 262.640625,
 											"height": 13,
-											"text": "+total(): float",
+											"text": "+total(): double",
 											"horizontalAlignment": 0
 										}
 									],
@@ -25935,7 +25935,7 @@
 									"_parent": {
 										"$ref": "AAAAAAFyTiM1xf4V/Jg="
 									},
-									"type": "float",
+									"type": "double",
 									"direction": "return"
 								}
 							]
