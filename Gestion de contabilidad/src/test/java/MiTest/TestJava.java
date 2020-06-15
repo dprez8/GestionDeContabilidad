@@ -48,11 +48,11 @@ public class TestJava {
         ip.close();
     }
     //Momento de instanciacion
-    Producto RAM = new Producto("Memoria RAM 4 gb DDR3",3000);
-    ItemEgreso RAMs = new ItemEgreso(RAM,1);
+    Producto RAM = new Producto("Memoria RAM 4 gb DDR3");
+    ItemEgreso RAMs = new ItemEgreso(RAM,1,3000);
 
-    Producto placaDeVideo = new Producto("4GB DDR5",6000);
-    ItemEgreso placasDeVideo = new ItemEgreso(placaDeVideo,2);
+    Producto placaDeVideo = new Producto("4GB DDR5");
+    ItemEgreso placasDeVideo = new ItemEgreso(placaDeVideo,2,5000);
 
     TipoDocumento FacturaA = new TipoDocumento("Factura A");
     SimpleDateFormat parseador = new SimpleDateFormat("dd/MM/yy");
