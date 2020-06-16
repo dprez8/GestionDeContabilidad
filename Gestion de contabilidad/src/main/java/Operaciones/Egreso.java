@@ -1,5 +1,6 @@
 package Operaciones;
 
+import Usuarios.Estandar;
 import java.util.ArrayList;
 
 import java.util.Date;
@@ -17,6 +18,8 @@ public class Egreso extends Operacion {
 	private List<ItemEgreso> items = new ArrayList<>();
 	private MedioDePago medioDePago;
 	private Proveedor proveedor;
+	private List<Presupuesto> presupuestos = new ArrayList<>();
+	private List<Estandar> revisores = new ArrayList<>();
 
 	public Egreso(DocumentoComercial documento,
 				  MedioDePago medioDePago, Proveedor proveedor, EntidadJuridica organizacion,
@@ -28,9 +31,38 @@ public class Egreso extends Operacion {
 		this.organizacion = organizacion;
 		this.agregarItems(items);
 	}
+	
+	
 
-    public void agregarItems (ItemEgreso ... unosItems) {
+    public List<Presupuesto> getPresupuestos() {
+		return presupuestos;
+	}
+
+
+	public DocumentoComercial getDocumento() {
+		return documento;
+	}
+
+	public List<ItemEgreso> getItems() {
+		return items;
+	}
+
+	public Proveedor getProveedor() {
+		return proveedor;
+	}
+
+
+
+	public void agregarItems (ItemEgreso ... unosItems) {
         Collections.addAll(this.items, unosItems);
+    }
+    
+    public void agregarPresupuestos (Presupuesto ... presupuesto) {
+        Collections.addAll(this.presupuestos, presupuesto);
+    }
+    
+    public void agregarRevisor(Estandar ... revisor) {
+        Collections.addAll(this.revisores, revisor);
     }
 
     public double valorTotal () {
