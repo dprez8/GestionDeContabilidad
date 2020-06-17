@@ -41,8 +41,8 @@ public class TestJava {
         Usuario.setNuevoControlUsuario(new ValidarLongitudCorta(Integer.parseInt(prop.getProperty("longitudMinima"))), new ValidarTop10k(prop.getProperty("dataFilePath")), new ValidarIgualAMailOUsuario());
         //nose como hacer una config que devuelva objectos instanciados o que los instancie, creo que no puede
         Administrador viktor = new Administrador();
-        Empresa CocaCola = viktor.darAltaEmpresa();
-        Estandar fernando = viktor.darAltaUsuario(CocaCola);
+        Empresa CocaCola = new Empresa();
+        Estandar fernando = new Estandar(CocaCola);
         fernando.generarUsuario("Fernando", "fortune12", "Fer@asd.com");
         fernando.validarContraseña();
         ip.close();
@@ -79,14 +79,14 @@ public class TestJava {
         /****Parte administrador****/
         Administrador viktor = new Administrador();
 
-        Empresa CocaCola = viktor.darAltaEmpresa();
+        Empresa CocaCola = new Empresa();
 
-        Osc MercadoLibre = viktor.darAltaOsc();
+        Osc MercadoLibre = new Osc();
 
         System.out.print(CocaCola);
         System.out.print(MercadoLibre);
 
-        Estandar fernando = viktor.darAltaUsuario(CocaCola);
+        Estandar fernando = new Estandar(CocaCola);
         viktor.asociarUsuarioAOrganizacion(fernando,CocaCola);
         /***************************/
         /***Parte Estandar**********/
@@ -107,7 +107,7 @@ public class TestJava {
         listaCategorias.add(new Categoria("Pequenia", 25000.0, 57000.0, 2, 5, "Agropecuario"));
         /**Faltaria crear constructor de Empresa, para este test se estan usando los valores hardcodeados solo para probar que anda**/
         Administrador viktor = new Administrador();
-        Empresa CocaCola = viktor.darAltaEmpresa();
+        Empresa CocaCola = new Empresa();
         CocaCola.cacularCategoria(listaCategorias);
         System.out.println(CocaCola.getCategoria().getCategoria());
         System.out.println(CocaCola.getCategoria().getSector());
