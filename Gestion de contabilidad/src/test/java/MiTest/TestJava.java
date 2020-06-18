@@ -7,19 +7,16 @@ import Exceptions.repiteContraseniaEnMailOUsuario;
 import Operaciones.Egreso;
 import Organizacion.Categoria;
 import Organizacion.Empresa;
-import Organizacion.EntidadJuridica;
 import Organizacion.Osc;
 import Usuarios.Administrador;
 import Usuarios.Estandar;
 import Usuarios.Usuario;
-import Validador.ControladorUsuario;
-import Validador.ValidarIgualAMailOUsuario;
-import Validador.ValidarLongitudCorta;
-import Validador.ValidarTop10k;
+import ValidadorDeContrasenia.ValidarIgualAMailOUsuario;
+import ValidadorDeContrasenia.ValidarLongitudCorta;
+import ValidadorDeContrasenia.ValidarTop10k;
 import org.junit.Assert;
 import org.junit.Test;
 
-import javax.swing.text.Document;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.ParseException;
@@ -28,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-import java.util.stream.Collectors;
 
 public class TestJava {
 

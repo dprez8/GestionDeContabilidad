@@ -1,4 +1,6 @@
-package Operaciones;
+package ValidadorDeTransparencia;
+
+import Operaciones.Egreso;
 
 public class ValidarCantidadMinima extends ValidacionDeTransparencia{
 	private int cantidadMinimaDePresupuestos;

@@ -1,26 +1,26 @@
-package Operaciones;
+package ValidadorDeTransparencia;
 
-import java.util.Comparator;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
+import Operaciones.Egreso;
 import Operaciones.Presupuesto;
 
 public class ValidarMenorValor extends ValidacionDeTransparencia{
-
+	@Override
 	public boolean validarEgreso(Egreso egreso){
-		
-		Presupuesto presupuestoCoincide;
-		
+
+
 		if(coincidePresupuesto(egreso)) { //si existe un presupuesto que coincida se procede
-			
-			double minimoPresupuesto=1000000000;
-			
+
+			Double minimoPresupuesto = null;
+
 			for (Presupuesto presupuesto : egreso.getPresupuestos()) {
-		       if(presupuesto.total()>=minimoPresupuesto)
-		    	   minimoPresupuesto=presupuesto.total();		
+				if(minimoPresupuesto == null){
+					minimoPresupuesto = presupuesto.total();
+				}
+				else if(presupuesto.total()<=minimoPresupuesto) {
+					minimoPresupuesto = presupuesto.total();
+				}
 			}
-			if(minimoPresupuesto>=obtenerPresupuestoElegido(egreso).total())
+			if(minimoPresupuesto==obtenerPresupuestoElegido(egreso).total())
 				return true;
 		}
 		

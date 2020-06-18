@@ -5,7 +5,7 @@ import java.util.*;
 import Exceptions.contraseniaCorta;
 import Exceptions.contraseniaMuyComun;
 import Exceptions.repiteContraseniaEnMailOUsuario;
-import Validador.*;
+import ValidadorDeContrasenia.*;
 
 public abstract class Usuario {
 	private String usuario;

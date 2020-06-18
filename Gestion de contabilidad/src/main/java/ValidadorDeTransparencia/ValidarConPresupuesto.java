@@ -1,6 +1,7 @@
-package Operaciones;
+package ValidadorDeTransparencia;
 
 
+import Operaciones.Egreso;
 
 public class ValidarConPresupuesto extends ValidacionDeTransparencia {
 

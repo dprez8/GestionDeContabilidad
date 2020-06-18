@@ -1,4 +1,4 @@
-package Validador;
+package ValidadorDeContrasenia;
 
 import Exceptions.contraseniaCorta;
 
