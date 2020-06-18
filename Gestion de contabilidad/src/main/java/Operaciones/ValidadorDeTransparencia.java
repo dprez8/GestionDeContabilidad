@@ -1,9 +1,11 @@
 package Operaciones;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import DatosDeOperaciones.ItemEgreso;
 
@@ -18,16 +20,27 @@ public class ValidadorDeTransparencia {
 	}
 
 
-	public ValidadorDeTransparencia(ValidacionDeTransparencia validations) {
+	public ValidadorDeTransparencia(ValidacionDeTransparencia ... validations) {
 		cargarValidacion(validations);
 	}
 	
 	
 	public void validarEgreso (Egreso egreso) {
-        validaciones.forEach(validador->validador.validarEgreso(egreso));
-        // Retorna la sumatoria del precio de cada item del egreso
+       
+		validaciones.forEach(validador->validador.validarEgreso(egreso));
+        if(egreso.cantidadValidaciones()==validaciones.size()) //Si el egreso paso todas las validaciones no se vuelve a validar
+        	egreso.validado();
+        else
+        	egreso.reiniciarValidaciones(); //esto permite volver a validar el egreso si no paso las pruebas
     }
 	
+	public Stream<Egreso> egresosNoValidados (Egreso ... egreso) {
+		return Arrays.asList(egreso).stream().filter(elementoEgreso->!validado(elementoEgreso));
+    }
+	
+	public boolean validado(Egreso egreso){
+		return egreso.isValidado();
+	}
 	
 	public void cargarValidacion(ValidacionDeTransparencia ... nuevasValidaciones){
 		Collections.addAll(this.validaciones, nuevasValidaciones);

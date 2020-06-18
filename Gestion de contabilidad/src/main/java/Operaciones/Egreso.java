@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import DatosDeOperaciones.*;
 import Organizacion.EntidadJuridica;
+import Organizacion.Organizacion;
 
 public class Egreso extends Operacion {
 	
@@ -20,9 +21,11 @@ public class Egreso extends Operacion {
 	private Proveedor proveedor;
 	private List<Presupuesto> presupuestos = new ArrayList<>();
 	private List<Estandar> revisores = new ArrayList<>();
+	private boolean validado;
+	private int validaciones;
 
 	public Egreso(DocumentoComercial documento,
-				  MedioDePago medioDePago, Proveedor proveedor, EntidadJuridica organizacion,
+				  MedioDePago medioDePago, Proveedor proveedor, Organizacion organizacion,
 				  ItemEgreso ...items) {
 		this.fechaOperacion = new Date();
 		this.documento = documento;
@@ -30,9 +33,9 @@ public class Egreso extends Operacion {
 		this.proveedor = proveedor;
 		this.organizacion = organizacion;
 		this.agregarItems(items);
+		this.validado=false;
+		this.validaciones=0;
 	}
-	
-	
 
     public List<Presupuesto> getPresupuestos() {
 		return presupuestos;
@@ -50,8 +53,17 @@ public class Egreso extends Operacion {
 	public Proveedor getProveedor() {
 		return proveedor;
 	}
+	
+	public int cantidadValidaciones(){
+		return validaciones;
+	}
 
-
+	public boolean isValidado() {
+		return validado;
+	}
+	public void validado(){
+		this.validado=true;
+	}
 
 	public void agregarItems (ItemEgreso ... unosItems) {
         Collections.addAll(this.items, unosItems);
@@ -69,4 +81,12 @@ public class Egreso extends Operacion {
         return  items.stream().collect(Collectors.summingDouble(unItem->unItem.valorTotal()));
         // Retorna la sumatoria del precio de cada item del egreso
     }
+
+	public void reiniciarValidaciones() {
+		this.validaciones=0;
+	}
+	
+	public void pasoValidacion(){
+		this.validaciones++;
+	}
 }

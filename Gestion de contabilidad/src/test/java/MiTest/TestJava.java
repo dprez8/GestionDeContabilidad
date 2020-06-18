@@ -5,9 +5,15 @@ import Exceptions.contraseniaCorta;
 import Exceptions.contraseniaMuyComun;
 import Exceptions.repiteContraseniaEnMailOUsuario;
 import Operaciones.Egreso;
+import Operaciones.Operacion;
+import Operaciones.Scheduler;
+import Operaciones.ValidadorDeTransparencia;
+import Operaciones.ValidarCantidadMinima;
+import Operaciones.ValidarMenorValor;
 import Organizacion.Categoria;
 import Organizacion.Empresa;
 import Organizacion.EntidadJuridica;
+import Organizacion.Organizacion;
 import Organizacion.Osc;
 import Usuarios.Administrador;
 import Usuarios.Estandar;
@@ -43,7 +49,7 @@ public class TestJava {
         Administrador viktor = new Administrador();
         Empresa CocaCola = viktor.darAltaEmpresa();
         Estandar fernando = viktor.darAltaUsuario(CocaCola);
-        fernando.generarUsuario("Fernando", "fortune12", "Fer@asd.com");
+        fernando.generarUsuario("Fernando", "fortune12op", "Fer@asd.com");
         fernando.validarContraseña();
         ip.close();
     }
@@ -69,10 +75,10 @@ public class TestJava {
     @Test
     public void testEgreso(){
 
-        Empresa manaos = new Empresa();
-        Egreso unaCompra = new Egreso(unDocumento,efectivo,lautaro,manaos,RAMs,placasDeVideo);
+        Organizacion adidas = new Empresa();
+        Egreso unaCompra = new Egreso(unDocumento,efectivo,lautaro,adidas,RAMs,placasDeVideo);
 
-        Assert.assertEquals(15000,unaCompra.valorTotal(),0);
+        Assert.assertEquals(13000,unaCompra.valorTotal(),0);
     }
     @Test
     public void testUsuarios(){
@@ -112,4 +118,25 @@ public class TestJava {
         System.out.println(CocaCola.getCategoria().getCategoria());
         System.out.println(CocaCola.getCategoria().getSector());
     }
+    /*@Test
+    public void testValidadorEgresos(){
+    	
+    	 Organizacion coca = new Empresa();
+    	 Egreso unaCompra = new Egreso(unDocumento,efectivo,lautaro,coca,RAMs,placasDeVideo);
+    	
+    	Organizacion UTN=new Empresa("UTN",unaCompra); //Agregar otros egresos
+    	int frecuenciaScheduler = 50000; //cada cuanto se ejecuta el Scheduler
+    	
+    	ValidarCantidadMinima validacionMinima=new ValidarCantidadMinima(3);
+    	ValidarMenorValor validacionMenorValor= new ValidarMenorValor();
+    	ValidadorDeTransparencia validador=new ValidadorDeTransparencia(validacionMinima,validacionMenorValor);
+    	
+    	Scheduler scheduler=new Scheduler(UTN,validador,frecuenciaScheduler);  
+    	Thread thread =new Thread(scheduler);  
+    	thread.start(); //El hilo va a ejecutar la funcion run de Scheduler con la frecuencia asignada 
+    	
+    	//Hacer test que verifique que se pasaron las pruebas
+    	//Assert.assertTrue(unaCompra.isValidado());
+    }*/
+    
 }

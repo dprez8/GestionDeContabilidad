@@ -20,11 +20,9 @@ public abstract class ValidacionDeTransparencia {
 		return null;
 	}
 
-
 	public boolean compararEgresoPresupuesto(Egreso egreso,Presupuesto presupuesto){
 	
-	return  (egreso.getDocumento().equals(presupuesto.getDocumento())) && 
-		    (egreso.getItems().equals(presupuesto.getItems())) &&
+	return  (egreso.getItems().equals(presupuesto.getItems())) &&
 		    (egreso.equals(presupuesto.getEgresoAsociado()));
 		    //&&(egreso.getProveedor().equals(presupuesto.getProveedor()));    
 	}

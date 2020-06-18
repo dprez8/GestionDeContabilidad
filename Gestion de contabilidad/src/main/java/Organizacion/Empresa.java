@@ -6,13 +6,30 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Empresa extends EntidadJuridica{
-    private int cantidadDePersonal=2;  //valores hardcodeados temporalmente para testeo
-    private double ventasAnuales=30000.0;  //valores hardcodeados temporalmente para testeo hay que crear setter
-    private Categoria categoria;
-    private String rubro="Agropecuario";
+import Operaciones.Operacion;
 
-    public void cacularCategoria(List<Categoria> listaCategorias){
+public class Empresa extends EntidadJuridica{
+    private int cantidadDePersonal;  
+    private double ventasAnuales; 
+    private Categoria categoria;
+    private String rubro;
+
+    
+    public Empresa() {
+		this.cantidadDePersonal = 2;//valores hardcodeados temporalmente para testeo
+	  	this.ventasAnuales = 3000.0; //valores hardcodeados temporalmente para testeo hay que crear setter
+		this.rubro = "Agropecuario";
+	}
+    
+
+	public Empresa(String nombreFicticio,Operacion ... operaciones) {
+		this.nombreFicticio=nombreFicticio;
+		this.agregarOperaciones(operaciones);
+	}
+
+
+
+	public void cacularCategoria(List<Categoria> listaCategorias){
 //        int promedio = this.promedioDeVentasAnuales(); //Todavia no podemos desarrollar esta funcion, usamos atributo ventasAnuales temporalmente
 //        Categoria listaCategoriasOrdenado = listaCategorias.sort(); //Se podria sortear con un criterio propio, o suponer que se la pasa ordenada, o tomando los resultados ver cual es mayor.
         List<Categoria> listaCategoriasFiltrada = listaCategorias.stream().filter(a -> a.getSector().equals(this.rubro))

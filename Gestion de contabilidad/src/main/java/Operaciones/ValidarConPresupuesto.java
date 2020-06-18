@@ -4,10 +4,18 @@ package Operaciones;
 
 public class ValidarConPresupuesto extends ValidacionDeTransparencia {
 
-	
+	@Override
 	public boolean validarEgreso(Egreso egreso){
 		//mostrar el resultado de la validacion en la bandeja de mensajes
-		return coincidePresupuesto(egreso);
+		
+		boolean coincide=coincidePresupuesto(egreso);
+		
+		if(coincide){
+			egreso.pasoValidacion();
+			return true;
+		}
+		else
+			return false;
 	}
 	
 }

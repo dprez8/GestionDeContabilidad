@@ -20,10 +20,10 @@ public class ValidarMenorValor extends ValidacionDeTransparencia{
 		       if(presupuesto.total()>=minimoPresupuesto)
 		    	   minimoPresupuesto=presupuesto.total();		
 			}
-			if(minimoPresupuesto>=obtenerPresupuestoElegido(egreso).total())
-				return true;
+			if(minimoPresupuesto>=obtenerPresupuestoElegido(egreso).total()) {
+				egreso.pasoValidacion();
+				return true;}
 		}
-		
 		//mostrar el resultado de la validacion en la bandeja de mensajes
 		return false;
 	}
