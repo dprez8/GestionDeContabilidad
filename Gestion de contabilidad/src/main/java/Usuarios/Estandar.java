@@ -20,7 +20,7 @@ public class Estandar extends Usuario {
 		// Ingresar a la base de datos el egreso
 		Egreso egreso = new Egreso(documentoComercial, medioDePago, proveedor, this.miOrganizacion, items);
 
-		miOrganizacion.addOperacion(egreso);
+		miOrganizacion.agregarOperaciones(egreso);
 		return egreso;
 	}
 }

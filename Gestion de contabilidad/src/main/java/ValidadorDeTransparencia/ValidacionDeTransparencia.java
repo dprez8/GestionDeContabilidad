@@ -1,4 +1,7 @@
-package Operaciones;
+package ValidadorDeTransparencia;
+
+import Operaciones.Egreso;
+import Operaciones.Presupuesto;
 
 public abstract class ValidacionDeTransparencia {
 

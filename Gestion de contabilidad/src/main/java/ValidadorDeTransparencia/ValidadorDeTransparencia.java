@@ -1,13 +1,12 @@
-package Operaciones;
+package ValidadorDeTransparencia;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import DatosDeOperaciones.ItemEgreso;
+import Operaciones.Egreso;
 
 public class ValidadorDeTransparencia {
 	

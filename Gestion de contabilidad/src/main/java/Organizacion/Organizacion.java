@@ -1,13 +1,10 @@
 package Organizacion;
 
-import java.util.ArrayList;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
-
-import DatosDeOperaciones.ItemEgreso;
 import Operaciones.*;
-import Usuarios.Estandar;
 
 public abstract class Organizacion {
     protected String nombreFicticio;
@@ -29,5 +26,5 @@ public abstract class Organizacion {
 	public Stream<Egreso> egresosNoValidados(){
 		return egresos.stream().filter(egresoAValidar->!egresoAValidar.isValidado());
 	}
-	
+
 }

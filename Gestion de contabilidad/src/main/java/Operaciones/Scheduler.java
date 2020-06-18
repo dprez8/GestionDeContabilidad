@@ -2,6 +2,7 @@ package Operaciones;
 import java.util.stream.Stream;
 
 import Organizacion.*;
+import ValidadorDeTransparencia.ValidadorDeTransparencia;
 
 public class Scheduler implements Runnable{
 	private Organizacion organizacion;
