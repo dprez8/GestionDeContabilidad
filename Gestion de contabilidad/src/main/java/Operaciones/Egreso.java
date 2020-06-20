@@ -20,6 +20,8 @@ public class Egreso extends Operacion {
 	private Proveedor proveedor;
 	private List<Presupuesto> presupuestos = new ArrayList<>();
 	private List<Estandar> revisores = new ArrayList<>();
+	private Ingreso ingresoAsociado;
+	private CategoriaOperacion categoria;
 
 	public Egreso(DocumentoComercial documento,
 				  MedioDePago medioDePago, Proveedor proveedor, EntidadJuridica organizacion,
