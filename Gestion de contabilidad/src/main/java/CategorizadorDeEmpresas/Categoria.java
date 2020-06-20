@@ -9,9 +9,9 @@ import java.util.List;
 
 public class Categoria {
     private String nombre;
-    //private double montoMin = 0.0;
+    private double montoMin;
     private double montoMax;
-    //private int personalMin = 0;
+    private int personalMin;
     private int personalMax;
     private Sector sector;
     private static List<String> actividadesExceptuadas = new ArrayList<>();
@@ -19,27 +19,14 @@ public class Categoria {
 
     public Categoria(String categoria, Double montoMin, Double montoMax, int personalMin, int personalMax, Sector sector){
         this.nombre      = categoria;
-      //  this.montoMin    = montoMin;
+        this.montoMin    = montoMin;
         this.montoMax    = montoMax;
-       // this.personalMin = personalMin;
+        this.personalMin = personalMin;
         this.personalMax = personalMax;
         this.sector      = sector;
     }
 
-    public boolean categorizarA(Empresa unaEmpresa){
-        if(sector.equals(unaEmpresa.getSector())) {
-            if (!estaDentroDeLasActividadesExceptuadas(unaEmpresa)) {
-                if (unaEmpresa.getVentasAnuales() < montoMax) {
-                    return unaEmpresa.getCantidadDePersonal() <= personalMax;
-                }
-            }else{
-                return unaEmpresa.getCantidadDePersonal() <= personalMax;
-            }
-        }
-        return false;
-    }
-
-    private boolean estaDentroDeLasActividadesExceptuadas(Empresa unaEmpresa){
+    public boolean estaDentroDeLasActividadesExceptuadas(Empresa unaEmpresa){
         return actividadesExceptuadas.stream().anyMatch(
                                                unaActividad->unaActividad.equalsIgnoreCase(unaEmpresa.getActividad()));
 
@@ -48,18 +35,21 @@ public class Categoria {
     public static void agregarActivadadesExceptuadas(String ... actividades){
         Collections.addAll(actividadesExceptuadas, actividades);
     }
+
+    public boolean dentroDelMinMaxPersonal(Empresa unaEmpresa){
+        return this.personalMin < unaEmpresa.getCantidadDePersonal() && unaEmpresa.getCantidadDePersonal() <= this.personalMax;
+    }
+
+    public boolean dentroDelMinMaxMonto(Empresa unaEmpresa){
+        return this.montoMin < unaEmpresa.getVentasAnuales() && unaEmpresa.getVentasAnuales() <= this.montoMax;
+    }
+
+    public Sector getSector() {
+        return sector;
+    }
 /*
     public String getNombre(){
         return nombre;
-    }
-
-    public String getSector() {
-        return sector;
-    }
-
-    public Boolean dentroDelMinMax(double monto, int personal){
-        if((montoMin < monto && monto <= montoMax) || (personalMin < personal && personal <= personalMax)) return true;
-        else return false;
     }
 
     public static void addCategoriaExistente(String key, Integer value) {
