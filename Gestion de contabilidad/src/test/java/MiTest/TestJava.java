@@ -5,7 +5,7 @@ import Exceptions.contraseniaCorta;
 import Exceptions.contraseniaMuyComun;
 import Exceptions.repiteContraseniaEnMailOUsuario;
 import Operaciones.Egreso;
-import Organizacion.Categoria;
+import CategorizadorDeEmpresas.Categoria;
 import Organizacion.Empresa;
 import Organizacion.Osc;
 import Usuarios.Administrador;

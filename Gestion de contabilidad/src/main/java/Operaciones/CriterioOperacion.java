@@ -1,6 +1,6 @@
 package Operaciones;
 
-import Organizacion.Categoria;
+import CategorizadorDeEmpresas.Categoria;
 
 import java.util.List;
 

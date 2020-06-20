@@ -1,32 +1,55 @@
 package Organizacion;
 
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import CategorizadorDeEmpresas.*;
+
+import java.util.Optional;
 
 public class Empresa extends EntidadJuridica{
-    private int cantidadDePersonal=2;  //valores hardcodeados temporalmente para testeo
-    private double ventasAnuales=30000.0;  //valores hardcodeados temporalmente para testeo hay que crear setter
-    private Categoria categoria;
-    private String sector="Agropecuario";
+    private int cantidadDePersonal;
+    private double ventasAnuales;
+    private Optional<Categoria> categoria;
+    private Sector sector;
+    private String actividad;
 
-    public void cacularCategoria(List<Categoria> listaCategorias){
+    public Empresa (int cantidadDePersonal,double ventasAnuales,Sector sector){
+        this.cantidadDePersonal = cantidadDePersonal;
+        this.ventasAnuales = ventasAnuales;
+        this.sector = sector;
+    }
+
+    public void cacularCategoria(Categorizador categorizador){
+        this.categoria = categorizador.obtenerCategoriaDe(this);
+    /*
 //        int promedio = this.promedioDeVentasAnuales(); //Todavia no podemos desarrollar esta funcion, usamos atributo ventasAnuales temporalmente
 //        Categoria listaCategoriasOrdenado = listaCategorias.sort(); //Se podria sortear con un criterio propio, o suponer que se la pasa ordenada, o tomando los resultados ver cual es mayor.
         List<Categoria> listaCategoriasFiltrada = listaCategorias.stream().filter(a -> a.getSector().equals(this.sector))
                 .filter(a -> a.dentroDelMinMax(this.ventasAnuales, this.cantidadDePersonal)).collect(Collectors.toList());
         Categoria categoriaObtenida = listaCategoriasFiltrada.stream().max(Comparator.comparingInt(Categoria::getCategoriaLevel)).get();
         this.categoria = categoriaObtenida;
+
+     */
+    }
+    public Sector getSector() {
+        return sector;
+    }
+    public int getCantidadDePersonal() {
+        return cantidadDePersonal;
     }
 
+    public double getVentasAnuales() {
+        return ventasAnuales;
+    }
+
+    public String getActividad(){
+        return actividad;
+    }
     public int promedioDeVentasAnuales(){
         //desarrollar
         return 0;
     }
 
-    public Categoria getCategoria() {
+    public Optional<Categoria> getCategoria() {
         return categoria;
     }
 }
