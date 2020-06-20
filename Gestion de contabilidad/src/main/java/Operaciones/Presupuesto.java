@@ -14,6 +14,7 @@ public class Presupuesto {
     private Egreso egresoAsociado;
     private DocumentoComercial documento;
     private String fechaVigente;
+    private CategoriaOperacion categoria;
     //private Proveedor proveedor;
     
 
@@ -47,5 +48,9 @@ public class Presupuesto {
     }
     public double total(){
         return items.stream().collect(Collectors.summingDouble(unItem->unItem.valorTotal()));
+    }
+
+    public void setCategoria(CategoriaOperacion categoria) {
+        this.categoria = categoria;
     }
 }

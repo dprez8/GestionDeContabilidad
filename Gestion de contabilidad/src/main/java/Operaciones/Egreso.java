@@ -71,4 +71,12 @@ public class Egreso extends Operacion {
         return  items.stream().collect(Collectors.summingDouble(unItem->unItem.valorTotal()));
         // Retorna la sumatoria del precio de cada item del egreso
     }
+
+	public void setCategoria(CategoriaOperacion categoria) {
+		this.categoria = categoria;
+	}
+
+	public void setIngresoAsociado(Ingreso ingreso) {
+		this.ingresoAsociado = ingreso;
+	}
 }
