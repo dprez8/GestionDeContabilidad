@@ -8,14 +8,15 @@ import java.util.Optional;
 public class Empresa extends EntidadJuridica{
     private int cantidadDePersonal;
     private double ventasAnuales;
-    private Optional<Categoria> categoria;
+    private Categoria categoria;
     private Sector sector;
     private String actividad;
 
-    public Empresa (int cantidadDePersonal,double ventasAnuales,Sector sector){
+    public Empresa (int cantidadDePersonal,double ventasAnuales,String actividad,Sector sector){
         this.cantidadDePersonal = cantidadDePersonal;
-        this.ventasAnuales = ventasAnuales;
-        this.sector = sector;
+        this.ventasAnuales      = ventasAnuales;
+        this.actividad          = actividad;
+        this.sector             = sector;
     }
 
     public void cacularCategoria(Categorizador categorizador){
@@ -49,7 +50,7 @@ public class Empresa extends EntidadJuridica{
         return 0;
     }
 
-    public Optional<Categoria> getCategoria() {
+    public Categoria getCategoria() {
         return categoria;
     }
 }

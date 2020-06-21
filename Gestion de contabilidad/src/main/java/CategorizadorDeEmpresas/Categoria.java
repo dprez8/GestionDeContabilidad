@@ -47,11 +47,11 @@ public class Categoria {
     public Sector getSector() {
         return sector;
     }
-/*
+
     public String getNombre(){
         return nombre;
     }
-
+/*
     public static void addCategoriaExistente(String key, Integer value) {
         categoriasExistentes.put(key, value);
     }

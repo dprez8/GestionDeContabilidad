@@ -1,5 +1,6 @@
 package MiTest;
 
+import CategorizadorDeEmpresas.Sector;
 import DatosDeOperaciones.*;
 import Exceptions.contraseniaCorta;
 import Exceptions.contraseniaMuyComun;
@@ -27,7 +28,7 @@ import java.util.List;
 import java.util.Properties;
 
 public class TestJava {
-
+    Sector servicios    = new Sector("Servicios");
     @Test
     public void testValidador() throws IOException, contraseniaCorta, contraseniaMuyComun, repiteContraseniaEnMailOUsuario {
         Properties prop=new Properties();
@@ -36,8 +37,8 @@ public class TestJava {
         prop.load(ip);
         Usuario.setNuevoControlUsuario(new ValidarLongitudCorta(Integer.parseInt(prop.getProperty("longitudMinima"))), new ValidarTop10k(prop.getProperty("dataFilePath")), new ValidarIgualAMailOUsuario());
         //nose como hacer una config que devuelva objectos instanciados o que los instancie, creo que no puede
-        Administrador viktor = new Administrador();
-        Empresa CocaCola = new Empresa();
+
+        Empresa CocaCola = new Empresa(12,130000,"SUMINISTRO DE AGUA",servicios);
         Estandar fernando = new Estandar(CocaCola);
         fernando.generarUsuario("Fernando", "fortune12", "Fer@asd.com");
         fernando.validarContraseña();
@@ -65,7 +66,7 @@ public class TestJava {
     @Test
     public void testEgreso(){
 
-        Empresa manaos = new Empresa();
+        Empresa manaos = new Empresa(12,130000,"SUMINISTRO DE AGUA",servicios);
         Egreso unaCompra = new Egreso(unDocumento,efectivo,lautaro,manaos,RAMs,placasDeVideo);
 
         Assert.assertEquals(15000,unaCompra.valorTotal(),0);
@@ -75,7 +76,7 @@ public class TestJava {
         /****Parte administrador****/
         Administrador viktor = new Administrador();
 
-        Empresa CocaCola = new Empresa();
+        Empresa CocaCola = new Empresa(12,130000,"SUMINISTRO DE AGUA",servicios);
 
         Osc MercadoLibre = new Osc();
 
@@ -87,25 +88,5 @@ public class TestJava {
         /***************************/
         /***Parte Estandar**********/
         Egreso compraDePizzas = fernando.darAltaEgreso(unDocumento,efectivo,lautaro,placasDeVideo,RAMs);
-    }
-    @Test
-    public void testCategoria(){
-        /**Cargo HashMap de nombre de Categorias que existirian con su respectivo tier para saber cual es mejor que el otro**/
-        Categoria.addCategoriaExistente("Micro", 1);
-        Categoria.addCategoriaExistente("Pequenia", 2);
-        Categoria.addCategoriaExistente("Mediana T1", 3);
-        Categoria.addCategoriaExistente("Mediana T2", 4);
-        /**Inicializo Categorias y las cargo en una lista**/
-        List<Categoria> listaCategorias = new ArrayList<>();
-        listaCategorias.add(new Categoria("Mediana T1", 57000.0, 99999.0, 5, 9, "Agropecuario"));
-        listaCategorias.add(new Categoria("Micro", 0.0, 25000.0, 0, 2, "Agropecuario"));
-        listaCategorias.add(new Categoria("Pequenia", 25000.0, 57000.0, 2, 5, "Unico"));
-        listaCategorias.add(new Categoria("Pequenia", 25000.0, 57000.0, 2, 5, "Agropecuario"));
-        /**Faltaria crear constructor de Empresa, para este test se estan usando los valores hardcodeados solo para probar que anda**/
-        Administrador viktor = new Administrador();
-        Empresa CocaCola = new Empresa();
-        CocaCola.cacularCategoria(listaCategorias);
-        System.out.println(CocaCola.getCategoria().getCategoria());
-        System.out.println(CocaCola.getCategoria().getSector());
     }
 }
