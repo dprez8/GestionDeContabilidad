@@ -11,7 +11,10 @@ public class Estandar extends Usuario {
 	
 	private EntidadJuridica miOrganizacion; // Conoce su organizacion
 
-	public Estandar(EntidadJuridica unaOrganizacion){
+	public Estandar(EntidadJuridica unaOrganizacion,String nombre,String contrasenia, String mail){
+		this.usuario = nombre;
+		this.contrasenia = contrasenia;
+		this.mail = mail;
 		this.miOrganizacion = unaOrganizacion;
 	}
 

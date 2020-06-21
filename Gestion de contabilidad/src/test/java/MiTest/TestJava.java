@@ -39,8 +39,7 @@ public class TestJava {
         //nose como hacer una config que devuelva objectos instanciados o que los instancie, creo que no puede
 
         Empresa CocaCola = new Empresa(12,130000,"SUMINISTRO DE AGUA",servicios);
-        Estandar fernando = new Estandar(CocaCola);
-        fernando.generarUsuario("Fernando", "fortune12", "Fer@asd.com");
+        Estandar fernando = new Estandar(CocaCola,"Fernando","fortune12","fer12@mail.com");
         fernando.validarContraseña();
         ip.close();
     }
@@ -83,7 +82,7 @@ public class TestJava {
         System.out.print(CocaCola);
         System.out.print(MercadoLibre);
 
-        Estandar fernando = new Estandar(CocaCola);
+        Estandar fernando = new Estandar(CocaCola,"Fernando","fortune12","fer12@mail.com");
         viktor.asociarUsuarioAOrganizacion(fernando,CocaCola);
         /***************************/
         /***Parte Estandar**********/

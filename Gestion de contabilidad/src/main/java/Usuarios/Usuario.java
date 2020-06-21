@@ -8,15 +8,15 @@ import Exceptions.repiteContraseniaEnMailOUsuario;
 import ValidadorDeContrasenia.*;
 
 public abstract class Usuario {
-	private String usuario;
-	private String contraseña;
-	private String mail;
+	protected String usuario;
+	protected String contrasenia;
+	protected String mail;
 	private static List<ControladorUsuario> controlUsuario = new ArrayList<>();
 	static Scanner scanner= new Scanner(System.in);
 	
 	public void validarContraseña() throws IOException, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, contraseniaCorta {
 	    for (int i = 0; i < controlUsuario.size(); i++){ //no usar foreach porque sino el try y el catch tienen que estar adentro de la funcion lambda
-	    	controlUsuario.get(i).validarConstrasenia(this.contraseña, this.mail, this.usuario);
+	    	controlUsuario.get(i).validarConstrasenia(this.contrasenia, this.mail, this.usuario);
 		}
 	}
 
