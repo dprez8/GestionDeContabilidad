@@ -21,13 +21,7 @@ public class Categorizador {
 
     public boolean categorizarA(Empresa unaEmpresa,Categoria unaCategoria){
         if(unaCategoria.getSector().equals(unaEmpresa.getSector())) {
-            if (!unaCategoria.estaDentroDeLasActividadesExceptuadas(unaEmpresa)) {
-                if (unaCategoria.dentroDelMinMaxMonto(unaEmpresa)) {
-                    return unaCategoria.dentroDelMinMaxPersonal(unaEmpresa);
-                }
-            }else{
-                return unaCategoria.dentroDelMinMaxPersonal(unaEmpresa);
-            }
+            return unaCategoria.dentroDelMinMaxMonto(unaEmpresa) && unaCategoria.dentroDelMinMaxPersonal(unaEmpresa);
         }
         return false;
     }

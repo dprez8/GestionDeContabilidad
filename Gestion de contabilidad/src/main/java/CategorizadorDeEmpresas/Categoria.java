@@ -14,7 +14,6 @@ public class Categoria {
     private int personalMin;
     private int personalMax;
     private Sector sector;
-    private static List<String> actividadesExceptuadas = new ArrayList<>();
     //private static HashMap<String, Integer> categoriasExistentes = new HashMap<String, Integer>();
 
     public Categoria(String categoria, Double montoMin, Double montoMax, int personalMin, int personalMax, Sector sector){
@@ -24,16 +23,6 @@ public class Categoria {
         this.personalMin = personalMin;
         this.personalMax = personalMax;
         this.sector      = sector;
-    }
-
-    public boolean estaDentroDeLasActividadesExceptuadas(Empresa unaEmpresa){
-        return actividadesExceptuadas.stream().anyMatch(
-                                               unaActividad->unaActividad.equalsIgnoreCase(unaEmpresa.getActividad()));
-
-    }
-
-    public static void agregarActivadadesExceptuadas(String ... actividades){
-        Collections.addAll(actividadesExceptuadas, actividades);
     }
 
     public boolean dentroDelMinMaxPersonal(Empresa unaEmpresa){

@@ -25,7 +25,6 @@ public class CategorizacionDeEmpresa {
 
         Empresa miPyme = new Empresa(10,10000000.0,"Construccion",construccion);
 
-        Categoria.agregarActivadadesExceptuadas("Comisionista","AgenciaDeViaje");
         categorizador.agregarCategorias(microComercio,microConstruccion,microServicios);
 
         miPyme.cacularCategoria(categorizador);
