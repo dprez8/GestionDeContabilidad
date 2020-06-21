@@ -14,7 +14,6 @@ public class Categoria {
     private int personalMin;
     private int personalMax;
     private Sector sector;
-    //private static HashMap<String, Integer> categoriasExistentes = new HashMap<String, Integer>();
 
     public Categoria(String categoria, Double montoMin, Double montoMax, int personalMin, int personalMax, Sector sector){
         this.nombre      = categoria;
@@ -25,12 +24,18 @@ public class Categoria {
         this.sector      = sector;
     }
 
-    public boolean dentroDelMinMaxPersonal(Empresa unaEmpresa){
-        return this.personalMin < unaEmpresa.getCantidadDePersonal() && unaEmpresa.getCantidadDePersonal() <= this.personalMax;
-    }
+//    public boolean dentroDelMinMaxPersonal(Empresa unaEmpresa){
+//        return this.personalMin < unaEmpresa.getCantidadDePersonal() && unaEmpresa.getCantidadDePersonal() <= this.personalMax;
+//    }
+//
+//    public boolean dentroDelMinMaxMonto(Empresa unaEmpresa){
+//        return this.montoMin < unaEmpresa.getVentasAnuales() && unaEmpresa.getVentasAnuales() <= this.montoMax;
+//    }
 
-    public boolean dentroDelMinMaxMonto(Empresa unaEmpresa){
-        return this.montoMin < unaEmpresa.getVentasAnuales() && unaEmpresa.getVentasAnuales() <= this.montoMax;
+    public Boolean dentroDelMinMax(Empresa unaEmpresa){
+        if((montoMin < unaEmpresa.getVentasAnuales() && unaEmpresa.getVentasAnuales() <= montoMax)
+                || (personalMin < unaEmpresa.getCantidadDePersonal() && unaEmpresa.getCantidadDePersonal() <= personalMax)) return true;
+        else return false;
     }
 
     public Sector getSector() {
@@ -40,16 +45,4 @@ public class Categoria {
     public String getNombre(){
         return nombre;
     }
-/*
-    public static void addCategoriaExistente(String key, Integer value) {
-        categoriasExistentes.put(key, value);
-    }
-
-    public static void removeCategoriaExistente(String key){
-        categoriasExistentes.remove(key);
-    }
-
-    public Integer getCategoriaLevel(){
-        return categoriasExistentes.get(nombre);
-    }*/
 }
