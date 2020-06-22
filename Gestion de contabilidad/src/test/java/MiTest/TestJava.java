@@ -2,19 +2,11 @@ package MiTest;
 
 import CategorizadorDeEmpresas.Sector;
 import DatosDeOperaciones.*;
-import Exceptions.contraseniaCorta;
-import Exceptions.contraseniaMuyComun;
-import Exceptions.repiteContraseniaEnMailOUsuario;
-import Operaciones.Egreso;
-import CategorizadorDeEmpresas.Categoria;
-import Organizacion.Empresa;
-import Organizacion.Osc;
-import Usuarios.Administrador;
-import Usuarios.Estandar;
-import Usuarios.Usuario;
-import ValidadorDeContrasenia.ValidarIgualAMailOUsuario;
-import ValidadorDeContrasenia.ValidarLongitudCorta;
-import ValidadorDeContrasenia.ValidarTop10k;
+import Exceptions.*;
+import Operaciones.*;
+import Organizacion.*;
+import Usuarios.*;
+import ValidadorDeContrasenia.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -68,7 +60,7 @@ public class TestJava {
         Empresa manaos = new Empresa(12,130000,"SUMINISTRO DE AGUA",servicios);
         Egreso unaCompra = new Egreso(unDocumento,efectivo,lautaro,manaos,RAMs,placasDeVideo);
 
-        Assert.assertEquals(15000,unaCompra.valorTotal(),0);
+        Assert.assertEquals(13000,unaCompra.valorTotal(),0);
     }
     @Test
     public void testUsuarios(){

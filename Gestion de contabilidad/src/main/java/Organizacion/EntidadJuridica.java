@@ -10,7 +10,6 @@ public class EntidadJuridica extends Organizacion {
     private int cuit;
     private int direccionPostal;
     private int codigoDeInscripcionDefinitivaEnIGJ;
-
     private List<EntidadBase> entidadesBase;
     private Estandar usuario;
 

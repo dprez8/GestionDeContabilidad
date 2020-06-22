@@ -2,7 +2,7 @@ package DatosDeOperaciones;
 
 import java.util.Date;
 
-public class DocumentoComercial {
+public class DocumentoComercial{
     private TipoDocumento tipo;
     private int numDocumento;
     private Date fechaDePedido;

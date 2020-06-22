@@ -5,6 +5,8 @@ import CategorizadorDeEmpresas.*;
 
 import java.util.Optional;
 
+import Operaciones.Operacion;
+
 public class Empresa extends EntidadJuridica{
     private int cantidadDePersonal;
     private double ventasAnuales;

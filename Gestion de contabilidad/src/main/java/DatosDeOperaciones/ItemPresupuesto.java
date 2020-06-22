@@ -15,4 +15,15 @@ public class ItemPresupuesto {
     public double valorTotal(){
         return this.cantidad * this.precio;
     }
+    
+    public int getCantidad() {
+		return cantidad;
+	}
+
+	public double getPrecio() {
+		return precio;
+	}
+	public Producto getProducto() {
+		return producto;
+	}
 }
