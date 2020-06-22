@@ -62,10 +62,15 @@ public class Egreso extends Operacion {
     public void agregarPresupuestos (Presupuesto ... presupuesto) {
         Collections.addAll(this.presupuestos, presupuesto);
     }
-    
+
+    public void darseDeAltaRevisor(Estandar revisor) {
+
+	}
     public void agregarRevisor(Estandar ... revisor) {
-        Collections.addAll(this.revisores, revisor);
+		Collections.addAll(this.revisores, revisor);
     }
+
+    public List<Estandar> obtenerRevisores(){ return this.revisores;}
 
     public double valorTotal () {
         return  items.stream().collect(Collectors.summingDouble(unItem->unItem.valorTotal()));

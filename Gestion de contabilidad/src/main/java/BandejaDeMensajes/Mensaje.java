@@ -14,9 +14,3 @@ public class Mensaje{
         this.cuerpo = cuerpo;
     }
 }
-
-class OrdenarPorFecha implements Comparator<Mensaje> {
-    public int compare(Mensaje msgA, Mensaje msgB){
-        return msgA.fecha.compareTo(msgB.fecha);
-    }
-}

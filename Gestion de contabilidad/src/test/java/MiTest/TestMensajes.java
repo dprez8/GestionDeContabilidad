@@ -3,6 +3,7 @@ package MiTest;
 import BandejaDeMensajes.BandejaDeMensajes;
 import Operaciones.Egreso;
 import Organizacion.Empresa;
+import Usuarios.Estandar;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -13,7 +14,7 @@ import java.util.logging.SimpleFormatter;
 
 public class TestMensajes{
     @Test
-    public void testMensaje() throws Exception{
+    public void OrdernarMensajes() throws Exception{
 
         BandejaDeMensajes bandeja = new BandejaDeMensajes();
 
@@ -25,11 +26,22 @@ public class TestMensajes{
         bandeja.crearMensaje(hoy, "Mensaje hoy");
         bandeja.crearMensaje(anteayer, "Mensaje anteayer");
 
-        bandeja.printMsgs();
+        bandeja.imprimirMensajes();
 
-        bandeja.ordenarPorFecha();
+        bandeja.ordenarPorFechaRecientePrimero();
 
-        bandeja.printMsgs();
+        System.out.println("\nOrdenados por mas reciente primero");
+        bandeja.imprimirMensajes();
+
+        bandeja.ordenarPorFechaRecienteUltimo();
+
+        System.out.println("\nOrdenados por mas reciente último");
+        bandeja.imprimirMensajes();
+    }
+
+    @Test
+    public void ValidacionesYMensajes() throws Exception{
+        
 
     }
 }

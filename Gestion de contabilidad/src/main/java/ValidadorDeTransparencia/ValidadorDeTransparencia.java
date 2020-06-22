@@ -2,6 +2,7 @@ package ValidadorDeTransparencia;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import Operaciones.Egreso;
@@ -23,8 +24,14 @@ public class ValidadorDeTransparencia {
 	
 	
 	public void validarEgreso (Egreso egreso) {
-        validaciones.forEach(validador->validador.validarEgreso(egreso));
-        // Retorna la sumatoria del precio de cada item del egreso
+
+        boolean resultadoDeValidacion = validaciones.stream().allMatch(validador->validador.validarEgreso(egreso));
+
+        if(resultadoDeValidacion){
+			egreso.obtenerRevisores().forEach(revisor -> revisor.crearMensaje(new Date(), "Se validó correctamente el egreso"));
+		} else {
+			egreso.obtenerRevisores().forEach(revisor -> revisor.crearMensaje(new Date(), "No se validó el egreso"));
+		}
     }
 	
 	
