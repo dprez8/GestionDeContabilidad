@@ -1,5 +1,7 @@
 package ValidadorTransparencia;
 
+import DatosDeOperaciones.ItemEgreso;
+import DatosDeOperaciones.ItemPresupuesto;
 import Operaciones.Egreso;
 import Operaciones.Presupuesto;
 
@@ -23,9 +25,23 @@ public abstract class ValidacionDeTransparencia {
 
 	public boolean compararEgresoPresupuesto(Egreso egreso,Presupuesto presupuesto){
 	
-	return  (egreso.getItems().equals(presupuesto.getItems())) &&
-		    (egreso.equals(presupuesto.getEgresoAsociado()));
-		    //&&(egreso.getProveedor().equals(presupuesto.getProveedor()));    
+		int datosIguales =0;
+		
+		for(int i=0;i>egreso.getItems().size();i++){
+			ItemEgreso itemEgreso=egreso.getItems().get(i);
+			ItemPresupuesto itemPresupuesto=presupuesto.getItems().get(i);
+	
+			if ((itemEgreso.getPrecio() == itemPresupuesto.getPrecio()) && 
+				(itemEgreso.getCantidad() == itemPresupuesto.getCantidad()) &&
+				(itemEgreso.getProducto().equals(itemPresupuesto.getProducto())))
+				datosIguales++;
+		}	
+		
+		if(datosIguales==egreso.getItems().size())
+			return true;
+		else
+			return  false;
+  
 	}
 }
 
