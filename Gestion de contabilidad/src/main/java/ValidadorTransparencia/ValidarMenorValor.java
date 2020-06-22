@@ -1,4 +1,4 @@
-package ValidadorDeTransparencia;
+package ValidadorTransparencia;
 
 import Operaciones.Egreso;
 import Operaciones.Presupuesto;

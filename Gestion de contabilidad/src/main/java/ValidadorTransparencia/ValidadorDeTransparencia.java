@@ -1,4 +1,4 @@
-package ValidadorDeTransparencia;
+package ValidadorTransparencia;
 
 import java.util.ArrayList;
 import java.util.Collections;
