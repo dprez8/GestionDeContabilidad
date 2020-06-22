@@ -3,6 +3,7 @@ package Organizacion;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import Operaciones.*;
 
@@ -19,12 +20,17 @@ public abstract class Organizacion {
 	public List<Operacion> getOperaciones() {
 		return operaciones;
 	}
+
+	/**Obtengo la lista de egresos que son subtipos de operaciones */
 	public List<Egreso> getEgresos() {
-		return egresos;
+		return operaciones.stream()
+				.filter(Egreso.class::isInstance)
+				.map(Egreso.class::cast)
+				.collect(Collectors.toList());
 	}
 	
 	public Stream<Egreso> egresosNoValidados(){
-		return egresos.stream().filter(egresoAValidar->!egresoAValidar.isValidado());
+		return getEgresos().stream().filter(egresoAValidar->!egresoAValidar.isValidado());
 	}
 
 }
