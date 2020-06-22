@@ -26,17 +26,16 @@ public class ValidadorDeTransparencia {
 	public void validarEgreso (Egreso egreso) {
 		validaciones.forEach(validador->validador.validarEgreso(egreso));
         if(egreso.cantidadValidaciones()==validaciones.size()) //Si el egreso paso todas las validaciones no se vuelve a validar
-        	egreso.validado();
-        else
-        	egreso.reiniciarValidaciones(); //esto permite volver a validar el egreso si no paso las pruebas
+        	egreso.validar();
+        egreso.yaVerificado();
     }
 	
-	public Stream<Egreso> egresosNoValidados (Egreso ... egreso) {
-		return Arrays.asList(egreso).stream().filter(elementoEgreso->!validado(elementoEgreso));
+	public Stream<Egreso> egresosNoVerificados (Egreso ... egreso) {
+		return Arrays.asList(egreso).stream().filter(elementoEgreso->!egresoVerificado(elementoEgreso));
     }
 	
-	public boolean validado(Egreso egreso){
-		return egreso.isValidado();
+	public boolean egresoVerificado(Egreso egreso){
+		return egreso.fueVerificado();
 	}
 	
 	public void cargarValidacion(ValidacionDeTransparencia ... nuevasValidaciones){

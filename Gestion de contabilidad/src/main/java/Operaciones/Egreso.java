@@ -21,8 +21,9 @@ public class Egreso extends Operacion {
 	private Proveedor proveedor;
 	private List<Presupuesto> presupuestos = new ArrayList<>();
 	private List<Estandar> revisores = new ArrayList<>();
-	private boolean validado;
+	private boolean pasoValidaciones;
 	private int validaciones;
+	private boolean fueVerificado;
 
 	public Egreso(DocumentoComercial documento,
 				  MedioDePago medioDePago, Proveedor proveedor, Organizacion organizacion,
@@ -33,8 +34,9 @@ public class Egreso extends Operacion {
 		this.proveedor = proveedor;
 		this.organizacion = organizacion;
 		this.agregarItems(items);
-		this.validado=false;
-		this.validaciones=0;
+		this.pasoValidaciones=false; //si paso todas las validadiones
+		this.validaciones=0; //contador de validaciones pasadas
+		this.fueVerificado=false; //indica si el validador ya fue sometido a las validaciones
 	}
 
     public List<Presupuesto> getPresupuestos() {
@@ -58,13 +60,18 @@ public class Egreso extends Operacion {
 		return validaciones;
 	}
 
-	public boolean isValidado() {
-		return validado;
+	public void validar(){
+		this.pasoValidaciones=true;
 	}
-	public void validado(){
-		this.validado=true;
+	
+	public boolean fueVerificado(){
+		return fueVerificado;
 	}
-
+	
+	public void yaVerificado(){
+		fueVerificado=true;
+	}
+	
 	public void agregarItems (ItemEgreso ... unosItems) {
         Collections.addAll(this.items, unosItems);
     }

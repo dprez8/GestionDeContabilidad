@@ -23,8 +23,8 @@ public abstract class Organizacion {
 		return egresos;
 	}
 	
-	public Stream<Egreso> egresosNoValidados(){
-		return egresos.stream().filter(egresoAValidar->!egresoAValidar.isValidado());
+	public Stream<Egreso> egresosNoVerificados(){
+		return egresos.stream().filter(egresoAValidar->!egresoAValidar.fueVerificado());
 	}
 
 }

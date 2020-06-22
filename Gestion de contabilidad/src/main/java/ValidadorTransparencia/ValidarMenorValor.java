@@ -22,7 +22,9 @@ public class ValidarMenorValor extends ValidacionDeTransparencia{
 			}
 			if(minimoPresupuesto==obtenerPresupuestoElegido(egreso).total()) {
 				egreso.pasoValidacion();
-				return true;}		}
+				return true;}		
+			}
+		
 		//mostrar el resultado de la validacion en la bandeja de mensajes
 		return false;
 	}
