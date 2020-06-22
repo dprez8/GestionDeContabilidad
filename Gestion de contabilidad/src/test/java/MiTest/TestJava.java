@@ -3,7 +3,6 @@ package MiTest;
 import DatosDeOperaciones.*;
 import Exceptions.*;
 import Operaciones.*;
-import ValidadorDeTransparencia.*;
 import Organizacion.*;
 import Usuarios.*;
 import ValidadorDeContrasenia.*;
