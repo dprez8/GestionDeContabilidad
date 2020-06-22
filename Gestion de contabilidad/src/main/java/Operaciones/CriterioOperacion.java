@@ -25,7 +25,4 @@ public class CriterioOperacion {
     public void setCriterioPadre(CriterioOperacion critOperacion){
         criterioPadre = critOperacion;
     }
-
-    public void aplicarCriterio(){}    //que reciba de parametro algun tipo generico
-
 }
