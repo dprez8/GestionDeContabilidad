@@ -1,8 +1,8 @@
-package Operaciones;
+package ValidadorDeTransparencia;
 import java.util.stream.Stream;
 
+import Operaciones.Egreso;
 import Organizacion.*;
-import ValidadorDeTransparencia.ValidadorDeTransparencia;
 
 public class Scheduler implements Runnable{
 	private Organizacion organizacion;
@@ -24,7 +24,7 @@ public class Scheduler implements Runnable{
 				e.printStackTrace(); //seria bueno algo mas descriptivo
 			}
 			Stream<Egreso> egresos=organizacion.egresosNoValidados(); //Lo egresos que no han sido validados o no pasaron las pruebas anteriormente
-			egresos.forEach(egreso->validador.validarEgreso(egreso)); //valida cada uno de los egresos que no se habian validado	
+			//egresos.forEach(egreso->validador.validarEgreso(egreso,validaciones)); //valida cada uno de los egresos que no se habian validado
 		}
 	}
 }

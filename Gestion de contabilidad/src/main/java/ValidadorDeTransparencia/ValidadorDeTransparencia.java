@@ -22,11 +22,9 @@ public class ValidadorDeTransparencia {
 	public ValidadorDeTransparencia(ValidacionDeTransparencia ... validations) {
 		cargarValidacion(validations);
 	}
-	
-	
-	public void validarEgreso (Egreso egreso) {
-       
-		validaciones.forEach(validador->validador.validarEgreso(egreso));
+
+	public void validarEgreso (Egreso egreso,ValidacionDeTransparencia ... unasValidaciones) {
+		Arrays.asList(unasValidaciones).forEach(validador->validador.validarEgreso(egreso));
         if(egreso.cantidadValidaciones()==validaciones.size()) //Si el egreso paso todas las validaciones no se vuelve a validar
         	egreso.validado();
         else

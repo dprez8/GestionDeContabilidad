@@ -5,10 +5,8 @@ import Operaciones.Presupuesto;
 
 public abstract class ValidacionDeTransparencia {
 
-	public boolean validarEgreso(Egreso egreso){
-		return false;
-	}
-	
+	public abstract void validarEgreso(Egreso egreso);
+
 	public boolean coincidePresupuesto(Egreso egreso){
 		return egreso.getPresupuestos().stream().anyMatch(presupuesto->this.compararEgresoPresupuesto(egreso, presupuesto));
 	}
