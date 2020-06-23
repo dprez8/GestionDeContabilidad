@@ -23,9 +23,6 @@ public class Estandar extends Usuario {
 		this.bandejaDeMensajes = new BandejaDeMensajes();
 	}
 
-	public void crearMensaje(Date fecha, String cuerpo){
-		this.bandejaDeMensajes.crearMensaje(fecha, cuerpo);
-	}
 	public void verMensajes(){ this.bandejaDeMensajes.mostrarTodosLosMensajes(); }
 
 	public Egreso darAltaEgreso(DocumentoComercial documentoComercial, MedioDePago medioDePago,
@@ -35,6 +32,10 @@ public class Estandar extends Usuario {
 
 		miOrganizacion.agregarOperaciones(egreso);
 		return egreso;
+	}
+
+	public BandejaDeMensajes getBandejaDeMensajes() {
+		return bandejaDeMensajes;
 	}
 }
 

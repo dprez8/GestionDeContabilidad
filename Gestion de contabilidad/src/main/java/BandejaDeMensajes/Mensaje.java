@@ -4,15 +4,29 @@ import java.util.Comparator;
 import java.util.Date;
 
 public class Mensaje{
-    public Date fecha;
-    public boolean leido;
-    public String cuerpo;
+    private Date fecha;
+    private boolean leido;
+    private String cuerpo;
 
-    // Cuando creamos un mensaje, le pasamos una fecha por temas de testing
-
-    public Mensaje(Date fecha, String cuerpo){
-        this.fecha = fecha;
+    public Mensaje(String cuerpo){
+        this.fecha = new Date();
         this.leido = false;
         this.cuerpo = cuerpo;
+    }
+
+    public boolean isLeido() {
+        return leido;
+    }
+
+    public void setLeido(boolean leido) {
+        this.leido = leido;
+    }
+
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public String getCuerpo() {
+        return cuerpo;
     }
 }

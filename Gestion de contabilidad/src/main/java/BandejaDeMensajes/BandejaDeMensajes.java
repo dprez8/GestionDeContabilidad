@@ -2,6 +2,7 @@ package BandejaDeMensajes;
 
 import java.util.*;
 import java.io.FileInputStream;
+import java.util.stream.Collectors;
 
 public class BandejaDeMensajes{
     private List<Mensaje> mensajes;
@@ -12,8 +13,8 @@ public class BandejaDeMensajes{
         OrdenarPorFecha = new OrdenarPorFecha();
     }
 
-    public void crearMensaje(Date fecha, String cuerpo){
-        Mensaje msg = new Mensaje(fecha, cuerpo);
+    public void crearMensaje(String cuerpo){
+        Mensaje msg = new Mensaje(cuerpo);
         mensajes.add(msg);
     }
     public void ordenarPorFechaRecienteUltimo(){
@@ -23,49 +24,28 @@ public class BandejaDeMensajes{
         Collections.sort(mensajes, OrdenarPorFecha);
         Collections.reverse(mensajes);
     }
-    public void filtrarPorLeido(boolean leido){
-        if(leido)
-            System.out.println("Mostrando mensajes leidos...");
-        else
-            System.out.println("Mostrando mensajes no leidos...");
-
-        for (int i = 0; i < this.mensajes.size(); i++) {
-
-            if(this.mensajes.get(i).leido == leido){
-                mostrarUnMensaje(mensajes.get(i));
-                this.mensajes.get(i).leido = true;
-            }
-        }
+    public List<Mensaje> filtrarPorLeido(boolean leido){
+        return mensajes.stream().filter(a->a.isLeido()==leido).collect(Collectors.toList());
     }
-    public void filtrarPorFecha(Date fecha){
-
-        System.out.printf("Mostrando los mensajes del día  %td/%tm/%ty...\n", fecha, fecha, fecha);
-
-        for (int i = 0; i < this.mensajes.size(); i++) {
-
-            if(this.mensajes.get(i).fecha.equals(fecha)){
-                mostrarUnMensaje(mensajes.get(i));
-                this.mensajes.get(i).leido = true;
-            }
-        }
+    public List<Mensaje> filtrarPorFecha(Date fecha){
+//        System.out.printf("Mostrando los mensajes del día  %td/%tm/%ty...\n", fecha, fecha, fecha); //solo se filtran no se deberia mostrar, al menos no en esta funcion
+        return mensajes.stream().filter(a->a.getFecha().equals(fecha)).collect(Collectors.toList());
     }
+//    public void mostrarMensajesDeXLista(List<Mensaje> unaListaDeMensajes){
+//        unaListaDeMensajes.forEach(a->mostrarUnMensaje(a));
+//    }
     public void mostrarTodosLosMensajes(){
         System.out.println("Mostrando todos los mensajes...");
-        for (int i = 0; i < this.mensajes.size(); i++) {
-            mostrarUnMensaje(mensajes.get(i));
-        }
+        mensajes.forEach(a->mostrarUnMensaje(a));
     }
     public void mostrarUnMensaje(Mensaje mensaje){
-        String leido = "sin leer";
-        if(mensaje.leido)
-            leido = "leido";
-
-        System.out.printf("[%td/%tm/%ty] [%s] %s\n", mensaje.fecha, mensaje.fecha, mensaje.fecha, leido, mensaje.cuerpo);
+        System.out.printf("[%td/%tm/%ty] [leido: %s] %s\n", mensaje.getFecha(), mensaje.getFecha(), mensaje.getFecha(), mensaje.isLeido(), mensaje.getCuerpo());
+        mensaje.setLeido(true);
     }
 }
 
 class OrdenarPorFecha implements Comparator<Mensaje> {
     public int compare(Mensaje msgA, Mensaje msgB){
-        return msgA.fecha.compareTo(msgB.fecha);
+        return msgA.getFecha().compareTo(msgB.getFecha());
     }
 }
