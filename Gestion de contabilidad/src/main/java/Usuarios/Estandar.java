@@ -25,10 +25,10 @@ public class Estandar extends Usuario {
 
 	public void verMensajes(){ this.bandejaDeMensajes.mostrarTodosLosMensajes(); }
 
-	public Egreso darAltaEgreso(DocumentoComercial documentoComercial, MedioDePago medioDePago,
+	public Egreso darAltaEgreso(int operacionNumero, DocumentoComercial documentoComercial, MedioDePago medioDePago,
 							  Proveedor proveedor, ItemEgreso ... items) {
 		// Ingresar a la base de datos el egreso
-		Egreso egreso = new Egreso(documentoComercial, medioDePago, proveedor, this.miOrganizacion, items);
+		Egreso egreso = new Egreso(operacionNumero, documentoComercial, medioDePago, proveedor, this.miOrganizacion, items);
 
 		miOrganizacion.agregarOperaciones(egreso);
 		return egreso;

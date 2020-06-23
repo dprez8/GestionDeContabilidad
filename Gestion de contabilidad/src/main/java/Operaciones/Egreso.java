@@ -14,7 +14,6 @@ import Organizacion.EntidadJuridica;
 import Organizacion.Organizacion;
 
 public class Egreso extends Operacion {
-	
 	private DocumentoComercial documento;
 	private List<ItemEgreso> items = new ArrayList<>();
 	private MedioDePago medioDePago;
@@ -25,9 +24,10 @@ public class Egreso extends Operacion {
 	private CategoriaOperacion categoria;
 	private boolean validado;
 
-	public Egreso(DocumentoComercial documento,
+	public Egreso(int operacionNumero, DocumentoComercial documento,
 				  MedioDePago medioDePago, Proveedor proveedor, Organizacion organizacion,
 				  ItemEgreso ...items) {
+		this.operacionNumero = operacionNumero;
 		this.fechaOperacion = new Date();
 		this.documento = documento;
 		this.medioDePago = medioDePago;
@@ -90,5 +90,9 @@ public class Egreso extends Operacion {
 
 	public void setValidado(boolean validado) {
 		this.validado = validado;
+	}
+
+	public int getOperacionNumero() {
+		return operacionNumero;
 	}
 }

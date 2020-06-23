@@ -37,7 +37,7 @@ public class TestOperaciones {
     public void testEgreso(){
 
         Empresa manaos = new Empresa(12,130000,"SUMINISTRO DE AGUA",servicios);
-        Egreso unaCompra = new Egreso(unDocumento,efectivo,lautaro,manaos,RAMs,placasDeVideo);
+        Egreso unaCompra = new Egreso(100, unDocumento,efectivo,lautaro,manaos,RAMs,placasDeVideo);
 
         Assert.assertEquals(13000,unaCompra.valorTotal(),0);
     }

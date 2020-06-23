@@ -10,9 +10,16 @@ public class ValidarConPresupuesto extends ValidacionDeTransparencia {
 
 	@Override
 	public boolean validarEgreso(Egreso egreso, Presupuesto presupuesto){
-		return coincideProveedor(egreso,presupuesto)
-				&& coincideItems(egreso,presupuesto)
-				&& coincideDocumentoComercial(egreso,presupuesto);
+		if(coincideProveedor(egreso,presupuesto) && coincideItems(egreso,presupuesto) && coincideDocumentoComercial(egreso,presupuesto)) {
+			egreso.obtenerRevisores().forEach(revisor -> revisor.getBandejaDeMensajes().
+					crearMensaje(String.format("El egreso: %d y el presupuesto: %d paso ValidarConPresupuesto", egreso.getOperacionNumero(), presupuesto.getOperacionNumero())));
+			return true;
+		}
+		else {
+			egreso.obtenerRevisores().forEach(revisor -> revisor.getBandejaDeMensajes().
+					crearMensaje(String.format("El egreso: %d y el presupuesto: %d no paso ValidarConPresupuesto", egreso.getOperacionNumero(), presupuesto.getOperacionNumero())));
+			return false;
+		}
 	}
 
 	private boolean coincideProveedor(Egreso egreso,Presupuesto presupuesto){

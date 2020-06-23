@@ -10,5 +10,6 @@ import Usuarios.*;
 public abstract class Operacion {
 	protected Date fechaOperacion;
 	protected Organizacion organizacion;
+	protected int operacionNumero;
 
 }

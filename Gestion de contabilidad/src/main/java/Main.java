@@ -42,7 +42,7 @@ public class Main {
         Proveedor lautaroRobles = new Proveedor("Lautaro Robles", 41424242, 1823);
         Proveedor lautaroIturregui = new Proveedor("Lautaro Iturregui", 2224222, 1853);
 
-        Egreso unaCompra = new Egreso(unDocumento, efectivo, lautaroRobles, miPyme, RAMs, placasDeVideo);
+        Egreso unaCompra = new Egreso(100, unDocumento, efectivo, lautaroRobles, miPyme, RAMs, placasDeVideo);
 
         ItemPresupuesto RAMpresupuesto = new ItemPresupuesto(RAM, RAMs, 1, 3000);
         ItemPresupuesto placaVideoPresupuesto = new ItemPresupuesto(placaDeVideo, placasDeVideo, 2, 5000);
@@ -50,8 +50,8 @@ public class Main {
         ItemPresupuesto RAM2presupuesto = new ItemPresupuesto(RAM, RAMs, 1, 3500);
         ItemPresupuesto placaVide2Presupuesto = new ItemPresupuesto(placaDeVideo, placasDeVideo, 2, 6000);
 
-        Presupuesto primerPresupuesto = new Presupuesto(unaCompra, unDocumento, "31/01/20", lautaroRobles, RAMpresupuesto, placaVideoPresupuesto);
-        Presupuesto segundoPresupuesto = new Presupuesto(unaCompra, unDocumento, "1/02/20", lautaroIturregui, RAM2presupuesto, placaVide2Presupuesto);
+        Presupuesto primerPresupuesto = new Presupuesto(4000, unaCompra, unDocumento, "31/01/20", lautaroRobles, RAMpresupuesto, placaVideoPresupuesto);
+        Presupuesto segundoPresupuesto = new Presupuesto(4210, unaCompra, unDocumento, "1/02/20", lautaroIturregui, RAM2presupuesto, placaVide2Presupuesto);
 
         unaCompra.agregarPresupuestos(primerPresupuesto,segundoPresupuesto);
         miPyme.agregarOperaciones(unaCompra);

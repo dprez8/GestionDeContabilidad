@@ -10,6 +10,7 @@ import DatosDeOperaciones.ItemPresupuesto;
 import DatosDeOperaciones.Proveedor;
 
 public class Presupuesto {
+    private int operacionNumero;
     private List<ItemPresupuesto> items = new ArrayList<>();
     private Egreso egresoAsociado;
     private DocumentoComercial documento;
@@ -18,7 +19,8 @@ public class Presupuesto {
     private Proveedor proveedor;
     
 
-    public Presupuesto(Egreso unEgreso,DocumentoComercial unDocumento,String fechaVigente,Proveedor unProveedor,ItemPresupuesto ... items){
+    public Presupuesto(int operacionNumero, Egreso unEgreso,DocumentoComercial unDocumento,String fechaVigente,Proveedor unProveedor,ItemPresupuesto ... items){
+        this.operacionNumero = operacionNumero;
         this.egresoAsociado = unEgreso;
         this.documento = unDocumento;
         this.fechaVigente = fechaVigente;
@@ -59,5 +61,7 @@ public class Presupuesto {
         return proveedor;
     }
 
-
+    public int getOperacionNumero() {
+        return operacionNumero;
+    }
 }
