@@ -23,6 +23,7 @@ public class Egreso extends Operacion {
 	private List<Estandar> revisores = new ArrayList<>();
 	private Ingreso ingresoAsociado;
 	private CategoriaOperacion categoria;
+	private boolean validado;
 
 	public Egreso(DocumentoComercial documento,
 				  MedioDePago medioDePago, Proveedor proveedor, Organizacion organizacion,
@@ -32,6 +33,7 @@ public class Egreso extends Operacion {
 		this.medioDePago = medioDePago;
 		this.proveedor = proveedor;
 		this.organizacion = organizacion;
+		this.validado = false;
 		this.agregarItems(items);
 	}
 
@@ -80,5 +82,9 @@ public class Egreso extends Operacion {
 
 	public void setIngresoAsociado(Ingreso ingreso) {
 		this.ingresoAsociado = ingreso;
+	}
+
+	public boolean isValidado() {
+		return validado;
 	}
 }
