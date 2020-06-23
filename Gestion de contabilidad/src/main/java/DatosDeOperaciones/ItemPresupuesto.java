@@ -26,4 +26,7 @@ public class ItemPresupuesto {
 	public Producto getProducto() {
 		return producto;
 	}
+    public ItemEgreso getItemEgresoAsociado() {
+        return itemEgresoAsociado;
+    }
 }

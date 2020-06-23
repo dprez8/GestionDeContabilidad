@@ -10,17 +10,7 @@ public class ValidarCantidadMinima extends ValidacionDeTransparencia{
 	}
 	
 	public boolean validarEgreso(Egreso egreso){
-		
-		//mostrar el resultado de la validacion en la bandeja de mensajes
-		
-		boolean tieneMinima= egreso.getPresupuestos().size()>=cantidadMinimaDePresupuestos;
-	
-		if(tieneMinima){
-			egreso.pasoValidacion();
-			return true;
-		}
-		else
-			return false;
+		return egreso.getPresupuestos().size()>=this.cantidadMinimaDePresupuestos;
 	}
 	
 }

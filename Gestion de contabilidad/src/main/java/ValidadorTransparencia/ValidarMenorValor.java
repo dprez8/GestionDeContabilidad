@@ -7,7 +7,6 @@ public class ValidarMenorValor extends ValidacionDeTransparencia{
 	@Override
 	public boolean validarEgreso(Egreso egreso){
 
-
 		if(coincidePresupuesto(egreso)) { //si existe un presupuesto que coincida se procede
 
 			Double minimoPresupuesto = null;
