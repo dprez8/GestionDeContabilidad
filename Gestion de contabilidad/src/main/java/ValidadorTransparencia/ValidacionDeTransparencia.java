@@ -5,7 +5,7 @@ import Operaciones.Presupuesto;
 
 public abstract class ValidacionDeTransparencia {
 
-	public boolean validarEgreso(Egreso egreso){
+	public boolean validarEgreso(Egreso egreso, Presupuesto presupuesto){
 		return false;
 	}
 	

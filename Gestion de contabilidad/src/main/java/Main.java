@@ -1,45 +1,20 @@
-package MiTest;
-
-import BandejaDeMensajes.BandejaDeMensajes;
 import CategorizadorDeEmpresas.Sector;
 import DatosDeOperaciones.*;
-import ValidadorTransparencia.*;
 import Operaciones.Egreso;
 import Operaciones.Presupuesto;
 import Organizacion.Empresa;
 import Usuarios.Estandar;
-import org.junit.Assert;
-import org.junit.Test;
+import ValidadorTransparencia.*;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.logging.SimpleFormatter;
+import java.util.Date;
+import java.util.Properties;
+import java.util.Timer;
 
-public class TestMensajes{
-
-    @Test
-    public void OrdernarMensajes() throws Exception{
-
-        BandejaDeMensajes bandeja = new BandejaDeMensajes();
-
-        Date hoy = new Date();
-        Date ayer = new SimpleDateFormat("dd/MM/yyyy").parse("21/6/2020");
-        Date anteayer = new SimpleDateFormat("dd/MM/yyyy").parse("20/6/2020");
-
-        bandeja.crearMensaje(ayer, "Mensaje ayer");
-        bandeja.crearMensaje(hoy, "Mensaje hoy");
-        bandeja.crearMensaje(anteayer, "Mensaje anteayer");
-
-        bandeja.filtrarPorFecha(ayer);
-        bandeja.filtrarPorLeido(false);
-        bandeja.mostrarTodosLosMensajes();
-    }
-
-    @Test
-    public void ValidacionesYMensajes() throws Exception {
+public class Main {
+    public static void main(String[] args) throws Exception {
 
         Sector construccion = new Sector("Construccion");
         Empresa miPyme = new Empresa(3,5000003.0,"Construccion",construccion);
@@ -48,7 +23,7 @@ public class TestMensajes{
         ValidarConPresupuesto validacionPresupuesto = new ValidarConPresupuesto();
         ValidarMenorValor validacionMenorValor = new ValidarMenorValor();
 
-        ValidadorDeTransparencia validador = new ValidadorDeTransparencia(validacionMenorValor, validacionMinima, validacionPresupuesto);
+        ValidadorDeTransparencia validador = new ValidadorDeTransparencia(validacionMenorValor, validacionPresupuesto, validacionMinima);
 
         Producto RAM = new Producto("Memoria RAM 4 gb DDR3");
         ItemEgreso RAMs = new ItemEgreso(RAM, 1, 3000);
@@ -85,9 +60,13 @@ public class TestMensajes{
 
         unaCompra.agregarRevisor(unUsuario);
 
-        List<Egreso> egresos = miPyme.getEgresos(); //Lo egresos que no han sido validados o no pasaron las pruebas anteriormente
-        egresos.forEach(egreso -> validador.validarEgreso(egreso));
+        lanzarHilo(miPyme, validador, unUsuario);
+    }
 
-        unUsuario.verMensajes();
+    /**Quizas esta parte pueda ir en la clase Schudeler*/
+    public static void lanzarHilo(Empresa miPyme, ValidadorDeTransparencia validador, Estandar unUsuario){
+        Scheduler hilo = new Scheduler(miPyme,validador, unUsuario);
+        Timer timer    = new Timer();
+        timer.schedule(hilo,0,5 * 1000); /**La instancia Scheduler llama a la funcion run con timer.schedule*/
     }
 }

@@ -33,8 +33,6 @@ public class Egreso extends Operacion {
 		this.proveedor = proveedor;
 		this.organizacion = organizacion;
 		this.agregarItems(items);
-		this.validado=false;
-		this.validaciones=0;
 	}
 
     public List<Presupuesto> getPresupuestos() {
@@ -52,17 +50,6 @@ public class Egreso extends Operacion {
 
 	public Proveedor getProveedor() {
 		return proveedor;
-	}
-	
-	public int cantidadValidaciones(){
-		return validaciones;
-	}
-
-	public boolean isValidado() {
-		return validado;
-	}
-	public void validado(){
-		this.validado=true;
 	}
 
 	public void agregarItems (ItemEgreso ... unosItems) {
@@ -82,7 +69,7 @@ public class Egreso extends Operacion {
 
     public List<Estandar> obtenerRevisores(){ return this.revisores;}
 
-    public double valorTotal () {
+    public Double valorTotal () {
         return  items.stream().collect(Collectors.summingDouble(unItem->unItem.valorTotal()));
         // Retorna la sumatoria del precio de cada item del egreso
     }

@@ -47,7 +47,7 @@ public class Presupuesto {
 	private void agregarItems (ItemPresupuesto ... unosItems) {
         Collections.addAll(this.items, unosItems);
     }
-    public double total(){
+    public Double valorTotal(){
         return items.stream().collect(Collectors.summingDouble(unItem->unItem.valorTotal()));
     }
 

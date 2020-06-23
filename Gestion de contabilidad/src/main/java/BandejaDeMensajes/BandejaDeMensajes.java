@@ -23,10 +23,44 @@ public class BandejaDeMensajes{
         Collections.sort(mensajes, OrdenarPorFecha);
         Collections.reverse(mensajes);
     }
-    public void imprimirMensajes(){
+    public void filtrarPorLeido(boolean leido){
+        if(leido)
+            System.out.println("Mostrando mensajes leidos...");
+        else
+            System.out.println("Mostrando mensajes no leidos...");
+
+        for (int i = 0; i < this.mensajes.size(); i++) {
+
+            if(this.mensajes.get(i).leido == leido){
+                mostrarUnMensaje(mensajes.get(i));
+                this.mensajes.get(i).leido = true;
+            }
+        }
+    }
+    public void filtrarPorFecha(Date fecha){
+
+        System.out.printf("Mostrando los mensajes del día  %td/%tm/%ty...\n", fecha, fecha, fecha);
+
+        for (int i = 0; i < this.mensajes.size(); i++) {
+
+            if(this.mensajes.get(i).fecha.equals(fecha)){
+                mostrarUnMensaje(mensajes.get(i));
+                this.mensajes.get(i).leido = true;
+            }
+        }
+    }
+    public void mostrarTodosLosMensajes(){
         System.out.println("Mostrando todos los mensajes...");
-        for (int i = 0; i < this.mensajes.size(); i++)
-            System.out.println(this.mensajes.get(i).cuerpo);
+        for (int i = 0; i < this.mensajes.size(); i++) {
+            mostrarUnMensaje(mensajes.get(i));
+        }
+    }
+    public void mostrarUnMensaje(Mensaje mensaje){
+        String leido = "sin leer";
+        if(mensaje.leido)
+            leido = "leido";
+
+        System.out.printf("[%td/%tm/%ty] [%s] %s\n", mensaje.fecha, mensaje.fecha, mensaje.fecha, leido, mensaje.cuerpo);
     }
 }
 
