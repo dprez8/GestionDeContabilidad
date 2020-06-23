@@ -68,5 +68,6 @@ public class Main {
         Scheduler hilo = new Scheduler(miPyme,validador);
         Timer timer    = new Timer();
         timer.schedule(hilo,0,5 * 1000); /**La instancia Scheduler llama a la funcion run con timer.schedule*/
+        /**vole el usuario que imprimia mensaje del schedule, hay que arreglarlo aca en el main**/
     }
 }
