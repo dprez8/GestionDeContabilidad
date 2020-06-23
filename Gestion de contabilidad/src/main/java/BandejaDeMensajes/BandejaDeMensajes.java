@@ -30,10 +30,8 @@ public class BandejaDeMensajes{
             System.out.println("Mostrando mensajes no leidos...");
 
         for (int i = 0; i < this.mensajes.size(); i++) {
-
             if(this.mensajes.get(i).leido == leido){
                 mostrarUnMensaje(mensajes.get(i));
-                this.mensajes.get(i).leido = true;
             }
         }
     }
@@ -45,7 +43,6 @@ public class BandejaDeMensajes{
 
             if(this.mensajes.get(i).fecha.equals(fecha)){
                 mostrarUnMensaje(mensajes.get(i));
-                this.mensajes.get(i).leido = true;
             }
         }
     }
@@ -59,6 +56,8 @@ public class BandejaDeMensajes{
         String leido = "sin leer";
         if(mensaje.leido)
             leido = "leido";
+        else
+            mensaje.leido = true;
 
         System.out.printf("[%td/%tm/%ty] [%s] %s\n", mensaje.fecha, mensaje.fecha, mensaje.fecha, leido, mensaje.cuerpo);
     }

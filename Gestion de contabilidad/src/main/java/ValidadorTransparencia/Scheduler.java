@@ -22,8 +22,8 @@ public class Scheduler extends TimerTask{
 		List<Egreso> egresos=organizacion.getEgresos(); //Lo egresos que no han sido validados o no pasaron las pruebas anteriormente
 		if(faltanEgresosPorValidar(egresos)){
 			egresos.forEach(egreso->validador.validarEgreso(egreso)); //valida cada uno de los egresos que no se habian validado
-			usuario.verMensajes();
 		}
+		usuario.verMensajes();
 	}
 
 	private boolean faltanEgresosPorValidar(List<Egreso> egresos){
