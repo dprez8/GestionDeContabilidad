@@ -60,12 +60,12 @@ public class Main {
 
         unaCompra.agregarRevisor(unUsuario);
 
-        lanzarHilo(miPyme, validador, unUsuario);
+        lanzarHilo(miPyme, validador);
     }
 
     /**Quizas esta parte pueda ir en la clase Schudeler*/
-    public static void lanzarHilo(Empresa miPyme, ValidadorDeTransparencia validador, Estandar unUsuario){
-        Scheduler hilo = new Scheduler(miPyme,validador, unUsuario);
+    public static void lanzarHilo(Empresa miPyme, ValidadorDeTransparencia validador){
+        Scheduler hilo = new Scheduler(miPyme,validador);
         Timer timer    = new Timer();
         timer.schedule(hilo,0,5 * 1000); /**La instancia Scheduler llama a la funcion run con timer.schedule*/
     }

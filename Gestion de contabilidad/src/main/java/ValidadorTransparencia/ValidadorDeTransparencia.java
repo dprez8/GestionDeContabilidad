@@ -30,6 +30,7 @@ public class ValidadorDeTransparencia {
 		);
 
         if(resultadoDeValidacion){
+        	egreso.setValidado(true);
 			egreso.obtenerRevisores().forEach(revisor -> revisor.getBandejaDeMensajes().crearMensaje("Se validó correctamente el egreso"));
 		} else {
 			egreso.obtenerRevisores().forEach(revisor -> revisor.getBandejaDeMensajes().crearMensaje("No se validó el egreso"));

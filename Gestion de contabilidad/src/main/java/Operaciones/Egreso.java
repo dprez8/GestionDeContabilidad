@@ -87,4 +87,8 @@ public class Egreso extends Operacion {
 	public boolean isValidado() {
 		return validado;
 	}
+
+	public void setValidado(boolean validado) {
+		this.validado = validado;
+	}
 }
