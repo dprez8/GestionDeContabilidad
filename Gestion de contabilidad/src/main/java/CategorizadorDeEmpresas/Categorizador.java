@@ -11,9 +11,6 @@ public class Categorizador {
     private List<Categoria> categorias = new ArrayList<>();
     private HashMap<String, Integer> categoriasExistentes = new HashMap<String, Integer>();
 
-    /**Guardo el stream filtrado en categoriaFiltrada y luego creo otra variable local de tipo
-       lista para "castear" el stream a una lista tipo categoria y asi poder entender el mensaje get(indice)
-        ya que la lista stream no entiende ese mensaje*/
     public Categoria obtenerCategoriaDe(Empresa unaEmpresa){
         List<Categoria> listaCategoriasFiltrada = this.categorias.stream().filter(a -> a.getSector().equals(unaEmpresa.getSector()))
                 .filter(a -> a.dentroDelMinMax(unaEmpresa)).collect(Collectors.toList());
