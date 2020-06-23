@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.Timer;
 
 public class ValidadorTransparencia {
+
     Empresa miPyme = new Empresa();
 
     ValidarCantidadMinima validacionMinima = new ValidarCantidadMinima(3);

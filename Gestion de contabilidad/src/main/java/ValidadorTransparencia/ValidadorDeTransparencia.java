@@ -18,7 +18,7 @@ public class ValidadorDeTransparencia {
 	}
 
 
-	public ValidadorDeTransparencia(ValidacionDeTransparencia validations) {
+	public ValidadorDeTransparencia(ValidacionDeTransparencia ... validations) {
 		cargarValidacion(validations);
 	}
 	
