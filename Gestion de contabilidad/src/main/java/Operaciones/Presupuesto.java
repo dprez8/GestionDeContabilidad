@@ -15,13 +15,14 @@ public class Presupuesto {
     private DocumentoComercial documento;
     private String fechaVigente;
     private CategoriaOperacion categoria;
-    //private Proveedor proveedor;
+    private Proveedor proveedor;
     
 
-    public Presupuesto(Egreso unEgreso,DocumentoComercial unDocumento,String fechaVigente,ItemPresupuesto ... items){
+    public Presupuesto(Egreso unEgreso,DocumentoComercial unDocumento,String fechaVigente,Proveedor unProveedor,ItemPresupuesto ... items){
         this.egresoAsociado = unEgreso;
         this.documento = unDocumento;
         this.fechaVigente = fechaVigente;
+        this.proveedor = unProveedor;
         this.agregarItems(items);
     }
     
@@ -46,11 +47,17 @@ public class Presupuesto {
 	private void agregarItems (ItemPresupuesto ... unosItems) {
         Collections.addAll(this.items, unosItems);
     }
-    public double total(){
+    public Double valorTotal(){
         return items.stream().collect(Collectors.summingDouble(unItem->unItem.valorTotal()));
     }
 
     public void setCategoria(CategoriaOperacion categoria) {
         this.categoria = categoria;
     }
+
+    public Proveedor getProveedor() {
+        return proveedor;
+    }
+
+
 }

@@ -1,6 +1,7 @@
 package ValidadorTransparencia;
 
 import Operaciones.Egreso;
+import Operaciones.Presupuesto;
 
 public class ValidarCantidadMinima extends ValidacionDeTransparencia{
 	private int cantidadMinimaDePresupuestos;
@@ -9,18 +10,8 @@ public class ValidarCantidadMinima extends ValidacionDeTransparencia{
 		this.cantidadMinimaDePresupuestos = cantidadMinimaDePresupuestos;
 	}
 	
-	public boolean validarEgreso(Egreso egreso){
-		
-		//mostrar el resultado de la validacion en la bandeja de mensajes
-		
-		boolean tieneMinima= egreso.getPresupuestos().size()>=cantidadMinimaDePresupuestos;
-	
-		if(tieneMinima){
-			egreso.pasoValidacion();
-			return true;
-		}
-		else
-			return false;
+	public boolean validarEgreso(Egreso egreso, Presupuesto presupuesto){
+		return egreso.getPresupuestos().size() >= this.cantidadMinimaDePresupuestos;
 	}
 	
 }

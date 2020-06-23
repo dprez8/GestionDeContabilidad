@@ -26,9 +26,5 @@ public abstract class Organizacion {
 				.map(Egreso.class::cast)
 				.collect(Collectors.toList());
 	}
-	
-	public Stream<Egreso> egresosNoValidados(){
-		return getEgresos().stream().filter(egresoAValidar->!egresoAValidar.isValidado());
-	}
 
 }

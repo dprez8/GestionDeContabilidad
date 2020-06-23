@@ -18,14 +18,16 @@ public class ValidadorDeTransparencia {
 	}
 
 
-	public ValidadorDeTransparencia(ValidacionDeTransparencia validations) {
+	public ValidadorDeTransparencia(ValidacionDeTransparencia ... validations) {
 		cargarValidacion(validations);
 	}
 	
 	
 	public void validarEgreso (Egreso egreso) {
 
-        boolean resultadoDeValidacion = validaciones.stream().allMatch(validador->validador.validarEgreso(egreso));
+		boolean resultadoDeValidacion = egreso.getPresupuestos().stream().anyMatch(
+				unPresupuesto -> validaciones.stream().allMatch(validador->validador.validarEgreso(egreso, unPresupuesto))
+		);
 
         if(resultadoDeValidacion){
 			egreso.obtenerRevisores().forEach(revisor -> revisor.crearMensaje(new Date(), "Se validó correctamente el egreso"));

@@ -26,6 +26,7 @@ public class Estandar extends Usuario {
 	public void crearMensaje(Date fecha, String cuerpo){
 		this.bandejaDeMensajes.crearMensaje(fecha, cuerpo);
 	}
+	public void verMensajes(){ this.bandejaDeMensajes.mostrarTodosLosMensajes(); }
 
 	public Egreso darAltaEgreso(DocumentoComercial documentoComercial, MedioDePago medioDePago,
 							  Proveedor proveedor, ItemEgreso ... items) {
