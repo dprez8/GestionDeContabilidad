@@ -9,9 +9,7 @@ import Operaciones.*;
 
 public abstract class Organizacion {
     protected String nombreFicticio;
-    protected List<Operacion> operaciones; 
-    protected List<Egreso> egresos;//no esta bien pero para simular el scheduler. Trato de a partir de la lista de operaciones
-    								//poder obtener unicamente los Egresos.
+    protected List<Operacion> operaciones;
 	
 	public void agregarOperaciones (Operacion ... unasOperaciones) {
         Collections.addAll(this.operaciones, unasOperaciones);
