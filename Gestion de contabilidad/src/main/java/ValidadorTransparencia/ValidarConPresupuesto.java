@@ -17,7 +17,7 @@ public class ValidarConPresupuesto extends ValidacionDeTransparencia {
 		}
 		else {
 			egreso.obtenerRevisores().forEach(revisor -> revisor.getBandejaDeMensajes().
-					crearMensaje(String.format("El egreso: %d y el presupuesto: %d no paso ValidarConPresupuesto", egreso.getOperacionNumero(), presupuesto.getOperacionNumero())));
+					crearMensaje("El egreso: %d y el presupuesto: %d no paso ValidarConPresupuesto", egreso.getOperacionNumero(), presupuesto.getOperacionNumero()));
 			return false;
 		}
 	}

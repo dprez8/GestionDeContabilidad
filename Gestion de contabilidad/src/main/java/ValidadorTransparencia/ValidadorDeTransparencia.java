@@ -26,7 +26,7 @@ public class ValidadorDeTransparencia {
 				unPresupuesto -> validaciones.stream().allMatch(validador->validador.validarEgreso(egreso, unPresupuesto)));
 		if(resultadoDeValidacion){
 			egreso.obtenerRevisores().forEach(revisor -> revisor.getBandejaDeMensajes().
-					crearMensaje(String.format("Paso todas las validaciones, el egreso: %d", egreso.getOperacionNumero())));
+					crearMensaje("Paso todas las validaciones, el egreso: %d", egreso.getOperacionNumero()));
 		}
 		else{
 			mandaMensajeCuandoFallaValidacion(egreso);

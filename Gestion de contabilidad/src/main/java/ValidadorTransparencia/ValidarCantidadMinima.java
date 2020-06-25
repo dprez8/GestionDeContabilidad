@@ -18,7 +18,7 @@ public class ValidarCantidadMinima extends ValidacionDeTransparencia{
 		}
 		else {
 			egreso.obtenerRevisores().forEach(revisor -> revisor.getBandejaDeMensajes().
-					crearMensaje(String.format("El egreso: %d no paso ValidarCantidadMinima, cantidad minima de presupuestos requerida es %d y se tiene %d", egreso.getOperacionNumero(), cantidadMinimaDePresupuestos, egreso.getPresupuestos().size())));
+					crearMensaje("El egreso: %d no paso ValidarCantidadMinima, cantidad minima de presupuestos requerida es %d y se tiene %d", egreso.getOperacionNumero(), cantidadMinimaDePresupuestos, egreso.getPresupuestos().size()));
 			return false;
 		}
 	}
