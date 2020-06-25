@@ -1,6 +1,8 @@
 package MiTest;
 
+
 import BandejaDeMensajes.BandejaDeMensajes;
+import BandejaDeMensajes.Mensaje;
 import CategorizadorDeEmpresas.Sector;
 import DatosDeOperaciones.*;
 import ValidadorTransparencia.*;
@@ -20,23 +22,27 @@ import java.util.logging.SimpleFormatter;
 
 public class TestMensajes{
 
-//    @Test //REHACER ESTE TEST
-//    public void OrdernarMensajes() throws Exception{
-//
-//        BandejaDeMensajes bandeja = new BandejaDeMensajes();
-//
-//        Date hoy = new Date();
-//        Date ayer = new SimpleDateFormat("dd/MM/yyyy").parse("21/6/2020");
-//        Date anteayer = new SimpleDateFormat("dd/MM/yyyy").parse("20/6/2020");
-//
-//        bandeja.crearMensaje(ayer, "Mensaje ayer");
-//        bandeja.crearMensaje(hoy, "Mensaje hoy");
-//        bandeja.crearMensaje(anteayer, "Mensaje anteayer");
-//
-//        bandeja.filtrarPorFecha(ayer);
-//        bandeja.filtrarPorLeido(false);
-//        bandeja.mostrarTodosLosMensajes();
-//    }
+    @Test
+    public void OrdernarMensajes() throws Exception{
+
+        BandejaDeMensajes bandeja = new BandejaDeMensajes();
+
+        Date ayer = new SimpleDateFormat("dd/MM/yyyy").parse("21/6/2020");
+        Date anteayer = new SimpleDateFormat("dd/MM/yyyy").parse("20/6/2020");
+
+        bandeja.crearMensaje("Mensaje ayer");
+        bandeja.crearMensaje("Mensaje hoy");
+        bandeja.crearMensaje("Mensaje anteayer");
+
+        bandeja.getMensajes().get(2).setFecha(anteayer);
+        bandeja.getMensajes().get(0).setFecha(ayer);
+
+        bandeja.ordenarPorFechaRecientePrimero();
+
+        bandeja.filtrarPorFecha(ayer).forEach(m->m.mostrarMensaje());
+        bandeja.filtrarPorLeido(false).forEach(m->m.mostrarMensaje());
+        bandeja.mostrarTodosLosMensajes();
+    }
 
     @Test
     public void ValidacionesYMensajes() throws Exception {

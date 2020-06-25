@@ -22,7 +22,7 @@ public class Ingreso extends Operacion {
     }
 
     public double montoEnUso(){
-        return egresos.stream().collect(Collectors.summingDouble(unEgreso -> unEgreso.valorTotal()));
+        return egresos.stream().collect(Collectors.summingDouble(unEgreso -> unEgreso.getValorTotal()));
     }
 
     public void desasociarEgreso(Egreso egreso){

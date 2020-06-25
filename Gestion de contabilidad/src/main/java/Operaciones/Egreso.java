@@ -24,6 +24,7 @@ public class Egreso extends Operacion {
 	private Ingreso ingresoAsociado;
 	private CategoriaOperacion categoria;
 	private boolean validado;
+	private double valorTotal;
 
 	public Egreso(int operacionNumero, DocumentoComercial documento,
 				  MedioDePago medioDePago, Proveedor proveedor, Organizacion organizacion,
@@ -36,6 +37,7 @@ public class Egreso extends Operacion {
 		this.organizacion = organizacion;
 		this.validado = false;
 		this.agregarItems(items);
+		this.valorTotal = calculaValorTotal();
 	}
 
     public List<Presupuesto> getPresupuestos() {
@@ -64,7 +66,7 @@ public class Egreso extends Operacion {
     }
 
     public void darseDeAltaRevisor(Estandar revisor) {
-
+		revisores.add(revisor);
 	}
     public void agregarRevisor(Estandar ... revisor) {
 		Collections.addAll(this.revisores, revisor);
@@ -72,17 +74,21 @@ public class Egreso extends Operacion {
 
     public List<Estandar> obtenerRevisores(){ return this.revisores;}
 
-    public double valorTotal () {
+    private double calculaValorTotal () {
         return  items.stream().collect(Collectors.summingDouble(unItem->unItem.valorTotal()));
         // Retorna la sumatoria del precio de cada item del egreso
     }
+
+	public double getValorTotal() {
+		return valorTotal;
+	}
 
 	public void setCategoria(CategoriaOperacion categoria) {
 		this.categoria = categoria;
 	}
 
 	public void setIngresoAsociado(Ingreso ingreso) throws noAlcanzaIngreso {
-		if(ingreso.montoSobrante() >= this.valorTotal()) {
+		if(ingreso.montoSobrante() >= this.valorTotal) {
 			this.ingresoAsociado.desasociarEgreso(this);
 			this.ingresoAsociado = ingreso;
 			ingreso.asociarEgreso(this);

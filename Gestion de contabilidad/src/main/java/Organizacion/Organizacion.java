@@ -26,7 +26,4 @@ public abstract class Organizacion {
 				.map(Egreso.class::cast)
 				.collect(Collectors.toList());
 	}
-	public List<Egreso> getEgresosValidados(boolean validado) {  //si validado es true te da los validados, si es false te da los no validados
-		return getEgresos().stream().filter(a->a.isValidado()==validado).collect(Collectors.toList());
-	}
 }

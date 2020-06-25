@@ -12,11 +12,10 @@ public abstract class Usuario {
 	protected String contrasenia;
 	protected String mail;
 	private static List<ControladorUsuario> controlUsuario = new ArrayList<>();
-	static Scanner scanner= new Scanner(System.in);
 	
-	public void validarContraseña() throws IOException, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, contraseniaCorta {
-	    for (int i = 0; i < controlUsuario.size(); i++){ //no usar foreach porque sino el try y el catch tienen que estar adentro de la funcion lambda
-	    	controlUsuario.get(i).validarConstrasenia(this.contrasenia, this.mail, this.usuario);
+	public void validarContrasenia() throws IOException, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, contraseniaCorta {
+	    for(ControladorUsuario validador : controlUsuario){
+	    	validador.validarConstrasenia(this.contrasenia, this.mail, this.usuario);
 		}
 	}
 

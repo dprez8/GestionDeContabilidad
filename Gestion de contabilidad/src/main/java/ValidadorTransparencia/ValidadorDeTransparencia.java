@@ -25,13 +25,13 @@ public class ValidadorDeTransparencia {
 		boolean resultadoDeValidacion = egreso.getPresupuestos().stream().anyMatch(
 				unPresupuesto -> validaciones.stream().allMatch(validador->validador.validarEgreso(egreso, unPresupuesto)));
 		if(resultadoDeValidacion){
-			egreso.setValidado(true);
 			egreso.obtenerRevisores().forEach(revisor -> revisor.getBandejaDeMensajes().
 					crearMensaje(String.format("Paso todas las validaciones, el egreso: %d", egreso.getOperacionNumero())));
 		}
 		else{
 			mandaMensajeCuandoFallaValidacion(egreso);
 		}
+        egreso.setValidado(true);
 	}
 
 	public void mandaMensajeCuandoFallaValidacion(Egreso egreso) {

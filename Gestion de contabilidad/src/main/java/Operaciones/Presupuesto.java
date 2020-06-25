@@ -17,6 +17,7 @@ public class Presupuesto {
     private String fechaVigente;
     private CategoriaOperacion categoria;
     private Proveedor proveedor;
+    private Double valorTotal;
     
 
     public Presupuesto(int operacionNumero, Egreso unEgreso,DocumentoComercial unDocumento,String fechaVigente,Proveedor unProveedor,ItemPresupuesto ... items){
@@ -26,6 +27,7 @@ public class Presupuesto {
         this.fechaVigente = fechaVigente;
         this.proveedor = unProveedor;
         this.agregarItems(items);
+        this.valorTotal = this.calcularValorTotal();
     }
     
     
@@ -49,7 +51,7 @@ public class Presupuesto {
 	private void agregarItems (ItemPresupuesto ... unosItems) {
         Collections.addAll(this.items, unosItems);
     }
-    public Double valorTotal(){
+    private Double calcularValorTotal(){
         return items.stream().collect(Collectors.summingDouble(unItem->unItem.valorTotal()));
     }
 
@@ -63,5 +65,9 @@ public class Presupuesto {
 
     public int getOperacionNumero() {
         return operacionNumero;
+    }
+
+    public Double getValorTotal() {
+        return valorTotal;
     }
 }

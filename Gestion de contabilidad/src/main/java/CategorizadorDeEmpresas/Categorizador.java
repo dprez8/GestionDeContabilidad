@@ -16,17 +16,7 @@ public class Categorizador {
                 .filter(a -> a.dentroDelMinMax(unaEmpresa)).collect(Collectors.toList());
         Categoria categoriaObtenida = listaCategoriasFiltrada.stream().max(Comparator.comparingInt(a->categoriasExistentes.get(a.getNombre()))).get();
         return categoriaObtenida;
-//        Stream<Categoria> categoriaFiltrada = categorias.stream().filter(unaCategoria->categorizarA(unaEmpresa,unaCategoria));
-//        List<Categoria> categoriaFilter = categoriaFiltrada.collect(Collectors.toList());
-//        return categoriaFilter.get(0); //Se supone es esta lista solo tiene un elemento o ninguno, ya que una empresa no podria tener 2 categorias
     }
-
-//    public boolean categorizarA(Empresa unaEmpresa,Categoria unaCategoria){
-//        if(unaCategoria.getSector().equals(unaEmpresa.getSector())) {
-//            return unaCategoria.dentroDelMinMaxMonto(unaEmpresa) && unaCategoria.dentroDelMinMaxPersonal(unaEmpresa);
-//        }
-//        return false;
-//    }
 
     public void agregarCategorias(Categoria ... categorias){
         Collections.addAll(this.categorias,categorias);
