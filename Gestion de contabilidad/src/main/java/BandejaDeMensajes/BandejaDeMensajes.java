@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 public class BandejaDeMensajes{
     private List<Mensaje> mensajes = new ArrayList<Mensaje>();
 
-    public void crearMensaje(String cuerpo){
-        Mensaje msg = new Mensaje(cuerpo);
+    public void crearMensaje(String cuerpo, Object... args){
+        Mensaje msg = new Mensaje(String.format(cuerpo, args));
         mensajes.add(msg);
     }
     public void ordenarPorFechaRecienteUltimo(){
