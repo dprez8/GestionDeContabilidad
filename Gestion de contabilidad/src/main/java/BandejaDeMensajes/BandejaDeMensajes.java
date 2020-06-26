@@ -24,9 +24,6 @@ public class BandejaDeMensajes{
     public List<Mensaje> filtrarPorFecha(Date fecha){
         return mensajes.stream().filter(a->a.getFecha().equals(fecha)).collect(Collectors.toList());
     }
-    public void mostrarTodosLosMensajes(){
-        mensajes.forEach(a->a.mostrarMensaje());
-    }
 
     public List<Mensaje> getMensajes() {
         return mensajes;

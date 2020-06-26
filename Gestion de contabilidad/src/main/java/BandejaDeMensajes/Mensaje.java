@@ -30,11 +30,6 @@ public class Mensaje{
         return cuerpo;
     }
 
-    public void mostrarMensaje(){
-        System.out.printf("[%td/%tm/%ty] [leido: %s] %s\n", this.getFecha(), this.getFecha(), this.getFecha(), this.isLeido(), this.getCuerpo());
-        this.setLeido(true);
-    }
-
     public void setFecha(Date fecha) {
         this.fecha = fecha;
     }

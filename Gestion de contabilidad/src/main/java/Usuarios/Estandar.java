@@ -10,6 +10,8 @@ import Organizacion.*;
 
 import java.util.Date;
 
+// Revisar esta clase y revisar los usuarios en general, quizas la clase Estandar no sirva para nada
+
 public class Estandar extends Usuario {
 	
 	private EntidadJuridica miOrganizacion; // Conoce su organizacion
@@ -32,6 +34,7 @@ public class Estandar extends Usuario {
 
 		miOrganizacion.agregarOperaciones(egreso);
 		return egreso;
+		// ObjetoQueSeEncargaDeCrearCosas.CrearEgreso();
 	}
 
 	public BandejaDeMensajes getBandejaDeMensajes() {
