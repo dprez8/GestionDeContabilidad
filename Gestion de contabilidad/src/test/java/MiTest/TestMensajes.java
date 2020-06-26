@@ -39,9 +39,10 @@ public class TestMensajes{
 
         bandeja.ordenarPorFechaRecientePrimero();
 
-        bandeja.filtrarPorFecha(ayer).forEach(m->m.mostrarMensaje());
-        bandeja.filtrarPorLeido(false).forEach(m->m.mostrarMensaje());
-        bandeja.mostrarTodosLosMensajes();
+        for(Mensaje mensaje : bandeja.getMensajes()){
+            System.out.printf("[%td/%tm/%ty] [leido: %s] %s\n", mensaje.getFecha(), mensaje.getFecha(), mensaje.getFecha(), mensaje.isLeido(), mensaje.getCuerpo());
+            mensaje.setLeido(true);
+        }
     }
 
     @Test
@@ -94,6 +95,9 @@ public class TestMensajes{
         List<Egreso> egresos = miPyme.getEgresos(); //Lo egresos que no han sido validados o no pasaron las pruebas anteriormente
         egresos.forEach(egreso -> validador.validarEgreso(egreso));
 
-        unUsuario.verMensajes();
+        for(Mensaje mensaje : unUsuario.getBandejaDeMensajes().getMensajes()){
+            System.out.printf("[%td/%tm/%ty] [leido: %s] %s\n", mensaje.getFecha(), mensaje.getFecha(), mensaje.getFecha(), mensaje.isLeido(), mensaje.getCuerpo());
+            mensaje.setLeido(true);
+        }
     }
 }

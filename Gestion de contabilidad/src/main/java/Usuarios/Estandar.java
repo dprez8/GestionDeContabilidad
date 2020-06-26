@@ -25,8 +25,6 @@ public class Estandar extends Usuario {
 		this.bandejaDeMensajes = new BandejaDeMensajes();
 	}
 
-	public void verMensajes(){ this.bandejaDeMensajes.mostrarTodosLosMensajes(); }
-
 	public Egreso darAltaEgreso(int operacionNumero, DocumentoComercial documentoComercial, MedioDePago medioDePago,
 							  Proveedor proveedor, ItemEgreso ... items) {
 		// Ingresar a la base de datos el egreso
