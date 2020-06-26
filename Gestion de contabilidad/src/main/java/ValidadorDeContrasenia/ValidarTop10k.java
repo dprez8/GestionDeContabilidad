@@ -6,7 +6,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class ValidarTop10k extends ControladorUsuario{
+public class ValidarTop10k extends ValidacionDeContrasenia {
     private String rutaArchivo10KPeoresContras;
 
     public ValidarTop10k(String pathDeArchivo){

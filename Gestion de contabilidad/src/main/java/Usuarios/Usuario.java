@@ -8,21 +8,10 @@ import Exceptions.repiteContraseniaEnMailOUsuario;
 import ValidadorDeContrasenia.*;
 
 public abstract class Usuario {
+	// Esta informacion debe venir de una base de datos
 	protected String usuario;
 	protected String contrasenia;
 	protected String mail;
-	private static List<ControladorUsuario> controlUsuario = new ArrayList<>();
-	
-	public void validarContrasenia() throws IOException, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, contraseniaCorta {
-	    for(ControladorUsuario validador : controlUsuario){
-	    	validador.validarConstrasenia(this.contrasenia, this.mail, this.usuario);
-		}
-	}
-
-	public static void setNuevoControlUsuario(ControladorUsuario ... nuevoControlUsuario) {
-		Usuario.controlUsuario = new ArrayList<>();
-		Collections.addAll(Usuario.controlUsuario, nuevoControlUsuario);
-	}
 
 	/**Estos metodos se implementaran cuando veamos el tema de persistencia*/
 	public static void iniciarSesion() {

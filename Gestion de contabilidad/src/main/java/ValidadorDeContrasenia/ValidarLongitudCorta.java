@@ -2,7 +2,7 @@ package ValidadorDeContrasenia;
 
 import Exceptions.contraseniaCorta;
 
-public class ValidarLongitudCorta extends ControladorUsuario{
+public class ValidarLongitudCorta extends ValidacionDeContrasenia {
     private int longitudMinima;
 
     public ValidarLongitudCorta(int unaLongitudMinima){
