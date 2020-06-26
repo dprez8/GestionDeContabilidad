@@ -18,7 +18,7 @@ public class Estandar extends Usuario {
 	private BandejaDeMensajes bandejaDeMensajes;
 
 	public Estandar(EntidadJuridica unaOrganizacion,String nombre,String contrasenia, String mail){
-		this.usuario = nombre;
+		this.nombre = nombre;
 		this.contrasenia = contrasenia;
 		this.mail = mail;
 		this.miOrganizacion = unaOrganizacion;
@@ -30,7 +30,7 @@ public class Estandar extends Usuario {
 		// Ingresar a la base de datos el egreso
 		Egreso egreso = new Egreso(operacionNumero, documentoComercial, medioDePago, proveedor, this.miOrganizacion, items);
 
-		miOrganizacion.agregarOperaciones(egreso);
+		miOrganizacion.addOperaciones(egreso);
 		return egreso;
 		// ObjetoQueSeEncargaDeCrearCosas.CrearEgreso();
 	}

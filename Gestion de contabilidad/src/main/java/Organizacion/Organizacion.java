@@ -1,17 +1,21 @@
 package Organizacion;
 
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import Operaciones.*;
 
 public abstract class Organizacion {
     protected String nombreFicticio;
     protected List<Operacion> operaciones;
-	
-	public void agregarOperaciones (Operacion ... unasOperaciones) {
+
+    public Organizacion(String nombreFicticio){
+    	this.nombreFicticio = nombreFicticio;
+    	operaciones = new ArrayList<>();
+	}
+	public void addOperaciones (Operacion ... unasOperaciones) {
         Collections.addAll(this.operaciones, unasOperaciones);
     }
 

@@ -9,7 +9,7 @@ import ValidadorDeContrasenia.*;
 
 public abstract class Usuario {
 	// Esta informacion debe venir de una base de datos
-	protected String usuario;
+	protected String nombre;
 	protected String contrasenia;
 	protected String mail;
 

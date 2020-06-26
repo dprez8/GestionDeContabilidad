@@ -10,14 +10,17 @@ public class EntidadJuridica extends Organizacion {
     private int cuit;
     private int direccionPostal;
     private int codigoDeInscripcionDefinitivaEnIGJ;
-    private List<EntidadBase> entidadesBase = new ArrayList<>();
+    private List<EntidadBase> entidadesBase;
     private Estandar usuario;
     private CategoriaEntidadJuridica tipoEntidadJuridica;
 
-    public EntidadJuridica(String nombre,int cuit,String razonSocial){
+    public EntidadJuridica(String nombre,int cuit,String razonSocial,int direccionPostal,int codigoDeInscripcionDefinitivaEnIGJ){
         super(nombre);
         this.cuit = cuit;
         this.razonSocial = razonSocial;
+        this.direccionPostal = direccionPostal;
+        this.codigoDeInscripcionDefinitivaEnIGJ = codigoDeInscripcionDefinitivaEnIGJ;
+        entidadesBase = new ArrayList<>();
     }
 
     public void setUsuario(Estandar usuario) {
