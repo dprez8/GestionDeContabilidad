@@ -7,7 +7,7 @@ import java.util.Optional;
 
 import Operaciones.Operacion;
 
-public class Empresa extends EntidadJuridica{
+public class Empresa extends CategoriaEntidadJuridica{
     private int cantidadDePersonal;
     private double ventasAnuales;
     private Categoria categoria;

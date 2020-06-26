@@ -1,4 +1,4 @@
 package Organizacion;
 
-public class CategoriaEntidadJuridica {
+public abstract class CategoriaEntidadJuridica {
 }
