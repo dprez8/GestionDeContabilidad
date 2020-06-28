@@ -11,7 +11,7 @@ import DatosDeOperaciones.Proveedor;
 
 public class Presupuesto {
     private int operacionNumero;
-    private List<ItemPresupuesto> items = new ArrayList<>();
+    private List<ItemPresupuesto> items;
     private Egreso egresoAsociado;
     private DocumentoComercial documento;
     private String fechaVigente;
@@ -20,45 +20,18 @@ public class Presupuesto {
     private Double valorTotal;
     
 
-    public Presupuesto(int operacionNumero, Egreso unEgreso,DocumentoComercial unDocumento,String fechaVigente,Proveedor unProveedor,ItemPresupuesto ... items){
+    public Presupuesto(int operacionNumero, Egreso unEgreso){
         this.operacionNumero = operacionNumero;
         this.egresoAsociado = unEgreso;
-        this.documento = unDocumento;
-        this.fechaVigente = fechaVigente;
-        this.proveedor = unProveedor;
-        this.agregarItems(items);
-        this.valorTotal = this.calcularValorTotal();
+        this.items = new ArrayList<>();
     }
-    
-    
-
+    /**Getters*/
     public List<ItemPresupuesto> getItems() {
 		return items;
 	}
-
-
 	public DocumentoComercial getDocumento() {
 		return documento;
 	}
-
-	
-
-	public Egreso getEgresoAsociado() {
-		return egresoAsociado;
-	}
-
-
-	private void agregarItems (ItemPresupuesto ... unosItems) {
-        Collections.addAll(this.items, unosItems);
-    }
-    private Double calcularValorTotal(){
-        return items.stream().collect(Collectors.summingDouble(unItem->unItem.valorTotal()));
-    }
-
-    public void setCategoria(CategoriaOperacion categoria) {
-        this.categoria = categoria;
-    }
-
     public Proveedor getProveedor() {
         return proveedor;
     }
@@ -66,8 +39,46 @@ public class Presupuesto {
     public int getOperacionNumero() {
         return operacionNumero;
     }
-
     public Double getValorTotal() {
         return valorTotal;
     }
+	public Egreso getEgresoAsociado() {
+		return egresoAsociado;
+	}
+    public String getFechaVigente() {
+        return fechaVigente;
+    }
+    public CategoriaOperacion getCategoria() {
+        return categoria;
+    }
+    /**Setters*/
+    public void setCategoria(CategoriaOperacion categoria) {
+        this.categoria = categoria;
+    }
+
+	private void addItems (ItemPresupuesto ... unosItems) {
+        Collections.addAll(this.items, unosItems);
+    }
+
+    public void setDocumento(DocumentoComercial documento) {
+        this.documento = documento;
+    }
+
+    public void setFechaVigente(String fechaVigente) {
+        this.fechaVigente = fechaVigente;
+    }
+
+    public void setProveedor(Proveedor proveedor) {
+        this.proveedor = proveedor;
+    }
+
+    public void setValorTotal(Double valorTotal) {
+        this.valorTotal = valorTotal;
+    }
+
+    /********************************************/
+    private Double calcularValorTotal(){
+        return items.stream().collect(Collectors.summingDouble(unItem->unItem.valorTotal()));
+    }
+
 }

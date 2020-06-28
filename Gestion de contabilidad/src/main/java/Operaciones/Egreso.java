@@ -11,35 +11,30 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import DatosDeOperaciones.*;
-import Organizacion.EntidadJuridica;
-import Organizacion.Organizacion;
+import Organizacion.*;
 
 public class Egreso extends Operacion {
+
 	private DocumentoComercial documento;
-	private List<ItemEgreso> items = new ArrayList<>();
+	private List<ItemEgreso> items;
 	private MedioDePago medioDePago;
 	private Proveedor proveedor;
-	private List<Presupuesto> presupuestos = new ArrayList<>();
-	private List<Estandar> revisores = new ArrayList<>();
+	private List<Presupuesto> presupuestos;
+	private List<Estandar> revisores;
 	private Ingreso ingresoAsociado;
 	private CategoriaOperacion categoria;
 	private boolean validado;
 	private double valorTotal;
 
-	public Egreso(int operacionNumero, DocumentoComercial documento,
-				  MedioDePago medioDePago, Proveedor proveedor, Organizacion organizacion,
-				  ItemEgreso ...items) {
-		this.operacionNumero = operacionNumero;
-		this.fechaOperacion = new Date();
-		this.documento = documento;
-		this.medioDePago = medioDePago;
-		this.proveedor = proveedor;
-		this.organizacion = organizacion;
+	public Egreso(int operacionNumero) {
+		super(operacionNumero);
+		this.items = new ArrayList<>();
+		this.presupuestos = new ArrayList<>();
+		this.revisores = new ArrayList<>();
 		this.validado = false;
-		this.agregarItems(items);
-		this.valorTotal = calculaValorTotal();
 	}
 
+	/**Getters*/
     public List<Presupuesto> getPresupuestos() {
 		return presupuestos;
 	}
@@ -57,30 +52,30 @@ public class Egreso extends Operacion {
 		return proveedor;
 	}
 
-	public void agregarItems (ItemEgreso ... unosItems) {
-        Collections.addAll(this.items, unosItems);
-    }
-    
-    public void agregarPresupuestos (Presupuesto ... presupuesto) {
-        Collections.addAll(this.presupuestos, presupuesto);
-    }
-
-    public void darseDeAltaRevisor(Estandar revisor) {
-		revisores.add(revisor);
+	public int getOperacionNumero() {
+		return this.operacionNumero;
 	}
-    public void agregarRevisor(Estandar ... revisor) {
-		Collections.addAll(this.revisores, revisor);
-    }
-
-    public List<Estandar> obtenerRevisores(){ return this.revisores;}
-
-    private double calculaValorTotal () {
-        return  items.stream().collect(Collectors.summingDouble(unItem->unItem.valorTotal()));
-        // Retorna la sumatoria del precio de cada item del egreso
-    }
 
 	public double getValorTotal() {
-		return valorTotal;
+		return this.valorTotal;
+	}
+	public List<Estandar> getRevisores(){ return this.revisores;}
+
+	/**Setters*/
+	public void setDocumento(DocumentoComercial documento) {
+		this.documento = documento;
+	}
+
+	public void setMedioDePago(MedioDePago medioDePago) {
+		this.medioDePago = medioDePago;
+	}
+
+	public void setValidado(boolean validado) {
+		this.validado = validado;
+	}
+
+	public void setProveedor(Proveedor proveedor) {
+		this.proveedor = proveedor;
 	}
 
 	public void setCategoria(CategoriaOperacion categoria) {
@@ -96,15 +91,26 @@ public class Egreso extends Operacion {
 		else throw new noAlcanzaIngreso("El monto del ingreso asociado es menor al monto del egreso");
 	}
 
+	public void addItems (ItemEgreso ... unosItems) {
+        Collections.addAll(this.items, unosItems);
+    }
+    
+    public void addPresupuestos (Presupuesto ... presupuesto) {
+        Collections.addAll(this.presupuestos, presupuesto);
+    }
+
+    public void addRevisores(Estandar ... revisor) {
+		Collections.addAll(this.revisores, revisor);
+    }
+
+	/************************************************/
+    private double calculaValorTotal () {
+        return  this.items.stream().collect(Collectors.summingDouble(unItem->unItem.valorTotal()));
+        // Retorna la sumatoria del precio de cada item del egreso
+    }
+
 	public boolean isValidado() {
-		return validado;
+		return this.validado;
 	}
 
-	public void setValidado(boolean validado) {
-		this.validado = validado;
-	}
-
-	public int getOperacionNumero() {
-		return operacionNumero;
-	}
 }

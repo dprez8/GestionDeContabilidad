@@ -11,7 +11,7 @@ public class Ingreso extends Operacion {
     private List<Egreso> egresos;
 
     public Ingreso(int operacionNumero, String descripcion, double montoTotal){
-        this.operacionNumero = operacionNumero;
+        super(operacionNumero);
         this.descripcion = descripcion;
         this.montoTotal = montoTotal;
         this.egresos = new ArrayList<>();

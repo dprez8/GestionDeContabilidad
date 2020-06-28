@@ -12,4 +12,8 @@ public abstract class Operacion {
 	protected Organizacion organizacion;
 	protected int operacionNumero;
 
+	public Operacion(int operacionNumero){
+		this.fechaOperacion = new Date();
+		this.operacionNumero = operacionNumero;
+	}
 }

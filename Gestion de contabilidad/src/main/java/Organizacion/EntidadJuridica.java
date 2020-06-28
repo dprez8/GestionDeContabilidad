@@ -20,7 +20,7 @@ public class EntidadJuridica extends Organizacion {
         this.razonSocial = razonSocial;
         this.direccionPostal = direccionPostal;
         this.codigoDeInscripcionDefinitivaEnIGJ = codigoDeInscripcionDefinitivaEnIGJ;
-        entidadesBase = new ArrayList<>();
+        this.entidadesBase = new ArrayList<>();
     }
 
     public void setUsuario(Estandar usuario) {

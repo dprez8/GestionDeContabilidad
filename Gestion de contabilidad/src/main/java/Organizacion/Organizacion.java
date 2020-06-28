@@ -13,7 +13,7 @@ public abstract class Organizacion {
 
     public Organizacion(String nombreFicticio){
     	this.nombreFicticio = nombreFicticio;
-    	operaciones = new ArrayList<>();
+    	this.operaciones = new ArrayList<>();
 	}
 	public void addOperaciones (Operacion ... unasOperaciones) {
         Collections.addAll(this.operaciones, unasOperaciones);
