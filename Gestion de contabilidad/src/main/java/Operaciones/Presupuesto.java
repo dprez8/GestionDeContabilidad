@@ -58,6 +58,7 @@ public class Presupuesto {
 
 	private void addItems (ItemPresupuesto ... unosItems) {
         Collections.addAll(this.items, unosItems);
+        this.valorTotal = calcularValorTotal();
     }
 
     public void setDocumento(DocumentoComercial documento) {
@@ -70,10 +71,6 @@ public class Presupuesto {
 
     public void setProveedor(Proveedor proveedor) {
         this.proveedor = proveedor;
-    }
-
-    public void setValorTotal(Double valorTotal) {
-        this.valorTotal = valorTotal;
     }
 
     /********************************************/
