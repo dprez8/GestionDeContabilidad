@@ -7,24 +7,20 @@ public class DocumentoComercial{
     private int numDocumento;
     private Date fechaDePedido;
     private Date fechaDeEntrega;
-    private String descripcion;
     private String pathAdjunto;
 	
-    public DocumentoComercial(TipoDocumento tipo, int numDocumento, Date fechaDePedido, Date fechaDeEntrega,
-			String descripcion) {
+    public DocumentoComercial(TipoDocumento tipo, int numDocumento, Date fechaDePedido, Date fechaDeEntrega) {
 		this.tipo = tipo;
 		this.numDocumento = numDocumento;
 		this.fechaDePedido = fechaDePedido;
 		this.fechaDeEntrega = fechaDeEntrega;
-		this.descripcion = descripcion;
 	}
 	public DocumentoComercial(TipoDocumento tipo, int numDocumento, Date fechaDePedido, Date fechaDeEntrega,
-							  String descripcion, String pathAdjunto) {
+							  String pathAdjunto) {
 		this.tipo = tipo;
 		this.numDocumento = numDocumento;
 		this.fechaDePedido = fechaDePedido;
 		this.fechaDeEntrega = fechaDeEntrega;
-		this.descripcion = descripcion;
 		this.pathAdjunto = pathAdjunto;
 	}
 }

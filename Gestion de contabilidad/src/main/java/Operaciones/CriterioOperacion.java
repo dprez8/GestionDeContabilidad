@@ -3,7 +3,6 @@ package Operaciones;
 import CategorizadorDeEmpresas.Categoria;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class CriterioOperacion {

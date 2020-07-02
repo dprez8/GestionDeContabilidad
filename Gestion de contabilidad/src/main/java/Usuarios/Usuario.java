@@ -1,11 +1,4 @@
 package Usuarios;
-import java.io.IOException;
-import java.util.*;
-
-import Exceptions.contraseniaCorta;
-import Exceptions.contraseniaMuyComun;
-import Exceptions.repiteContraseniaEnMailOUsuario;
-import ValidadorDeContrasenia.*;
 
 public abstract class Usuario {
 	// Esta informacion debe venir de una base de datos

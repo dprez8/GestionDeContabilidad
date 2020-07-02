@@ -1,16 +1,7 @@
 package Usuarios;
 
 import BandejaDeMensajes.BandejaDeMensajes;
-import DatosDeOperaciones.DocumentoComercial;
-import DatosDeOperaciones.ItemEgreso;
-import DatosDeOperaciones.MedioDePago;
-import DatosDeOperaciones.Proveedor;
-import Operaciones.Egreso; // Problema: Estandar importa de Egreso y Egreso de Usuario (solventar)
 import Organizacion.*;
-
-import java.util.Date;
-
-// Revisar esta clase y revisar los usuarios en general, quizas la clase Estandar no sirva para nada
 
 public class Estandar extends Usuario {
 	

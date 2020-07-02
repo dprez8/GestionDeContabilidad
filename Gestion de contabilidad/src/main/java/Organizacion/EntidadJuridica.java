@@ -2,7 +2,6 @@ package Organizacion;
 
 import java.util.ArrayList;
 import java.util.List;
-import Operaciones.Operacion;
 import Usuarios.Estandar;
 
 public class EntidadJuridica extends Organizacion {

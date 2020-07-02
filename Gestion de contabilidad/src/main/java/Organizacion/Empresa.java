@@ -3,10 +3,6 @@ package Organizacion;
 
 import CategorizadorDeEmpresas.*;
 
-import java.util.Optional;
-
-import Operaciones.Operacion;
-
 public class Empresa extends CategoriaEntidadJuridica{
     private int cantidadDePersonal;
     private double ventasAnuales;

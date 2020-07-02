@@ -2,11 +2,9 @@ package ValidadorTransparencia;
 import java.util.List;
 import java.util.TimerTask;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import Operaciones.Egreso;
 import Organizacion.*;
-import Usuarios.Estandar;
 
 public class Scheduler extends TimerTask{
 	private Organizacion organizacion;

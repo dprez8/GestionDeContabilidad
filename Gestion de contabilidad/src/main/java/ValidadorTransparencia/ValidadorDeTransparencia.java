@@ -8,7 +8,7 @@ import Operaciones.Presupuesto;
 public class ValidadorDeTransparencia {
 	
 
-	private List<ValidacionDeTransparencia> validaciones = new ArrayList<>();
+	private List<ValidacionDeTransparencia> validaciones;
 	
 	
 	public List<ValidacionDeTransparencia> getValidaciones() {
@@ -16,16 +16,15 @@ public class ValidadorDeTransparencia {
 	}
 
 
-	public ValidadorDeTransparencia(ValidacionDeTransparencia ... validations) {
-		cargarValidacion(validations);
+	public ValidadorDeTransparencia() {
+		this.validaciones = new ArrayList<>();
 	}
-	
 
 	public void validarEgreso (Egreso egreso) {
 		boolean resultadoDeValidacion = egreso.getPresupuestos().stream().anyMatch(
 				unPresupuesto -> validaciones.stream().allMatch(validador->validador.validarEgreso(egreso, unPresupuesto)));
 		if(resultadoDeValidacion){
-			egreso.obtenerRevisores().forEach(revisor -> revisor.getBandejaDeMensajes().
+			egreso.getRevisores().forEach(revisor -> revisor.getBandejaDeMensajes().
 					crearMensaje("Paso todas las validaciones, el egreso: %d", egreso.getOperacionNumero()));
 		}
 		else{
@@ -67,7 +66,7 @@ public class ValidadorDeTransparencia {
 //    }
 	
 	
-	public void cargarValidacion(ValidacionDeTransparencia ... nuevasValidaciones){
+	public void addValidaciones(ValidacionDeTransparencia ... nuevasValidaciones){
 		Collections.addAll(this.validaciones, nuevasValidaciones);
 	}
 }

@@ -21,7 +21,7 @@ public class ValidarMenorValor extends ValidacionDeTransparencia{
 		}
 		else{
 			egreso
-					.obtenerRevisores()
+					.getRevisores()
 					.forEach(revisor -> revisor.getBandejaDeMensajes().crearMensaje("El egreso: %d y el presupuesto: %d no paso ValidarMenorValor", egreso.getOperacionNumero(), presupuesto.getOperacionNumero()));
 			return false;
 		}
