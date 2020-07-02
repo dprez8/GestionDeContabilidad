@@ -4723,30 +4723,11 @@
 									"model": {
 										"$ref": "AAAAAAFxzI9DPJOaI/s="
 									},
-									"subViews": [
-										{
-											"_type": "UMLOperationView",
-											"_id": "AAAAAAFxzNT5G020xZs=",
-											"_parent": {
-												"$ref": "AAAAAAFxzI9DP5OjBNI="
-											},
-											"model": {
-												"$ref": "AAAAAAFxzNT4sE2ZUSE="
-											},
-											"font": "Arial;13;0",
-											"left": 837,
-											"top": 180,
-											"width": 563.24658203125,
-											"height": 13,
-											"text": "+darAltaEgreso(DocumentoComercial, MedioDePago, Proveedor, EntidadJuridica, Items): Egreso",
-											"horizontalAlignment": 0
-										}
-									],
 									"font": "Arial;13;0",
 									"left": 832,
 									"top": 175,
 									"width": 573.24658203125,
-									"height": 23
+									"height": 10
 								},
 								{
 									"_type": "UMLReceptionCompartmentView",
@@ -18541,6 +18522,19 @@
 							"headQualifiersCompartment": {
 								"$ref": "AAAAAAFy8p00mfat0kQ="
 							}
+						},
+						{
+							"_type": "UMLNoteView",
+							"_id": "AAAAAAFzDPGu6/OHrPI=",
+							"_parent": {
+								"$ref": "AAAAAAFF+qBtyKM79qY="
+							},
+							"font": "Arial;13;0",
+							"left": 824,
+							"top": 216,
+							"width": 201,
+							"height": 116,
+							"text": "Estandar deberia relacionarse con entidadJuridica? o puede ser con organizacion? suena raro que un usuario estandar modifique tambien las operaciones de las entidadesBase que pose la EntidadJuridica"
 						}
 					]
 				},
@@ -30490,74 +30484,6 @@
 								"$ref": "AAAAAAFybXOWUOfV+cc="
 							}
 						}
-					],
-					"operations": [
-						{
-							"_type": "UMLOperation",
-							"_id": "AAAAAAFxzNT4sE2ZUSE=",
-							"_parent": {
-								"$ref": "AAAAAAFxzI9DPJOaI/s="
-							},
-							"name": "darAltaEgreso",
-							"parameters": [
-								{
-									"_type": "UMLParameter",
-									"_id": "AAAAAAFycvrh+sXVaEE=",
-									"_parent": {
-										"$ref": "AAAAAAFxzNT4sE2ZUSE="
-									},
-									"name": "DocumentoComercial",
-									"type": ""
-								},
-								{
-									"_type": "UMLParameter",
-									"_id": "AAAAAAFycy3kp1GB3C8=",
-									"_parent": {
-										"$ref": "AAAAAAFxzNT4sE2ZUSE="
-									},
-									"name": "MedioDePago",
-									"type": ""
-								},
-								{
-									"_type": "UMLParameter",
-									"_id": "AAAAAAFycy3kp1GCyhE=",
-									"_parent": {
-										"$ref": "AAAAAAFxzNT4sE2ZUSE="
-									},
-									"name": "Proveedor",
-									"type": ""
-								},
-								{
-									"_type": "UMLParameter",
-									"_id": "AAAAAAFycy3kp1GDOP4=",
-									"_parent": {
-										"$ref": "AAAAAAFxzNT4sE2ZUSE="
-									},
-									"name": "EntidadJuridica",
-									"type": ""
-								},
-								{
-									"_type": "UMLParameter",
-									"_id": "AAAAAAFycy3kp1GEamg=",
-									"_parent": {
-										"$ref": "AAAAAAFxzNT4sE2ZUSE="
-									},
-									"name": "Items",
-									"type": ""
-								},
-								{
-									"_type": "UMLParameter",
-									"_id": "AAAAAAFyc0kNzJsX5P4=",
-									"_parent": {
-										"$ref": "AAAAAAFxzNT4sE2ZUSE="
-									},
-									"type": {
-										"$ref": "AAAAAAFxvbR0SXK23fo="
-									},
-									"direction": "return"
-								}
-							]
-						}
 					]
 				},
 				{
@@ -37958,7 +37884,8 @@
 									"_parent": {
 										"$ref": "AAAAAAFy8qM6FqC18yE="
 									},
-									"name": "usuario"
+									"name": "usuario",
+									"type": ""
 								},
 								{
 									"_type": "UMLParameter",
@@ -37975,7 +37902,8 @@
 									"_parent": {
 										"$ref": "AAAAAAFy8qM6FqC18yE="
 									},
-									"name": "mail"
+									"name": "mail",
+									"type": ""
 								},
 								{
 									"_type": "UMLParameter",
@@ -37983,7 +37911,8 @@
 									"_parent": {
 										"$ref": "AAAAAAFy8qM6FqC18yE="
 									},
-									"name": "contrasenia"
+									"name": "contrasenia",
+									"type": ""
 								}
 							]
 						},

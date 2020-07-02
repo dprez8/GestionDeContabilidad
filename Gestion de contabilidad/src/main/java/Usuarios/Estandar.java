@@ -25,16 +25,6 @@ public class Estandar extends Usuario {
 		this.bandejaDeMensajes = new BandejaDeMensajes();
 	}
 
-	public Egreso darAltaEgreso(int operacionNumero, DocumentoComercial documentoComercial, MedioDePago medioDePago,
-							  Proveedor proveedor, ItemEgreso ... items) {
-		// Ingresar a la base de datos el egreso
-		Egreso egreso = new Egreso(operacionNumero, documentoComercial, medioDePago, proveedor, this.miOrganizacion, items);
-
-		miOrganizacion.addOperaciones(egreso);
-		return egreso;
-		// ObjetoQueSeEncargaDeCrearCosas.CrearEgreso();
-	}
-
 	public BandejaDeMensajes getBandejaDeMensajes() {
 		return bandejaDeMensajes;
 	}
