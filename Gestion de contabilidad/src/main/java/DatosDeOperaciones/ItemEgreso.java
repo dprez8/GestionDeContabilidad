@@ -13,6 +13,8 @@ public class ItemEgreso {
     public double valorTotal(){
         return this.cantidad * this.precio;
     }
+
+	/**Getters*/
 	public int getCantidad() {
 		return cantidad;
 	}
@@ -23,7 +25,7 @@ public class ItemEgreso {
 	public Producto getProducto() {
 		return producto;
 	}
-    
+    /********************************/
 }
 
 

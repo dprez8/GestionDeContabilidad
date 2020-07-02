@@ -15,11 +15,10 @@ public class ItemPresupuesto {
     public double valorTotal(){
         return this.cantidad * this.precio;
     }
-    
+    /**Getters*/
     public int getCantidad() {
 		return cantidad;
 	}
-
 	public double getPrecio() {
 		return precio;
 	}
@@ -29,4 +28,5 @@ public class ItemPresupuesto {
     public ItemEgreso getItemEgresoAsociado() {
         return itemEgresoAsociado;
     }
+    /**********************/
 }
