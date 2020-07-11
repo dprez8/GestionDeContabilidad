@@ -17,8 +17,8 @@ public class Empresa extends CategoriaEntidadJuridica{
         this.sector             = sector;
     }
 
-    public void cacularCategoria(Categorizador categorizador){
-        this.categoria = categorizador.obtenerCategoriaDe(this);
+    public void cacularCategoria(){
+        this.categoria = this.sector.obtenerCategoriaDe(this);
     }
 
     public Sector getSector() {
