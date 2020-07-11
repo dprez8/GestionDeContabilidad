@@ -1,10 +1,10 @@
 package MiTest;
 
-import CategorizadorDeEmpresas.Sector;
-import Exceptions.*;
-import Organizacion.*;
-import Usuarios.*;
-import ValidadorDeContrasenia.*;
+import Domain.CategorizadorDeEmpresas.Sector;
+import Domain.Exceptions.*;
+import Domain.Organizacion.*;
+import Domain.Usuarios.*;
+import Domain.ValidadorDeContrasenia.*;
 import org.junit.Test;
 
 import java.io.FileInputStream;

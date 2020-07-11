@@ -1,13 +1,9 @@
 package MiTest;
 
-import CategorizadorDeEmpresas.*;
-import Organizacion.Empresa;
+import Domain.CategorizadorDeEmpresas.*;
+import Domain.Organizacion.Empresa;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 
 public class CategorizacionDeEmpresa {

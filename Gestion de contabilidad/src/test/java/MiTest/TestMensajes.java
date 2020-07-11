@@ -1,24 +1,19 @@
 package MiTest;
 
 
-import BandejaDeMensajes.BandejaDeMensajes;
-import BandejaDeMensajes.Mensaje;
-import CategorizadorDeEmpresas.Sector;
-import DatosDeOperaciones.*;
-import ValidadorTransparencia.*;
-import Operaciones.Egreso;
-import Operaciones.Presupuesto;
-import Organizacion.Empresa;
-import Usuarios.Estandar;
-import org.junit.Assert;
+import Domain.BandejaDeMensajes.BandejaDeMensajes;
+import Domain.BandejaDeMensajes.Mensaje;
+import Domain.CategorizadorDeEmpresas.Sector;
+import Domain.DatosDeOperaciones.*;
+import Domain.ValidadorTransparencia.*;
+import Domain.Operaciones.Egreso;
+import Domain.Operaciones.Presupuesto;
+import Domain.Organizacion.Empresa;
+import Domain.Usuarios.Estandar;
 import org.junit.Test;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.logging.SimpleFormatter;
 
 public class TestMensajes{
 

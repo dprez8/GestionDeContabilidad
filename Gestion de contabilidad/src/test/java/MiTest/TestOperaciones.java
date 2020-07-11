@@ -1,9 +1,9 @@
 package MiTest;
 
-import CategorizadorDeEmpresas.Sector;
-import DatosDeOperaciones.*;
-import Operaciones.Egreso;
-import Organizacion.Empresa;
+import Domain.CategorizadorDeEmpresas.Sector;
+import Domain.DatosDeOperaciones.*;
+import Domain.Operaciones.Egreso;
+import Domain.Organizacion.Empresa;
 import org.junit.Assert;
 import org.junit.Test;
 

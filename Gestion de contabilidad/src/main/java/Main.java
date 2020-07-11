@@ -1,16 +1,13 @@
-import CategorizadorDeEmpresas.Sector;
-import DatosDeOperaciones.*;
-import Operaciones.Egreso;
-import Operaciones.Presupuesto;
-import Organizacion.Empresa;
-import Usuarios.Estandar;
-import ValidadorTransparencia.*;
+import Domain.CategorizadorDeEmpresas.Sector;
+import Domain.DatosDeOperaciones.*;
+import Domain.Operaciones.Egreso;
+import Domain.Operaciones.Presupuesto;
+import Domain.Organizacion.Empresa;
+import Domain.Usuarios.Estandar;
+import Domain.ValidadorTransparencia.*;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Properties;
 import java.util.Timer;
 
 public class Main {
