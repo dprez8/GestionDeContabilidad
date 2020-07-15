@@ -8,25 +8,32 @@ import Domain.Operaciones.Presupuesto;
 
 public class ValidarConPresupuesto extends ValidacionDeTransparencia {
 
+	private String msg = "El egreso %d no pudo ser validado, no coinciden proveedor, " +
+			"items ni documento comercial del egreso con ningun presupuesto";
 	@Override
-	public boolean validarEgreso(Egreso egreso, Presupuesto presupuesto){
-		if(coincideProveedor(egreso,presupuesto) && coincideItems(egreso,presupuesto) && coincideDocumentoComercial(egreso,presupuesto)) {
-//			egreso.obtenerRevisores().forEach(revisor -> revisor.getBandejaDeMensajes().
-//					crearMensaje(String.format("El egreso: %d y el presupuesto: %d paso ValidarConPresupuesto", egreso.getOperacionNumero(), presupuesto.getOperacionNumero())));
-			return true;
-		}
-		else {
-			egreso.getRevisores().forEach(revisor -> revisor.getBandejaDeMensajes().
-					crearMensaje("El egreso: %d y el presupuesto: %d no paso ValidarConPresupuesto", egreso.getOperacionNumero(), presupuesto.getOperacionNumero()));
-			return false;
-		}
+	public void validarEgreso(Egreso egreso) {
+		boolean validado = egreso.getPresupuestos().stream().anyMatch(presupuesto -> validarPresupuesto(egreso, presupuesto));
+		if (!validado)
+			egreso.getRevisores().forEach(revisor ->
+					revisor.getBandejaDeMensajes().crearMensaje(msg, egreso.getOperacionNumero()));
 	}
 
-	private boolean coincideProveedor(Egreso egreso,Presupuesto presupuesto){
+	private boolean validarPresupuesto(Egreso egreso, Presupuesto presupuesto) {
+		if (coincideProveedor(egreso, presupuesto) &&
+			coincideItems(egreso, presupuesto) &&
+			coincideDocumentoComercial(egreso, presupuesto))
+		{
+			presupuesto.incrementValidado();
+			return true;
+		}
+		return false;
+	}
+
+	private boolean coincideProveedor(Egreso egreso, Presupuesto presupuesto) {
 		return egreso.getProveedor().equals(presupuesto.getProveedor());
 	}
 
-	private boolean coincideItems(Egreso egreso, Presupuesto presupuesto){
+	private boolean coincideItems(Egreso egreso, Presupuesto presupuesto) {
 		return egreso.getItems()
 				.stream()
 				.allMatch(unItem->presupuesto.getItems()
@@ -34,13 +41,13 @@ public class ValidarConPresupuesto extends ValidacionDeTransparencia {
 						.anyMatch(unItemPresupuesto->itemCoincide(unItem,unItemPresupuesto)));
 	}
 
-	private boolean itemCoincide(ItemEgreso item, ItemPresupuesto itemPresupuesto){
+	private boolean itemCoincide(ItemEgreso item, ItemPresupuesto itemPresupuesto) {
 		return itemPresupuesto.getItemEgresoAsociado().equals(item)
 				&& itemPresupuesto.valorTotal() == item.valorTotal()
 				&& itemPresupuesto.getProducto().equals(item.getProducto());
 	}
 
-	private boolean coincideDocumentoComercial(Egreso egreso, Presupuesto presupuesto){
+	private boolean coincideDocumentoComercial(Egreso egreso, Presupuesto presupuesto) {
 		return egreso.getDocumento().equals(presupuesto.getDocumento());
 	}
 

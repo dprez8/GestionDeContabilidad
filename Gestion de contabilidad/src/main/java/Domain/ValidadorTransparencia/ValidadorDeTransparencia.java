@@ -21,30 +21,30 @@ public class ValidadorDeTransparencia {
 	}
 
 	public void validarEgreso (Egreso egreso) {
-		boolean resultadoDeValidacion = egreso.getPresupuestos().stream().anyMatch(
-				unPresupuesto -> validaciones.stream().allMatch(validador->validador.validarEgreso(egreso, unPresupuesto)));
-		if(resultadoDeValidacion){
+		validaciones.forEach(validador -> validador.validarEgreso(egreso));
+		boolean resultadoDeValidacion = egreso.getPresupuestos().stream().anyMatch(presupuesto -> presupuesto.getValidado() == validaciones.size());
+		if (resultadoDeValidacion) {
 			egreso.getRevisores().forEach(revisor -> revisor.getBandejaDeMensajes().
 					crearMensaje("Paso todas las validaciones, el egreso: %d", egreso.getOperacionNumero()));
-		}
-		else{
-			mandaMensajeCuandoFallaValidacion(egreso);
+		} else {
+			egreso.getRevisores().forEach(revisor -> revisor.getBandejaDeMensajes().
+					crearMensaje("Fallo la validacion del egreso %d. No hay presupuestos que hayan pasado todas las validaciones", egreso.getOperacionNumero()));
 		}
         egreso.setValidado(true);
 	}
 
-	public void mandaMensajeCuandoFallaValidacion(Egreso egreso) {
-		ListIterator<ValidacionDeTransparencia> listIteratorValidaciones = validaciones.listIterator();
-		ListIterator<Presupuesto> listIteratorPresupuestos = egreso.getPresupuestos().listIterator();
-		boolean estaValidadandoBien = true;
-		while (listIteratorPresupuestos.hasNext()) {
-			Presupuesto unPresupuesto = listIteratorPresupuestos.next();
-			while (listIteratorValidaciones.hasNext() && estaValidadandoBien) {        /**dejo de validar con este presupuesto apenas me falla un validador**/
-				ValidacionDeTransparencia unValidador = listIteratorValidaciones.next();
-				estaValidadandoBien = unValidador.validarEgreso(egreso, unPresupuesto);
-			}
-		}
-	}
+//	public void mandaMensajeCuandoFallaValidacion(Egreso egreso) {
+//		ListIterator<ValidacionDeTransparencia> listIteratorValidaciones = validaciones.listIterator();
+//		ListIterator<Presupuesto> listIteratorPresupuestos = egreso.getPresupuestos().listIterator();
+//		boolean estaValidadandoBien = true;
+//		while (listIteratorPresupuestos.hasNext()) {
+//			Presupuesto unPresupuesto = listIteratorPresupuestos.next();
+//			while (listIteratorValidaciones.hasNext() && estaValidadandoBien) {        /**dejo de validar con este presupuesto apenas me falla un validador**/
+//				ValidacionDeTransparencia unValidador = listIteratorValidaciones.next();
+//				estaValidadandoBien = unValidador.validarEgreso(egreso, unPresupuesto);
+//			}
+//		}
+//	}
 
 //	public void validarEgreso (Egreso egreso) { ///NO BORRAR, esta funcion te valida y guarda msj bien detallado
 //		ListIterator<ValidacionDeTransparencia> listIteratorValidaciones = validaciones.listIterator();
@@ -64,9 +64,8 @@ public class ValidadorDeTransparencia {
 //			}
 //		}
 //    }
-	
-	
-	public void addValidaciones(ValidacionDeTransparencia ... nuevasValidaciones){
+
+	public void addValidaciones(ValidacionDeTransparencia ... nuevasValidaciones) {
 		Collections.addAll(this.validaciones, nuevasValidaciones);
 	}
 }

@@ -78,4 +78,10 @@ public class Presupuesto {
         return items.stream().collect(Collectors.summingDouble(unItem->unItem.valorTotal()));
     }
 
+    public void incrementValidado() {
+    }
+
+    public int getValidado() {
+        return 1;
+    }
 }
