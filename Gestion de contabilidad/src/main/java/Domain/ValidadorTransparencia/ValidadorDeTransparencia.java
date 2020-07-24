@@ -2,27 +2,34 @@ package Domain.ValidadorTransparencia;
 
 import java.util.*;
 
+import Domain.BandejaDeMensajes.Mensaje;
 import Domain.Operaciones.Egreso;
-import Domain.Operaciones.Presupuesto;
 
 public class ValidadorDeTransparencia {
-	
-
 	private List<ValidacionDeTransparencia> validaciones;
-	
-	
-	public List<ValidacionDeTransparencia> getValidaciones() {
-		return validaciones;
-	}
-
 
 	public ValidadorDeTransparencia() {
 		this.validaciones = new ArrayList<>();
 	}
 
 	public void validarEgreso (Egreso egreso) {
-		boolean resultadoDeValidacion = egreso.getPresupuestos().stream().anyMatch(
-				unPresupuesto -> validaciones.stream().allMatch(validador->validador.validarEgreso(egreso, unPresupuesto)));
+		List<String> resultados = new ArrayList<>();
+		validaciones.forEach(unaValidacion->
+							 resultados.add(unaValidacion.validarEgreso(egreso)));
+		depositarEnLaBandeja(egreso,resultados);
+	}
+
+	private void depositarEnLaBandeja(Egreso egreso,List<String> mensajes){
+		egreso.getRevisores()
+				.forEach(revisor -> revisor
+						.getBandejaDeMensajes()
+						.addMensajes(mensajes));
+	}
+
+	public List<ValidacionDeTransparencia> getValidaciones() {
+		return validaciones;
+	}
+	/*
 		if(resultadoDeValidacion){
 			egreso.getRevisores().forEach(revisor -> revisor.getBandejaDeMensajes().
 					crearMensaje("Paso todas las validaciones, el egreso: %d", egreso.getOperacionNumero()));
@@ -39,13 +46,12 @@ public class ValidadorDeTransparencia {
 		boolean estaValidadandoBien = true;
 		while (listIteratorPresupuestos.hasNext()) {
 			Presupuesto unPresupuesto = listIteratorPresupuestos.next();
-			while (listIteratorValidaciones.hasNext() && estaValidadandoBien) {        /**dejo de validar con este presupuesto apenas me falla un validador**/
+			while (listIteratorValidaciones.hasNext() && estaValidadandoBien) {
 				ValidacionDeTransparencia unValidador = listIteratorValidaciones.next();
 				estaValidadandoBien = unValidador.validarEgreso(egreso, unPresupuesto);
 			}
 		}
-	}
-
+	}*/
 //	public void validarEgreso (Egreso egreso) { ///NO BORRAR, esta funcion te valida y guarda msj bien detallado
 //		ListIterator<ValidacionDeTransparencia> listIteratorValidaciones = validaciones.listIterator();
 //		ListIterator<Presupuesto> listIteratorPresupuestos = egreso.getPresupuestos().listIterator();

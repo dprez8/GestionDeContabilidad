@@ -10,6 +10,10 @@ public class BandejaDeMensajes{
         Mensaje msg = new Mensaje(String.format(cuerpo, args));
         mensajes.add(msg);
     }
+
+    public void addMensajes(List<String> variosMensajes){
+        variosMensajes.forEach(unCuerpo->crearMensaje(unCuerpo));
+    }
     public void ordenarPorFechaRecienteUltimo(){
         mensajes.sort(Comparator.comparing(Mensaje::getFecha));
     }

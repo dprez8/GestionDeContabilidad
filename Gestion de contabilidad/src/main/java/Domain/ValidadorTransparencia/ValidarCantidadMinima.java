@@ -1,7 +1,7 @@
 package Domain.ValidadorTransparencia;
 
+import Domain.BandejaDeMensajes.Mensaje;
 import Domain.Operaciones.Egreso;
-import Domain.Operaciones.Presupuesto;
 
 public class ValidarCantidadMinima extends ValidacionDeTransparencia{
 	private int cantidadMinimaDePresupuestos;
@@ -10,14 +10,14 @@ public class ValidarCantidadMinima extends ValidacionDeTransparencia{
 		this.cantidadMinimaDePresupuestos = cantidadMinimaDePresupuestos;
 	}
 	
-	public boolean validarEgreso(Egreso egreso, Presupuesto presupuesto){
+	public String validarEgreso(Egreso egreso){
+		String cuerpo;
 		if(egreso.getPresupuestos().size() >= this.cantidadMinimaDePresupuestos) {
-			return true;
+			cuerpo = "El egreso:" + egreso.getOperacionNumero() + ", se validó con la cantidad minima de presupuestos";
 		}
 		else {
-			egreso.getRevisores().forEach(revisor -> revisor.getBandejaDeMensajes().
-					crearMensaje("El egreso: %d no paso ValidarCantidadMinima, cantidad minima de presupuestos requerida es %d y se tiene %d", egreso.getOperacionNumero(), cantidadMinimaDePresupuestos, egreso.getPresupuestos().size()));
-			return false;
+			cuerpo = "El egreso:" + egreso.getOperacionNumero() + ", no se validó con la cantidad minima de presupuestos requeridas por el sistema";
 		}
+		return cuerpo;
 	}
 }
