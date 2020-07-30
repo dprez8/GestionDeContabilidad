@@ -8,7 +8,7 @@ import Domain.Operaciones.Presupuesto;
 
 public class ValidarConPresupuesto extends ValidacionDeTransparencia {
 
-	@Override
+/*	@Override
 	public boolean validarEgreso(Egreso egreso, Presupuesto presupuesto){
 		if(coincideProveedor(egreso,presupuesto) && coincideItems(egreso,presupuesto) && coincideDocumentoComercial(egreso,presupuesto)) {
 //			egreso.obtenerRevisores().forEach(revisor -> revisor.getBandejaDeMensajes().
@@ -43,5 +43,4 @@ public class ValidarConPresupuesto extends ValidacionDeTransparencia {
 	private boolean coincideDocumentoComercial(Egreso egreso, Presupuesto presupuesto){
 		return egreso.getDocumento().equals(presupuesto.getDocumento());
 	}
-
-}
+*/}

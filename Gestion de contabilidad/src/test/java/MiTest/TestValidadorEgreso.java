@@ -5,41 +5,68 @@ import Domain.BandejaDeMensajes.BandejaDeMensajes;
 import Domain.BandejaDeMensajes.Mensaje;
 import Domain.CategorizadorDeEmpresas.Sector;
 import Domain.DatosDeOperaciones.*;
+import Domain.Organizacion.EntidadJuridica;
+import Domain.Organizacion.Organizacion;
 import Domain.ValidadorTransparencia.*;
 import Domain.Operaciones.Egreso;
 import Domain.Operaciones.Presupuesto;
 import Domain.Organizacion.Empresa;
 import Domain.Usuarios.Estandar;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class TestMensajes{
+public class TestValidadorEgreso {
 
-    @Test
-    public void OrdernarMensajes() throws Exception{
+    private Egreso unaCompra;
+    private Presupuesto primerPresupuesto;
+    private Presupuesto segundoPresupuesto;
+    private Sector construccion;
+    private Empresa miPyme;
+    private EntidadJuridica unaEntidad;
+    private Estandar unUsuario;
+    private ValidarCantidadMinima validacionMinima;
+    private ValidadorDeTransparencia validador;
 
-        BandejaDeMensajes bandeja = new BandejaDeMensajes();
+    @Before
+    public void antesDeValidar(){
 
-        Date ayer = new SimpleDateFormat("dd/MM/yyyy").parse("21/6/2020");
-        Date anteayer = new SimpleDateFormat("dd/MM/yyyy").parse("20/6/2020");
+        this.validacionMinima = new ValidarCantidadMinima(1);
+        this.validador = new ValidadorDeTransparencia(validacionMinima);
 
-        bandeja.crearMensaje("Mensaje ayer");
-        bandeja.crearMensaje("Mensaje hoy");
-        bandeja.crearMensaje("Mensaje anteayer");
+        this.unaCompra = new Egreso(1);
 
-        bandeja.getMensajes().get(2).setFecha(anteayer);
-        bandeja.getMensajes().get(0).setFecha(ayer);
+        this.primerPresupuesto  = new Presupuesto(3, unaCompra);
+        this.segundoPresupuesto = new Presupuesto(4, unaCompra);
 
-        bandeja.ordenarPorFechaRecientePrimero();
+        unaCompra.addPresupuestos(primerPresupuesto,segundoPresupuesto);
 
-        for(Mensaje mensaje : bandeja.getMensajes()){
-            System.out.printf("[%td/%tm/%ty] [leido: %s] %s\n", mensaje.getFecha(), mensaje.getFecha(), mensaje.getFecha(), mensaje.isLeido(), mensaje.getCuerpo());
-            mensaje.setLeido(true);
-        }
+        this.construccion       = new Sector("Construccion");
+        this.miPyme             = new Empresa(3,5000003.0,"Construccion",construccion);
+        this.unaEntidad         = new EntidadJuridica("MiPyme",1234,"Nose",4321,1);
+
+        this.unUsuario = new Estandar(unaEntidad, "Lautaro", "1234", "lautaro@robles.com");
+
+        this.unaCompra.addRevisores(unUsuario);
     }
 
+    @Test
+    public void validarEgresos(){
+        List<Mensaje> mensajes = new ArrayList<>();
+        /*unaCompra.getRevisores()
+                 .forEach(unRevisor->unRevisor
+                         .getBandejaDeMensajes()
+                         .getMensajes());*/
+
+        mensajes.addAll(unUsuario.getBandejaDeMensajes().getMensajes());
+        mensajes.forEach(unMsj->
+                Assert.assertEquals(
+                        "Se validó con la cantidad minima de presupuestos. Número de egreso: 1",unMsj.getCuerpo()));
+    }
+/*
     @Test
     public void ValidacionesYMensajes() throws Exception {
 
@@ -94,5 +121,5 @@ public class TestMensajes{
             System.out.printf("[%td/%tm/%ty] [leido: %s] %s\n", mensaje.getFecha(), mensaje.getFecha(), mensaje.getFecha(), mensaje.isLeido(), mensaje.getCuerpo());
             mensaje.setLeido(true);
         }
-    }
+    }*/
 }

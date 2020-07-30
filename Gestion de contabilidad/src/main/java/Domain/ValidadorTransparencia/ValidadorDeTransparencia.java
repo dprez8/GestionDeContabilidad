@@ -2,14 +2,14 @@ package Domain.ValidadorTransparencia;
 
 import java.util.*;
 
-import Domain.BandejaDeMensajes.Mensaje;
 import Domain.Operaciones.Egreso;
 
 public class ValidadorDeTransparencia {
 	private List<ValidacionDeTransparencia> validaciones;
 
-	public ValidadorDeTransparencia() {
+	public ValidadorDeTransparencia(ValidacionDeTransparencia ... unasValidaciones) {
 		this.validaciones = new ArrayList<>();
+		addValidaciones(unasValidaciones);
 	}
 
 	public void validarEgreso (Egreso egreso) {
