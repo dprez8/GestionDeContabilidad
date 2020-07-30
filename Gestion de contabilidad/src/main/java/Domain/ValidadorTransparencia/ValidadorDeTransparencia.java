@@ -15,8 +15,10 @@ public class ValidadorDeTransparencia {
 	public void validarEgreso (Egreso egreso) {
 		List<String> resultados = new ArrayList<>();
 		validaciones.forEach(unaValidacion->
-							 resultados.add(unaValidacion.validarEgreso(egreso)));
+							 resultados.add(validarYConcatenarResultado(egreso,unaValidacion)));
 		depositarEnLaBandeja(egreso,resultados);
+		egreso.setValidado(true);
+		resultados.clear();
 	}
 
 	private void depositarEnLaBandeja(Egreso egreso,List<String> mensajes){
@@ -26,6 +28,9 @@ public class ValidadorDeTransparencia {
 						.addMensajes(mensajes));
 	}
 
+	private String validarYConcatenarResultado(Egreso egreso, ValidacionDeTransparencia unaValidacion){
+		return unaValidacion.validarEgreso(egreso) + " Número de egreso: " + egreso.getOperacionNumero();
+	}
 	public List<ValidacionDeTransparencia> getValidaciones() {
 		return validaciones;
 	}
