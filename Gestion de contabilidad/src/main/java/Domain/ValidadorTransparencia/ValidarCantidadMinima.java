@@ -2,7 +2,8 @@ package Domain.ValidadorTransparencia;
 
 import Domain.Operaciones.Egreso;
 
-public class ValidarCantidadMinima extends ValidacionDeTransparencia{
+public class ValidarCantidadMinima extends ValidacionDeTransparencia {
+
 	private int cantidadMinimaDePresupuestos;
 
 	public ValidarCantidadMinima(int cantidadMinimaDePresupuestos) {
