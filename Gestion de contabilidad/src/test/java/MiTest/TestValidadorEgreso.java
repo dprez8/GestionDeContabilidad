@@ -56,12 +56,14 @@ public class TestValidadorEgreso {
     @Test
     public void validarEgresos(){
         List<Mensaje> mensajes = new ArrayList<>();
+        validador.validarEgreso(this.unaCompra);
         /*unaCompra.getRevisores()
                  .forEach(unRevisor->unRevisor
                          .getBandejaDeMensajes()
                          .getMensajes());*/
 
         mensajes.addAll(unUsuario.getBandejaDeMensajes().getMensajes());
+        mensajes.forEach(unMsj->System.out.printf(unMsj.getCuerpo()));
         mensajes.forEach(unMsj->
                 Assert.assertEquals(
                         "Se validó con la cantidad minima de presupuestos. Número de egreso: 1",unMsj.getCuerpo()));

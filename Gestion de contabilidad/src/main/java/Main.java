@@ -12,7 +12,7 @@ import java.util.Timer;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-
+    /**
         Sector construccion = new Sector("Construccion");
         Empresa miPyme = new Empresa(3,5000003.0,"Construccion",construccion);
 
@@ -59,12 +59,12 @@ public class Main {
 
         lanzarHilo(miPyme, validador);
     }
-
+    **/
     /**Quizas esta parte pueda ir en la clase Schudeler*/
-    public static void lanzarHilo(Empresa miPyme, ValidadorDeTransparencia validador){
+    /**public static void lanzarHilo(Empresa miPyme, ValidadorDeTransparencia validador){
         Scheduler hilo = new Scheduler(miPyme,validador);
         Timer timer    = new Timer();
-        timer.schedule(hilo,0,5 * 1000); /**La instancia Scheduler llama a la funcion run con timer.schedule*/
+        timer.schedule(hilo,0,5 * 1000); La instancia Scheduler llama a la funcion run con timer.schedule*/
         /**vole el usuario que imprimia mensaje del schedule, hay que arreglarlo aca en el main**/
     }
 }
