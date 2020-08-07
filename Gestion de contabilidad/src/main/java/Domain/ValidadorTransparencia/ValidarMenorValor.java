@@ -5,25 +5,25 @@ import Domain.Operaciones.Presupuesto;
 
 import java.util.Comparator;
 
-public class ValidarMenorValor extends ValidacionDeTransparencia{
+public class ValidarMenorValor extends ValidacionDeTransparencia {
 	@Override
-	public boolean validarEgreso(Egreso egreso, Presupuesto presupuesto) {
-		if(egreso
-				.getPresupuestos()
-				.stream()
-				.min(Comparator.comparing(Presupuesto::getValorTotal))
-				.get()
-				.equals(presupuesto)
-		){
-//			egreso.obtenerRevisores().forEach(revisor -> revisor.getBandejaDeMensajes().
-//					crearMensaje(String.format("El egreso: %d y el presupuesto: %d paso ValidarMenorValor", egreso.getOperacionNumero(), presupuesto.getOperacionNumero())));
-			return true;
-		}
-		else{
-			egreso
-					.getRevisores()
-					.forEach(revisor -> revisor.getBandejaDeMensajes().crearMensaje("El egreso: %d y el presupuesto: %d no paso ValidarMenorValor", egreso.getOperacionNumero(), presupuesto.getOperacionNumero()));
-			return false;
-		}
+	public String validarEgreso(Egreso egreso) {
+		
+		String cuerpo;
+		Presupuesto presupuestoObtenido = egreso.getPresupuestos().stream()
+											.filter(unPresupuesto->
+												validarPresupuesto(egreso,unPresupuesto))
+													.collect(Collectors.toList())
+														.get(0);
+																		
+
+		Presupuesto menor = egreso.getPresupuestos().stream().min(Comparator.comparing(Presupuesto::getValorTotal)).get();
+
+		if(menor.equals(presupuestoObtenido)){
+			cuerpo = "El presupuesto elegido es el de menor valor.";
+			return cuerpo;
+		}		
+			cuerpo = "El presupuesto elegido no es el de menor valor.";
+			return cuerpo;		
 	}
 }

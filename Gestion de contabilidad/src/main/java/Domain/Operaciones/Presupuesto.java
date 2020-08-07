@@ -77,5 +77,4 @@ public class Presupuesto {
     private Double calcularValorTotal(){
         return items.stream().collect(Collectors.summingDouble(unItem->unItem.valorTotal()));
     }
-
 }
