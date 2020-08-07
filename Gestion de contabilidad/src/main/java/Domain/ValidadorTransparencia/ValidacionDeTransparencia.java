@@ -1,19 +1,21 @@
 package Domain.ValidadorTransparencia;
 
 import Domain.Operaciones.Egreso;
+import Domain.Operaciones.Presupuesto;
+import Domain.DatosDeOperaciones.*;
 
 public abstract class ValidacionDeTransparencia {
 
 	public abstract String validarEgreso(Egreso egreso);
 
-		protected boolean validarPresupuesto(Egreso egreso, Presupuesto presupuesto) {
-		if (coincideProveedor(egreso, presupuesto) &&
+	protected boolean validarPresupuesto(Egreso egreso, Presupuesto presupuesto) {
+	if (coincideProveedor(egreso, presupuesto) &&
 			coincideItems(egreso, presupuesto) &&
 			coincideDocumentoComercial(egreso, presupuesto))
 		{
 			return true;
 		}
-		return false;
+	return false;
 	}
 
 	private boolean coincideProveedor(Egreso egreso, Presupuesto presupuesto) {

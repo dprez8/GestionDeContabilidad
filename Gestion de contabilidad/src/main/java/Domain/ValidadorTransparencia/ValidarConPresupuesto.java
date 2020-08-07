@@ -1,10 +1,9 @@
 package Domain.ValidadorTransparencia;
 
-
-import Domain.DatosDeOperaciones.ItemEgreso;
-import Domain.DatosDeOperaciones.ItemPresupuesto;
 import Domain.Operaciones.Egreso;
 import Domain.Operaciones.Presupuesto;
+
+import java.util.stream.Collectors;
 
 public class ValidarConPresupuesto extends ValidacionDeTransparencia {
 
@@ -17,9 +16,8 @@ public class ValidarConPresupuesto extends ValidacionDeTransparencia {
 													.collect(Collectors.toList())
 														.get(0);
 
-		if (presupuestoElegido!=NULL){
+		if (presupuestoElegido != null){
 			cuerpo = "Se validó el egreso con uno de los presupuestos.";
-			presupuestoElegido.incrementValidado();
 			}
 		else 
 			cuerpo = "No se validó el egreso con alguno de los presupuesto.";
