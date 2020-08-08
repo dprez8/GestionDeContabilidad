@@ -8,15 +8,13 @@ public class Categoria {
     private double montoMax;
     private int personalMin;
     private int personalMax;
-    private Sector sector;
 
-    public Categoria(String categoria, Double montoMin, Double montoMax, int personalMin, int personalMax, Sector sector){
+    public Categoria(String categoria, Double montoMin, Double montoMax, int personalMin, int personalMax){
         this.nombre      = categoria;
         this.montoMin    = montoMin;
         this.montoMax    = montoMax;
         this.personalMin = personalMin;
         this.personalMax = personalMax;
-        this.sector      = sector;
     }
 
 //    public boolean dentroDelMinMaxPersonal(Empresa unaEmpresa){
@@ -31,10 +29,6 @@ public class Categoria {
         if((montoMin < unaEmpresa.getVentasAnuales() && unaEmpresa.getVentasAnuales() <= montoMax)
                 || (personalMin < unaEmpresa.getCantidadDePersonal() && unaEmpresa.getCantidadDePersonal() <= personalMax)) return true;
         else return false;
-    }
-
-    public Sector getSector() {
-        return sector;
     }
 
     public String getNombre(){
