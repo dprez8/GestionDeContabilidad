@@ -2,6 +2,8 @@ package Domain.Organizacion;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import Domain.CategorizadorDeEmpresas.Categoria;
 import Domain.Usuarios.Estandar;
 
 public class EntidadJuridica extends Organizacion {
@@ -22,9 +24,13 @@ public class EntidadJuridica extends Organizacion {
         this.entidadesBase = new ArrayList<>();
     }
 
+    /**Setters & Getters*/
     public void setUsuario(Estandar usuario) {
         this.usuario = usuario;
     }
 
+    public void setTipoEntidadJuridica(CategoriaEntidadJuridica tipoEntidadJuridica){
+        this.tipoEntidadJuridica = tipoEntidadJuridica;
+    }
 }
 
