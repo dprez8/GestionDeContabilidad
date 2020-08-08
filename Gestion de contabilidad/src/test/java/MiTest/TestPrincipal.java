@@ -1,17 +1,14 @@
 package MiTest;
 
-
-import Domain.BandejaDeMensajes.BandejaDeMensajes;
-import Domain.BandejaDeMensajes.Mensaje;
-import Domain.CategorizadorDeEmpresas.Sector;
+import Domain.BandejaDeMensajes.*;
+import Domain.CategorizadorDeEmpresas.*;
 import Domain.DatosDeOperaciones.*;
-import Domain.Organizacion.EntidadJuridica;
-import Domain.Organizacion.Organizacion;
+import Domain.Organizacion.*;
 import Domain.ValidadorTransparencia.*;
-import Domain.Operaciones.Egreso;
-import Domain.Operaciones.Presupuesto;
-import Domain.Organizacion.Empresa;
-import Domain.Usuarios.Estandar;
+import Domain.Operaciones.*;
+import Domain.Usuarios.*;
+import Repositories.DaoMemoria;
+import Repositories.Repositorio;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,8 +16,9 @@ import org.junit.Test;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class TestValidadorEgreso {
+public class TestPrincipal {
 
+    private Repositorio<Egreso> repoEgresos;
     private Egreso unaCompra;
     private Presupuesto primerPresupuesto;
     private Presupuesto segundoPresupuesto;
@@ -51,6 +49,9 @@ public class TestValidadorEgreso {
         this.unUsuario = new Estandar(unaEntidad, "Lautaro", "1234", "lautaro@robles.com");
 
         this.unaCompra.addRevisores(unUsuario);
+
+        this.repoEgresos = new Repositorio<Egreso>(new DaoMemoria<Egreso>(),Egreso.class); //Creo el repositorio de egresos
+        this.repoEgresos.agregar(this.unaCompra);
     }
 
     @Test
@@ -67,6 +68,27 @@ public class TestValidadorEgreso {
         mensajes.forEach(unMsj->
                 Assert.assertEquals(
                         "Se validó con la cantidad minima de presupuestos. Número de egreso: 1",unMsj.getCuerpo()));
+    }
+
+    @Test
+    public void categorizacionDeEmpresas(){
+
+        construccion.addCategoriaExistente("Micro", 1);
+        construccion.addCategoriaExistente("Pequenia", 2);
+        construccion.addCategoriaExistente("Mediana T1", 3);
+        construccion.addCategoriaExistente("Mediana T2", 4);
+
+        Categoria microConstruccion = new Categoria("Micro",0.0,15230000.0,1,6);
+        Categoria medianaT1Construccion = new Categoria("Mediana T1",300000.0,15230000.0,6,12);
+        Categoria microServicios    = new Categoria("Micro",0.0,8500000.0,1,7);
+        Categoria microComercio     = new Categoria("Micro",0.0,29740000.0,1,7);
+
+        Empresa miPyme = new Empresa(3,5000003.0,"Construccion",construccion);
+
+        construccion.addCategorias(microComercio,medianaT1Construccion,microConstruccion,microServicios);
+
+        miPyme.cacularCategoria();
+        Assert.assertEquals(medianaT1Construccion,miPyme.getCategoria());
     }
 /*
     @Test

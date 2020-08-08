@@ -17,8 +17,9 @@ public class Sector {
     }
 
     public Categoria obtenerCategoriaDe(Empresa unaEmpresa){
-        List<Categoria> listaCategoriasFiltrada = this.categorias.stream().filter(a -> a.getSector().equals(unaEmpresa.getSector()))
-                .filter(a -> a.dentroDelMinMax(unaEmpresa)).collect(Collectors.toList());
+        List<Categoria> listaCategoriasFiltrada = this.categorias.stream().filter(unaCategoria ->
+                                                                                    unaCategoria.dentroDelMinMax(unaEmpresa))
+                                                                                        .collect(Collectors.toList());
         Categoria categoriaObtenida = listaCategoriasFiltrada.stream().max(Comparator.comparingInt(a->categoriasExistentes.get(a.getNombre()))).get();
         return categoriaObtenida;
     }
