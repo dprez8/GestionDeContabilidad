@@ -1,15 +1,3 @@
-import Domain.CategorizadorDeEmpresas.Sector;
-import Domain.DatosDeOperaciones.*;
-import Domain.Operaciones.Egreso;
-import Domain.Operaciones.Presupuesto;
-import Domain.Organizacion.Empresa;
-import Domain.Usuarios.Estandar;
-import Domain.ValidadorTransparencia.*;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Timer;
-
 public class Main {
     public static void main(String[] args) throws Exception {
     /**

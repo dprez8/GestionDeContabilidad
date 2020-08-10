@@ -2,7 +2,7 @@ package MiTest;
 
 import Domain.BandejaDeMensajes.*;
 import Domain.CategorizadorDeEmpresas.*;
-import Domain.DatosDeOperaciones.*;
+import Domain.Operaciones.Egreso.Egreso;
 import Domain.Organizacion.*;
 import Domain.ValidadorTransparencia.*;
 import Domain.Operaciones.*;
@@ -13,7 +13,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class TestPrincipal {

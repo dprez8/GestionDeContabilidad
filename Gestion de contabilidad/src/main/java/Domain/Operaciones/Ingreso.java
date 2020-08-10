@@ -1,6 +1,8 @@
 package Domain.Operaciones;
 
 
+import Domain.Operaciones.Egreso.Egreso;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,7 +13,6 @@ public class Ingreso extends Operacion {
     private List<Egreso> egresos;
 
     public Ingreso(int operacionNumero, String descripcion, double montoTotal){
-        super(operacionNumero);
         this.descripcion = descripcion;
         this.montoTotal = montoTotal;
         this.egresos = new ArrayList<>();

@@ -9,8 +9,15 @@ public abstract class Operacion {
 	protected Organizacion organizacion;
 	protected int operacionNumero;
 
-	public Operacion(int operacionNumero){
+	public Operacion(){
 		this.fechaOperacion = new Date();
+	}
+
+	public void setOperacionNumero(int operacionNumero) {
 		this.operacionNumero = operacionNumero;
+	}
+
+	public void setFechaOperacion(Date fecha) {
+		this.fechaOperacion = fecha;
 	}
 }

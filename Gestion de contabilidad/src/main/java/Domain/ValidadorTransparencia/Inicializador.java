@@ -3,7 +3,7 @@ import java.util.List;
 import java.util.TimerTask;
 import java.util.stream.Collectors;
 
-import Domain.Operaciones.Egreso;
+import Domain.Operaciones.Egreso.Egreso;
 import Domain.Organizacion.*;
 
 public class Inicializador extends TimerTask {

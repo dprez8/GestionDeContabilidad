@@ -1,6 +1,6 @@
 package Domain.ValidadorTransparencia;
 
-import Domain.Operaciones.Egreso;
+import Domain.Operaciones.Egreso.Egreso;
 
 public class ValidarCantidadMinima extends ValidacionDeTransparencia {
 

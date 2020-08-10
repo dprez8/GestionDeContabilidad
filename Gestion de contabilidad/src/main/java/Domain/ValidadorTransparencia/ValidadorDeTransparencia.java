@@ -2,7 +2,7 @@ package Domain.ValidadorTransparencia;
 
 import java.util.*;
 
-import Domain.Operaciones.Egreso;
+import Domain.Operaciones.Egreso.Egreso;
 
 public class ValidadorDeTransparencia {
 	private List<ValidacionDeTransparencia> validaciones;

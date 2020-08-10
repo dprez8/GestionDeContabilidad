@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import Domain.DatosDeOperaciones.DocumentoComercial;
 import Domain.DatosDeOperaciones.ItemPresupuesto;
 import Domain.DatosDeOperaciones.Proveedor;
+import Domain.Operaciones.Egreso.Egreso;
 
 public class Presupuesto {
     private int operacionNumero;
