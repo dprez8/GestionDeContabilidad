@@ -12,7 +12,7 @@ import java.util.Timer;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-    /**
+
         Sector construccion = new Sector("Construccion");
         Empresa miPyme = new Empresa(3,5000003.0,"Construccion",construccion);
 
@@ -39,16 +39,26 @@ public class Main {
         Proveedor lautaroRobles = new Proveedor("Lautaro Robles", 41424242, 1823);
         Proveedor lautaroIturregui = new Proveedor("Lautaro Iturregui", 2224222, 1853);
 
-        Egreso unaCompra = new Egreso(100, unDocumento, efectivo, lautaroRobles, miPyme, RAMs, placasDeVideo);
-
         ItemPresupuesto RAMpresupuesto = new ItemPresupuesto(RAM, RAMs, 1, 3000);
         ItemPresupuesto placaVideoPresupuesto = new ItemPresupuesto(placaDeVideo, placasDeVideo, 2, 5000);
 
         ItemPresupuesto RAM2presupuesto = new ItemPresupuesto(RAM, RAMs, 1, 3500);
         ItemPresupuesto placaVide2Presupuesto = new ItemPresupuesto(placaDeVideo, placasDeVideo, 2, 6000);
 
-        Presupuesto primerPresupuesto = new Presupuesto(4000, unaCompra, unDocumento, "31/01/20", lautaroRobles, RAMpresupuesto, placaVideoPresupuesto);
-        Presupuesto segundoPresupuesto = new Presupuesto(4210, unaCompra, unDocumento, "1/02/20", lautaroIturregui, RAM2presupuesto, placaVide2Presupuesto);
+        BuilderEgresoConcreto builder = new BuilderEgresoConcreto();
+
+        Egreso unaCompra = builder.agregarProveedor()
+
+
+        Presupuesto primerPresupuesto = new Presupuesto(4000, unaCompra);
+        primerPresupuesto.setDocumento(unDocumento);
+        primerPresupuesto.setFechaVigente("31/12/20");
+        primerPresupuesto.setProveedor(lautaroIturregui);
+
+        Presupuesto segundoPresupuesto = new Presupuesto(4210, unaCompra);
+        segundoPresupuesto.setDocumento(unDocumento);
+        segundoPresupuesto.setFechaVigente("30/11/20");
+        segundoPresupuesto.setProveedor(lautaroRobles);
 
         unaCompra.agregarPresupuestos(primerPresupuesto,segundoPresupuesto);
         miPyme.agregarOperaciones(unaCompra);
@@ -59,7 +69,7 @@ public class Main {
 
         lanzarHilo(miPyme, validador);
     }
-    **/
+
     /**Quizas esta parte pueda ir en la clase Schudeler*/
     /**public static void lanzarHilo(Empresa miPyme, ValidadorDeTransparencia validador){
         Scheduler hilo = new Scheduler(miPyme,validador);
