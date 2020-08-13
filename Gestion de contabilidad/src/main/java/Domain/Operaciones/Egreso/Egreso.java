@@ -1,6 +1,10 @@
-package Domain.Operaciones;
+package Domain.Operaciones.Egreso;
 
 import Domain.Exceptions.noAlcanzaIngreso;
+import Domain.Operaciones.CategoriaOperacion;
+import Domain.Operaciones.Ingreso;
+import Domain.Operaciones.Operacion;
+import Domain.Operaciones.Presupuesto;
 import Domain.Usuarios.Estandar;
 import java.util.ArrayList;
 
@@ -25,8 +29,7 @@ public class Egreso extends Operacion {
 	private boolean validado;
 	private double valorTotal;
 
-	public Egreso(int operacionNumero) {
-		super(operacionNumero);
+	public Egreso() {
 		this.items = new ArrayList<>();
 		this.presupuestos = new ArrayList<>();
 		this.revisores = new ArrayList<>();

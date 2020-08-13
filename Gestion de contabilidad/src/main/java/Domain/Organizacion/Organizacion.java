@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import Domain.Operaciones.*;
+import Domain.Operaciones.Egreso.Egreso;
 
 public abstract class Organizacion {
     protected String nombreFicticio;

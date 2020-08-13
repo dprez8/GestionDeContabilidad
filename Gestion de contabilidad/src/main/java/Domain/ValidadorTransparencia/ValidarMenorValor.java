@@ -1,9 +1,10 @@
 package Domain.ValidadorTransparencia;
 
-import Domain.Operaciones.Egreso;
+import Domain.Operaciones.Egreso.Egreso;
 import Domain.Operaciones.Presupuesto;
 
 import java.util.Comparator;
+import java.util.stream.Collectors;
 
 public class ValidarMenorValor extends ValidacionDeTransparencia {
 	@Override

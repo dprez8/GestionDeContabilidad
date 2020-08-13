@@ -1,16 +1,5 @@
 package MiTest;
 
-import Domain.CategorizadorDeEmpresas.Sector;
-import Domain.DatosDeOperaciones.*;
-import Domain.Operaciones.Egreso;
-import Domain.Organizacion.Empresa;
-import org.junit.Assert;
-import org.junit.Test;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 public class TestOperaciones {
     /*
     public TestOperaciones() throws ParseException {
