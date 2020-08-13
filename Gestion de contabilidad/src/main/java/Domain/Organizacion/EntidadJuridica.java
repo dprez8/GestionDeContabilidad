@@ -4,18 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Domain.CategorizadorDeEmpresas.Categoria;
+import Domain.DireccionPostal.DireccionPostal;
 import Domain.Usuarios.Estandar;
 
 public class EntidadJuridica extends Organizacion {
     private String razonSocial;
     private int cuit;
-    private int direccionPostal;
+    private DireccionPostal direccionPostal;
     private int codigoDeInscripcionDefinitivaEnIGJ;
     private List<EntidadBase> entidadesBase;
     private Estandar usuario;
     private CategoriaEntidadJuridica tipoEntidadJuridica;
 
-    public EntidadJuridica(String nombre,int cuit,String razonSocial,int direccionPostal,int codigoDeInscripcionDefinitivaEnIGJ){
+    public EntidadJuridica(String nombre,int cuit,String razonSocial,DireccionPostal direccionPostal,int codigoDeInscripcionDefinitivaEnIGJ){
         super(nombre);
         this.cuit = cuit;
         this.razonSocial = razonSocial;

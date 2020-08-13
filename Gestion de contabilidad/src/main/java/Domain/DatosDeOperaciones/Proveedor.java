@@ -1,14 +1,17 @@
 package Domain.DatosDeOperaciones;
 
+import Domain.DireccionPostal.DireccionPostal;
+
 public class Proveedor {
 	private String nombre;
 	private int documento;
-	private int zipcode;
+	private DireccionPostal direccion;
 	
-	public Proveedor(String nombre, int documento, int zipcode) {
+	
+	public Proveedor(String nombre, int documento, DireccionPostal direccion) {
 		this.nombre = nombre;
 		this.documento = documento;
-		this.zipcode = zipcode;
+		this.direccion = direccion;
 	}
 }
 
