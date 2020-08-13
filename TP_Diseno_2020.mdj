@@ -35297,7 +35297,7 @@
 													"top": 594,
 													"width": 339.61865234375,
 													"height": 13,
-													"text": "+categorizarA(Empresa): bool",
+													"text": "+dentroDelMinMax(Empresa): bool",
 													"horizontalAlignment": 0
 												}
 											],
@@ -36491,7 +36491,7 @@
 									"_parent": {
 										"$ref": "AAAAAAFy0AqREampY0g="
 									},
-									"name": "categorizarA",
+									"name": "dentroDelMinMax",
 									"parameters": [
 										{
 											"_type": "UMLParameter",
@@ -36499,8 +36499,7 @@
 											"_parent": {
 												"$ref": "AAAAAAFy0LLDixQqk3o="
 											},
-											"name": "Empresa",
-											"type": ""
+											"name": "Empresa"
 										},
 										{
 											"_type": "UMLParameter",
