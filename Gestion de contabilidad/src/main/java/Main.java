@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -21,12 +22,12 @@ public class Main {
         ValidarConPresupuesto validacionPresupuesto = new ValidarConPresupuesto();
         ValidarMenorValor validacionMenorValor = new ValidarMenorValor();
 
-        ValidadorDeTransparencia validador = new ValidadorDeTransparencia(validacionMenorValor, validacionPresupuesto, validacionMinima);
+        ValidadorDeTransparencia validador = new ValidadorDeTransparencia(validacionMinima,validacionPresupuesto,validacionMenorValor);
 
         /**Creacion del Scheduler*/
-
+        /*
         Scheduler hilo = new Scheduler(10000); //esta en ms, serian 10 seg
-
+*/
         /**Creacion de los datos de egreso y sus presupuestos, ejemplo*/
         Producto RAM = new Producto("Memoria RAM 4 gb DDR3");
         ItemEgreso RAMs = new ItemEgreso(RAM, 1, 3000);
@@ -62,9 +63,9 @@ public class Main {
         EntidadJuridica unaEntidad  = new EntidadJuridica("MiPyme",1234,"Nose",direccionPostal,1);
         unaEntidad.setTipoEntidadJuridica(miPyme);
 
+        /**Construccion del egreso*/
         BuilderEgresoConcreto egresoBuilder = new BuilderEgresoConcreto();
 
-        /**Construccion del egreso*/
         Egreso unaCompra = egresoBuilder.agregarProveedor(lautaroIturregui)
                             .agregarFechaOperacion(fechaDeEntrega)
                             .agregarMedioDePago(efectivo)
@@ -90,12 +91,12 @@ public class Main {
         Estandar unUsuario = new Estandar(unaEntidad, "Lautaro", "1234", "lautaro@robles.com");
 
         /**Configuracion del egreso para pruebas*/
+        unaEntidad.addOperaciones(unaCompra);
         unaCompra.addRevisores(unUsuario);
         unaCompra.addPresupuestos(primerPresupuesto,segundoPresupuesto);
 
         /**Inicio scheduler para validar el egreso*/
-
-        hilo.arrancarTarea(unaEntidad,validador);
+        Scheduler.arrancarTarea(unaEntidad,validador);
 
         /**Solo es necesario un revisor para ver los mensajes*/
         List<Mensaje> mensajes = new ArrayList<>();
@@ -104,8 +105,7 @@ public class Main {
         revisor = unaCompra.getRevisores().get(0);
 
         mensajes.addAll(revisor.getBandejaDeMensajes().getMensajes());
-        mensajes.forEach(unMsj->System.out.printf(unMsj.getCuerpo()));
-
+        mensajes.forEach(unMsj->System.out.println(unMsj.getCuerpo()));
         mensajes.clear();
     }
 }

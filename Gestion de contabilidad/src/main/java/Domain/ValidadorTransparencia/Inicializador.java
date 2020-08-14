@@ -17,7 +17,7 @@ public class Inicializador extends TimerTask {
 
     @Override
     public void run() {
-        List<Egreso> egresos = organizacion.getEgresos().stream().filter(a -> a.isValidado() == false).collect(Collectors.toList()); //Lo egresos que no han sido validados o no pasaron las pruebas anteriormente
-        egresos.forEach(egreso -> validador.validarEgreso(egreso)); //valida cada uno de los egresos que no se habian validado
+        List<Egreso> egresos = this.organizacion.getEgresos().stream().filter(a -> a.isValidado() == false).collect(Collectors.toList()); //Lo egresos que no han sido validados o no pasaron las pruebas anteriormente
+        egresos.forEach(egreso -> this.validador.validarEgreso(egreso)); //valida cada uno de los egresos que no se habian validado
     }
 }
