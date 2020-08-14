@@ -57,7 +57,7 @@ public class Presupuesto {
         this.categoria = categoria;
     }
 
-	private void addItems (ItemPresupuesto ... unosItems) {
+	public void addItems (ItemPresupuesto ... unosItems) {
         Collections.addAll(this.items, unosItems);
         this.valorTotal = calcularValorTotal();
     }
