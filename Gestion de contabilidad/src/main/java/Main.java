@@ -1,5 +1,7 @@
+import Domain.BandejaDeMensajes.Mensaje;
 import Domain.CategorizadorDeEmpresas.Sector;
 import Domain.DatosDeOperaciones.*;
+import Domain.DireccionPostal.DireccionPostal;
 import Domain.Operaciones.*;
 import Domain.ValidadorTransparencia.*;
 import Domain.Organizacion.*;
@@ -7,20 +9,25 @@ import Domain.Operaciones.Egreso.*;
 import Domain.Usuarios.*;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws Exception {
 
-        Sector construccion = new Sector("Construccion");
-        Empresa miPyme = new Empresa(3,5000003.0,"Construccion",construccion);
-
+        /**Creacion de los validadores*/
         ValidarCantidadMinima validacionMinima = new ValidarCantidadMinima(1);
         ValidarConPresupuesto validacionPresupuesto = new ValidarConPresupuesto();
         ValidarMenorValor validacionMenorValor = new ValidarMenorValor();
 
         ValidadorDeTransparencia validador = new ValidadorDeTransparencia(validacionMenorValor, validacionPresupuesto, validacionMinima);
 
+        /**Creacion del Scheduler*/
+
+        Scheduler hilo = new Scheduler(10000); //esta en ms, serian 10 seg
+
+        /**Creacion de los datos de egreso y sus presupuestos, ejemplo*/
         Producto RAM = new Producto("Memoria RAM 4 gb DDR3");
         ItemEgreso RAMs = new ItemEgreso(RAM, 1, 3000);
 
@@ -35,8 +42,11 @@ public class Main {
 
         MedioDePago efectivo = new MedioDePago(1212, "Efectivo");
 
-        Proveedor lautaroRobles = new Proveedor("Lautaro Robles", 41424242, 1823);
-        Proveedor lautaroIturregui = new Proveedor("Lautaro Iturregui", 2224222, 1853);
+        DireccionPostal direPostalIturregui = new DireccionPostal();
+        DireccionPostal direPostalRobles    = new DireccionPostal();
+
+        Proveedor lautaroRobles = new Proveedor("Lautaro Robles", 41424242, direPostalRobles);
+        Proveedor lautaroIturregui = new Proveedor("Lautaro Iturregui", 2224222, direPostalIturregui);
 
         ItemPresupuesto RAMpresupuesto = new ItemPresupuesto(RAM, RAMs, 1, 3000);
         ItemPresupuesto placaVideoPresupuesto = new ItemPresupuesto(placaDeVideo, placasDeVideo, 2, 5000);
@@ -44,32 +54,58 @@ public class Main {
         ItemPresupuesto RAM2presupuesto = new ItemPresupuesto(RAM, RAMs, 1, 3500);
         ItemPresupuesto placaVide2Presupuesto = new ItemPresupuesto(placaDeVideo, placasDeVideo, 2, 6000);
 
-        BuilderEgresoConcreto builder = new BuilderEgresoConcreto();
+        /**Creacion de una organizacion ejemplo*/
+        DireccionPostal direccionPostal = new DireccionPostal();
 
-        Egreso unaCompra = builder.agregarProveedor(lautaroIturregui)
-                            .agregarFechaOperacion();
+        Sector construccion = new Sector("Construccion");
+        Empresa miPyme = new Empresa(3,5000003.0,"Construccion",construccion);
+        EntidadJuridica unaEntidad  = new EntidadJuridica("MiPyme",1234,"Nose",direccionPostal,1);
+        unaEntidad.setTipoEntidadJuridica(miPyme);
 
+        BuilderEgresoConcreto egresoBuilder = new BuilderEgresoConcreto();
 
+        /**Construccion del egreso*/
+        Egreso unaCompra = egresoBuilder.agregarProveedor(lautaroIturregui)
+                            .agregarFechaOperacion(fechaDeEntrega)
+                            .agregarMedioDePago(efectivo)
+                            .agregarDocumentoComercial(unDocumento)
+                            .agregarDatosOrganizacion(unaEntidad)
+                            .agregarItems(RAMs,placasDeVideo)
+                            .build();
+
+        /**Creacion de dos presupuestos con un egreso*/
         Presupuesto primerPresupuesto = new Presupuesto(4000, unaCompra);
         primerPresupuesto.setDocumento(unDocumento);
         primerPresupuesto.setFechaVigente("31/12/20");
         primerPresupuesto.setProveedor(lautaroIturregui);
+        primerPresupuesto.addItems(placaVideoPresupuesto,RAMpresupuesto);
 
         Presupuesto segundoPresupuesto = new Presupuesto(4210, unaCompra);
         segundoPresupuesto.setDocumento(unDocumento);
         segundoPresupuesto.setFechaVigente("30/11/20");
         segundoPresupuesto.setProveedor(lautaroRobles);
+        segundoPresupuesto.addItems(placaVide2Presupuesto,RAM2presupuesto);
 
+        /**Creacion de un usuario, el cual sera revisor*/
+        Estandar unUsuario = new Estandar(unaEntidad, "Lautaro", "1234", "lautaro@robles.com");
 
-        Estandar unUsuario = new Estandar(miPyme, "Lautaro", "1234", "lautaro@robles.com");
+        /**Configuracion del egreso para pruebas*/
+        unaCompra.addRevisores(unUsuario);
+        unaCompra.addPresupuestos(primerPresupuesto,segundoPresupuesto);
 
-    }
+        /**Inicio scheduler para validar el egreso*/
 
-    /**Quizas esta parte pueda ir en la clase Schudeler*/
-    /**public static void lanzarHilo(Empresa miPyme, ValidadorDeTransparencia validador){
-        Scheduler hilo = new Scheduler(miPyme,validador);
-        Timer timer    = new Timer();
-        timer.schedule(hilo,0,5 * 1000); La instancia Scheduler llama a la funcion run con timer.schedule*/
-        /**vole el usuario que imprimia mensaje del schedule, hay que arreglarlo aca en el main**/
+        hilo.arrancarTarea(unaEntidad,validador);
+
+        /**Solo es necesario un revisor para ver los mensajes*/
+        List<Mensaje> mensajes = new ArrayList<>();
+        Estandar revisor;
+
+        revisor = unaCompra.getRevisores().get(0);
+
+        mensajes.addAll(revisor.getBandejaDeMensajes().getMensajes());
+        mensajes.forEach(unMsj->System.out.printf(unMsj.getCuerpo()));
+
+        mensajes.clear();
     }
 }
