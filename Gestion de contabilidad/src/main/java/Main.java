@@ -1,3 +1,14 @@
+import Domain.CategorizadorDeEmpresas.Sector;
+import Domain.DatosDeOperaciones.*;
+import Domain.Operaciones.*;
+import Domain.ValidadorTransparencia.*;
+import Domain.Organizacion.*;
+import Domain.Operaciones.Egreso.*;
+import Domain.Usuarios.*;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Main {
     public static void main(String[] args) throws Exception {
 
@@ -35,7 +46,8 @@ public class Main {
 
         BuilderEgresoConcreto builder = new BuilderEgresoConcreto();
 
-        Egreso unaCompra = builder.agregarProveedor()
+        Egreso unaCompra = builder.agregarProveedor(lautaroIturregui)
+                            .agregarFechaOperacion();
 
 
         Presupuesto primerPresupuesto = new Presupuesto(4000, unaCompra);
@@ -48,14 +60,9 @@ public class Main {
         segundoPresupuesto.setFechaVigente("30/11/20");
         segundoPresupuesto.setProveedor(lautaroRobles);
 
-        unaCompra.agregarPresupuestos(primerPresupuesto,segundoPresupuesto);
-        miPyme.agregarOperaciones(unaCompra);
 
         Estandar unUsuario = new Estandar(miPyme, "Lautaro", "1234", "lautaro@robles.com");
 
-        unaCompra.agregarRevisor(unUsuario);
-
-        lanzarHilo(miPyme, validador);
     }
 
     /**Quizas esta parte pueda ir en la clase Schudeler*/

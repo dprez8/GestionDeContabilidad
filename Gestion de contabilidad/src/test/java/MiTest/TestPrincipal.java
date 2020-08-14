@@ -34,7 +34,8 @@ public class TestPrincipal {
         this.validacionMinima = new ValidarCantidadMinima(1);
         this.validador = new ValidadorDeTransparencia(validacionMinima);
 
-        this.unaCompra = new Egreso(1);
+        this.unaCompra = new Egreso();
+        this.unaCompra.setOperacionNumero(1);
 
         this.primerPresupuesto  = new Presupuesto(3, unaCompra);
         this.segundoPresupuesto = new Presupuesto(4, unaCompra);
