@@ -13,5 +13,11 @@ public class Proveedor {
 		this.documento = documento;
 		this.direccion = direccion;
 	}
+
+	/**Setters & Getters*/
+
+	public String getNombre(){
+		return nombre;
+	}
 }
 
