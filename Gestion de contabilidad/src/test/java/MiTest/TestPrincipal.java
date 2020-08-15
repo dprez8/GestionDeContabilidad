@@ -65,6 +65,7 @@ public class TestPrincipal {
         /**Creacion de un usuario estandar*/
         this.fernando = new Estandar(pymeJuridica, "Lautaro", "1234", "lautaro@robles.com");
 
+        /**Creacion de un repositorio de egresos*/
         this.repoEgresos = new Repositorio<Egreso>(new DaoMemoria<Egreso>(),Egreso.class); //Creo el repositorio de egresos
 
     }
@@ -109,5 +110,9 @@ public class TestPrincipal {
         this.miPyme.cacularCategoria();
         System.out.printf(miPyme.getCategoria().getNombre());
         Assert.assertEquals(pequeniaConstruccion,miPyme.getCategoria());
+    }
+    @Test
+    public void validadorDeContrasenias(){
+
     }
 }

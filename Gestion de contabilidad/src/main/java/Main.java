@@ -102,9 +102,13 @@ public class Main {
         Estandar revisor;
 
         revisor = unaCompra.getRevisores().get(0);
-
+        /**Por alguna razon, antes de que se ejecute el Scheduler, pasan muchas cosas, por lo tanto, espero a que se valide
+         * la compra. Aca entra otro problema, si o si debo colocar este system.out dentro del while, sin el no muestra los msj*/
+        while (unaCompra.isValidado()==false){
+            System.out.printf(" ");
+        }
         mensajes.addAll(revisor.getBandejaDeMensajes().getMensajes());
-        mensajes.forEach(unMsj->System.out.println(unMsj.getCuerpo()));
+        mensajes.forEach(msj->System.out.println(msj.getCuerpo()));
         mensajes.clear();
     }
 }
