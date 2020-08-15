@@ -9,6 +9,7 @@ import Domain.Operaciones.Egreso.*;
 import Domain.Usuarios.*;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,10 +37,8 @@ public class Main {
         ItemEgreso placasDeVideo = new ItemEgreso(placaDeVideo, 2, 5000);
 
         TipoDocumento FacturaA = new TipoDocumento("Factura A");
-        SimpleDateFormat parseador = new SimpleDateFormat("dd/MM/yy");
-        Date fechaDePedido = parseador.parse("31/01/20");
-        Date fechaDeEntrega = parseador.parse("05/02/20");
-        DocumentoComercial unDocumento = new DocumentoComercial(FacturaA, 11111, fechaDePedido, fechaDeEntrega, "Ejemplo");
+
+        DocumentoComercial unDocumento = new DocumentoComercial(FacturaA, 11111);
 
         MedioDePago efectivo = new MedioDePago(1212, "Efectivo");
 
@@ -67,7 +66,7 @@ public class Main {
         BuilderEgresoConcreto egresoBuilder = new BuilderEgresoConcreto();
 
         Egreso unaCompra = egresoBuilder.agregarProveedor(lautaroIturregui)
-                            .agregarFechaOperacion(fechaDeEntrega)
+                            .agregarFechaOperacion(LocalDate.now())
                             .agregarMedioDePago(efectivo)
                             .agregarDocumentoComercial(unDocumento)
                             .agregarDatosOrganizacion(unaEntidad)
