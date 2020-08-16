@@ -1,26 +1,31 @@
 package MiTest;
 
-import Domain.BandejaDeMensajes.*;
 import Domain.CategorizadorDeEmpresas.*;
 import Domain.DatosDeOperaciones.*;
 import Domain.DireccionPostal.DireccionPostal;
+import Domain.Exceptions.contraseniaCorta;
+import Domain.Exceptions.contraseniaMuyComun;
+import Domain.Exceptions.repiteContraseniaEnMailOUsuario;
 import Domain.Operaciones.Egreso.BuilderEgresoConcreto;
 import Domain.Operaciones.Egreso.Egreso;
 import Domain.Organizacion.*;
 import Domain.Operaciones.*;
 import Domain.Usuarios.*;
+import Domain.ValidadorDeContrasenia.ValidadorDeContrasenia;
+import Domain.ValidadorDeContrasenia.ValidarIgualAMailOUsuario;
+import Domain.ValidadorDeContrasenia.ValidarLongitudCorta;
+import Domain.ValidadorDeContrasenia.ValidarTop10k;
 import Repositories.DaoMemoria;
 import Repositories.Repositorio;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.io.FileReader;
+import java.io.IOException;
 import java.time.Month;
 import java.util.*;
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class TestPrincipal {
 
@@ -36,6 +41,7 @@ public class TestPrincipal {
     private DocumentoComercial factura;
     private Producto ram,placaDeVideo;
     private ItemEgreso rams,placasDeVideo;
+    private ValidadorDeContrasenia validadorDeContrasenia;
 
     @Before
     public void antesDeTestear(){
@@ -63,11 +69,13 @@ public class TestPrincipal {
         this.pymeJuridica       = new EntidadJuridica("MiPyme",1234,"Nose",direccionPostal,1);
         this.pymeJuridica.setTipoEntidadJuridica(this.miPyme);
         /**Creacion de un usuario estandar*/
-        this.fernando = new Estandar(pymeJuridica, "Lautaro", "1234", "lautaro@robles.com");
+        this.fernando = new Estandar(pymeJuridica, "Fernando", "1234", "fernando@herbas.com");
 
         /**Creacion de un repositorio de egresos*/
         this.repoEgresos = new Repositorio<Egreso>(new DaoMemoria<Egreso>(),Egreso.class); //Creo el repositorio de egresos
 
+        /**Creacion del validador de contraseñas*/
+        this.validadorDeContrasenia = new ValidadorDeContrasenia();
     }
 
     @Test
@@ -111,8 +119,34 @@ public class TestPrincipal {
         System.out.printf(miPyme.getCategoria().getNombre());
         Assert.assertEquals(pequeniaConstruccion,miPyme.getCategoria());
     }
-    @Test
-    public void validadorDeContrasenias(){
 
+    @Test(expected = contraseniaCorta.class)
+    public void validadorDeContrasenias() throws IOException, contraseniaCorta, contraseniaMuyComun, repiteContraseniaEnMailOUsuario {
+        /**Leo un archivo de config mediante la clase Properties*/
+        Properties prop=new Properties();
+        prop.load(new FileReader("src/main/resources/config.properties"));
+
+        ValidarLongitudCorta validarLongitudCorta           = new ValidarLongitudCorta(Integer.parseInt(prop.getProperty("longitudMinima")));
+        ValidarTop10k validarTop10k                         = new ValidarTop10k(prop.getProperty("dataFilePath"));
+        ValidarIgualAMailOUsuario validarIgualAMailOUsuario = new ValidarIgualAMailOUsuario();
+
+        this.validadorDeContrasenia.addValidaciones(validarLongitudCorta,validarTop10k,validarIgualAMailOUsuario);
+
+        this.validadorDeContrasenia.validarContrasenia(this.fernando);
+
+        /**Para capturar la excepcion, si se desea, comentar la linea de arriba y el expected en la anotacion @Test*/
+        /*
+        String error = new String();
+        try{
+            this.validadorDeContrasenia.validarContrasenia(this.fernando);
+        }catch (contraseniaCorta ex) {
+            error = ex.getMessage();
+        }catch (contraseniaMuyComun ex){
+            error = ex.getMessage();
+        }catch (repiteContraseniaEnMailOUsuario ex){
+            error = ex.getMessage();
+        }
+        System.out.println(error);
+        */
     }
 }
