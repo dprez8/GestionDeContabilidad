@@ -1,6 +1,7 @@
 package Domain.ValidadorDeContrasenia;
 
 import Domain.Exceptions.contraseniaMuyComun;
+import Domain.Usuarios.Usuario;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -13,8 +14,9 @@ public class ValidarTop10k extends ValidacionDeContrasenia {
         rutaArchivo10KPeoresContras = pathDeArchivo;
     }
 
-    public void validarConstrasenia(String contrasenia, String mail, String usuarioNombre) throws contraseniaMuyComun, IOException {
-        if(estaEnElTopDiezK(contrasenia))
+    @Override
+    public void validarConstrasenia(Usuario usuario) throws contraseniaMuyComun, IOException {
+        if(estaEnElTopDiezK(usuario.getContrasenia()))
             throw new contraseniaMuyComun("La contrasenia es muy comun, dentro del top10k peores, pensar algo mas complejo");
     }
 

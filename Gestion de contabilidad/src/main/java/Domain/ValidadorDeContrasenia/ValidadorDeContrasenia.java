@@ -3,6 +3,7 @@ package Domain.ValidadorDeContrasenia;
 import Domain.Exceptions.contraseniaCorta;
 import Domain.Exceptions.contraseniaMuyComun;
 import Domain.Exceptions.repiteContraseniaEnMailOUsuario;
+import Domain.Usuarios.Usuario;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,9 +21,9 @@ public class ValidadorDeContrasenia {
         Collections.addAll(this.validaciones, nuevasValidaciones);
     }
 
-    public void validarContrasenia(String usuario, String mail, String contrasenia) throws IOException, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, contraseniaCorta {
+    public void validarContrasenia(Usuario usuario) throws IOException, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, contraseniaCorta {
         for(ValidacionDeContrasenia validador : validaciones){
-            validador.validarConstrasenia(contrasenia, mail, usuario);
+            validador.validarConstrasenia(usuario);
         }
     }
 }
