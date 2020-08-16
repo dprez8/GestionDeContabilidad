@@ -6,6 +6,7 @@ import Domain.DatosDeOperaciones.MedioDePago;
 import Domain.DatosDeOperaciones.Proveedor;
 import Domain.Organizacion.Organizacion;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class BuilderEgresoConcreto implements IBuilderEgreso {
     }
     
     @Override
-    public IBuilderEgreso agregarFechaOperacion(Date fecha) {
+    public IBuilderEgreso agregarFechaOperacion(LocalDate fecha) {
         this.egreso.setFechaOperacion(fecha);
         return this;
     }

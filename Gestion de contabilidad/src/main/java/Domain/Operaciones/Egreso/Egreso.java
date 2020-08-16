@@ -41,6 +41,9 @@ public class Egreso extends Operacion {
 		return presupuestos;
 	}
 
+	public MedioDePago getMedioDePago(){
+    	return medioDePago;
+	}
 
 	public DocumentoComercial getDocumento() {
 		return documento;
