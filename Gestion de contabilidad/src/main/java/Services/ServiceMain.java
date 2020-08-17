@@ -1,8 +1,10 @@
 package Services;
 
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.Scanner;
 
 import Domain.ApiPaises.*;
@@ -10,9 +12,11 @@ import Domain.ApiPaises.*;
 public class ServiceMain {
 
 	public static void main(String[] args) throws IOException {
-		
+		//LLAMO AL ARCHIVO DE CONFIG PARA OBTENER LA URL A LA API DE ML
+		Properties prop=new Properties();
+		prop.load(new FileReader("src/main/resources/config.properties"));
 		//SE HACE EL REQUEST DE LA LISTA DE PAISES
-		ServicioGeoref servicioGeoref = ServicioGeoref.instancia();
+		ServicioGeoref servicioGeoref = ServicioGeoref.instancia(prop.getProperty("URLML"));
 		System.out.println("Paises Disponibles: ");
 		List<Pais> paisesList = servicioGeoref.ListadoDePaises();
 		Pais.asignarIdAPaises(paisesList);

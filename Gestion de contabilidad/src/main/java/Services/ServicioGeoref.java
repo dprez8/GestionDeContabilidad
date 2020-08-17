@@ -13,17 +13,17 @@ public class ServicioGeoref {
 	private static ServicioGeoref instancia=null;
 	private Retrofit retrofit;
 	
-	public static ServicioGeoref instancia(){
+	public static ServicioGeoref instancia(String URL){
 	
 		if(instancia==null){
-			instancia= new ServicioGeoref();
+			instancia= new ServicioGeoref(URL);
 		}
 		return instancia;
 	}
 	
-	private ServicioGeoref(){
+	private ServicioGeoref(String URL){
 		this.retrofit = new Retrofit.Builder().
-				baseUrl("https://api.mercadolibre.com/").
+				baseUrl(URL).
 				addConverterFactory(GsonConverterFactory.
 				create()).build();
 	}
