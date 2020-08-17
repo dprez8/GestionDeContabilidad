@@ -35,4 +35,30 @@ public class ServicioGeoref {
 		List<Pais> paises = responseListadoDePaises.body();
 		return paises;
 	}
+	
+	public ListadoDeProvincias ListadoDeProvincias(Pais pais) throws IOException{
+		GeorefServices georefservices=this.retrofit.create(GeorefServices.class);
+		Call<ListadoDeProvincias> requestListadoProvincias = georefservices.getProvincias(pais.id);
+		Response<ListadoDeProvincias> responseListadoDeProvincias = requestListadoProvincias.execute();
+		ListadoDeProvincias provincias = responseListadoDeProvincias.body();
+		return provincias;
+	}
+	
+	public ListadoDeCiudades ListadoDeCiudades(Provincia provincia) throws IOException{
+		GeorefServices georefservices=this.retrofit.create(GeorefServices.class);
+		Call<ListadoDeCiudades> requestListadoCiudades = georefservices.getCiudades (provincia.id);
+		Response<ListadoDeCiudades> responseListadoDeCiudades  = requestListadoCiudades.execute();
+		ListadoDeCiudades ciudades = responseListadoDeCiudades.body();
+		return ciudades;
+	}
+	
+	
+	public Moneda Moneda(Pais pais) throws IOException{
+		GeorefServices georefservices=this.retrofit.create(GeorefServices.class);
+		Call<Moneda> requestMoneda = georefservices.getMoneda(pais.currency_id);
+		Response<Moneda> responseMoneda = requestMoneda.execute();
+		Moneda moneda = responseMoneda.body();
+		return moneda;
+	}
+	
 }

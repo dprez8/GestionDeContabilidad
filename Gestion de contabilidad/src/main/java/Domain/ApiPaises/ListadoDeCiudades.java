@@ -1,5 +1,9 @@
 package Domain.ApiPaises;
 
-public class ListadoDeCiudades {
+import java.util.List;
 
+public class ListadoDeCiudades {
+	public String id;
+	public String name;
+	public List<Ciudad> cities;
 }
