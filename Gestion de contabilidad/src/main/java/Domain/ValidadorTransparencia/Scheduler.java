@@ -18,11 +18,11 @@ public class Scheduler{
 	}
 
 	/** Setter & Getters */
-	public void setPeriodo(long unPeriodo){
+	public static void setPeriodo(long unPeriodo){
 		periodo = unPeriodo;
 	}
 
-	public long getPeriodo(){
+	public static long getPeriodo(){
 		return periodo;
 	}
 }

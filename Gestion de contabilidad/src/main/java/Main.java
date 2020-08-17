@@ -95,6 +95,7 @@ public class Main {
         unaCompra.addPresupuestos(primerPresupuesto,segundoPresupuesto);
 
         /**Inicio scheduler para validar el egreso*/
+        Scheduler.setPeriodo(100);
         Scheduler.arrancarTarea(unaEntidad,validador);
 
         /**Solo es necesario un revisor para ver los mensajes*/
