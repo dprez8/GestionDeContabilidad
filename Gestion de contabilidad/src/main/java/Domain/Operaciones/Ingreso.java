@@ -31,6 +31,10 @@ public class Ingreso extends Operacion {
     }
 
     public void asociarEgreso(Egreso egreso){
-        egresos.add(egreso);
+        if(montoSobrante()-egreso.getValorTotal()>=0)
+        	egresos.add(egreso);
+        else{
+        	System.out.println("No puede asociarse este egreso porque supera el valor del ingreso");
+        }
     }
 }
