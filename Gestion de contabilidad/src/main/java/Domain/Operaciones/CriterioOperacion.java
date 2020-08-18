@@ -22,4 +22,8 @@ public class CriterioOperacion {
     public void setCriterioPadre(CriterioOperacion critOperacion){
         criterioPadre = critOperacion;
     }
+    
+    public void addCategoria(Categoria categoria){
+    	categorias.add(categoria);
+    }
 }
