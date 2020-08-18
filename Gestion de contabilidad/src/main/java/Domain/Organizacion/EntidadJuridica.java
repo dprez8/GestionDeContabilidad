@@ -3,7 +3,6 @@ package Domain.Organizacion;
 import java.util.ArrayList;
 import java.util.List;
 
-import Domain.CategorizadorDeEmpresas.Categoria;
 import Domain.DireccionPostal.DireccionPostal;
 import Domain.Usuarios.Estandar;
 

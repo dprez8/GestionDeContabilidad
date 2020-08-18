@@ -6,7 +6,7 @@ import Domain.CategorizadorDeEmpresas.*;
 public class Empresa extends CategoriaEntidadJuridica{
     private int cantidadDePersonal;
     private double ventasAnuales;
-    private Categoria categoria;
+    private CategoriaEmpresa categoriaEmpresa;
     private Sector sector;
     private String actividad;
 
@@ -18,7 +18,7 @@ public class Empresa extends CategoriaEntidadJuridica{
     }
 
     public void cacularCategoria(){
-        this.categoria = this.sector.obtenerCategoriaDe(this);
+        this.categoriaEmpresa = this.sector.obtenerCategoriaDe(this);
     }
 
     public Sector getSector() {
@@ -42,7 +42,7 @@ public class Empresa extends CategoriaEntidadJuridica{
         return 0;
     }
 
-    public Categoria getCategoria() {
-        return categoria;
+    public CategoriaEmpresa getCategoriaEmpresa() {
+        return categoriaEmpresa;
     }
 }

@@ -24,7 +24,7 @@ public class Egreso extends Operacion {
 	private List<Presupuesto> presupuestos;
 	private List<Estandar> revisores;
 	private Ingreso ingresoAsociado;
-	private CategoriaOperacion categoria;
+	private List<CategoriaOperacion> categorias;
 	private Organizacion organizacion;
 	private boolean validado;
 	private double valorTotal;
@@ -33,6 +33,7 @@ public class Egreso extends Operacion {
 		this.items = new ArrayList<>();
 		this.presupuestos = new ArrayList<>();
 		this.revisores = new ArrayList<>();
+		this.categorias = new ArrayList<>();
 		this.validado = false;
 	}
 
@@ -85,8 +86,8 @@ public class Egreso extends Operacion {
 		this.proveedor = proveedor;
 	}
 
-	public void setCategoria(CategoriaOperacion categoria) {
-		this.categoria = categoria;
+	public void addCategorias(CategoriaOperacion ... categorias) {
+		Collections.addAll(this.categorias, categorias);
 	}
 	public void setOrganizacion(Organizacion organizacion) {
 		this.organizacion = organizacion;

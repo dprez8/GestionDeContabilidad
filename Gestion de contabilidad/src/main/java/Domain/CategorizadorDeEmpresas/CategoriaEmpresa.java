@@ -2,14 +2,14 @@ package Domain.CategorizadorDeEmpresas;
 
 import Domain.Organizacion.Empresa;
 
-public class Categoria {
+public class CategoriaEmpresa {
     private String nombre;
     private double montoMin;
     private double montoMax;
     private int personalMin;
     private int personalMax;
 
-    public Categoria(String categoria, Double montoMin, Double montoMax, int personalMin, int personalMax){
+    public CategoriaEmpresa(String categoria, Double montoMin, Double montoMax, int personalMin, int personalMax){
         this.nombre      = categoria;
         this.montoMin    = montoMin;
         this.montoMax    = montoMax;

@@ -1,12 +1,10 @@
 package Domain.Operaciones;
 
-import Domain.CategorizadorDeEmpresas.Categoria;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class CriterioOperacion {
-    private List<Categoria> categorias;
+    private List<CategoriaOperacion> categorias;
     private List<CriterioOperacion> criteriosHijo;
     private CriterioOperacion criterioPadre;
     private String descripcion;
