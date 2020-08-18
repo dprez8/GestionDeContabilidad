@@ -1,6 +1,7 @@
 package Domain.ApiPaises;
 
 import java.util.List;
+import java.util.Optional;
 
 public class Ciudad {
 	public String id;
@@ -22,5 +23,9 @@ public class Ciudad {
 	public void asignarId(){
 		contadorCiudades++;
 		this.idCiudad=contadorCiudades;
+	}
+	
+	public static Optional<Ciudad> ciudadConId(List<Ciudad> listaCiudades,int idElegido){
+		return listaCiudades.stream().filter(p->p.idCiudad==idElegido).findFirst();
 	}
 }
