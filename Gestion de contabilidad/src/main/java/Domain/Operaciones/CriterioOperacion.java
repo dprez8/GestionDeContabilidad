@@ -1,6 +1,7 @@
 package Domain.Operaciones;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CriterioOperacion {
@@ -23,7 +24,7 @@ public class CriterioOperacion {
         criterioPadre = critOperacion;
     }
     
-    public void addCategoria(Categoria categoria){
-    	categorias.add(categoria);
+    public void addCategorias(CategoriaOperacion ... categorias){
+        Collections.addAll(this.categorias, categorias);
     }
 }
