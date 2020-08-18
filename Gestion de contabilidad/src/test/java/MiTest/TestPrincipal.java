@@ -108,16 +108,16 @@ public class TestPrincipal {
         this.construccion.addCategoriaExistente("Mediana T2", 4);
 
         /**Categorias del sector construccion*/
-        Categoria microConstruccion     = new Categoria("Micro",0.0,	19450000.0,1,12);
-        Categoria pequeniaConstruccion  = new Categoria("Pequenia",19450000.0,115370000.0,12,45);
-        Categoria medianaT1Construccion = new Categoria("Mediana T1",115370000.0,643710000.0,45,200);
-        Categoria medianaT2Construccion = new Categoria("Mediana T2",643710000.0,965460000.0,200,590);
+        CategoriaEmpresa microConstruccion     = new CategoriaEmpresa("Micro",0.0,	19450000.0,1,12);
+        CategoriaEmpresa pequeniaConstruccion  = new CategoriaEmpresa("Pequenia",19450000.0,115370000.0,12,45);
+        CategoriaEmpresa medianaT1Construccion = new CategoriaEmpresa("Mediana T1",115370000.0,643710000.0,45,200);
+        CategoriaEmpresa medianaT2Construccion = new CategoriaEmpresa("Mediana T2",643710000.0,965460000.0,200,590);
 
         this.construccion.addCategorias(pequeniaConstruccion,medianaT1Construccion,microConstruccion,medianaT2Construccion);
 
         this.miPyme.cacularCategoria();
-        System.out.printf(miPyme.getCategoria().getNombre());
-        Assert.assertEquals(pequeniaConstruccion,miPyme.getCategoria());
+        System.out.printf(miPyme.getCategoriaEmpresa().getNombre());
+        Assert.assertEquals(pequeniaConstruccion,miPyme.getCategoriaEmpresa());
     }
 
     @Test(expected = contraseniaCorta.class)

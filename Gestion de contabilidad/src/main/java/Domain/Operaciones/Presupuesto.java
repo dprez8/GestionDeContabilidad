@@ -16,7 +16,7 @@ public class Presupuesto {
     private Egreso egresoAsociado;
     private DocumentoComercial documento;
     private String fechaVigente;
-    private CategoriaOperacion categoria;
+    private List<CategoriaOperacion> categorias;
     private Proveedor proveedor;
     private Double valorTotal;
     
@@ -24,6 +24,7 @@ public class Presupuesto {
     public Presupuesto(int operacionNumero, Egreso unEgreso){
         this.operacionNumero = operacionNumero;
         this.egresoAsociado = unEgreso;
+        this.categorias = new ArrayList<>();
         this.items = new ArrayList<>();
     }
     /**Getters*/
@@ -49,12 +50,12 @@ public class Presupuesto {
     public String getFechaVigente() {
         return fechaVigente;
     }
-    public CategoriaOperacion getCategoria() {
-        return categoria;
+    public List<CategoriaOperacion> getCategorias() {
+        return categorias;
     }
     /**Setters*/
-    public void setCategoria(CategoriaOperacion categoria) {
-        this.categoria = categoria;
+    public void addCategorias(CategoriaOperacion ... categorias) {
+        Collections.addAll(this.categorias,categorias);
     }
 
 	public void addItems (ItemPresupuesto ... unosItems) {

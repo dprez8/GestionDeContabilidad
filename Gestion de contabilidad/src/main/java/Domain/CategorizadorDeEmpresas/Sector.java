@@ -7,24 +7,24 @@ import java.util.stream.Collectors;
 
 public class Sector {
     private String nombre;
-    private List<Categoria> categorias;
+    private List<CategoriaEmpresa> categoriaEmpresas;
     private HashMap<String, Integer> categoriasExistentes;
 
     public Sector(String nombre){
-        this.categorias = new ArrayList<>();
+        this.categoriaEmpresas = new ArrayList<>();
         this.categoriasExistentes = new HashMap<String,Integer>();
         this.nombre = nombre;
     }
 
-    public Categoria obtenerCategoriaDe(Empresa unaEmpresa){
-        List<Categoria> listaCategoriasFiltrada = this.categorias.stream().filter(unaCategoria ->
-                                                                                    unaCategoria.dentroDelMinMax(unaEmpresa))
+    public CategoriaEmpresa obtenerCategoriaDe(Empresa unaEmpresa){
+        List<CategoriaEmpresa> listaCategoriasFiltrada = this.categoriaEmpresas.stream().filter(unaCategoriaEmpresa ->
+                                                                                    unaCategoriaEmpresa.dentroDelMinMax(unaEmpresa))
                                                                                         .collect(Collectors.toList());
-        Categoria categoriaObtenida = listaCategoriasFiltrada.stream().max(Comparator.comparingInt(a->categoriasExistentes.get(a.getNombre()))).get();
-        return categoriaObtenida;
+        CategoriaEmpresa categoriaEmpresaObtenida = listaCategoriasFiltrada.stream().max(Comparator.comparingInt(a->categoriasExistentes.get(a.getNombre()))).get();
+        return categoriaEmpresaObtenida;
     }
-    public void addCategorias(Categoria ... categorias){
-        Collections.addAll(this.categorias,categorias);
+    public void addCategorias(CategoriaEmpresa... categoriaEmpresas){
+        Collections.addAll(this.categoriaEmpresas, categoriaEmpresas);
     }
 
     public void addCategoriaExistente(String key, Integer value) {
