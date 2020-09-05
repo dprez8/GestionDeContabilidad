@@ -7,6 +7,16 @@ public class Provincia {
 	public String id;
 	public String name;
 	private int idProvincia;
+	private String idPais;
+	
+	public String getIdPais() {
+		return idPais;
+	}
+
+	public void setIdPais(String idPais) {
+		this.idPais = idPais;
+	}
+
 	private static int contadorProvincias;
 	
 	public void setIdProvincia(int idProvincia) {
