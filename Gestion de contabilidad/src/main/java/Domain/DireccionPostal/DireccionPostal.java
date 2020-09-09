@@ -4,7 +4,7 @@ import Domain.ApiPaises.Ciudad;
 import Domain.ApiPaises.Pais;
 import Domain.ApiPaises.Provincia;
 
-public class d {
+public class DireccionPostal{
 	private Pais pais;
 	private Provincia provincia;
 	private Ciudad ciudad;

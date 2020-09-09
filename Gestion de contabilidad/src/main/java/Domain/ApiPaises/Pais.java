@@ -3,9 +3,18 @@ package Domain.ApiPaises;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+@Entity
+@Table(name= "Pais")
 public class Pais {
+	
+	@Column(name="country_id")
 	public String id;
+	@Column
 	public String name;
+	@Column
 	public String currency_id;
 	private int idPais;
 	private static int contadorPaises;

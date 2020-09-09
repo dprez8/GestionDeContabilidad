@@ -1,5 +1,6 @@
 package Domain.Operaciones;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -15,7 +16,7 @@ public class Presupuesto {
     private List<ItemPresupuesto> items;
     private Egreso egresoAsociado;
     private DocumentoComercial documento;
-    private String fechaVigente;
+    private LocalDate fechaVigente;
     private List<CategoriaOperacion> categorias;
     private Proveedor proveedor;
     private Double valorTotal;
@@ -47,7 +48,7 @@ public class Presupuesto {
 	public Egreso getEgresoAsociado() {
 		return egresoAsociado;
 	}
-    public String getFechaVigente() {
+    public LocalDate getFechaVigente() {
         return fechaVigente;
     }
     public List<CategoriaOperacion> getCategorias() {
@@ -67,7 +68,7 @@ public class Presupuesto {
         this.documento = documento;
     }
 
-    public void setFechaVigente(String fechaVigente) {
+    public void setFechaVigente(LocalDate fechaVigente) {
         this.fechaVigente = fechaVigente;
     }
 

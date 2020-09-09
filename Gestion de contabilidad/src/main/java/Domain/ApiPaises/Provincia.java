@@ -3,18 +3,22 @@ package Domain.ApiPaises;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.Column;
+
 public class Provincia {
+	@Column(name="province_id")
 	public String id;
+	@Column
 	public String name;
 	private int idProvincia;
-	private String idPais;
+	private Pais pais;
 	
-	public String getIdPais() {
-		return idPais;
+	public Pais getPais() {
+		return pais;
 	}
 
-	public void setIdPais(String idPais) {
-		this.idPais = idPais;
+	public void setPais(Pais pais) {
+		this.pais = pais;
 	}
 
 	private static int contadorProvincias;

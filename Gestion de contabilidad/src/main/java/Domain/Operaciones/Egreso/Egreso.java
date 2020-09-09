@@ -25,7 +25,6 @@ public class Egreso extends Operacion {
 	private List<Estandar> revisores;
 	private Ingreso ingresoAsociado;
 	private List<CategoriaOperacion> categorias;
-	private Organizacion organizacion;
 	private boolean validado;
 	private double valorTotal;
 
