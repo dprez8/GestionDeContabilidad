@@ -1,11 +1,13 @@
 package Domain.Operaciones;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 import Domain.Organizacion.*;
 
 public abstract class Operacion {
 	protected LocalDate fechaOperacion;
+	protected Date fechaCarga;
 	protected Organizacion organizacion;
 	protected int operacionNumero;
 

@@ -6,9 +6,12 @@ import Domain.Operaciones.Ingreso;
 import Domain.Operaciones.Operacion;
 import Domain.Operaciones.Presupuesto;
 import Domain.Usuarios.Estandar;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,6 +32,7 @@ public class Egreso extends Operacion {
 	private double valorTotal;
 
 	public Egreso() {
+		this.fechaCarga= new Date();
 		this.items = new ArrayList<>();
 		this.presupuestos = new ArrayList<>();
 		this.revisores = new ArrayList<>();

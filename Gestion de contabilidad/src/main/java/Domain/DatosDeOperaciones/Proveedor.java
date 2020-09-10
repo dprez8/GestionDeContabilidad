@@ -1,6 +1,7 @@
 package Domain.DatosDeOperaciones;
 
-import Domain.DireccionPostal;
+import Domain.DireccionPostal.DireccionPostal;
+
 
 public class Proveedor {
 	private String nombre;
