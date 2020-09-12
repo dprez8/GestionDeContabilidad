@@ -44320,12 +44320,12 @@
 												},
 												{
 													"_type": "ERDColumnView",
-													"_id": "AAAAAAFxj6thpj5wcHg=",
+													"_id": "AAAAAAFxj6rYej5pMl0=",
 													"_parent": {
 														"$ref": "AAAAAAFxj6qYXT5d/18="
 													},
 													"model": {
-														"$ref": "AAAAAAFxj6thkT5tGx0="
+														"$ref": "AAAAAAFxj6rYRz5m7R4="
 													},
 													"font": "Arial;13;0",
 													"left": 117,
@@ -44335,12 +44335,12 @@
 												},
 												{
 													"_type": "ERDColumnView",
-													"_id": "AAAAAAFxj6rYej5pMl0=",
+													"_id": "AAAAAAFxj6thpj5wcHg=",
 													"_parent": {
 														"$ref": "AAAAAAFxj6qYXT5d/18="
 													},
 													"model": {
-														"$ref": "AAAAAAFxj6rYRz5m7R4="
+														"$ref": "AAAAAAFxj6thkT5tGx0="
 													},
 													"font": "Arial;13;0",
 													"left": 117,
@@ -45442,7 +45442,7 @@
 									"_parent": {
 										"$ref": "AAAAAAFxj6qYXT5ZLcw="
 									},
-									"name": "payment_type_id",
+									"name": "payment_type",
 									"type": "varchar",
 									"length": "20"
 								},
@@ -45452,7 +45452,7 @@
 									"_parent": {
 										"$ref": "AAAAAAFxj6qYXT5ZLcw="
 									},
-									"name": "nombreMedio",
+									"name": "nombre_medio",
 									"type": "varchar",
 									"length": "20"
 								}

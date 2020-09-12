@@ -2,14 +2,13 @@ package Domain.ApiPaises;
 
 import java.util.List;
 import java.util.Optional;
+import javax.persistence.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 @Entity
 @Table(name= "Pais")
 public class Pais {
 	
+	@Id
 	@Column(name="country_id")
 	public String id;
 	@Column

@@ -7,8 +7,9 @@ import javax.persistence.*;
 public class TipoDocumento {
 	@Id
 	@GeneratedValue
+	@Column(name="tipo_documento_id")
 	private int tipoId;
-	@Column
+	@Column (name="nombre_tipo")
 	private String nombreTipoDeDocumento;
 
 	public TipoDocumento(String nombreTipoDeDocumento) {
