@@ -38,6 +38,7 @@ public class TestPrincipal {
     private Estandar fernando;
     private Proveedor lautaroIturregui;
     private MedioDePago efectivo;
+    private Pago pago;
     private DocumentoComercial factura;
     private Producto ram,placaDeVideo;
     private ItemEgreso rams,placasDeVideo;
@@ -55,8 +56,9 @@ public class TestPrincipal {
 
         TipoDocumento facturaA = new TipoDocumento("Factura A");
         this.factura = new DocumentoComercial(facturaA, 11111);
-
-         this.efectivo = new MedioDePago(1212, "Efectivo");
+        this.efectivo = new MedioDePago("Rapi Pago","Ticket","rapipago");
+        this.pago = new Pago(1,LocalDate.of(2020, Month.AUGUST,14),1231231,efectivo);
+        
 
         DireccionPostal direPostalIturregui = new DireccionPostal();
         this.lautaroIturregui = new Proveedor("Lautaro Iturregui",2,direPostalIturregui);

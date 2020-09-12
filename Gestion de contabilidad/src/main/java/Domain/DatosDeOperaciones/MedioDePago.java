@@ -1,17 +1,12 @@
 package Domain.DatosDeOperaciones;
 
 public class MedioDePago {
-    private int numeroAsociado;
+    private String medio_id;
     private String tipoPago;
     private String nombreMedioDePago;
 
-
-	public MedioDePago(int numeroAsociado, String nombreMedioDePago) {
-		this.numeroAsociado = numeroAsociado;
-		this.nombreMedioDePago = nombreMedioDePago;
-	}
-	public MedioDePago(int numeroAsociado,String tipoPago, String nombreMedioDePago) {
-		this.numeroAsociado = numeroAsociado;
+	public MedioDePago(String medio_id,String tipoPago, String nombreMedioDePago) {
+		this.medio_id = medio_id;
 		this.tipoPago= tipoPago;
 		this.nombreMedioDePago = nombreMedioDePago;
 	}
