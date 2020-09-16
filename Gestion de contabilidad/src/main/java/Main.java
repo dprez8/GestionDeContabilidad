@@ -43,11 +43,8 @@ public class Main {
 
         MedioDePago efectivo = new MedioDePago("Rapi Pago","Ticket","rapipago");
 
-        DireccionPostal direPostalIturregui = new DireccionPostal();
-        DireccionPostal direPostalRobles    = new DireccionPostal();
-
-        Proveedor lautaroRobles = new Proveedor("Lautaro Robles", 41424242, direPostalRobles);
-        Proveedor lautaroIturregui = new Proveedor("Lautaro Iturregui", 2224222, direPostalIturregui);
+        Proveedor lautaroRobles = new Proveedor("Lautaro Robles", 41424242);
+        Proveedor lautaroIturregui = new Proveedor("Lautaro Iturregui", 2224222);
 
         ItemPresupuesto RAMpresupuesto = new ItemPresupuesto(RAM, RAMs, 1, 3000);
         ItemPresupuesto placaVideoPresupuesto = new ItemPresupuesto(placaDeVideo, placasDeVideo, 2, 5000);

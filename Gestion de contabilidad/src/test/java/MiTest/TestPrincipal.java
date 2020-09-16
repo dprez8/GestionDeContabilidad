@@ -2,7 +2,6 @@ package MiTest;
 
 import Domain.CategorizadorDeEmpresas.*;
 import Domain.DatosDeOperaciones.*;
-import Domain.DireccionPostal.DireccionPostal;
 import Domain.Exceptions.contraseniaCorta;
 import Domain.Exceptions.contraseniaMuyComun;
 import Domain.Exceptions.repiteContraseniaEnMailOUsuario;
@@ -59,16 +58,13 @@ public class TestPrincipal {
         this.efectivo = new MedioDePago("Rapi Pago","Ticket","rapipago");
         this.pago = new Pago(1,LocalDate.of(2020, Month.AUGUST,14),1231231,efectivo);
         
-
-        DireccionPostal direPostalIturregui = new DireccionPostal();
-        this.lautaroIturregui = new Proveedor("Lautaro Iturregui",2,direPostalIturregui);
+        this.lautaroIturregui = new Proveedor("Lautaro Iturregui",2);
 
         /**Creacion de una organizacion ejemplo*/
-        DireccionPostal direccionPostal = new DireccionPostal();
 
         this.construccion       = new Sector("Construccion");
         this.miPyme             = new Empresa(3,50000003.0,"Construccion",construccion);
-        this.pymeJuridica       = new EntidadJuridica("MiPyme",1234,"Nose",direccionPostal,1);
+        this.pymeJuridica       = new EntidadJuridica("MiPyme",1234,"Nose",1);
         this.pymeJuridica.setTipoEntidadJuridica(this.miPyme);
         /**Creacion de un usuario estandar*/
         this.fernando = new Estandar(pymeJuridica, "Fernando", "1234", "fernando@herbas.com");
