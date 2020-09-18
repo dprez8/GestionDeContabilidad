@@ -1,9 +1,9 @@
 package Domain.Entities;
 
-public class OrdenValorPrimeroEgreso implements CriterioUnico{
+public class OrdenValorPrimeroEgreso extends CriterioUnico{
 
     @Override
     public void aplicate() {
-
+        //ordenarPorValor();
     }
 }

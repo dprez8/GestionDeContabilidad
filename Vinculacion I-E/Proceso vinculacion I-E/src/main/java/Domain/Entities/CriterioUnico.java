@@ -1,6 +1,13 @@
 package Domain.Entities;
 
-public interface CriterioUnico extends Criterio {
+import java.util.Collections;
+import java.util.List;
+
+public abstract class CriterioUnico implements Criterio {
     @Override
-    void aplicate();
+    public abstract void aplicate();
+
+    protected void ordenarPorValor(List<Integer> numeros){
+       // Collections.sort();
+    }
 }
