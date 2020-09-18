@@ -1264,7 +1264,7 @@
 											"top": 140,
 											"width": 225.81787109375,
 											"height": 13,
-											"text": "-fechaInferior: LocalDate",
+											"text": "-fechaInicio: LocalDate",
 											"horizontalAlignment": 0
 										},
 										{
@@ -3667,7 +3667,7 @@
 							"_parent": {
 								"$ref": "AAAAAAF0juBIohZqF0I="
 							},
-							"name": "fechaInferior",
+							"name": "fechaInicio",
 							"visibility": "private",
 							"type": "LocalDate"
 						},
