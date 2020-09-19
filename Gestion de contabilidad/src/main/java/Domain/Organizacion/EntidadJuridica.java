@@ -18,7 +18,7 @@ public class EntidadJuridica extends Organizacion {
     
     private Pais pais;
 	private Provincia provincia;
-	private Ciudad ciudad;
+	private String ciudad;
 	private String calle;
 	private int altura;
 	private String piso;
@@ -57,11 +57,11 @@ public class EntidadJuridica extends Organizacion {
 		this.provincia = provincia;
 	}
 
-	public Ciudad getCiudad() {
+	public String getCiudad() {
 		return ciudad;
 	}
 
-	public void setCiudad(Ciudad ciudad) {
+	public void setCiudad(String ciudad) {
 		this.ciudad = ciudad;
 	}
 

@@ -17,10 +17,15 @@ public class Proveedor {
 	private Pais pais;
 	@ManyToOne
 	private Provincia provincia;
-	private Ciudad ciudad;
+	@Column
+	private String ciudad;
+	@Column
 	private String calle;
+	@Column
 	private int altura;
+	@Column
 	private String piso;
+	@Column
 	private int zipcode;
 	
 	public Proveedor(String nombre, int documento) {
@@ -56,11 +61,11 @@ public class Proveedor {
 		this.provincia = provincia;
 	}
 
-	public Ciudad getCiudad() {
+	public String getCiudad() {
 		return ciudad;
 	}
 
-	public void setCiudad(Ciudad ciudad) {
+	public void setCiudad(String ciudad) {
 		this.ciudad = ciudad;
 	}
 

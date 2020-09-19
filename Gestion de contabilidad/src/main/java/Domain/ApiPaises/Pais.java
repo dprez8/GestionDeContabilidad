@@ -15,7 +15,9 @@ public class Pais {
 	public String name;
 	@Column
 	public String currency_id;
+	@Column
 	private int idPais;
+	@Column
 	private static int contadorPaises;
 	
 

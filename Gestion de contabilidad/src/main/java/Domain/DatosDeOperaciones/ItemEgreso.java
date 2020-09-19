@@ -1,8 +1,16 @@
 package Domain.DatosDeOperaciones;
 
+import javax.persistence.*;
+
 public class ItemEgreso {
+	@Id
+	@Column(name="item_egreso_id")
+	private int idItemEgreso;
+	@ManyToOne
 	private Producto producto;
+	@Column
 	private int cantidad;
+	@Column
 	private double precio;
 
     public ItemEgreso(Producto producto, int cantidad, double precio) {

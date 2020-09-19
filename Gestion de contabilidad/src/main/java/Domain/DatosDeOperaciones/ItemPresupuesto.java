@@ -1,13 +1,25 @@
 package Domain.DatosDeOperaciones;
 
 import Domain.Operaciones.Presupuesto;
+import javax.persistence.*;
 
 public class ItemPresupuesto {
+	
+	@Id
+	@Column(name="item_presupuesto_id")
+	private int idItemPresupuesto;
+	@ManyToOne
+	private Producto producto;
+	@Column
+	private int cantidad;
+	@Column
+	private double precio;
+	@ManyToOne
     private ItemEgreso itemEgresoAsociado;
-    private Producto producto;
-    private int cantidad;
-    private double precio;
+	@ManyToOne
     private Presupuesto presupuesto;
+   
+    
 
     public ItemPresupuesto(Producto unProducto,ItemEgreso unItem, int cantidad, double precio, Presupuesto presupuesto){
         this.producto = unProducto;
