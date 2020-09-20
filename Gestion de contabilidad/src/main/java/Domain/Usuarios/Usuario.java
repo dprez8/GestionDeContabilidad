@@ -1,9 +1,20 @@
 package Domain.Usuarios;
 
+import javax.persistence.*;
+
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorValue("tipo_de_usuario")
 public abstract class Usuario {
 	// Esta informacion debe venir de una base de datos
+	@Id
+	@Column(name="usuario_id")
+	private int usuarioId;
+	@Column
 	protected String nombre;
+	@Column
 	protected String contrasenia;
+	@Column
 	protected String mail;
 
 	/**Estos metodos se implementaran cuando veamos el tema de persistencia*/

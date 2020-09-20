@@ -3,9 +3,15 @@ package Domain.BandejaDeMensajes;
 import java.time.LocalDate;
 import java.util.Date;
 
+import javax.persistence.*;
+
 public class Mensaje{
-	private int idMensaje;
+	@Id
+	@Column(name="mensaje_id")
+	private int mensajeId;
+	@Column(columnDefinition = "DATE")
     private LocalDate fechaCreacion;
+	@Column
     private String cuerpo;
 
     public Mensaje(String cuerpo){
@@ -14,7 +20,7 @@ public class Mensaje{
     }
 
     public LocalDate getFecha() {
-        return fecha;
+        return fechaCreacion;
     }
 
     public String getCuerpo() {
@@ -22,6 +28,6 @@ public class Mensaje{
     }
 
     public void setFecha(LocalDate fecha) {
-        this.fecha = fecha;
+        this.fechaCreacion = fecha;
     }
 }

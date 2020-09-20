@@ -1,5 +1,6 @@
 package Domain.BandejaDeMensajes;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -21,10 +22,10 @@ public class BandejaDeMensajes{
         this.ordenarPorFechaRecienteUltimo();
         Collections.reverse(mensajes);
     }
-    public List<Mensaje> filtrarPorLeido(boolean leido){
+    /*public List<Mensaje> filtrarPorLeido(boolean leido){
         return mensajes.stream().filter(a->a.isLeido()==leido).collect(Collectors.toList());
-    }
-    public List<Mensaje> filtrarPorFecha(Date fecha){
+    }*/
+    public List<Mensaje> filtrarPorFecha(LocalDate fecha){
         return mensajes.stream().filter(a->a.getFecha().equals(fecha)).collect(Collectors.toList());
     }
 
