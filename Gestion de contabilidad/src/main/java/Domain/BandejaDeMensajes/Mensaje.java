@@ -1,27 +1,19 @@
 package Domain.BandejaDeMensajes;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Mensaje{
-    private Date fecha;
-    private boolean leido;
+	private int idMensaje;
+    private LocalDate fechaCreacion;
     private String cuerpo;
 
     public Mensaje(String cuerpo){
-        this.fecha = new Date();
-        this.leido = false;
+        this.fechaCreacion=LocalDate.now();
         this.cuerpo = cuerpo;
     }
 
-    public boolean isLeido() {
-        return leido;
-    }
-
-    public void setLeido(boolean leido) {
-        this.leido = leido;
-    }
-
-    public Date getFecha() {
+    public LocalDate getFecha() {
         return fecha;
     }
 
@@ -29,7 +21,7 @@ public class Mensaje{
         return cuerpo;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
     }
 }
