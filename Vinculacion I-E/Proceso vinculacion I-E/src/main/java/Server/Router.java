@@ -1,5 +1,6 @@
 package Server;
 
+import Domain.Controllers.OperacionesRestController;
 import Spark.utils.BooleanHelper;
 import Spark.utils.HandlebarsTemplateEngineBuilder;
 import spark.Spark;
@@ -23,5 +24,10 @@ public class Router {
 
     private static void configure(){
 
+        OperacionesRestController operacionesRestController = new OperacionesRestController();
+
+        Spark.post("api/enviar-operaciones",operacionesRestController::obtenerOperaciones);
+
+        Spark.get("/api/operaciones-resueltas",operacionesRestController::retornarOperaciones);
     }
 }
