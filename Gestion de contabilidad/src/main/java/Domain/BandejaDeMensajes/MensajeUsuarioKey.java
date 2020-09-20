@@ -8,9 +8,9 @@ import javax.persistence.*;
 public class MensajeUsuarioKey implements Serializable {
     
 	@Column(name = "usuario_id")
-    private int usuarioId;
+    public int usuarioId;
  
     @Column(name = "mensaje_id")
-    private int mensajeId;
+    public int mensajeId;
  
 }

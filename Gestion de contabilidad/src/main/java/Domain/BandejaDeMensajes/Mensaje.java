@@ -1,10 +1,10 @@
 package Domain.BandejaDeMensajes;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 import javax.persistence.*;
-
+@Entity
+@Table
 public class Mensaje{
 	@Id
 	@Column(name="mensaje_id")

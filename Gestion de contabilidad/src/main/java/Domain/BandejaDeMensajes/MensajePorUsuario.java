@@ -11,16 +11,19 @@ import Domain.Usuarios.Usuario;
 public class MensajePorUsuario{
     
 	@EmbeddedId
-	MensajePorUsuario id;
+	MensajeUsuarioKey id;
 	
 	@ManyToOne
 	@MapsId("usuarioId")
 	@JoinColumn(name="usuario_id")
-    private Usuario usuario;
+    public Usuario usuario;
  
 	@ManyToOne
 	@MapsId("mensajeId")
     @JoinColumn(name = "mensaje_id")
-    private Mensaje mensaje;
+    public Mensaje mensaje;
+	
+	@Column
+	public boolean leido;
  
 }
