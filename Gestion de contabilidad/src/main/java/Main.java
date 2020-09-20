@@ -1,7 +1,6 @@
 import Domain.BandejaDeMensajes.Mensaje;
 import Domain.CategorizadorDeEmpresas.Sector;
 import Domain.DatosDeOperaciones.*;
-import Domain.DireccionPostal.DireccionPostal;
 import Domain.Operaciones.*;
 import Domain.ValidadorTransparencia.*;
 import Domain.Organizacion.*;
@@ -53,11 +52,10 @@ public class Main {
         ItemPresupuesto placaVide2Presupuesto = new ItemPresupuesto(placaDeVideo, placasDeVideo, 2, 6000);
 
         /**Creacion de una organizacion ejemplo*/
-        DireccionPostal direccionPostal = new DireccionPostal();
 
         Sector construccion = new Sector("Construccion");
         Empresa miPyme = new Empresa(3,5000003.0,"Construccion",construccion);
-        EntidadJuridica unaEntidad  = new EntidadJuridica("MiPyme",1234,"Nose",direccionPostal,1);
+        EntidadJuridica unaEntidad  = new EntidadJuridica("MiPyme",1234,"Nose",1);
         unaEntidad.setTipoEntidadJuridica(miPyme);
 
         /**Construccion del egreso*/

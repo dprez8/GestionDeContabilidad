@@ -2,15 +2,19 @@ package Domain.ApiPaises;
 
 import java.util.List;
 import java.util.Optional;
+import javax.persistence.*;
 
-import javax.persistence.Column;
-
+@Entity
+@Table
 public class Provincia {
-	@Column(name="province_id")
+	@Id
+	@Column(name="provincia_id")
 	public String id;
 	@Column
 	public String name;
+	@Transient
 	private int idProvincia;
+	@ManyToOne
 	private Pais pais;
 	
 	public Pais getPais() {

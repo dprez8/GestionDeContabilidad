@@ -1,6 +1,7 @@
 package Services;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
@@ -27,7 +28,7 @@ public class EleccionApi {
 	}
 	
 	
-	public static void BajarDatosApiMercadoLibre(Properties prop) throws IOException{
+	public static void BajarDatosApiMercadoLibrePorId(Properties prop) throws IOException{
 		
 		ServicioGeoref servicioGeoref = ServicioGeoref.instancia(prop.getProperty("URLML"));		
 		Pais pais=EleccionPais(servicioGeoref);
@@ -38,9 +39,52 @@ public class EleccionApi {
 		scanner.close();
 		
 		System.out.println("\nDireccion: " + pais.name + " | " + provincia.name+ " | " + ciudad.name);
-		System.out.println("Moneda: "+moneda.description);
+		
+		if(moneda!=null)
+			System.out.println("Moneda: "+moneda.description);
+		else 
+			System.out.println("Moneda no disponible");
 			
 	}
+public static void BajarDatosApiMercadoLibreABaseDeDatos(Properties prop) throws IOException{
+		
+		ServicioGeoref servicioGeoref = ServicioGeoref.instancia(prop.getProperty("URLML"));		
+		List<Pais> paisesList = servicioGeoref.ListadoDePaises();
+		List<Provincia> provinciasList = new ArrayList<>();
+		List<Ciudad> ciudadesList= new ArrayList<>();
+		List<Moneda> monedasList = new ArrayList<>();
+		
+		ListadoDeProvincias provincias;
+		ListadoDeCiudades ciudades;
+		Moneda moneda;
+		System.out.println("Almacenando datos");
+		
+		for(Pais pais: paisesList){
+			
+			moneda = servicioGeoref.Moneda(pais);
+			
+			if(moneda!=null)
+				monedasList.add(moneda);
+			
+			provincias = servicioGeoref.ListadoDeProvincias(pais);
+			
+			if(provincias.states.size()!=0){
+				for(Provincia provincia: provincias.states){
+					provinciasList.add(provincia);
+					ciudades = servicioGeoref.ListadoDeCiudades(provincia);
+					
+					if(ciudades.cities.size()!=0) {
+						for(Ciudad ciudad:ciudades.cities){
+							ciudadesList.add(ciudad);
+						}
+					}
+					System.out.println("Guardando datos de: "+provincia.name);
+				}
+			}
+		}
+		System.out.println("Carga de Datos con exito");
+	}
+	
 	
 	public static Pais EleccionPais(ServicioGeoref servicioGeoref) throws IOException{
 		

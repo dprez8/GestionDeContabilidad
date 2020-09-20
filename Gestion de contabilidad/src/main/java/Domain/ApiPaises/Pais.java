@@ -9,13 +9,13 @@ import javax.persistence.*;
 public class Pais {
 	
 	@Id
-	@Column(name="country_id")
+	@Column(name="pais_id")
 	public String id;
 	@Column
 	public String name;
 	@Column
 	public String currency_id;
-	@Column
+	@Transient
 	private int idPais;
 	@Column
 	private static int contadorPaises;
