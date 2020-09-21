@@ -1,13 +1,12 @@
-package Domain.Entities;
+package Domain.Entities.Criterios;
 
-import java.util.Collections;
+import Domain.Entities.ReglaCondiciones.Regla;
+
 import java.util.List;
 
-public abstract class CriterioUnico implements Criterio {
+public interface CriterioUnico extends Criterio {
     @Override
-    public abstract void aplicate();
+    public abstract void aplicate(Regla regla);
 
-    protected void ordenarPorValor(List<Integer> numeros){
-       // Collections.sort();
-    }
+    //void ordenarPorValor(List<Integer> numeros);
 }

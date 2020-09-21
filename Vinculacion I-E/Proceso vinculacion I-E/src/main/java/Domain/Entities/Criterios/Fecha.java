@@ -1,8 +1,11 @@
-package Domain.Entities;
+package Domain.Entities.Criterios;
 
-public class Fecha extends CriterioUnico{
+import Domain.Entities.Criterios.CriterioUnico;
+import Domain.Entities.ReglaCondiciones.Regla;
+
+public class Fecha implements CriterioUnico {
     @Override
-    public void aplicate() {
+    public void aplicate(Regla regla) {
 
     }
 }
