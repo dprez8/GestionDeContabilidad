@@ -1,6 +1,8 @@
-package Domain.Entities;
+package Domain.Entities.Criterios;
 
-public class OrdenValorPrimeroIngreso extends CriterioUnico{
+import Domain.Entities.Criterios.CriterioUnico;
+
+public class OrdenValorPrimeroIngreso extends CriterioUnico {
     @Override
     public void aplicate() {
 

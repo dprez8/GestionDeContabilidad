@@ -1,4 +1,4 @@
-package Domain.Entities;
+package Domain.Entities.ReglaCondiciones;
 
 import java.time.LocalDate;
 
