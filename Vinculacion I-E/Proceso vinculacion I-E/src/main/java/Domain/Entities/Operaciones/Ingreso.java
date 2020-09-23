@@ -26,7 +26,7 @@ public class Ingreso {
         this.egresosAsociados = egresosAsociados;
     }
 
-    public void addEgresosAsociados(Egreso egresosAsociado) {
+    public void addEgresoAsociado(Egreso egresosAsociado) {
         this.egresosAsociados.add(egresosAsociado);
     }
 
