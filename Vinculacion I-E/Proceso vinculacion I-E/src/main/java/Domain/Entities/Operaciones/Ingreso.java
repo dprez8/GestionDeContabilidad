@@ -2,6 +2,7 @@ package Domain.Entities.Operaciones;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Ingreso {
     private Double monto;
@@ -25,12 +26,20 @@ public class Ingreso {
         this.egresosAsociados = egresosAsociados;
     }
 
+    public void addEgresosAsociados(Egreso egresosAsociado) {
+        this.egresosAsociados.add(egresosAsociado);
+    }
+
     public LocalDate getFecha() {
         return fecha;
     }
 
     public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
+    }
+
+    public Double getMontoEgresosAsociados() {
+        return this.egresosAsociados.stream().collect(Collectors.summingDouble(unEgreso->unEgreso.getMonto()));
     }
 
 }

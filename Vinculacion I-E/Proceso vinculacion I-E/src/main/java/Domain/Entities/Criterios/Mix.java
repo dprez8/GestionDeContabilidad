@@ -6,6 +6,7 @@ import Domain.Entities.Criterios.CriterioUnico;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
 public class Mix implements Criterio {
     private List<CriterioUnico> criterios;
 
@@ -18,3 +19,4 @@ public class Mix implements Criterio {
 
     }
 }
+ */
