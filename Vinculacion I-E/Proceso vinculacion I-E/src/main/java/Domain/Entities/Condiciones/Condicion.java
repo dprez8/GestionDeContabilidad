@@ -1,7 +1,8 @@
-package Domain.Entities.ReglaCondiciones;
+package Domain.Entities.Condiciones;
 
-import java.time.LocalDate;
+import Domain.Entities.Operaciones.Egreso;
+import Domain.Entities.Operaciones.Ingreso;
 
 public interface Condicion {
-    public boolean cumplisCon(LocalDate fechaInicio, LocalDate fechaLimite, LocalDate fechaEgreso);
+    public boolean cumpleCondicion(Egreso egreso, Ingreso ingreso);
 }
