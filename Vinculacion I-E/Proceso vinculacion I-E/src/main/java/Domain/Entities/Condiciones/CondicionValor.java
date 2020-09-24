@@ -3,8 +3,6 @@ package Domain.Entities.Condiciones;
 import Domain.Entities.Operaciones.Egreso;
 import Domain.Entities.Operaciones.Ingreso;
 
-import java.time.LocalDate;
-
 public class CondicionValor implements Condicion{
 
     @Override
@@ -13,6 +11,6 @@ public class CondicionValor implements Condicion{
         double montoEgresos = ingreso.getMontoEgresosAsociados();
         double montoEgreso = egreso.getMonto();
 
-        return (montoIngreso - montoEgresos) >= montoEgreso;
+        return (montoIngreso - montoEgresos) > montoEgreso;
     }
 }

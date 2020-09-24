@@ -4,8 +4,6 @@ import Domain.Entities.Operaciones.Egreso;
 import Domain.Entities.Operaciones.Ingreso;
 
 import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
 
 public class OrdenValorPrimeroIngreso extends CriterioUnico {
 
@@ -33,6 +31,6 @@ public class OrdenValorPrimeroIngreso extends CriterioUnico {
 
     @Override
     public boolean termino() {
-        return this.posicionEgreso == this.egresos.size() - 1;
+        return this.posicionEgreso == this.egresos.size();
     }
 }

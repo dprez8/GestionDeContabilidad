@@ -1,6 +1,7 @@
 package Domain.Entities.Operaciones;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,6 +10,9 @@ public class Ingreso {
     private List<Egreso> egresosAsociados;
     private LocalDate fecha;
 
+    public Ingreso(){
+        this.egresosAsociados = new ArrayList<>();
+    }
     /**********Getters & Setters*****************/
     public Double getMonto() {
         return monto;
