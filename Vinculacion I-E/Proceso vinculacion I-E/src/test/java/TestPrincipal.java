@@ -1,4 +1,5 @@
 import Domain.Entities.Condiciones.CondicionEntreFechas;
+import Domain.Entities.Condiciones.CondicionSinIngresoAsociado;
 import Domain.Entities.Condiciones.CondicionValor;
 import Domain.Entities.Criterios.Criterio;
 import Domain.Entities.Criterios.CriterioUnico;
@@ -13,7 +14,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class TestPrincipal {
     private Vinculador vinculador;
@@ -22,6 +22,7 @@ public class TestPrincipal {
     private OrdenValorPrimeroEgreso ordenValorPrimeroEgreso;
     private CondicionEntreFechas condicionEntreFechas;
     private CondicionValor condicionValor;
+    private CondicionSinIngresoAsociado condicionSinIngresoAsociado;
 
     @Before
     public void antesDeTestear(){
@@ -61,6 +62,7 @@ public class TestPrincipal {
 
         this.condicionValor = new CondicionValor();
 
+        this.condicionSinIngresoAsociado = new CondicionSinIngresoAsociado();
         /***************Creacion criterio*******************/
         this.ordenValorPrimeroEgreso = new OrdenValorPrimeroEgreso();
 
@@ -68,13 +70,13 @@ public class TestPrincipal {
         this.vinculador = new Vinculador();
         this.vinculador.setIngresos(this.ingresos);
         this.vinculador.setEgresos(this.egresos);
-        this.vinculador.addCondiciones(this.condicionValor,this.condicionEntreFechas);
+        this.vinculador.addCondiciones(this.condicionValor,this.condicionEntreFechas,this.condicionSinIngresoAsociado);
         this.vinculador.setCriterio(this.ordenValorPrimeroEgreso);
 
     }
 
-    /*@Test
+    @Test
     public void VinculacionExitosa(){
-
-    }*/
+        
+    }
 }

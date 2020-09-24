@@ -3695,7 +3695,7 @@
 											"top": 719,
 											"width": 239.5478515625,
 											"height": 13,
-											"text": "CondicionSinRepetidos"
+											"text": "CondicionSinIngresoAsociado"
 										},
 										{
 											"_type": "LabelView",
@@ -5999,7 +5999,7 @@
 					"_parent": {
 						"$ref": "AAAAAAF0uBh+K4UQwH8="
 					},
-					"name": "CondicionSinRepetidos",
+					"name": "CondicionSinIngresoAsociado",
 					"ownedElements": [
 						{
 							"_type": "UMLRealization",
