@@ -73,8 +73,8 @@ public class TestPrincipal {
 
     }
 
-    @Test
+    /*@Test
     public void VinculacionExitosa(){
 
-    }
+    }*/
 }
