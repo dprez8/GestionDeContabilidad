@@ -22,7 +22,7 @@ public class Vinculador {
     }
     public void vincular() {
         this.criterio.setEgresos(egresos);
-        this. criterio.setIngresos(ingresos);
+        this.criterio.setIngresos(ingresos);
         this.criterio.ordenar();
 
         while(!criterio.termino()) {
@@ -34,7 +34,6 @@ public class Vinculador {
                 ingreso.addEgresoAsociado(egreso);
                 egreso.setIngresoAsociado(ingreso);
             }
-            else
             this.criterio.siguiente();
         }
     }
