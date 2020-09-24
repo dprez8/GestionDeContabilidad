@@ -26,7 +26,9 @@ public class Router {
 
         OperacionesRestController operacionesRestController = new OperacionesRestController();
 
-        Spark.post("api/enviar-operaciones",operacionesRestController::obtenerOperaciones);
+        Spark.get("/saludo",((request, response) -> "Hola Mundo plano"));
+
+        Spark.post("/api/enviar-operaciones",operacionesRestController::obtenerOperaciones);
 
         Spark.get("/api/operaciones-resueltas",operacionesRestController::retornarOperaciones);
     }
