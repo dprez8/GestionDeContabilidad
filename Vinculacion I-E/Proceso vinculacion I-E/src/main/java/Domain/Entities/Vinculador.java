@@ -5,6 +5,7 @@ import Domain.Entities.Criterios.Criterio;
 import Domain.Entities.Operaciones.Egreso;
 import Domain.Entities.Operaciones.Ingreso;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,19 +15,27 @@ public class Vinculador {
     private List<Condicion> condiciones;
     private Criterio criterio;
 
+    public Vinculador(){
+        this.ingresos = new ArrayList<>();
+        this.egresos = new ArrayList<>();
+        this.condiciones = new ArrayList<>();
+    }
     public void vincular() {
-        criterio.setEgresos(egresos);
-        criterio.setIngresos(ingresos);
-        criterio.ordenar();
+        this.criterio.setEgresos(egresos);
+        this. criterio.setIngresos(ingresos);
+        this.criterio.ordenar();
 
         while(!criterio.termino()) {
-            Egreso egreso = criterio.getEgreso();
-            Ingreso ingreso = criterio.getIngreso();
+            Egreso egreso = this.criterio.getEgreso();
+            Ingreso ingreso = this.criterio.getIngreso();
 
-            if(condiciones.stream().allMatch(unaCondicion->unaCondicion.cumpleCondicion(egreso, ingreso))) {
+            if(this.condiciones.stream().allMatch(unaCondicion->unaCondicion.cumpleCondicion(egreso, ingreso))) {
                 // Se puede vincular el egreso al ingreso
                 ingreso.addEgresoAsociado(egreso);
+                egreso.setIngresoAsociado(ingreso);
             }
+            else
+            this.criterio.siguiente();
         }
     }
 
@@ -39,12 +48,20 @@ public class Vinculador {
         this.ingresos = ingresos;
     }
 
+    public void addIngreso(Ingreso ... ingresos){
+        Collections.addAll(this.ingresos, ingresos);
+    }
+
     public List<Egreso> getEgresos() {
         return egresos;
     }
 
     public void setEgresos(List<Egreso> egresos) {
         this.egresos = egresos;
+    }
+
+    public void addEgreso(Egreso ... _egresos){
+        Collections.addAll(this.egresos, _egresos);
     }
 
     public List<Condicion> getCondiciones() {

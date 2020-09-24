@@ -7,8 +7,8 @@ import java.time.LocalDate;
 
 public class CondicionEntreFechas implements Condicion{
 
-    private int diasDesde;
-    private int diasHasta;
+    private long diasDesde;
+    private long diasHasta;
 
     @Override
     public boolean cumpleCondicion(Egreso egreso, Ingreso ingreso) {
