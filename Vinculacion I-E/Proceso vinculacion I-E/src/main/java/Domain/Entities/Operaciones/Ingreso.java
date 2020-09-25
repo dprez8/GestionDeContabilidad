@@ -6,9 +6,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Ingreso {
-    private Double monto;
-    private List<Egreso> egresosAsociados;
-    private LocalDate fecha;
+    public Integer numeroIngreso;
+    public Double monto;
+    public LocalDate fecha;
+    public List<Egreso> egresosAsociados;
 
     public Ingreso(){
         this.egresosAsociados = new ArrayList<>();
