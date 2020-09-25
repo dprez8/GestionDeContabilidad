@@ -22,7 +22,7 @@ public abstract class Criterio {
     public abstract boolean termino();
 
     public Egreso getEgreso() {
-        return egresos.get(posicionEgreso);
+        return this.egresos.get(this.posicionEgreso);
     }
 
     public void setEgresos(List<Egreso> egresos) {
@@ -30,7 +30,7 @@ public abstract class Criterio {
     }
 
     public Ingreso getIngreso() {
-        return ingresos.get(posicionIngreso);
+        return this.ingresos.get(this.posicionIngreso);
     }
 
     public void setIngresos(List<Ingreso> ingresos) {
