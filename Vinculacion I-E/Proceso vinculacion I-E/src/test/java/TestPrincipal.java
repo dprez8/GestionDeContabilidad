@@ -1,9 +1,7 @@
 import Domain.Entities.Condiciones.CondicionEntreFechas;
 import Domain.Entities.Condiciones.CondicionSinIngresoAsociado;
 import Domain.Entities.Condiciones.CondicionValor;
-import Domain.Entities.Criterios.Criterio;
-import Domain.Entities.Criterios.CriterioUnico;
-import Domain.Entities.Criterios.OrdenValorPrimeroEgreso;
+import Domain.Entities.Criterios.*;
 import Domain.Entities.Operaciones.Egreso;
 import Domain.Entities.Operaciones.Ingreso;
 import Domain.Entities.Vinculador;
@@ -19,6 +17,10 @@ import java.util.List;
 public class TestPrincipal {
     private Vinculador vinculador;
     private OrdenValorPrimeroEgreso ordenValorPrimeroEgreso;
+    private OrdenValorPrimeroIngreso ordenValorPrimeroIngreso;
+    private Fecha ordenFecha;
+    private Mix mix;
+
     private CondicionEntreFechas condicionEntreFechas;
     private CondicionValor condicionValor;
     private CondicionSinIngresoAsociado condicionSinIngresoAsociado;
@@ -58,7 +60,11 @@ public class TestPrincipal {
 
         this.condicionSinIngresoAsociado = new CondicionSinIngresoAsociado();
         /***************Creacion criterio*******************/
-        this.ordenValorPrimeroEgreso = new OrdenValorPrimeroEgreso();
+        this.ordenValorPrimeroEgreso  = new OrdenValorPrimeroEgreso();
+        this.ordenValorPrimeroIngreso = new OrdenValorPrimeroIngreso();
+        this.ordenFecha               = new Fecha();
+        this.mix                      = new Mix();
+
 
         /***************Creacion vinculador*****************/
         this.vinculador = new Vinculador();
@@ -67,17 +73,82 @@ public class TestPrincipal {
         this.vinculador.addCondiciones(this.condicionValor);
         this.vinculador.addCondiciones(this.condicionEntreFechas);
         this.vinculador.addCondiciones(this.condicionSinIngresoAsociado);
-        this.vinculador.setCriterio(this.ordenValorPrimeroEgreso);
-
     }
 
     @Test
-    public void VinculacionExitosa(){
+    public void VinculacionOrdenValorPrimeroEgreso(){
+        this.vinculador.setCriterio(this.ordenValorPrimeroEgreso);
+
         vinculador.vincular();
+
+        vinculador.getEgresos().forEach(e->System.out.println(e.getMonto()));
+
         Assert.assertEquals(creditosHaberes,compraUno.getIngresoAsociado());
         Assert.assertNotEquals(donacion,compraUno.getIngresoAsociado());
         Assert.assertEquals(creditosHaberes,compraDos.getIngresoAsociado());
         Assert.assertNotEquals(creditosHaberes,compraTres.getIngresoAsociado());
         Assert.assertNotEquals(donacion,compraTres.getIngresoAsociado());
+    }
+
+    @Test
+    public void VinculacionOrdenValorPrimeroIngreso() {
+        this.vinculador.setCriterio(this.ordenValorPrimeroIngreso);
+
+        vinculador.getIngresos().remove(this.donacion);
+        this.donacion.setMonto(5000.0);
+        vinculador.addIngreso(this.donacion);
+
+        vinculador.vincular();
+
+
+        Assert.assertEquals(donacion,compraUno.getIngresoAsociado());
+        Assert.assertEquals(donacion,compraDos.getIngresoAsociado());
+        Assert.assertEquals(creditosHaberes,compraTres.getIngresoAsociado());
+    }
+
+    @Test
+    public void VinculacionOrdenFecha(){
+        this.vinculador.setCriterio(this.ordenFecha);
+        vinculador.getEgresos().remove(this.compraUno);
+        this.compraUno.setFecha(LocalDate.of(2020,8,1));
+        vinculador.addEgreso(this.compraUno);
+
+        vinculador.getIngresos().remove(this.donacion);
+        this.donacion.setMonto(5000.0);
+        vinculador.addIngreso(this.donacion);
+
+        vinculador.vincular();
+
+        vinculador.getEgresos().forEach(e->System.out.println(e.getFecha()));
+        vinculador.getEgresos().forEach(e->System.out.println(e.getMonto()));
+
+        Assert.assertNotEquals(creditosHaberes,compraUno.getIngresoAsociado());
+        Assert.assertEquals(creditosHaberes,compraTres.getIngresoAsociado());
+        Assert.assertEquals(donacion,compraDos.getIngresoAsociado());
+    }
+
+    @Test
+    public void VinculacionMix(){
+        List<CriterioUnico> criterios = new ArrayList<>();
+
+        vinculador.getIngresos().remove(this.donacion);
+        this.donacion.setMonto(5000.0);
+        vinculador.addIngreso(this.donacion);
+
+        criterios.add(this.ordenFecha);
+        criterios.add(this.ordenValorPrimeroEgreso);
+        criterios.add(this.ordenValorPrimeroIngreso);
+
+        this.mix.setCriteriosUnicos(criterios);
+
+        this.vinculador.setCriterio(this.mix);
+
+        vinculador.vincular();
+
+        Assert.assertEquals(creditosHaberes,compraTres.getIngresoAsociado());
+        Assert.assertNotEquals(creditosHaberes,compraUno.getIngresoAsociado());
+        Assert.assertNotEquals(creditosHaberes,compraDos.getIngresoAsociado());
+        Assert.assertEquals(donacion,compraUno.getIngresoAsociado());
+        Assert.assertEquals(donacion,compraDos.getIngresoAsociado());
     }
 }

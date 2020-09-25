@@ -22,10 +22,10 @@ public class OrdenValorPrimeroEgreso extends CriterioUnico {
     @Override
     public void siguiente() {
         if(this.posicionEgreso == this.egresos.size() - 1) {
-            posicionEgreso = 0;
-            posicionIngreso++;
+            this.posicionEgreso = 0;
+            this.posicionIngreso++;
         } else {
-            posicionEgreso++;
+            this.posicionEgreso++;
         }
     }
 

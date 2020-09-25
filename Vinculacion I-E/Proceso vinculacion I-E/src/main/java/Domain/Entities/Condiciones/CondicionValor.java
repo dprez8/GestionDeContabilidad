@@ -11,6 +11,6 @@ public class CondicionValor implements Condicion{
         double montoEgresos = ingreso.getMontoEgresosAsociados();
         double montoEgreso = egreso.getMonto();
 
-        return (montoIngreso - montoEgresos) > montoEgreso;
+        return (montoIngreso - montoEgresos) >= montoEgreso;
     }
 }

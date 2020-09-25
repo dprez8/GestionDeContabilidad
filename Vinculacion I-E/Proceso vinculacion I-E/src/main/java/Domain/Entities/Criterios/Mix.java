@@ -3,7 +3,8 @@ package Domain.Entities.Criterios;
 import Domain.Entities.Operaciones.Egreso;
 import Domain.Entities.Operaciones.Ingreso;
 
-import java.util.Comparator;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Mix extends Criterio {
@@ -13,6 +14,7 @@ public class Mix extends Criterio {
 
     public Mix() {
         this.posicionCriterio = 0;
+        this.criterios = new ArrayList<>();
     }
 
     @Override
@@ -27,20 +29,16 @@ public class Mix extends Criterio {
     @Override
     public void siguiente() {
         CriterioUnico criterioActual = this.criterios.get(posicionCriterio);
-
+        criterioActual.siguiente();
         if(criterioActual.termino()) {
             posicionCriterio++;
             this.ordenar();
-        } else {
-            criterioActual.siguiente();
         }
     }
 
     @Override
     public boolean termino() {
-        CriterioUnico criterioActual = this.criterios.get(posicionCriterio);
-
-        return (this.posicionCriterio == this.criterios.size() - 1) && criterioActual.termino();
+        return this.posicionCriterio == this.criterios.size() - 1;
     }
 
     @Override
@@ -51,5 +49,10 @@ public class Mix extends Criterio {
     @Override
     public Ingreso getIngreso() {
         return criterios.get(posicionCriterio).getIngreso();
+    }
+
+    /************Setters & Getters**********************/
+    public void setCriteriosUnicos(List<CriterioUnico> criterios) {
+        this.criterios = criterios;
     }
 }
