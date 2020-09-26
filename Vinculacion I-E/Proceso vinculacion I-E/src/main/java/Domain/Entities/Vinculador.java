@@ -14,8 +14,16 @@ public class Vinculador {
     private List<Egreso> egresos;
     private List<Condicion> condiciones;
     private Criterio criterio;
+    private static Vinculador vinculador;
 
-    public Vinculador(){
+    public static Vinculador instancia (){
+        if(vinculador == null){
+            vinculador = new Vinculador();
+        }
+        return vinculador;
+    }
+
+    private Vinculador(){
         this.ingresos = new ArrayList<>();
         this.egresos = new ArrayList<>();
         this.condiciones = new ArrayList<>();

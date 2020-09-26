@@ -9,12 +9,11 @@ public class Fecha extends CriterioUnico {
 
     public Fecha() {
         super();
-        this.posicionEgreso = 0;
-        this.posicionIngreso = 0;
     }
 
     @Override
     public void ordenar() {
+        super.ordenar();
         this.egresos.sort(Comparator.comparing(Egreso::getFecha));
         this.ingresos.sort(Comparator.comparing(Ingreso::getFecha));
     }

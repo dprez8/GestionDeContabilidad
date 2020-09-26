@@ -19,12 +19,6 @@ import java.util.stream.Collectors;
 
 public class OperacionesRestController {
 
-    private Vinculador vinculador;
-
-    public OperacionesRestController() {
-        vinculador = new Vinculador();
-    }
-
     public String vincular(Request request, Response response) {
 
         // Gson builder implementa la clase LocalDateAdapter para transformar el String de Json "yyyy-MM-dd" a LocalDate
@@ -32,19 +26,20 @@ public class OperacionesRestController {
 
         VincularRequest vincularRequest = gson.fromJson(request.body(), VincularRequest.class);
 
-        this.vinculador.setEgresos(vincularRequest.getEgresos());
-        this.vinculador.setIngresos(vincularRequest.getIngresos());
+        Vinculador vinculador = Vinculador.instancia();
 
-        this.vinculador.vincular();
+        vinculador.setEgresos(vincularRequest.getEgresos());
+        vinculador.setIngresos(vincularRequest.getIngresos());
+
+        vinculador.vincular();
 
         VincularResponse vincularResponse = new VincularResponse();
 
-        vincularResponse.setIngresos(this.vinculador.getIngresos());
-        vincularResponse.setEgresos(this.vinculador.getEgresos());
+        vincularResponse.setIngresos(vinculador.getIngresos());
+        vincularResponse.setEgresos(vinculador.getEgresos());
 
         String jsonOperacionesDTO = gson.toJson(vincularResponse);
         response.type("application/json");
-        //response.body(jsonOperacionesDTO);
 
         System.out.println(jsonOperacionesDTO);
 
@@ -60,15 +55,17 @@ public class OperacionesRestController {
         String criterio = configuracionDTO.getCriterio();
         List<String> criterios = configuracionDTO.getCriterios();
 
+        Vinculador vinculador = Vinculador.instancia();
+
         if(!criterio.equals("Mix")) {
-            this.vinculador.setCriterio(criterioFromString(criterio));
+            vinculador.setCriterio(criterioFromString(criterio));
         } else {
             Mix mix = new Mix();
             List<CriterioUnico> criteriosUnicos = criterios.stream().map(unCriterio ->
                     criterioFromString(unCriterio)).collect(Collectors.toList());
 
             mix.setCriteriosUnicos(criteriosUnicos);
-            this.vinculador.setCriterio(mix);
+            vinculador.setCriterio(mix);
         }
 
         Integer diasDesde = configuracionDTO.getDiasDesde();
@@ -80,9 +77,9 @@ public class OperacionesRestController {
         CondicionSinIngresoAsociado condicionSinIngresoAsociado = new CondicionSinIngresoAsociado();
         CondicionValor condicionValor = new CondicionValor();
 
-        this.vinculador.addCondiciones(condicionEntreFechas, condicionSinIngresoAsociado, condicionValor);
+        vinculador.addCondiciones(condicionEntreFechas, condicionSinIngresoAsociado, condicionValor);
 
-        System.out.println(this.vinculador.getCriterio());
+        System.out.println(vinculador.getCriterio());
 
         return response;
     }

@@ -9,12 +9,11 @@ public class OrdenValorPrimeroIngreso extends CriterioUnico {
 
     public OrdenValorPrimeroIngreso() {
         super();
-        this.posicionEgreso = 0;
-        this.posicionIngreso = 0;
     }
 
     @Override
     public void ordenar() {
+        super.ordenar();
         this.egresos.sort(Comparator.comparing(Egreso::getMonto));
         this.ingresos.sort(Comparator.comparing(Ingreso::getMonto));
     }
