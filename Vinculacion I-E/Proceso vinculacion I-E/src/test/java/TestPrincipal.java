@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class TestPrincipal {
-    private Vinculador vinculador;
+    private static Vinculador vinculador;
     private OrdenValorPrimeroEgreso ordenValorPrimeroEgreso;
     private OrdenValorPrimeroIngreso ordenValorPrimeroIngreso;
     private Fecha ordenFecha;
@@ -67,17 +67,17 @@ public class TestPrincipal {
 
 
         /***************Creacion vinculador*****************/
-        this.vinculador = new Vinculador();
-        this.vinculador.addEgreso(this.compraUno,this.compraDos,this.compraTres);
-        this.vinculador.addIngreso(this.creditosHaberes,this.donacion);
-        this.vinculador.addCondiciones(this.condicionValor);
-        this.vinculador.addCondiciones(this.condicionEntreFechas);
-        this.vinculador.addCondiciones(this.condicionSinIngresoAsociado);
+        vinculador = Vinculador.instancia();
+        vinculador.addEgreso(this.compraUno,this.compraDos,this.compraTres);
+        vinculador.addIngreso(this.creditosHaberes,this.donacion);
+        vinculador.addCondiciones(this.condicionValor);
+        vinculador.addCondiciones(this.condicionEntreFechas);
+        vinculador.addCondiciones(this.condicionSinIngresoAsociado);
     }
 
     @Test
     public void VinculacionOrdenValorPrimeroEgreso(){
-        this.vinculador.setCriterio(this.ordenValorPrimeroEgreso);
+        vinculador.setCriterio(this.ordenValorPrimeroEgreso);
 
         vinculador.vincular();
 
@@ -92,7 +92,7 @@ public class TestPrincipal {
 
     @Test
     public void VinculacionOrdenValorPrimeroIngreso() {
-        this.vinculador.setCriterio(this.ordenValorPrimeroIngreso);
+        vinculador.setCriterio(this.ordenValorPrimeroIngreso);
 
         vinculador.getIngresos().remove(this.donacion);
         this.donacion.setMonto(5000.0);
@@ -108,7 +108,7 @@ public class TestPrincipal {
 
     @Test
     public void VinculacionOrdenFecha(){
-        this.vinculador.setCriterio(this.ordenFecha);
+        vinculador.setCriterio(this.ordenFecha);
         vinculador.getEgresos().remove(this.compraUno);
         this.compraUno.setFecha(LocalDate.of(2020,8,1));
         vinculador.addEgreso(this.compraUno);
@@ -141,7 +141,7 @@ public class TestPrincipal {
 
         this.mix.setCriteriosUnicos(criterios);
 
-        this.vinculador.setCriterio(this.mix);
+        vinculador.setCriterio(this.mix);
 
         vinculador.vincular();
 

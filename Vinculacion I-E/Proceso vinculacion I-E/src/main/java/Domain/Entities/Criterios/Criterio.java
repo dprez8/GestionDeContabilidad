@@ -17,7 +17,10 @@ public abstract class Criterio {
         this.ingresos = new ArrayList<Ingreso>();
     }
 
-    public abstract void ordenar();
+    public void ordenar() {
+        this.posicionEgreso = 0;
+        this.posicionIngreso = 0;
+    }
     public abstract void siguiente();
     public abstract boolean termino();
 
