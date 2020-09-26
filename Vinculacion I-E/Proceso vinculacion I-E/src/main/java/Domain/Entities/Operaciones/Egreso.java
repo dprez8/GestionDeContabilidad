@@ -3,10 +3,10 @@ package Domain.Entities.Operaciones;
 import java.time.LocalDate;
 
 public class Egreso {
-    public Integer numeroEgreso;
-    public Double monto;
-    public LocalDate fecha;
-    public Ingreso ingresoAsociado;
+    private Integer numeroEgreso;
+    private Double monto;
+    private LocalDate fecha;
+    private Ingreso ingresoAsociado;
 
     /************Getters & Setters*************/
     public Double getMonto() {
@@ -31,5 +31,13 @@ public class Egreso {
 
     public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
+    }
+
+    public Integer getNumeroEgreso() {
+        return numeroEgreso;
+    }
+
+    public void setNumeroEgreso(Integer numeroEgreso) {
+        this.numeroEgreso = numeroEgreso;
     }
 }

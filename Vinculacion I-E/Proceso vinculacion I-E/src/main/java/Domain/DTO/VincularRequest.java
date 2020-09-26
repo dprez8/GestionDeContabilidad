@@ -6,11 +6,11 @@ import Domain.Entities.Operaciones.Ingreso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OperacionesDTO {
-    public List<Ingreso> ingresos;
-    public List<Egreso> egresos;
+public class VincularRequest {
+    private List<Ingreso> ingresos;
+    private List<Egreso> egresos;
 
-    public OperacionesDTO() {
+    public VincularRequest() {
         this.ingresos = new ArrayList<>();
         this.egresos = new ArrayList<>();
     }
