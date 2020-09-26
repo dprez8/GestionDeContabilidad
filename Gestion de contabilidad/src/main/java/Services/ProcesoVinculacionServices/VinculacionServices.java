@@ -11,6 +11,6 @@ public interface VinculacionServices {
     @POST("api/vincular")
     Call<VincularResponse> vincular(@Body VincularRequest vincularRequest);
 
-    @POST("api/conficurar")
+    @POST("api/configurar")
     Call<Void> configurar(@Body ConfigurarVinculadorRequest configurarVinculadorRequest);
 }
