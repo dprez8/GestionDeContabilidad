@@ -4,11 +4,26 @@ import Domain.Organizacion.Empresa;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import javax.persistence.*;
 
+@Entity
+@Table
 public class Sector {
+	@Id
+	@Column(name="sector_id")
+	private int sectorId;
+	@Column
     private String nombre;
-    private List<CategoriaEmpresa> categoriaEmpresas;
-    private HashMap<String, Integer> categoriasExistentes;
+	//@ManyToMany(fetch = FetchType.LAZY, cascade= CascadeType.ALL)
+	@Transient
+	private List<CategoriaEmpresa> categoriaEmpresas;
+	
+	@OneToMany(mappedBy = "categoriaEmpresa")
+    List<CategoriaPorSector> categorias;
+	
+    
+    @Transient
+	private HashMap<String, Integer> categoriasExistentes;
 
     public Sector(String nombre){
         this.categoriaEmpresas = new ArrayList<>();

@@ -31590,14 +31590,14 @@
 													"top": 230,
 													"width": 131.16162109375,
 													"height": 13,
-													"text": "+categorias: Categoria",
+													"text": "+categorias: CategoriaEmpresa",
 													"horizontalAlignment": 0
 												}
 											],
 											"font": "Arial;13;0",
 											"left": 432,
 											"top": 225,
-											"width": 141.16162109375,
+											"width": 172.89990234375,
 											"height": 23
 										},
 										{
@@ -43206,13 +43206,28 @@
 													"top": 760,
 													"width": 200.62890625,
 													"height": 13
+												},
+												{
+													"_type": "ERDColumnView",
+													"_id": "AAAAAAF0xjagwHIfSMg=",
+													"_parent": {
+														"$ref": "AAAAAAFxgNROKWh1Gbs="
+													},
+													"model": {
+														"$ref": "AAAAAAF0t/pZqyf0Zpw="
+													},
+													"font": "Arial;13;0",
+													"left": 93,
+													"top": 775,
+													"width": 200.62890625,
+													"height": 13
 												}
 											],
 											"font": "Arial;13;0",
 											"left": 88,
 											"top": 695,
 											"width": 210.62890625,
-											"height": 83
+											"height": 98
 										}
 									],
 									"font": "Arial;13;0",
@@ -52293,7 +52308,7 @@
 									"top": 1280,
 									"width": 241,
 									"height": 90,
-									"text": "Se omitio el atributo categoriasExistentes de sector, ya que este existe para resolver cuestiones algoritmicas y no presenta motivos de ser persistido, aunque esto podria cambiar"
+									"text": "Se decidió modelar un Many To Many debido a que una categoria_empresa puede ser la misma para varios sectores y a su vez un sector pude tener varias categorías asociadas"
 								},
 								{
 									"_type": "UMLNoteLinkView",
@@ -52303,12 +52318,12 @@
 									},
 									"font": "Arial;13;0",
 									"head": {
-										"$ref": "AAAAAAF0t/mJnCEoSoc="
+										"$ref": "AAAAAAF0t/ySnSy38W4="
 									},
 									"tail": {
 										"$ref": "AAAAAAF0uAqFNDlttVE="
 									},
-									"points": "560:1324;496:1324;496:1196"
+									"points": "560:1324;456:1324;456:1316"
 								}
 							]
 						},
@@ -55230,7 +55245,7 @@
 											"top": 524,
 											"width": 384.0458984375,
 											"height": 13,
-											"text": "-categoria: Categoria",
+											"text": "-categoria: CategoriaEmpresa",
 											"horizontalAlignment": 0
 										},
 										{

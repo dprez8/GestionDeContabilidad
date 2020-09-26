@@ -1,12 +1,24 @@
 package Domain.CategorizadorDeEmpresas;
 
-import Domain.Organizacion.Empresa;
+import javax.persistence.*;
 
+import Domain.Organizacion.Empresa;
+@Entity
+@Table
 public class CategoriaEmpresa {
-    private String nombre;
+   
+	@Id
+	@Column(name="categoria_id")
+	private int categoriaId;
+	@Column
+	private String nombre;
+    @Column(name="monto_min")
     private double montoMin;
+    @Column(name="monto_max")
     private double montoMax;
+    @Column(name="personal_min")
     private int personalMin;
+    @Column(name="personal_max")
     private int personalMax;
 
     public CategoriaEmpresa(String categoria, Double montoMin, Double montoMax, int personalMin, int personalMax){
