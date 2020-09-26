@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Ingreso {
-    public Integer numeroIngreso;
-    public Double monto;
-    public LocalDate fecha;
-    public List<Egreso> egresosAsociados;
+    private Integer numeroIngreso;
+    private Double monto;
+    private LocalDate fecha;
+    private List<Egreso> egresosAsociados;
 
     public Ingreso(){
         this.egresosAsociados = new ArrayList<>();
@@ -41,6 +41,14 @@ public class Ingreso {
 
     public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
+    }
+
+    public Integer getNumeroIngreso() {
+        return numeroIngreso;
+    }
+
+    public void setNumeroIngreso(Integer numeroIngreso) {
+        this.numeroIngreso = numeroIngreso;
     }
 
     public Double getMontoEgresosAsociados() {
