@@ -8,28 +8,53 @@ import Domain.ApiPaises.Pais;
 import Domain.ApiPaises.Provincia;
 import Domain.Usuarios.Estandar;
 
-public class EntidadJuridica extends Organizacion {
-    private String razonSocial;
-    private int cuit;
-    private int codigoDeInscripcionDefinitivaEnIGJ;
-    private List<EntidadBase> entidadesBase;
-    private Estandar usuario;
-    private CategoriaEntidadJuridica tipoEntidadJuridica;
-    
-    private Pais pais;
-	private Provincia provincia;
-	private String ciudad;
-	private String calle;
-	private int altura;
-	private String piso;
-	private int zipcode;
-	
+import javax.persistence.*;
 
-    public EntidadJuridica(String nombre,int cuit,String razonSocial,int codigoDeInscripcionDefinitivaEnIGJ){
-        super(nombre);
-        this.cuit = cuit;
-        this.razonSocial = razonSocial;
-        this.codigoDeInscripcionDefinitivaEnIGJ = codigoDeInscripcionDefinitivaEnIGJ;
+@Entity
+@Table(name = "entidad_juridica")
+@PrimaryKeyJoinColumn(name = "organizacion_id")
+public class EntidadJuridica extends Organizacion {
+	@Column(name = "razon_social")
+    private String razonSocial;
+
+	@Transient
+	private Estandar usuario;
+
+	@Column(name = "cuit")
+    private int cuit;
+
+	@Column(name = "codigo_igj")
+    private int codigoDeInscripcionDefinitivaEnIGJ;
+
+	@OneToMany(mappedBy = "entidadJuridica",cascade = CascadeType.ALL)
+    private List<EntidadBase> entidadesBase;
+
+	@Transient
+    private CategoriaEntidadJuridica tipoEntidadJuridica;
+
+	@Transient
+    private Pais pais;
+
+	@Transient
+	private Provincia provincia;
+
+	@Transient
+	private Ciudad ciudad;
+
+	@Column(name = "calle")
+	private String calle;
+
+	@Column(name = "altura")
+	private int altura;
+
+	@Column(name = "piso")
+	private String piso;
+
+	@Column(name = "zipcode")
+	private int zipcode;
+
+	public EntidadJuridica(){
+        super();
         this.entidadesBase = new ArrayList<>();
     }
 
@@ -41,6 +66,46 @@ public class EntidadJuridica extends Organizacion {
     public void setTipoEntidadJuridica(CategoriaEntidadJuridica tipoEntidadJuridica){
         this.tipoEntidadJuridica = tipoEntidadJuridica;
     }
+
+	public String getRazonSocial() {
+		return razonSocial;
+	}
+
+	public void setRazonSocial(String razonSocial) {
+		this.razonSocial = razonSocial;
+	}
+
+	public Estandar getUsuario() {
+		return usuario;
+	}
+
+	public int getCuit() {
+		return cuit;
+	}
+
+	public void setCuit(int cuit) {
+		this.cuit = cuit;
+	}
+
+	public int getCodigoDeInscripcionDefinitivaEnIGJ() {
+		return codigoDeInscripcionDefinitivaEnIGJ;
+	}
+
+	public void setCodigoDeInscripcionDefinitivaEnIGJ(int codigoDeInscripcionDefinitivaEnIGJ) {
+		this.codigoDeInscripcionDefinitivaEnIGJ = codigoDeInscripcionDefinitivaEnIGJ;
+	}
+
+	public List<EntidadBase> getEntidadesBase() {
+		return entidadesBase;
+	}
+
+	public void setEntidadesBase(List<EntidadBase> entidadesBase) {
+		this.entidadesBase = entidadesBase;
+	}
+
+	public CategoriaEntidadJuridica getTipoEntidadJuridica() {
+		return tipoEntidadJuridica;
+	}
     public Pais getPais() {
 		return pais;
 	}
@@ -57,11 +122,11 @@ public class EntidadJuridica extends Organizacion {
 		this.provincia = provincia;
 	}
 
-	public String getCiudad() {
+	public Ciudad getCiudad() {
 		return ciudad;
 	}
 
-	public void setCiudad(String ciudad) {
+	public void setCiudad(Ciudad ciudad) {
 		this.ciudad = ciudad;
 	}
 

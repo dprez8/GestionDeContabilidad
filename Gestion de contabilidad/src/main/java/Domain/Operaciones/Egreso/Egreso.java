@@ -22,7 +22,7 @@ public class Egreso extends Operacion {
 
 	private DocumentoComercial documento;
 	private List<ItemEgreso> items;
-	private MedioDePago medioDePago;
+	private Pago pago;
 	private Proveedor proveedor;
 	private List<Presupuesto> presupuestos;
 	private List<Estandar> revisores;
@@ -45,8 +45,8 @@ public class Egreso extends Operacion {
 		return presupuestos;
 	}
 
-	public MedioDePago getMedioDePago(){
-    	return medioDePago;
+	public Pago getPago(){
+    	return pago;
 	}
 
 	public DocumentoComercial getDocumento() {
@@ -77,8 +77,8 @@ public class Egreso extends Operacion {
 		this.documento = documento;
 	}
 
-	public void setMedioDePago(MedioDePago medioDePago) {
-		this.medioDePago = medioDePago;
+	public void setPago(Pago pago) {
+		this.pago = pago;
 	}
 
 	public void setValidado(boolean validado) {

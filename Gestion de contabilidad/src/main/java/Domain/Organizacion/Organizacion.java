@@ -8,20 +8,38 @@ import java.util.stream.Collectors;
 import Domain.Operaciones.*;
 import Domain.Operaciones.Egreso.Egreso;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "organizacion")
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Organizacion {
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "organizacion_id")
+	private int organizacionId;
+
+	@Column(name = "nombre_ficticio")
     protected String nombreFicticio;
+
+    @OneToMany(mappedBy = "organizacion",cascade = CascadeType.ALL) //del otro lado es ManyToOne
     protected List<Operacion> operaciones;
 
-    public Organizacion(String nombreFicticio){
-    	this.nombreFicticio = nombreFicticio;
+    public Organizacion(){
     	this.operaciones = new ArrayList<>();
 	}
+
+	/****************Setters & Getters***************************/
 	public void addOperaciones (Operacion ... unasOperaciones) {
         Collections.addAll(this.operaciones, unasOperaciones);
     }
 
 	public List<Operacion> getOperaciones() {
 		return operaciones;
+	}
+
+	public int getOrganizacionId() {
+		return organizacionId;
 	}
 
 	/**Obtengo la lista de egresos que son subtipos de operaciones */

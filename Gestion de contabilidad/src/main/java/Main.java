@@ -41,6 +41,7 @@ public class Main {
         DocumentoComercial unDocumento = new DocumentoComercial(FacturaA, 11111);
 
         MedioDePago efectivo = new MedioDePago("Rapi Pago","Ticket","rapipago");
+        Pago unPago = new Pago(1,LocalDate.of(2020, Month.AUGUST,14),1231231,efectivo);
 
         Proveedor lautaroRobles = new Proveedor("Lautaro Robles", 41424242);
         Proveedor lautaroIturregui = new Proveedor("Lautaro Iturregui", 2224222);
@@ -63,7 +64,7 @@ public class Main {
 
         Egreso unaCompra = egresoBuilder.agregarProveedor(lautaroIturregui)
                             .agregarFechaOperacion(LocalDate.now())
-                            .agregarMedioDePago(efectivo)
+                            .agregarPago(unPago)
                             .agregarDocumentoComercial(unDocumento)
                             .agregarDatosOrganizacion(unaEntidad)
                             .agregarItems(RAMs,placasDeVideo)
