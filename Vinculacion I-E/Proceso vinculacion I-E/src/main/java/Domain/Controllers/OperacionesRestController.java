@@ -1,7 +1,8 @@
 package Domain.Controllers;
 
+import Domain.Converters.CriteriosAdapter;
 import Domain.Converters.LocalDateAdapter;
-import Domain.DTO.ConfiguracionDTO;
+import Domain.DTO.ConfiguracionRequest;
 import Domain.DTO.VincularRequest;
 import Domain.DTO.VincularResponse;
 import Domain.Entities.Condiciones.CondicionEntreFechas;
@@ -22,7 +23,9 @@ public class OperacionesRestController {
     public String vincular(Request request, Response response) {
 
         // Gson builder implementa la clase LocalDateAdapter para transformar el String de Json "yyyy-MM-dd" a LocalDate
-        Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe()).create();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe());
+        Gson gson = gsonBuilder.create();
 
         VincularRequest vincularRequest = gson.fromJson(request.body(), VincularRequest.class);
 
@@ -38,38 +41,31 @@ public class OperacionesRestController {
         vincularResponse.setIngresos(vinculador.getIngresos());
         vincularResponse.setEgresos(vinculador.getEgresos());
 
-        String jsonOperacionesDTO = gson.toJson(vincularResponse);
+        String jsonVincularRequest = gson.toJson(vincularResponse);
         response.type("application/json");
 
-        System.out.println(jsonOperacionesDTO);
+        System.out.println(jsonVincularRequest);
 
-        return jsonOperacionesDTO;
+        return jsonVincularRequest;
     }
 
     public Response configurar(Request request, Response response) {
 
-        Gson gson = new Gson();
+        // Gson builder implementa la clase CriteriosAdapter para convertir un String o un Array de Strings en
+        // Un CriterioUnico o un Criterio Mix
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Criterio.class, new CriteriosAdapter().nullSafe());
+        Gson gson = gsonBuilder.create();
 
-        ConfiguracionDTO configuracionDTO = gson.fromJson(request.body(), ConfiguracionDTO.class);
+        ConfiguracionRequest configuracionRequest = gson.fromJson(request.body(), ConfiguracionRequest.class);
 
-        String criterio = configuracionDTO.getCriterio();
-        List<String> criterios = configuracionDTO.getCriterios();
+        Criterio criterio = configuracionRequest.getCriterio();
 
         Vinculador vinculador = Vinculador.instancia();
+        vinculador.setCriterio(criterio);
 
-        if(!criterio.equals("Mix")) {
-            vinculador.setCriterio(criterioFromString(criterio));
-        } else {
-            Mix mix = new Mix();
-            List<CriterioUnico> criteriosUnicos = criterios.stream().map(unCriterio ->
-                    criterioFromString(unCriterio)).collect(Collectors.toList());
-
-            mix.setCriteriosUnicos(criteriosUnicos);
-            vinculador.setCriterio(mix);
-        }
-
-        Integer diasDesde = configuracionDTO.getDiasDesde();
-        Integer diasHasta = configuracionDTO.getDiasHasta();
+        Integer diasDesde = configuracionRequest.getDiasDesde();
+        Integer diasHasta = configuracionRequest.getDiasHasta();
 
         CondicionEntreFechas condicionEntreFechas = new CondicionEntreFechas();
         condicionEntreFechas.setDiasDesde(diasDesde);
@@ -82,17 +78,5 @@ public class OperacionesRestController {
         System.out.println(vinculador.getCriterio());
 
         return response;
-    }
-
-    public CriterioUnico criterioFromString(String string) {
-        CriterioUnico criterio = null;
-
-        switch (string) {
-            case "OrdenValorPrimeroEgreso": criterio = new OrdenValorPrimeroEgreso(); break;
-            case "OrdenValorPrimeroIngreso": criterio = new OrdenValorPrimeroIngreso(); break;
-            case "Fecha": criterio = new Fecha(); break;
-        }
-
-        return criterio;
     }
 }
