@@ -10,6 +10,7 @@ import javax.persistence.*;
 @Table
 public class Sector {
 	@Id
+	@GeneratedValue
 	@Column(name="sector_id")
 	private int sectorId;
 	@Column
@@ -40,6 +41,9 @@ public class Sector {
     }
     public void addCategorias(CategoriaEmpresa... categoriaEmpresas){
         Collections.addAll(this.categoriaEmpresas, categoriaEmpresas);
+    }
+    public void addRelacionCategoria(){
+    	
     }
 
     public void addCategoriaExistente(String key, Integer value) {

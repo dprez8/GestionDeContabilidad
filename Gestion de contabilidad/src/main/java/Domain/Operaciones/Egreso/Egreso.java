@@ -15,6 +15,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.persistence.OneToMany;
+
+import Domain.CategorizadorDeEmpresas.CategoriaPorSector;
 import Domain.DatosDeOperaciones.*;
 import Domain.Organizacion.*;
 
@@ -27,6 +30,10 @@ public class Egreso extends Operacion {
 	private List<Presupuesto> presupuestos;
 	private List<Estandar> revisores;
 	private Ingreso ingresoAsociado;
+	@OneToMany(mappedBy = "categoriaEmpresa")
+    List<CategoriaPorSector> categorias;
+	
+    
 	private List<CategoriaOperacion> categorias;
 	private boolean validado;
 	private double valorTotal;
