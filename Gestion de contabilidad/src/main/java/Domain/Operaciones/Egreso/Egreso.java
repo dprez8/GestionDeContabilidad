@@ -30,8 +30,6 @@ public class Egreso extends Operacion {
 	private List<Presupuesto> presupuestos;
 	private List<Estandar> revisores;
 	private Ingreso ingresoAsociado;
-	@OneToMany(mappedBy = "categoriaEmpresa")
-    List<CategoriaPorSector> categorias;
 	
     
 	private List<CategoriaOperacion> categorias;

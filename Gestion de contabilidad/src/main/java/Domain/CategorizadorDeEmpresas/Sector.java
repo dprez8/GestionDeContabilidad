@@ -15,42 +15,30 @@ public class Sector {
 	private int sectorId;
 	@Column
     private String nombre;
-	//@ManyToMany(fetch = FetchType.LAZY, cascade= CascadeType.ALL)
+	@OneToMany(mappedBy = "sector")
+    List<CategoriaPorSector> categoriasPorSector;
+	
+	/*@ManyToMany(fetch = FetchType.LAZY, cascade= CascadeType.ALL)
 	@Transient
 	private List<CategoriaEmpresa> categoriaEmpresas;
-	
-	@OneToMany(mappedBy = "categoriaEmpresa")
-    List<CategoriaPorSector> categorias;
-	
-    
     @Transient
-	private HashMap<String, Integer> categoriasExistentes;
+	private HashMap<String, Integer> categoriasExistentes;*/
 
     public Sector(String nombre){
-        this.categoriaEmpresas = new ArrayList<>();
-        this.categoriasExistentes = new HashMap<String,Integer>();
+        this.categoriasPorSector = new ArrayList<>();
         this.nombre = nombre;
     }
 
-    public CategoriaEmpresa obtenerCategoriaDe(Empresa unaEmpresa){
-        List<CategoriaEmpresa> listaCategoriasFiltrada = this.categoriaEmpresas.stream().filter(unaCategoriaEmpresa ->
-                                                                                    unaCategoriaEmpresa.dentroDelMinMax(unaEmpresa))
-                                                                                        .collect(Collectors.toList());
-        CategoriaEmpresa categoriaEmpresaObtenida = listaCategoriasFiltrada.stream().max(Comparator.comparingInt(a->categoriasExistentes.get(a.getNombre()))).get();
-        return categoriaEmpresaObtenida;
+    public void addCategoriasPorSector(CategoriaPorSector... categoria_sector){
+        Collections.addAll(this.categoriasPorSector, categoria_sector);
     }
-    public void addCategorias(CategoriaEmpresa... categoriaEmpresas){
-        Collections.addAll(this.categoriaEmpresas, categoriaEmpresas);
-    }
-    public void addRelacionCategoria(){
-    	
-    }
-
+    
+    /*
     public void addCategoriaExistente(String key, Integer value) {
         categoriasExistentes.put(key, value);
     }
 
     public void removeCategoriaExistente(String key){
         categoriasExistentes.remove(key);
-    }
+    }*/
 }

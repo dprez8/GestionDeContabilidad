@@ -3,6 +3,8 @@ package Domain.CategorizadorDeEmpresas;
 
 import javax.persistence.*;
 
+import Domain.Organizacion.Empresa;
+
 @Entity
 @Table(name="Categoria_x_Sector")
 public class CategoriaPorSector{
@@ -20,6 +22,14 @@ public class CategoriaPorSector{
     @JoinColumn(name = "sector_id")
     public Sector sector;
 
+	@Column(name="monto_min")
+    private double montoMin;
+    @Column(name="monto_max")
+    private double montoMax;
+    @Column(name="personal_min")
+    private int personalMin;
+    @Column(name="personal_max")
+    private int personalMax;
 	
 	
 	public CategoriaPorSector(CategoriaEmpresa categoriaEmpresa, Sector sector) {
@@ -28,6 +38,35 @@ public class CategoriaPorSector{
 		this.sector = sector;
 	}
 
+	 public CategoriaPorSector( Double montoMin, Double montoMax, int personalMin, int personalMax){
+        this.montoMin    = montoMin;
+        this.montoMax    = montoMax;
+        this.personalMin = personalMin;
+        this.personalMax = personalMax;
+    }
+
+	  public Boolean cumpleRequisitos(Empresa unaEmpresa){
+	        if((montoMin < unaEmpresa.getVentasAnuales() 
+	        	&& unaEmpresa.getVentasAnuales() <= montoMax)
+	            || (personalMin < unaEmpresa.getCantidadDePersonal() 
+	            && unaEmpresa.getCantidadDePersonal() <= personalMax)
+	            && unaEmpresa.getSector().equals(this.sector)) 
+	        	return true;
+	        
+	        else 
+	        	return false;
+	   }
+
+    public boolean dentroDelMinMaxPersonal(Empresa unaEmpresa){
+    	return this.personalMin < unaEmpresa.getCantidadDePersonal() && unaEmpresa.getCantidadDePersonal() <= this.personalMax;
+    }
+
+    public boolean dentroDelMinMaxMonto(Empresa unaEmpresa){
+    	return this.montoMin < unaEmpresa.getVentasAnuales() && unaEmpresa.getVentasAnuales() <= this.montoMax;
+    }
+
+
+	  
 	public CategoriaEmpresa getCategoriaEmpresa() {
 		return categoriaEmpresa;
 	}
@@ -44,4 +83,37 @@ public class CategoriaPorSector{
 		this.sector = sector;
 	}
 
+	public double getMontoMin() {
+		return montoMin;
+	}
+
+	public void setMontoMin(double montoMin) {
+		this.montoMin = montoMin;
+	}
+
+	public double getMontoMax() {
+		return montoMax;
+	}
+
+	public void setMontoMax(double montoMax) {
+		this.montoMax = montoMax;
+	}
+
+	public int getPersonalMin() {
+		return personalMin;
+	}
+
+	public void setPersonalMin(int personalMin) {
+		this.personalMin = personalMin;
+	}
+
+	public int getPersonalMax() {
+		return personalMax;
+	}
+
+	public void setPersonalMax(int personalMax) {
+		this.personalMax = personalMax;
+	}
+
+	
 }

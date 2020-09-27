@@ -1,5 +1,8 @@
 package Domain.CategorizadorDeEmpresas;
 
+import java.util.Collections;
+import java.util.List;
+
 import javax.persistence.*;
 
 import Domain.Organizacion.Empresa;
@@ -13,39 +16,22 @@ public class CategoriaEmpresa {
 	private int categoriaId;
 	@Column
 	private String nombre;
-    /*
-	@Column(name="monto_min")
-    private double montoMin;
-    @Column(name="monto_max")
-    private double montoMax;
-    @Column(name="personal_min")
-    private int personalMin;
-    @Column(name="personal_max")
-    private int personalMax;*/
-
-    public CategoriaEmpresa(String categoria, Double montoMin, Double montoMax, int personalMin, int personalMax){
+	@OneToMany(mappedBy = "categoriaEmpresa")
+    List<CategoriaPorSector> categoriasPorSector;
+ 
+    public CategoriaEmpresa(String categoria){
         this.nombre      = categoria;
-        this.montoMin    = montoMin;
-        this.montoMax    = montoMax;
-        this.personalMin = personalMin;
-        this.personalMax = personalMax;
-    }
-
-//    public boolean dentroDelMinMaxPersonal(Empresa unaEmpresa){
-//        return this.personalMin < unaEmpresa.getCantidadDePersonal() && unaEmpresa.getCantidadDePersonal() <= this.personalMax;
-//    }
-//
-//    public boolean dentroDelMinMaxMonto(Empresa unaEmpresa){
-//        return this.montoMin < unaEmpresa.getVentasAnuales() && unaEmpresa.getVentasAnuales() <= this.montoMax;
-//    }
-
-    public Boolean dentroDelMinMax(Empresa unaEmpresa){
-        if((montoMin < unaEmpresa.getVentasAnuales() && unaEmpresa.getVentasAnuales() <= montoMax)
-                || (personalMin < unaEmpresa.getCantidadDePersonal() && unaEmpresa.getCantidadDePersonal() <= personalMax)) return true;
-        else return false;
     }
 
     public String getNombre(){
         return nombre;
+    }
+    
+    public void setNombre(String name){
+        this.nombre=name;
+    }
+    
+    public void addCategoriasPorSector(CategoriaPorSector... categoria_sector){
+        Collections.addAll(this.categoriasPorSector, categoria_sector);
     }
 }
