@@ -2,7 +2,7 @@ package Domain.Operaciones.Egreso;
 
 import Domain.DatosDeOperaciones.DocumentoComercial;
 import Domain.DatosDeOperaciones.ItemEgreso;
-import Domain.DatosDeOperaciones.MedioDePago;
+import Domain.DatosDeOperaciones.Pago;
 import Domain.DatosDeOperaciones.Proveedor;
 import Domain.Organizacion.Organizacion;
 
@@ -31,8 +31,8 @@ public class BuilderEgresoConcreto implements IBuilderEgreso {
     }
 
     @Override
-    public IBuilderEgreso agregarMedioDePago(MedioDePago medioDePago) {
-        this.egreso.setMedioDePago(medioDePago);
+    public IBuilderEgreso agregarPago(Pago pago) {
+        this.egreso.setPago(pago);
         return this;
     }
     

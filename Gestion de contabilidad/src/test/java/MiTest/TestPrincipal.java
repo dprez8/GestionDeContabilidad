@@ -82,7 +82,7 @@ public class TestPrincipal {
 
         Egreso compra = egresoBuilder.agregarProveedor(this.lautaroIturregui)
                 .agregarFechaOperacion(LocalDate.of(2020, Month.AUGUST,14))
-                .agregarMedioDePago(this.efectivo)
+                .agregarPago(this.pago)
                 .agregarDocumentoComercial(this.factura)
                 .agregarDatosOrganizacion(this.pymeJuridica)
                 .agregarItems(this.rams,this.placasDeVideo)
@@ -90,7 +90,7 @@ public class TestPrincipal {
 
         Assert.assertEquals(compra.getProveedor().getNombre(), "Lautaro Iturregui");
         Assert.assertEquals(compra.getFechaOperacion().toString(), "2020-08-14");
-        Assert.assertEquals(compra.getMedioDePago(), this.efectivo);
+        Assert.assertEquals(compra.getPago().getMedioDePago(), this.efectivo);
         Assert.assertEquals(compra.getDocumento(), this.factura);
         Assert.assertEquals(compra.getOrganizacion(), this.pymeJuridica);
 
