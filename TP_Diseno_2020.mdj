@@ -42462,7 +42462,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 621,
-													"top": 192,
+													"top": 177,
 													"width": 220.154296875,
 													"height": 13
 												},
@@ -42477,7 +42477,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 621,
-													"top": 207,
+													"top": 192,
 													"width": 220.154296875,
 													"height": 13
 												},
@@ -42492,7 +42492,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 621,
-													"top": 222,
+													"top": 207,
 													"width": 220.154296875,
 													"height": 13
 												},
@@ -42507,7 +42507,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 621,
-													"top": 237,
+													"top": 222,
 													"width": 220.154296875,
 													"height": 13
 												},
@@ -42522,7 +42522,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 621,
-													"top": 252,
+													"top": 237,
 													"width": 220.154296875,
 													"height": 13
 												},
@@ -42537,7 +42537,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 621,
-													"top": 267,
+													"top": 252,
 													"width": 220.154296875,
 													"height": 13
 												},
@@ -42552,7 +42552,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 621,
-													"top": 282,
+													"top": 267,
 													"width": 220.154296875,
 													"height": 13
 												},
@@ -42567,7 +42567,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 621,
-													"top": 297,
+													"top": 282,
 													"width": 220.154296875,
 													"height": 13
 												},
@@ -42582,7 +42582,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 621,
-													"top": 312,
+													"top": 297,
 													"width": 220.154296875,
 													"height": 13
 												},
@@ -42597,7 +42597,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 621,
-													"top": 327,
+													"top": 312,
 													"width": 220.154296875,
 													"height": 13
 												},
@@ -42612,7 +42612,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 621,
-													"top": 342,
+													"top": 327,
 													"width": 220.154296875,
 													"height": 13
 												}
@@ -42621,7 +42621,7 @@
 											"left": 616,
 											"top": 127,
 											"width": 224.34619140625,
-											"height": 233
+											"height": 218
 										}
 									],
 									"font": "Arial;13;0",
@@ -42710,7 +42710,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 253,
-													"top": 177,
+													"top": 162,
 													"width": 224.45166015625,
 													"height": 13
 												},
@@ -42725,7 +42725,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 253,
-													"top": 192,
+													"top": 177,
 													"width": 224.45166015625,
 													"height": 13
 												}
@@ -42734,7 +42734,7 @@
 											"left": 248,
 											"top": 127,
 											"width": 234.45166015625,
-											"height": 83
+											"height": 68
 										}
 									],
 									"font": "Arial;13;0",
@@ -44063,7 +44063,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 517,
-													"top": 357,
+													"top": 342,
 													"width": 308.2216796875,
 													"height": 13
 												},
@@ -44078,7 +44078,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 517,
-													"top": 372,
+													"top": 357,
 													"width": 308.2216796875,
 													"height": 13
 												},
@@ -44093,7 +44093,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 517,
-													"top": 387,
+													"top": 372,
 													"width": 308.2216796875,
 													"height": 13
 												}
@@ -44102,7 +44102,7 @@
 											"left": 512,
 											"top": 247,
 											"width": 318.2216796875,
-											"height": 158
+											"height": 143
 										}
 									],
 									"font": "Arial;13;0",
@@ -51761,7 +51761,7 @@
 									"top": 560,
 									"width": 193,
 									"height": 142,
-									"text": "Se decidio modelar la generalizacion de operaciones como un table per subclass por una cuestion de performance, ya que los egresos e ingresos es algo que se espera que se usen constantemente, por lo cual mejorar el rendimiento es ideal."
+									"text": "Se decidio modelar la generalizacion de operaciones como un Table Per Concrete Class por una cuestion de performance, ya que los egresos e ingresos es algo que se espera que se usen constantemente, por lo cual mejorar el rendimiento es ideal."
 								},
 								{
 									"_type": "UMLNoteLinkView",
