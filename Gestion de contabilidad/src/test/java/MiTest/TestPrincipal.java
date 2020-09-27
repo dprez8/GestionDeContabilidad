@@ -96,7 +96,7 @@ public class TestPrincipal {
 
         this.repoEgresos.agregar(compra);
     }
-
+/*
     @Test
     public void categorizacionDeEmpresas(){
 
@@ -105,7 +105,7 @@ public class TestPrincipal {
         this.construccion.addCategoriaExistente("Mediana T1", 3);
         this.construccion.addCategoriaExistente("Mediana T2", 4);
 
-        /**Categorias del sector construccion*/
+  
         CategoriaEmpresa microConstruccion     = new CategoriaEmpresa("Micro",0.0,	19450000.0,1,12);
         CategoriaEmpresa pequeniaConstruccion  = new CategoriaEmpresa("Pequenia",19450000.0,115370000.0,12,45);
         CategoriaEmpresa medianaT1Construccion = new CategoriaEmpresa("Mediana T1",115370000.0,643710000.0,45,200);
@@ -116,6 +116,34 @@ public class TestPrincipal {
         this.miPyme.cacularCategoria();
         System.out.printf(miPyme.getCategoriaEmpresa().getNombre());
         Assert.assertEquals(pequeniaConstruccion,miPyme.getCategoriaEmpresa());
+    }*/
+    
+    @Test
+    public void categorizacionDeEmpresas(){
+ 
+        /**Categorias del sector construccion*/
+        CategoriaEmpresa micro   = new CategoriaEmpresa("Micro");
+        CategoriaEmpresa pequenia  = new CategoriaEmpresa("Pequenia");
+        CategoriaEmpresa medianaT1= new CategoriaEmpresa("Mediana T1");
+        CategoriaEmpresa medianaT2 = new CategoriaEmpresa("Mediana T2");
+
+        CategoriaPorSector microConstruccion     = new CategoriaPorSector(0.0,	19450000.0,1,12);
+        CategoriaPorSector pequeniaConstruccion  = new CategoriaPorSector(19450000.0,115370000.0,12,45);
+        CategoriaPorSector medianaT1Construccion = new CategoriaPorSector(115370000.0,643710000.0,45,200);
+        CategoriaPorSector medianaT2Construccion = new CategoriaPorSector(643710000.0,965460000.0,200,590);
+       
+        micro.addCategoriasPorSector(microConstruccion);
+        pequenia.addCategoriasPorSector(pequeniaConstruccion);
+        medianaT1.addCategoriasPorSector(medianaT1Construccion);
+        medianaT2.addCategoriasPorSector(medianaT2Construccion);
+      
+        
+        construccion.addCategoriasPorSector(microConstruccion,pequeniaConstruccion,medianaT1Construccion,medianaT2Construccion);
+        
+        CategorizadorDeEmpresas.addCategoriasPorSector(pequeniaConstruccion,medianaT1Construccion,microConstruccion,medianaT2Construccion);  
+        this.miPyme.cacularCategoria();
+        System.out.printf(miPyme.getCategoriaEmpresa().getNombre());
+        Assert.assertEquals(pequenia,miPyme.getCategoriaEmpresa());
     }
 
     @Test(expected = contraseniaCorta.class)

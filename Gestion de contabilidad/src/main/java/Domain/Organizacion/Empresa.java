@@ -45,4 +45,26 @@ public class Empresa extends CategoriaEntidadJuridica{
     public CategoriaEmpresa getCategoriaEmpresa() {
         return categoriaEmpresa;
     }
+
+	public void setCantidadDePersonal(int cantidadDePersonal) {
+		this.cantidadDePersonal = cantidadDePersonal;
+	}
+
+	public void setVentasAnuales(double ventasAnuales) {
+		this.ventasAnuales = ventasAnuales;
+	}
+
+	public void setCategoriaEmpresa(CategoriaEmpresa categoriaEmpresa) {
+		this.categoriaEmpresa = categoriaEmpresa;
+	}
+
+	public void setSector(Sector sector) {
+		this.sector = sector;
+	}
+
+	public void setActividad(String actividad) {
+		this.actividad = actividad;
+	}
+    
+    
 }

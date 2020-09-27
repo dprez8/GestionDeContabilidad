@@ -38,7 +38,7 @@ public class CategoriaPorSector{
 		this.sector = sector;
 	}
 
-	 public CategoriaPorSector( Double montoMin, Double montoMax, int personalMin, int personalMax){
+	 public CategoriaPorSector(Double montoMin, Double montoMax, int personalMin, int personalMax){
         this.montoMin    = montoMin;
         this.montoMax    = montoMax;
         this.personalMin = personalMin;

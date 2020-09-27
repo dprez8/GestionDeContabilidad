@@ -1,5 +1,6 @@
 package Domain.CategorizadorDeEmpresas;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class CategoriaEmpresa {
  
     public CategoriaEmpresa(String categoria){
         this.nombre      = categoria;
+        this.categoriasPorSector = new ArrayList<>();
     }
 
     public String getNombre(){
@@ -32,6 +34,8 @@ public class CategoriaEmpresa {
     }
     
     public void addCategoriasPorSector(CategoriaPorSector... categoria_sector){
-        Collections.addAll(this.categoriasPorSector, categoria_sector);
+    	for(CategoriaPorSector categoriaSector: categoria_sector) {
+    		categoriaSector.setCategoriaEmpresa(this);}
+    	Collections.addAll(this.categoriasPorSector, categoria_sector);
     }
 }

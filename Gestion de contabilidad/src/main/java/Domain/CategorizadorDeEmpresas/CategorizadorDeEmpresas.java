@@ -1,5 +1,6 @@
 package Domain.CategorizadorDeEmpresas;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -8,7 +9,7 @@ import Domain.Organizacion.Empresa;
 
 public class CategorizadorDeEmpresas {
 	
-	private static List<CategoriaPorSector> categoriasPorSector;
+	private static List<CategoriaPorSector> categoriasPorSector  = new ArrayList<>();
 	
 
     public static CategoriaEmpresa obtenerCategoriaDe(Empresa unaEmpresa){
@@ -20,12 +21,13 @@ public class CategorizadorDeEmpresas {
  
 		if(categoriaSectorObtenida.isPresent()) {
 			CategoriaPorSector categoriaEmp= categoriaSectorObtenida.get();
+			unaEmpresa.setCategoriaEmpresa(categoriaEmp.getCategoriaEmpresa());
 			return categoriaEmp.getCategoriaEmpresa();
 			}
 		return null;
     }
     
-    public void addCategoriasPorSector(CategoriaPorSector... categoria_sector){
-        Collections.addAll(this.categoriasPorSector, categoria_sector);
+    public static void addCategoriasPorSector(CategoriaPorSector... categoria_sector){
+        Collections.addAll(categoriasPorSector, categoria_sector);
     }
 }
