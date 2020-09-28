@@ -1,5 +1,8 @@
 package Domain.Entities.BandejaDeMensajes;
 
+import Domain.Entities.Usuarios.Usuario;
+
+import java.io.Serializable;
 import java.time.LocalDate;
 
 import javax.persistence.*;

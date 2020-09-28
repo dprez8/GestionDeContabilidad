@@ -1,10 +1,25 @@
 package Domain.Entities.BandejaDeMensajes;
 
+import Domain.Entities.Usuarios.Usuario;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.lang.annotation.Target;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class BandejaDeMensajes{
+@Embeddable
+public class BandejaDeMensajes {
+
+    @ManyToMany
+    @JoinTable(
+            name="mensaje_x_usuario",
+            inverseJoinColumns=
+            @JoinColumn(name="mensaje_id", referencedColumnName="mensaje_id"),
+            joinColumns=
+            @JoinColumn(name="usuario_id", referencedColumnName="usuario_id")
+    )
     private List<Mensaje> mensajes = new ArrayList<Mensaje>();
 
     public void crearMensaje(String cuerpo){
@@ -32,4 +47,37 @@ public class BandejaDeMensajes{
     public List<Mensaje> getMensajes() {
         return mensajes;
     }
+}
+
+@Entity
+@Table(name="mensaje_x_usuario")
+class MensajePorUsuario{
+
+    @EmbeddedId
+    MensajeUsuarioKey id;
+
+    @ManyToOne
+    @MapsId("usuarioId")
+    @JoinColumn(name="usuario_id")
+    public Usuario usuario;
+
+    @ManyToOne
+    @MapsId("mensajeId")
+    @JoinColumn(name = "mensaje_id")
+    public Mensaje mensaje;
+
+    @Column
+    public boolean leido;
+
+}
+
+@Embeddable
+class MensajeUsuarioKey implements Serializable {
+
+    @Column(name = "usuario_id")
+    public int usuarioId;
+
+    @Column(name = "mensaje_id")
+    public int mensajeId;
+
 }
