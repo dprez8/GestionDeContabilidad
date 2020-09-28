@@ -36,7 +36,7 @@ public class Presupuesto {
 
     @ManyToMany
     @JoinTable(
-            name="categoria_x_presupuesto",
+            name="categoria_x_egreso_x_presupuesto",
             inverseJoinColumns=
             @JoinColumn(name="categoria_id", referencedColumnName="categoria_id"),
             joinColumns=
