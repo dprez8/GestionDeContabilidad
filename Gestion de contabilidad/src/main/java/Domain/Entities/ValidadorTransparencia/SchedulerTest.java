@@ -1,3 +1,5 @@
+package Domain.Entities.ValidadorTransparencia;
+
 import Domain.Entities.BandejaDeMensajes.Mensaje;
 import Domain.Entities.CategorizadorDeEmpresas.Sector;
 import Domain.Entities.DatosDeOperaciones.*;
@@ -12,7 +14,7 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Main {
+public class SchedulerTest {
     public static void main(String[] args) throws Exception {
 
         /**Creacion de los validadores*/
@@ -52,8 +54,12 @@ public class Main {
         /**Creacion de una organizacion ejemplo*/
 
         Sector construccion = new Sector("Construccion");
-        Empresa miPyme = new Empresa(3,5000003.0,"Construccion",construccion);
-        EntidadJuridica unaEntidad  = new EntidadJuridica("MiPyme",1234,"Nose",1);
+        Empresa miPyme = new Empresa();
+        miPyme.setSector(construccion);
+        miPyme.setActividad("Construccion");
+        miPyme.setVentasAnuales(50000003.0);
+        miPyme.setCantidadDePersonal(3);
+        EntidadJuridica unaEntidad  = new EntidadJuridica();
         unaEntidad.setTipoEntidadJuridica(miPyme);
 
         /**Construccion del egreso*/
