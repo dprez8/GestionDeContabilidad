@@ -1,66 +1,77 @@
 package Services.ProcesoVinculacionServices;
 
 import Domain.ApiVinculador.*;
+import Domain.DatosDeOperaciones.ItemEgreso;
+import Domain.DatosDeOperaciones.Producto;
+import Domain.Operaciones.Egreso.BuilderEgresoConcreto;
+import Domain.Operaciones.Egreso.Egreso;
+import Domain.Operaciones.Ingreso;
 import Services.MercadoLibreServices.EleccionApi;
 import com.google.gson.Gson;
 
 import javax.xml.ws.Response;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 public class VinculacionMain {
     public static void main(String[] args) throws IOException {
-        ServicioVinculacion servicioVinculacion = ServicioVinculacion.instancia("http://181.21.131.77/");
+        //PREPARACION DE EGRESOS E INGRESOS (ESTOS VENDRIAN DE ALGUNA PARTE DEL SISTEMA)
 
-        ConfigurarVinculadorRequest configurarVinculadorRequest = new ConfigurarVinculadorRequest();
-        VincularRequest vincularRequest = new VincularRequest();
+        Producto ram = new Producto("4GB DDR4");
+        Producto placaDeVideo = new Producto("RTX 3090");
+        Producto monitor = new Producto("4k 144hz");
+        ItemEgreso rams = new ItemEgreso(ram, 1, 1000.0);
+        ItemEgreso placasDeVideo = new ItemEgreso(placaDeVideo, 1, 2500.0);
+        ItemEgreso monitores = new ItemEgreso(monitor, 2, 5000.0);
 
-        configurarVinculadorRequest.diasDesde = -3;
-        configurarVinculadorRequest.diasHasta = 3;
-        configurarVinculadorRequest.criterio = "OrdenValorPrimeroEgreso";
-        configurarVinculadorRequest.criterios = new ArrayList<>();
+        BuilderEgresoConcreto egresoBuilder = new BuilderEgresoConcreto();
+        Egreso compra1 = egresoBuilder
+                .agregarFechaOperacion(LocalDate.of(2020, Month.SEPTEMBER,26))
+                .agregarItems(rams)
+                .build();
+        egresoBuilder = new BuilderEgresoConcreto();
+        Egreso compra2 = egresoBuilder
+                .agregarFechaOperacion(LocalDate.of(2020, Month.SEPTEMBER,27))
+                .agregarItems(placasDeVideo)
+                .build();
+        egresoBuilder = new BuilderEgresoConcreto();
+        Egreso compra3 = egresoBuilder
+                .agregarFechaOperacion(LocalDate.of(2020, Month.SEPTEMBER,23))
+                .agregarItems(monitores)
+                .build();
+        compra1.setOperacionNumero(1);
+        compra2.setOperacionNumero(2);
+        compra3.setOperacionNumero(3);
 
-        servicioVinculacion.configurar(configurarVinculadorRequest);
+        Ingreso donacion = new Ingreso(5, "Donacion", 500.0);
+                donacion.setOperacionNumero(5);
+                donacion.setFechaOperacion(LocalDate.of(2020, 9, 26));
+        Ingreso venta = new Ingreso(7, "Venta de computadora", 10000.0);
+                venta.setOperacionNumero(7);
+                venta.setFechaOperacion(LocalDate.of(2020, 9, 25));
 
-        IngresoAEnviar creditosHaberes = new IngresoAEnviar();
-        IngresoAEnviar donacion = new IngresoAEnviar();
+        List<Ingreso> ingresos = new ArrayList<>();
+        List<Egreso> egresos = new ArrayList<>();
 
-        creditosHaberes.numeroIngreso = 1;
-        creditosHaberes.monto = 10000.0;
-        creditosHaberes.fecha = "2020-09-25";
+        ingresos.add(donacion);
+        ingresos.add(venta);
 
-        donacion.numeroIngreso = 2;
-        donacion.monto = 500.0;
-        donacion.fecha = "2020-09-26";
+        egresos.add(compra1);
+        egresos.add(compra2);
+        egresos.add(compra3);
 
-        EgresoAEnviar compraUno = new EgresoAEnviar();
-        EgresoAEnviar compraDos = new EgresoAEnviar();
-        EgresoAEnviar compraTres = new EgresoAEnviar();
+        //LLAMO AL ARCHIVO DE CONFIG PARA OBTENER LA URL A LA API DE VINCULADOR
+        Properties prop=new Properties();
+        prop.load(new FileReader("src/main/resources/config.properties"));
 
-        compraUno.numeroEgreso = 1;
-        compraUno.fecha = "2020-09-26";
-        compraUno.monto = 1000.0;
+        VinculacionApi vinculacionApi = new VinculacionApi();
 
-        compraDos.numeroEgreso = 2;
-        compraDos.fecha = "2020-09-27";
-        compraDos.monto = 2500.0;
-
-        compraTres.numeroEgreso = 3;
-        compraTres.fecha = "2020-09-23";
-        compraTres.monto = 10000.0;
-
-        vincularRequest.ingresos.add(creditosHaberes);
-        vincularRequest.ingresos.add(donacion);
-
-        vincularRequest.egresos.add(compraUno);
-        vincularRequest.egresos.add(compraDos);
-        vincularRequest.egresos.add(compraTres);
-
-        VincularResponse vincularResponse = servicioVinculacion.vincular(vincularRequest);
-
-        Gson gson = new Gson();
-        System.out.println(gson.toJson(vincularResponse));
+        vinculacionApi.configurarVinculador(-3, 3, "Fecha", prop);
+        vinculacionApi.vincularEgresosIngresos(ingresos, egresos, prop);
     }
 }
