@@ -1,6 +1,6 @@
 package Domain.Entities.DatosDeOperaciones;
 
-import Domain.Operaciones.Egreso.Egreso;
+import Domain.Entities.Operaciones.Egreso.Egreso;
 
 import javax.persistence.*;
 

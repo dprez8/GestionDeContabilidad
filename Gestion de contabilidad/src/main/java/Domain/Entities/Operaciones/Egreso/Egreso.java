@@ -41,7 +41,14 @@ public class Egreso extends Operacion {
 	@ManyToOne
 	@JoinColumn(name = "ingreso_asociado", referencedColumnName = "id")
 	private Ingreso ingresoAsociado;
-	@Transient
+	@ManyToMany
+	@JoinTable(
+			name="categoria_x_operacion",
+			inverseJoinColumns=
+			@JoinColumn(name="categoria_id", referencedColumnName="categoria_id"),
+			joinColumns=
+			@JoinColumn(name="operacion_id", referencedColumnName="id")
+	)
 	private List<CategoriaOperacion> categorias;
 	@Column
 	private boolean validado;

@@ -37,7 +37,7 @@ public class CategoriaOperacion {
     }
 }
 
-// propia del mapeo
+// inner classes propias del mapeo
 @Entity
 @Table(name="categoria_x_operacion")
 class CategoriaPorOperacion {
@@ -70,3 +70,37 @@ class CategoriaOperacionKey implements Serializable {
     public int operacionId;
 
 }
+
+@Entity
+@Table(name="categoria_x_presupuesto")
+class CategoriaPorPresupuesto {
+
+    @EmbeddedId
+    CategoriaPresupuestoKey id;
+
+    @ManyToOne
+    @MapsId("categoriaId")
+    @JoinColumn(name="categoria_id")
+    public CategoriaOperacion categoria;
+
+    @ManyToOne
+    @MapsId("presupuestoId")
+    @JoinColumn(name = "presupuesto_id")
+    public Presupuesto presupuesto;
+
+    @Column
+    public String descripcion;
+
+}
+
+@Embeddable
+class CategoriaPresupuestoKey implements Serializable {
+
+    @Column(name = "categoria_id")
+    public int categoriaId;
+
+    @Column(name = "presupuesto_id")
+    public int presupuestoId;
+
+}
+
