@@ -1,9 +1,5 @@
 package Domain.Entities.Operaciones;
 
-import Domain.BandejaDeMensajes.Mensaje;
-import Domain.BandejaDeMensajes.MensajeUsuarioKey;
-import Domain.Usuarios.Usuario;
-
 import javax.persistence.*;
 import java.io.Serializable;
 
