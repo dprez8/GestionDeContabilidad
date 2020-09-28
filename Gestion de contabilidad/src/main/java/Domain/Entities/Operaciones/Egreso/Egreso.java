@@ -120,6 +120,7 @@ public class Egreso extends Operacion {
 		this.organizacion = organizacion;
 	}
 	public void setIngresoAsociado(Ingreso ingreso) { this.ingresoAsociado = ingreso; }
+	public Ingreso getIngresoAsociado() { return this.ingresoAsociado; }
 
 	public void addItems (ItemEgreso ... unosItems) {
 		Collections.addAll(this.items, unosItems);

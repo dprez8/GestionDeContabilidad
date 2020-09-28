@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -27,7 +28,7 @@ public class VinculacionMain {
         Producto monitor = new Producto("4k 144hz");
         ItemEgreso rams = new ItemEgreso(ram, 1, 1000.0);
         ItemEgreso placasDeVideo = new ItemEgreso(placaDeVideo, 1, 2500.0);
-        ItemEgreso monitores = new ItemEgreso(monitor, 2, 5000.0);
+        ItemEgreso monitores = new ItemEgreso(monitor, 1, 5000.0);
 
         BuilderEgresoConcreto egresoBuilder = new BuilderEgresoConcreto();
         Egreso compra1 = egresoBuilder
@@ -48,7 +49,7 @@ public class VinculacionMain {
         compra2.setOperacionNumero(2);
         compra3.setOperacionNumero(3);
 
-        Ingreso donacion = new Ingreso(5, "Donacion", 500.0);
+        Ingreso donacion = new Ingreso(5, "Donacion", 5000.0);
                 donacion.setOperacionNumero(5);
                 donacion.setFechaOperacion(LocalDate.of(2020, 9, 26));
         Ingreso venta = new Ingreso(7, "Venta de computadora", 10000.0);
@@ -71,7 +72,38 @@ public class VinculacionMain {
 
         VinculacionApi vinculacionApi = new VinculacionApi();
 
-        vinculacionApi.configurarVinculador(-3, 3, "Fecha", prop);
+        vinculacionApi.configurarVinculador(-3, 3, "OrdenValorPrimeroEgreso", prop);
         vinculacionApi.vincularEgresosIngresos(ingresos, egresos, prop);
+
+        printTest(ingresos, egresos);
+    }
+
+    private static void printTest(List<Ingreso> ingresos, List<Egreso> egresos) {
+        egresos.forEach(unEgreso -> {
+            Integer numeroEgreso = unEgreso.getOperacionNumero();
+            String fechaEgreso = unEgreso.getFechaOperacion().toString();
+            Double valorEgreso = unEgreso.getValorTotal();
+
+            if(unEgreso.getIngresoAsociado() != null) {
+                Integer numeroIngreso = unEgreso.getIngresoAsociado().getOperacionNumero();
+                String fechaIngreso = unEgreso.getIngresoAsociado().getFechaOperacion().toString();
+                Double valorIngreso = unEgreso.getIngresoAsociado().montoSobrante() +
+                        unEgreso.getIngresoAsociado().montoEnUso();
+
+                System.out.println(
+                        "Egreso N°"+numeroEgreso+":\n"+
+                        "   Fecha: "+fechaEgreso+"\n"+
+                        "   Monto: $"+valorEgreso+"\n"+
+                        "   Ingreso asociado: -> {N°"+numeroIngreso+" | "+fechaIngreso+" | $"+valorIngreso+"}"
+                );
+            } else {
+                System.out.println(
+                        "Egreso N°"+numeroEgreso+":\n"+
+                        "   Fecha: "+fechaEgreso+"\n"+
+                        "   Monto: $"+valorEgreso+"\n"+
+                        "   Ingreso asociado: -> {null}"
+                );
+            }
+        });
     }
 }

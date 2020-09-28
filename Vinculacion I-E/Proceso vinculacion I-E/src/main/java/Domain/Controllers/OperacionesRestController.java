@@ -27,11 +27,12 @@ public class OperacionesRestController {
         // Gson builder implementa la clase LocalDateAdapter para transformar el String de Json "yyyy-MM-dd" a LocalDate
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe());
+        gsonBuilder.setPrettyPrinting();
         Gson gson = gsonBuilder.create();
 
-        System.out.println(request.body());
-
         VincularRequest vincularRequest = gson.fromJson(request.body(), VincularRequest.class);
+
+        System.out.println("Recibo para vincular \n"+gson.toJson(vincularRequest));
 
         List<Ingreso> ingresos = vincularRequest.getIngresos();
         List<Egreso> egresos = vincularRequest.getEgresos();
@@ -57,7 +58,7 @@ public class OperacionesRestController {
             response.body(jsonVincularRequest);
 
         }
-        System.out.println(response.body());
+        System.out.println("Envio ya vinculado \n"+response.body());
         return response.body();
     }
 
@@ -67,9 +68,12 @@ public class OperacionesRestController {
         // Un CriterioUnico o un Criterio Mix
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Criterio.class, new CriteriosAdapter().nullSafe());
+        gsonBuilder.setPrettyPrinting();
         Gson gson = gsonBuilder.create();
 
         ConfiguracionRequest configuracionRequest = gson.fromJson(request.body(), ConfiguracionRequest.class);
+
+        System.out.println("Recibo configuracion \n"+gson.toJson(new JsonParser().parse(request.body())));
 
         Criterio criterio = configuracionRequest.getCriterio();
 
@@ -90,7 +94,6 @@ public class OperacionesRestController {
         response.type("application/json");
         response.body("");
 
-        System.out.println(response.body());
         return response.body();
     }
 }

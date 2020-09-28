@@ -14,7 +14,6 @@ public class CriteriosAdapter extends TypeAdapter<Criterio> {
 
     @Override
     public void write(final JsonWriter jsonWriter, final Criterio criterio ) throws IOException {
-
     }
 
     @Override

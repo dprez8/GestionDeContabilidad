@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,6 +27,8 @@ public class TestPrincipal {
     private CondicionSinIngresoAsociado condicionSinIngresoAsociado;
     private Ingreso creditosHaberes,donacion;
     private Egreso compraUno,compraDos,compraTres;
+    private List<Ingreso> ingresos = new ArrayList<>();
+    private List<Egreso> egresos = new ArrayList<>();
 
     @Before
     public void antesDeTestear(){
@@ -51,6 +54,13 @@ public class TestPrincipal {
         this.compraTres.setFecha(LocalDate.of(2020,9,23));
         this.compraTres.setMonto(10000.0);
 
+        ingresos.add(donacion);
+        ingresos.add(creditosHaberes);
+
+        egresos.add(compraUno);
+        egresos.add(compraDos);
+        egresos.add(compraTres);
+
         /***************Creacion de condiciones*************/
         this.condicionEntreFechas = new CondicionEntreFechas();
         condicionEntreFechas.setDiasDesde(-3);
@@ -68,8 +78,6 @@ public class TestPrincipal {
 
         /***************Creacion vinculador*****************/
         vinculador = Vinculador.instancia();
-        vinculador.addEgreso(this.compraUno,this.compraDos,this.compraTres);
-        vinculador.addIngreso(this.creditosHaberes,this.donacion);
         vinculador.addCondiciones(this.condicionValor);
         vinculador.addCondiciones(this.condicionEntreFechas);
         vinculador.addCondiciones(this.condicionSinIngresoAsociado);
@@ -79,9 +87,7 @@ public class TestPrincipal {
     public void VinculacionOrdenValorPrimeroEgreso(){
         vinculador.setCriterio(this.ordenValorPrimeroEgreso);
 
-        vinculador.vincular();
-
-        vinculador.getEgresos().forEach(e->System.out.println(e.getMonto()));
+        vinculador.vincular(egresos, ingresos);
 
         Assert.assertEquals(creditosHaberes,compraUno.getIngresoAsociado());
         Assert.assertNotEquals(donacion,compraUno.getIngresoAsociado());
@@ -94,11 +100,11 @@ public class TestPrincipal {
     public void VinculacionOrdenValorPrimeroIngreso() {
         vinculador.setCriterio(this.ordenValorPrimeroIngreso);
 
-        vinculador.getIngresos().remove(this.donacion);
+        ingresos.remove(this.donacion);
         this.donacion.setMonto(5000.0);
-        vinculador.addIngreso(this.donacion);
+        ingresos.add(this.donacion);
 
-        vinculador.vincular();
+        vinculador.vincular(egresos, ingresos);
 
 
         Assert.assertEquals(donacion,compraUno.getIngresoAsociado());
@@ -109,18 +115,16 @@ public class TestPrincipal {
     @Test
     public void VinculacionOrdenFecha(){
         vinculador.setCriterio(this.ordenFecha);
-        vinculador.getEgresos().remove(this.compraUno);
+
+        egresos.remove(this.compraUno);
         this.compraUno.setFecha(LocalDate.of(2020,8,1));
-        vinculador.addEgreso(this.compraUno);
+        egresos.add(this.compraUno);
 
-        vinculador.getIngresos().remove(this.donacion);
+        ingresos.remove(this.donacion);
         this.donacion.setMonto(5000.0);
-        vinculador.addIngreso(this.donacion);
+        ingresos.add(this.donacion);
 
-        vinculador.vincular();
-
-        vinculador.getEgresos().forEach(e->System.out.println(e.getFecha()));
-        vinculador.getEgresos().forEach(e->System.out.println(e.getMonto()));
+        vinculador.vincular(egresos, ingresos);
 
         Assert.assertNotEquals(creditosHaberes,compraUno.getIngresoAsociado());
         Assert.assertEquals(creditosHaberes,compraTres.getIngresoAsociado());
@@ -131,9 +135,9 @@ public class TestPrincipal {
     public void VinculacionMix(){
         List<CriterioUnico> criterios = new ArrayList<>();
 
-        vinculador.getIngresos().remove(this.donacion);
+        ingresos.remove(this.donacion);
         this.donacion.setMonto(5000.0);
-        vinculador.addIngreso(this.donacion);
+        ingresos.add(this.donacion);
 
         criterios.add(this.ordenFecha);
         criterios.add(this.ordenValorPrimeroEgreso);
@@ -143,7 +147,7 @@ public class TestPrincipal {
 
         vinculador.setCriterio(this.mix);
 
-        vinculador.vincular();
+        vinculador.vincular(egresos, ingresos);
 
         Assert.assertEquals(creditosHaberes,compraTres.getIngresoAsociado());
         Assert.assertNotEquals(creditosHaberes,compraUno.getIngresoAsociado());
