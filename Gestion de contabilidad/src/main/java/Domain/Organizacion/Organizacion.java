@@ -13,11 +13,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "organizacion")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class Organizacion {
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "organizacion_id")
-	private int organizacionId;
+public abstract class Organizacion extends EntidadPersistente{
 
 	@Column(name = "nombre_ficticio")
     protected String nombreFicticio;
@@ -36,10 +32,6 @@ public abstract class Organizacion {
 
 	public List<Operacion> getOperaciones() {
 		return operaciones;
-	}
-
-	public int getOrganizacionId() {
-		return organizacionId;
 	}
 
 	/**Obtengo la lista de egresos que son subtipos de operaciones */

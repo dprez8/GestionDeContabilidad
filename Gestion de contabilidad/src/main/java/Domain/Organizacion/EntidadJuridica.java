@@ -12,7 +12,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "entidad_juridica")
-@PrimaryKeyJoinColumn(name = "organizacion_id")
+@PrimaryKeyJoinColumn(name = "id")
 public class EntidadJuridica extends Organizacion {
 	@Column(name = "razon_social")
     private String razonSocial;
@@ -29,7 +29,8 @@ public class EntidadJuridica extends Organizacion {
 	@OneToMany(mappedBy = "entidadJuridica",cascade = CascadeType.ALL)
     private List<EntidadBase> entidadesBase;
 
-	@Transient
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "tipo_entidad_id")
     private CategoriaEntidadJuridica tipoEntidadJuridica;
 
 	@Transient
