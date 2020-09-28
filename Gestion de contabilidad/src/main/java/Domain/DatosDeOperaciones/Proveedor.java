@@ -9,6 +9,9 @@ import Domain.ApiPaises.Provincia;
 @Table
 public class Proveedor {
 	@Id
+	@Column(name="proveedor_id")
+	private int proveedorId;
+
 	@Column(name="documento_proveedor")
 	private int documento;
 	@Column
@@ -107,6 +110,14 @@ public class Proveedor {
 
 	public String getNombre(){
 		return nombre;
+	}
+
+	public int getProveedorId() {
+		return proveedorId;
+	}
+
+	public void setProveedorId(int proveedorId) {
+		this.proveedorId = proveedorId;
 	}
 }
 
