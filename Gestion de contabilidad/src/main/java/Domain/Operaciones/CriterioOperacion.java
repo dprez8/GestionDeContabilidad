@@ -5,13 +5,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Entity
+@Table(name="criterio_operacion")
 public class CriterioOperacion {
-    @OneToMany(mappedBy = "criterio_id")
+    @Id
+    @Column(name="criterio_id")
+    private int criterioId;
+    @Transient //@OneToMany(mappedBy = "criterio_id")
     private List<CategoriaOperacion> categorias;
     @Transient
     private List<CriterioOperacion> criteriosHijo;
     @ManyToOne
-    @JoinColumn(referencedColumnName = "criterio_padre_id")
+    @OneToMany(mappedBy = "criterioPadre")
+    @JoinColumn(name="criterio_padre_id", referencedColumnName = "criterio_id")
     private CriterioOperacion criterioPadre;
     @Column
     private String descripcion;
