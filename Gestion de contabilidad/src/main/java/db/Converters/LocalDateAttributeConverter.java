@@ -1,4 +1,4 @@
-package Converters;
+package db.Converters;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
