@@ -2,8 +2,8 @@ package Domain.Entities.DatosDeOperaciones;
 
 import javax.persistence.*;
 
-import Domain.ApiPaises.Pais;
-import Domain.ApiPaises.Provincia;
+import Domain.Entities.ApiPaises.Pais;
+import Domain.Entities.ApiPaises.Provincia;
 @Entity
 @Table
 public class Proveedor {
