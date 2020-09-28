@@ -11,7 +11,7 @@ public class EntidadBase extends Organizacion {
     private String descripcion;
 
     @ManyToOne
-    @JoinColumn(name = "entidad_juridica", referencedColumnName = "id")
+    @JoinColumn(name = "juridica_id", referencedColumnName = "id")
     private EntidadJuridica entidadJuridica;
 
 

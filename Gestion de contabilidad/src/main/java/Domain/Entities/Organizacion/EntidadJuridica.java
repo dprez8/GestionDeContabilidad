@@ -17,16 +17,13 @@ public class EntidadJuridica extends Organizacion {
 	@Column(name = "razon_social")
     private String razonSocial;
 
-	@Transient
-	private Estandar usuario;
-
 	@Column(name = "cuit")
     private int cuit;
 
 	@Column(name = "codigo_igj")
     private int codigoDeInscripcionDefinitivaEnIGJ;
 
-	@OneToMany(mappedBy = "entidadJuridica",cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "entidadJuridica",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<EntidadBase> entidadesBase;
 
 	@OneToOne(cascade = CascadeType.ALL)
@@ -60,10 +57,6 @@ public class EntidadJuridica extends Organizacion {
     }
 
     /**Setters & Getters*/
-    public void setUsuario(Estandar usuario) {
-        this.usuario = usuario;
-    }
-
     public void setTipoEntidadJuridica(CategoriaEntidadJuridica tipoEntidadJuridica){
         this.tipoEntidadJuridica = tipoEntidadJuridica;
     }
@@ -74,10 +67,6 @@ public class EntidadJuridica extends Organizacion {
 
 	public void setRazonSocial(String razonSocial) {
 		this.razonSocial = razonSocial;
-	}
-
-	public Estandar getUsuario() {
-		return usuario;
 	}
 
 	public int getCuit() {

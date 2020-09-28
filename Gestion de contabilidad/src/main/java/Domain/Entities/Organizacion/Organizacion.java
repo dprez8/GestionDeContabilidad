@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import Domain.Entities.EntidadPersistente.EntidadPersistente;
 import Domain.Entities.Operaciones.*;
 import Domain.Entities.Operaciones.Egreso.Egreso;
+import Domain.Entities.Usuarios.Estandar;
 
 import javax.persistence.*;
 
@@ -24,8 +25,13 @@ public abstract class Organizacion extends EntidadPersistente {
     //@OneToMany(mappedBy = "organizacion",cascade = CascadeType.ALL) //del otro lado es ManyToOne
     protected List<Operacion> operaciones;
 
+	@OneToMany(mappedBy = "miOrganizacion",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	protected List<Estandar> usuarios;
+
+
     public Organizacion(){
     	this.operaciones = new ArrayList<>();
+    	this.usuarios 	 = new ArrayList<>();
 	}
 
 	/****************Setters & Getters***************************/
@@ -44,4 +50,21 @@ public abstract class Organizacion extends EntidadPersistente {
 				.map(Egreso.class::cast)
 				.collect(Collectors.toList());
 	}
+
+	public List<Estandar> getUsuarios() {
+		return usuarios;
+	}
+
+	public void setUsuarios(List<Estandar> usuarios) {
+		this.usuarios = usuarios;
+	}
+
+	public String getNombreFicticio() {
+		return nombreFicticio;
+	}
+
+	public void setNombreFicticio(String nombreFicticio) {
+		this.nombreFicticio = nombreFicticio;
+	}
+
 }
