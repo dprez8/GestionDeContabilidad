@@ -29,10 +29,6 @@ public class ServicioVinculacion {
     }
 
     public VincularResponse vincular(VincularRequest vincularRequest) throws IOException {
-
-        // Podemos recibir por parametro una lista de Egresos e Ingresos y usar un adapter para crear un
-        // VincularRequest
-
         VinculacionServices vinculacionServices = this.retrofit.create(VinculacionServices.class);
         Call<VincularResponse> requestVinculacion = vinculacionServices.vincular(vincularRequest);
         Response<VincularResponse> responseVinculacion = requestVinculacion.execute();

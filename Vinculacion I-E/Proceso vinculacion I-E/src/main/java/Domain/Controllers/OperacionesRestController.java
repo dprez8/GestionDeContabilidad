@@ -9,6 +9,8 @@ import Domain.Entities.Condiciones.CondicionEntreFechas;
 import Domain.Entities.Condiciones.CondicionSinIngresoAsociado;
 import Domain.Entities.Condiciones.CondicionValor;
 import Domain.Entities.Criterios.*;
+import Domain.Entities.Operaciones.Egreso;
+import Domain.Entities.Operaciones.Ingreso;
 import Domain.Entities.Vinculador;
 import com.google.gson.*;
 import spark.Request;
@@ -27,29 +29,39 @@ public class OperacionesRestController {
         gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe());
         Gson gson = gsonBuilder.create();
 
+        System.out.println(request.body());
+
         VincularRequest vincularRequest = gson.fromJson(request.body(), VincularRequest.class);
+
+        List<Ingreso> ingresos = vincularRequest.getIngresos();
+        List<Egreso> egresos = vincularRequest.getEgresos();
 
         Vinculador vinculador = Vinculador.instancia();
 
-        vinculador.setEgresos(vincularRequest.getEgresos());
-        vinculador.setIngresos(vincularRequest.getIngresos());
+        if(vinculador.getCriterio() == null) {
+            // No se a configurado el vinculador
+            // Enviar error
+            response.status(403);
+            response.type("application/json");
+            response.body("");
+        } else {
+            // Se configuró el servidor previamente, asi que vincular y responder
+            vinculador.vincular(egresos, ingresos);
 
-        vinculador.vincular();
+            VincularResponse vincularResponse = new VincularResponse();
+            vincularResponse.setIngresos(ingresos);
+            vincularResponse.setEgresos(egresos);
 
-        VincularResponse vincularResponse = new VincularResponse();
+            String jsonVincularRequest = gson.toJson(vincularResponse);
+            response.type("application/json");
+            response.body(jsonVincularRequest);
 
-        vincularResponse.setIngresos(vinculador.getIngresos());
-        vincularResponse.setEgresos(vinculador.getEgresos());
-
-        String jsonVincularRequest = gson.toJson(vincularResponse);
-        response.type("application/json");
-
-        System.out.println(jsonVincularRequest);
-
-        return jsonVincularRequest;
+        }
+        System.out.println(response.body());
+        return response.body();
     }
 
-    public Response configurar(Request request, Response response) {
+    public String configurar(Request request, Response response) {
 
         // Gson builder implementa la clase CriteriosAdapter para convertir un String o un Array de Strings en
         // Un CriterioUnico o un Criterio Mix
@@ -75,8 +87,10 @@ public class OperacionesRestController {
 
         vinculador.addCondiciones(condicionEntreFechas, condicionSinIngresoAsociado, condicionValor);
 
-        System.out.println(vinculador.getCriterio());
+        response.type("application/json");
+        response.body("");
 
-        return response;
+        System.out.println(response.body());
+        return response.body();
     }
 }

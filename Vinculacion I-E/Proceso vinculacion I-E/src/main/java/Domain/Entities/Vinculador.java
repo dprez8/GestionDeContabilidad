@@ -10,11 +10,9 @@ import java.util.Collections;
 import java.util.List;
 
 public class Vinculador {
-    private List<Ingreso> ingresos;
-    private List<Egreso> egresos;
     private List<Condicion> condiciones;
     private Criterio criterio;
-    private static Vinculador vinculador;
+    private static Vinculador vinculador = null;
 
     public static Vinculador instancia (){
         if(vinculador == null){
@@ -24,11 +22,10 @@ public class Vinculador {
     }
 
     private Vinculador(){
-        this.ingresos = new ArrayList<>();
-        this.egresos = new ArrayList<>();
         this.condiciones = new ArrayList<>();
+        this.criterio = null;
     }
-    public void vincular() {
+    public void vincular(List<Egreso> egresos, List<Ingreso> ingresos) {
         this.criterio.setEgresos(egresos);
         this.criterio.setIngresos(ingresos);
         this.criterio.ordenar();
@@ -47,30 +44,6 @@ public class Vinculador {
     }
 
     /*******Getters & Setters******************/
-    public List<Ingreso> getIngresos() {
-        return ingresos;
-    }
-
-    public void setIngresos(List<Ingreso> ingresos) {
-        this.ingresos = ingresos;
-    }
-
-    public void addIngreso(Ingreso ... ingresos){
-        Collections.addAll(this.ingresos, ingresos);
-    }
-
-    public List<Egreso> getEgresos() {
-        return egresos;
-    }
-
-    public void setEgresos(List<Egreso> egresos) {
-        this.egresos = egresos;
-    }
-
-    public void addEgreso(Egreso ... _egresos){
-        Collections.addAll(this.egresos, _egresos);
-    }
-
     public List<Condicion> getCondiciones() {
         return condiciones;
     }

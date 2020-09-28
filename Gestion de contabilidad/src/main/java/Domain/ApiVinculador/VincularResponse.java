@@ -11,14 +11,4 @@ public class VincularResponse {
         this.ingresos = new ArrayList<>();
         this.egresos = new ArrayList<>();
     }
-
-    private class IngresoARecibir {
-        public Integer numeroIngreso;
-        public List<Integer> egresosAsociados;
-    }
-
-    private class EgresoARecibir {
-        public Integer numeroEgreso;
-        public Integer ingresoAsociado;
-    }
 }
