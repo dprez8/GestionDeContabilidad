@@ -28,7 +28,7 @@ import java.time.LocalDate;
 
 public class TestPrincipal {
 
-    private Repositorio<Egreso> repoEgresos;;
+    private Repositorio<Egreso> repoEgresos;
     private Presupuesto primerPresupuesto;
     private Presupuesto segundoPresupuesto;
     private Sector construccion;
