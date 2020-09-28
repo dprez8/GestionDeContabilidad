@@ -7,6 +7,7 @@ import javax.persistence.*;
 public class Producto {
 	
 	@Id
+    @GeneratedValue
 	@Column(name="producto_id")
 	private int idProducto;
 	@Column(name="nombre_producto")
@@ -14,6 +15,8 @@ public class Producto {
 	@Column
 	private double precio;
 
+    public Producto(){
+    }
     public Producto(String nombreProducto){
         this.nombreProducto = nombreProducto;
     }

@@ -9,6 +9,7 @@ import Domain.ApiPaises.Provincia;
 @Table
 public class Proveedor {
 	@Id
+	@GeneratedValue
 	@Column(name="proveedor_id")
 	private int proveedorId;
 

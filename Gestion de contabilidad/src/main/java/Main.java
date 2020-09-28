@@ -56,7 +56,7 @@ public class Main {
 
         Sector construccion = new Sector("Construccion");
         Empresa miPyme = new Empresa(3,5000003.0,"Construccion",construccion);
-        EntidadJuridica unaEntidad  = new EntidadJuridica("MiPyme",1234,"Nose",1);
+        EntidadJuridica unaEntidad  = new EntidadJuridica();; //new EntidadJuridica("MiPyme",1234,"Nose",1);
         unaEntidad.setTipoEntidadJuridica(miPyme);
 
         /**Construccion del egreso*/

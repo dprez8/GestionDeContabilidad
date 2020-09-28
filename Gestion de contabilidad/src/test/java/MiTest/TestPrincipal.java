@@ -64,7 +64,7 @@ public class TestPrincipal {
 
         this.construccion       = new Sector("Construccion");
         this.miPyme             = new Empresa(3,50000003.0,"Construccion",construccion);
-        this.pymeJuridica       = new EntidadJuridica("MiPyme",1234,"Nose",1);
+        this.pymeJuridica       = new EntidadJuridica();//EntidadJuridica("MiPyme",1234,"Nose",1);
         this.pymeJuridica.setTipoEntidadJuridica(this.miPyme);
         /**Creacion de un usuario estandar*/
         this.fernando = new Estandar(pymeJuridica, "Fernando", "1234", "fernando@herbas.com");

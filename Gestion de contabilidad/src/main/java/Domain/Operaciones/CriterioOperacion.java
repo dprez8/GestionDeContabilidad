@@ -1,13 +1,19 @@
 package Domain.Operaciones;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class CriterioOperacion {
+    @OneToMany(mappedBy = "criterio_id")
     private List<CategoriaOperacion> categorias;
+    @Transient
     private List<CriterioOperacion> criteriosHijo;
+    @ManyToOne
+    @JoinColumn(referencedColumnName = "criterio_padre_id")
     private CriterioOperacion criterioPadre;
+    @Column
     private String descripcion;
 
     public CriterioOperacion(String descrip){

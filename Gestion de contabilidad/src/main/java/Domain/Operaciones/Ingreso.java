@@ -3,14 +3,20 @@ package Domain.Operaciones;
 
 import Domain.Operaciones.Egreso.Egreso;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Entity
+@Table(name="ingreso")
 public class Ingreso extends Operacion {
+    @Column
     private String descripcion;
+    @Column
     private double montoTotal;
+    @OneToMany(mappedBy = "ingresoAsociado")
     private List<Egreso> egresos;
 
     public Ingreso(int operacionNumero, String descripcion, double montoTotal){

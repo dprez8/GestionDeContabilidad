@@ -11,14 +11,32 @@ import Domain.DatosDeOperaciones.ItemPresupuesto;
 import Domain.DatosDeOperaciones.Proveedor;
 import Domain.Operaciones.Egreso.Egreso;
 
+import javax.persistence.*;
+
+@Entity
+@Table
 public class Presupuesto {
+
+    @Id
+    @GeneratedValue
+    @Column(name="presupuesto_id")
+    private int presupuestoId;
+    @Column
     private int operacionNumero;
+    @Transient
     private List<ItemPresupuesto> items;
+    @ManyToOne
     private Egreso egresoAsociado;
+    @OneToOne
+    @JoinColumn(referencedColumnName = "documento_comercial_id")
     private DocumentoComercial documento;
+    @Column(columnDefinition = "DATE")
     private LocalDate fechaVigente;
+    @Transient
     private List<CategoriaOperacion> categorias;
+    @ManyToOne
     private Proveedor proveedor;
+    @Column
     private Double valorTotal;
     
 

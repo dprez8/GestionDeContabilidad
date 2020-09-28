@@ -7,7 +7,8 @@ import javax.persistence.*;
 @Table
 public class DocumentoComercial{
 	@Id
-	@Column(name="num_doc_comercial")
+	@GeneratedValue
+	@Column(name="documento_comercial_id")
 	private int numDocumento;
 	@ManyToOne
 	private TipoDocumento tipo;

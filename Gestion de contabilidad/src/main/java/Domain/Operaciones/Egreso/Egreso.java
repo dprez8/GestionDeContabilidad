@@ -18,17 +18,34 @@ import java.util.stream.Collectors;
 import Domain.DatosDeOperaciones.*;
 import Domain.Organizacion.*;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name="egreso")
 public class Egreso extends Operacion {
 
+	@OneToOne
+	@JoinColumn(name="documento_comercial_id", referencedColumnName = "documento_comercial_id")
 	private DocumentoComercial documento;
+	@OneToMany(mappedBy = "egresoAsociado")
 	private List<ItemEgreso> items;
+	@OneToOne
+	@JoinColumn(referencedColumnName = "pago_id")
 	private Pago pago;
+	@ManyToOne
+	@JoinColumn(name = "proveedor_id", referencedColumnName = "proveedor_id")
 	private Proveedor proveedor;
+	@OneToMany(mappedBy = "egresoAsociado")
 	private List<Presupuesto> presupuestos;
+	@Transient
 	private List<Estandar> revisores;
+	@ManyToOne
 	private Ingreso ingresoAsociado;
+	@Transient
 	private List<CategoriaOperacion> categorias;
+	@Column
 	private boolean validado;
+	@Column
 	private double valorTotal;
 
 	public Egreso() {
@@ -41,12 +58,12 @@ public class Egreso extends Operacion {
 	}
 
 	/**Getters*/
-    public List<Presupuesto> getPresupuestos() {
+	public List<Presupuesto> getPresupuestos() {
 		return presupuestos;
 	}
 
 	public Pago getPago(){
-    	return pago;
+		return pago;
 	}
 
 	public DocumentoComercial getDocumento() {
@@ -68,7 +85,7 @@ public class Egreso extends Operacion {
 		return organizacion;
 	}
 	public double getValorTotal() {
-    	return valorTotal;
+		return valorTotal;
 	}
 	public List<Estandar> getRevisores(){ return this.revisores;}
 
@@ -105,23 +122,23 @@ public class Egreso extends Operacion {
 	}
 
 	public void addItems (ItemEgreso ... unosItems) {
-        Collections.addAll(this.items, unosItems);
-        this.valorTotal = calcularValorTotal();
-    }
-    
-    public void addPresupuestos (Presupuesto ... presupuesto) {
-        Collections.addAll(this.presupuestos, presupuesto);
-    }
+		Collections.addAll(this.items, unosItems);
+		this.valorTotal = calcularValorTotal();
+	}
 
-    public void addRevisores(Estandar ... revisor) {
+	public void addPresupuestos (Presupuesto ... presupuesto) {
+		Collections.addAll(this.presupuestos, presupuesto);
+	}
+
+	public void addRevisores(Estandar ... revisor) {
 		Collections.addAll(this.revisores, revisor);
-    }
+	}
 
 	/************************************************/
-    private double calcularValorTotal () {
-        return  this.items.stream().collect(Collectors.summingDouble(unItem->unItem.valorTotal()));
-        // Retorna la sumatoria del precio de cada item del egreso
-    }
+	private double calcularValorTotal () {
+		return  this.items.stream().collect(Collectors.summingDouble(unItem->unItem.valorTotal()));
+		// Retorna la sumatoria del precio de cada item del egreso
+	}
 
 	public boolean isValidado() {
 		return this.validado;
