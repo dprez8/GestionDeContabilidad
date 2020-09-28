@@ -1,16 +1,10 @@
 package MiTest;
 
-import Domain.CategorizadorDeEmpresas.Sector;
 import Domain.Exceptions.*;
-import Domain.Organizacion.*;
-import Domain.Usuarios.*;
-import Domain.ValidadorDeContrasenia.*;
 import org.junit.Test;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Properties;
 
 public class TestValidadorContrasenia {
 
