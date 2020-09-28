@@ -1,19 +1,16 @@
-import Domain.BandejaDeMensajes.Mensaje;
-import Domain.CategorizadorDeEmpresas.Sector;
-import Domain.DatosDeOperaciones.*;
-import Domain.Operaciones.*;
-import Domain.ValidadorTransparencia.*;
-import Domain.Organizacion.*;
-import Domain.Operaciones.Egreso.*;
-import Domain.Usuarios.*;
+import Domain.Entities.BandejaDeMensajes.Mensaje;
+import Domain.Entities.CategorizadorDeEmpresas.Sector;
+import Domain.Entities.DatosDeOperaciones.*;
+import Domain.Entities.Operaciones.*;
+import Domain.Entities.ValidadorTransparencia.*;
+import Domain.Entities.Organizacion.*;
+import Domain.Entities.Operaciones.Egreso.*;
+import Domain.Entities.Usuarios.*;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Timer;
 
 public class Main {
     public static void main(String[] args) throws Exception {
