@@ -16,6 +16,9 @@ public class CriterioOperacion {
     @Column
     private String descripcion;
 
+    protected CriterioOperacion(){
+    }
+
     public CriterioOperacion(String descrip){
         descripcion = descrip;
         categorias = new ArrayList<>();

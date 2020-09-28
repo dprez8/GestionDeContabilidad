@@ -12,6 +12,7 @@ public class ItemEgreso {
 	@Column(name="item_egreso_id")
 	private int idItemEgreso;
 	@ManyToOne
+	@JoinColumn(referencedColumnName = "producto_id", name="producto_id")
 	private Producto producto;
 	@Column
 	private int cantidad;
@@ -21,7 +22,7 @@ public class ItemEgreso {
 	@JoinColumn(name= "egreso_id", referencedColumnName = "id")
 	private Egreso egresoAsociado;
 
-	public ItemEgreso() {
+	protected ItemEgreso() {
 	}
 
     public ItemEgreso(Producto producto, int cantidad, double precio) {

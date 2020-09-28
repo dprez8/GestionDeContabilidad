@@ -30,7 +30,7 @@ public class Egreso extends Operacion {
 	@OneToMany(mappedBy = "egresoAsociado")
 	private List<ItemEgreso> items;
 	@OneToOne
-	@JoinColumn(referencedColumnName = "pago_id")
+	@JoinColumn(name= "pago_id", referencedColumnName = "pago_id")
 	private Pago pago;
 	@ManyToOne
 	@JoinColumn(name = "proveedor_id", referencedColumnName = "proveedor_id")
@@ -40,6 +40,7 @@ public class Egreso extends Operacion {
 	@Transient
 	private List<Estandar> revisores;
 	@ManyToOne
+	@JoinColumn(name = "ingreso_asociado", referencedColumnName = "id")
 	private Ingreso ingresoAsociado;
 	@Transient
 	private List<CategoriaOperacion> categorias;

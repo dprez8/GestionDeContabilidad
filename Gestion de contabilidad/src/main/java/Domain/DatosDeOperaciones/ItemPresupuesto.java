@@ -18,8 +18,9 @@ public class ItemPresupuesto {
     private ItemEgreso itemEgresoAsociado;
 	@ManyToOne
     private Presupuesto presupuesto;
-   
-    
+
+    protected ItemPresupuesto(){
+    }
 
     public ItemPresupuesto(Producto unProducto,ItemEgreso unItem, int cantidad, double precio, Presupuesto presupuesto){
         this.producto = unProducto;

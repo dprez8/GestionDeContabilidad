@@ -12,6 +12,10 @@ public class TipoDocumento {
 	@Column (name="nombre_tipo")
 	private String nombreTipoDeDocumento;
 
+	protected TipoDocumento() {
+
+	}
+
 	public TipoDocumento(String nombreTipoDeDocumento) {
 		this.nombreTipoDeDocumento = nombreTipoDeDocumento;
 	}

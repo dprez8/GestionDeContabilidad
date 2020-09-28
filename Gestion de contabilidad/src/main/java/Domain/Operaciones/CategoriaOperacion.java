@@ -11,6 +11,10 @@ public class CategoriaOperacion {
     @JoinColumn(name = "criterio_id")
     private CriterioOperacion criterio;
 
+    protected CategoriaOperacion() {
+
+    }
+
     public String getDescripcion() {
         return descripcion;
     }

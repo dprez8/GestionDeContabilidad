@@ -19,6 +19,9 @@ public class Ingreso extends Operacion {
     @OneToMany(mappedBy = "ingresoAsociado")
     private List<Egreso> egresos;
 
+    protected Ingreso(){
+    }
+
     public Ingreso(int operacionNumero, String descripcion, double montoTotal){
     	this.fechaCarga= new Date();
     	this.descripcion = descripcion;

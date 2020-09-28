@@ -18,8 +18,10 @@ public class Proveedor {
 	@Column
 	private String nombre;
 	@ManyToOne
+	@JoinColumn(name="pais_id", referencedColumnName = "pais_id")
 	private Pais pais;
 	@ManyToOne
+	@JoinColumn(name="provincia_id", referencedColumnName = "provincia_id")
 	private Provincia provincia;
 	@Column
 	private String ciudad;
@@ -31,16 +33,17 @@ public class Proveedor {
 	private String piso;
 	@Column
 	private int zipcode;
-	
+
+	protected Proveedor() {
+	}
+
 	public Proveedor(String nombre, int documento) {
 		this.nombre = nombre;
 		this.documento = documento;
 	}
-	
 
 	/**Setters & Getters*/
 
-	
 	public int getDocumento() {
 		return documento;
 	}

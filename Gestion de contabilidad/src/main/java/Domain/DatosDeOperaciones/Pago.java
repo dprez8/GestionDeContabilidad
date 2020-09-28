@@ -8,6 +8,27 @@ import javax.persistence.*;
 @Table
 public class Pago {
 
+	@Id
+	@Column(name="pago_id")
+	private int pagoId;
+	@Column(columnDefinition = "DATE")
+	private LocalDate fechaPago;
+	@Column(name="numero_asociado")
+	private int numeroAsociado;
+	@ManyToOne
+	private MedioDePago medioDePago;
+
+
+	protected Pago() {
+	}
+
+	public Pago(int pagoId, LocalDate fechaPago, int numeroAsociado, MedioDePago medioDePago) {
+		this.pagoId = pagoId;
+		this.fechaPago = fechaPago;
+		this.numeroAsociado = numeroAsociado;
+		this.medioDePago = medioDePago;
+	}
+
 	public int getPagoId() {
 		return pagoId;
 	}
@@ -37,28 +58,6 @@ public class Pago {
 	}
 
 	public void setMedioDePago(MedioDePago medioDePago) {
-		this.medioDePago = medioDePago;
-	}
-
-	@Id
-	@Column(name="pago_id")
-	private int pagoId;
-	@Column(columnDefinition = "DATE")
-	private LocalDate fechaPago;
-	@Column(name="numero_asociado")
-	private int numeroAsociado;
-	@ManyToOne
-	private MedioDePago medioDePago;
-
-
-	public Pago() {
-
-	}
-
-	public Pago(int pagoId, LocalDate fechaPago, int numeroAsociado, MedioDePago medioDePago) {
-		this.pagoId = pagoId;
-		this.fechaPago = fechaPago;
-		this.numeroAsociado = numeroAsociado;
 		this.medioDePago = medioDePago;
 	}
 }

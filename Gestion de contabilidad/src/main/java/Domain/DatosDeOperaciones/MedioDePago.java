@@ -10,8 +10,11 @@ public class MedioDePago {
 	private String medioId;
     @Column (name="payment_type")
     private String tipoPago;
-    @Column (name="nommbre_medio")
+    @Column (name="nombre_medio")
     private String nombreMedioDePago;
+
+	protected MedioDePago() {
+	}
 
 	public MedioDePago(String medio_id,String tipoPago, String nombreMedioDePago) {
 		this.medioId = medio_id;

@@ -13,14 +13,14 @@ public abstract class Operacion {
 	@Id
 	@Column(name="id")
 	private int id;
-	@Column(columnDefinition = "DATE")
+	@Column(name="fecha_operacion", columnDefinition = "DATE")
 	protected LocalDate fechaOperacion;
-	@Column(columnDefinition = "DATE")
+	@Column(name="fecha_carga", columnDefinition = "DATE")
 	protected Date fechaCarga;
 	@ManyToOne
-	@JoinColumn(referencedColumnName = "organizacion_id")
+	@JoinColumn(name = "organizacion_id", referencedColumnName = "id")
 	protected Organizacion organizacion;
-	@Column
+	@Column(name="operacion_numero")
 	protected int operacionNumero;
 
 	/**Setters & Getters*/

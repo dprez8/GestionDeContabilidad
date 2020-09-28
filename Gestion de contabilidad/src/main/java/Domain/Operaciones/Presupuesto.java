@@ -21,24 +21,28 @@ public class Presupuesto {
     @GeneratedValue
     @Column(name="presupuesto_id")
     private int presupuestoId;
-    @Column
+    @Column(name="operacion_numero")
     private int operacionNumero;
     @Transient
     private List<ItemPresupuesto> items;
     @ManyToOne
+    @JoinColumn(name="egreso_asociado", referencedColumnName = "id")
     private Egreso egresoAsociado;
     @OneToOne
-    @JoinColumn(referencedColumnName = "documento_comercial_id")
+    @JoinColumn(name="documento_comercial_id", referencedColumnName = "documento_comercial_id")
     private DocumentoComercial documento;
-    @Column(columnDefinition = "DATE")
+    @Column(name="fecha_vigente", columnDefinition = "DATE")
     private LocalDate fechaVigente;
     @Transient
     private List<CategoriaOperacion> categorias;
     @ManyToOne
+    @JoinColumn(name="proveedor_id", referencedColumnName = "proveedor_id")
     private Proveedor proveedor;
-    @Column
+    @Column(name="valor_total")
     private Double valorTotal;
-    
+
+    protected Presupuesto(){
+    }
 
     public Presupuesto(int operacionNumero, Egreso unEgreso){
         this.operacionNumero = operacionNumero;

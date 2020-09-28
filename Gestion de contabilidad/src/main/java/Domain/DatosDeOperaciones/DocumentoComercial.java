@@ -11,6 +11,7 @@ public class DocumentoComercial{
 	@Column(name="documento_comercial_id")
 	private int numDocumento;
 	@ManyToOne
+	@JoinColumn(name = "tipo_documento_id", referencedColumnName = "tipo_documento_id")
 	private TipoDocumento tipo;
 	@Column(columnDefinition = "DATE")
     private LocalDate fechaDePedido;
@@ -20,7 +21,10 @@ public class DocumentoComercial{
     private String descripcion;
     @Column(name="path_adjunto")
     private String pathAdjunto;
-	
+
+	protected DocumentoComercial() {
+	}
+
     public DocumentoComercial(TipoDocumento tipo, int numDocumento) {
 		this.tipo = tipo;
 		this.numDocumento = numDocumento;
