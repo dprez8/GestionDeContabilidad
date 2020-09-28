@@ -53608,9 +53608,9 @@
 									"_parent": {
 										"$ref": "AAAAAAFz9cp7SwuoS9Q="
 									},
-									"name": "documento_proveedor",
-									"type": "varchar",
-									"length": "20",
+									"name": "proveedor_id",
+									"type": "smallint",
+									"length": 0,
 									"foreignKey": true
 								},
 								{
