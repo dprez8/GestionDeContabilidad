@@ -52,6 +52,12 @@
 		    <artifactId>commons-lang3</artifactId>
 		    <version>3.0</version>
 		</dependency>
+        <!--Guava SHA 256-->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>20.0</version>
+        </dependency>
     </dependencies>
 
 </project>

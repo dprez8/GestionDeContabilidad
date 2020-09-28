@@ -11,10 +11,17 @@ import Domain.Entities.Organizacion.*;
 @Entity
 @DiscriminatorValue("estandar")
 public class Estandar extends Usuario {
-	@Transient
-	private EntidadJuridica miOrganizacion; // Conoce su organizacion
+
+	@ManyToOne
+	@JoinColumn(name = "organizacion_id", referencedColumnName = "id")
+	private Organizacion miOrganizacion; // Conoce su organizacion
+
 	@Embedded
 	private BandejaDeMensajes bandejaDeMensajes;
+
+	protected Estandar(){
+		this.bandejaDeMensajes = new BandejaDeMensajes();
+	}
 
 	public Estandar(EntidadJuridica unaOrganizacion,String nombre,String contrasenia, String mail){
 		this.nombre = nombre;
