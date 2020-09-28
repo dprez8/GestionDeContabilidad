@@ -17,15 +17,6 @@ public abstract class Usuario {
 	@Column
 	protected String mail;
 
-	/**Estos metodos se implementaran cuando veamos el tema de persistencia*/
-	public static void iniciarSesion() {
-		//
-	}
-
-	public void singUp(){
-		//
-	}
-
 	/**Setters & getters*/
 	public String getNombre(){
 		return nombre;

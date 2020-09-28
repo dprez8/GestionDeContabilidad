@@ -1,4 +1,4 @@
-package Domain.Entities.Organizacion;
+package Domain.Entities.EntidadPersistente;
 
 import javax.persistence.*;
 

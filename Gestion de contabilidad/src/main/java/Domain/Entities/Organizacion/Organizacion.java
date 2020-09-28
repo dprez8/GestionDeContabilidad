@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import Domain.Entities.EntidadPersistente.EntidadPersistente;
 import Domain.Entities.Operaciones.*;
 import Domain.Entities.Operaciones.Egreso.Egreso;
 
@@ -13,7 +15,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "organizacion")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class Organizacion extends EntidadPersistente{
+public abstract class Organizacion extends EntidadPersistente {
 
 	@Column(name = "nombre_ficticio")
     protected String nombreFicticio;
