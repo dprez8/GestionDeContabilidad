@@ -3,8 +3,11 @@ package Domain.Entities.CategorizadorDeEmpresas;
 import javax.persistence.*;
 
 import Domain.Entities.Organizacion.Empresa;
+
+import java.io.Serializable;
+
 @Entity
-@Table
+@Table(name="categoria_empresa")
 public class CategoriaEmpresa {
    
 	@Id
@@ -20,6 +23,10 @@ public class CategoriaEmpresa {
     private int personalMin;
     @Column(name="personal_max")
     private int personalMax;
+
+    protected CategoriaEmpresa(){
+
+    }
 
     public CategoriaEmpresa(String categoria, Double montoMin, Double montoMax, int personalMin, int personalMax){
         this.nombre      = categoria;
@@ -46,4 +53,36 @@ public class CategoriaEmpresa {
     public String getNombre(){
         return nombre;
     }
+}
+
+
+// inner classes for mapping
+@Entity
+@Table(name="categoria_x_sector")
+class CategoriaPorSector{
+
+    @EmbeddedId
+    CategoriaSectorKey id;
+
+    @ManyToOne
+    @MapsId("categoriaId")
+    @JoinColumn(name="categoria_id")
+    public CategoriaEmpresa categoriaEmpresa;
+
+    @ManyToOne
+    @MapsId("sectorId")
+    @JoinColumn(name = "sector_id")
+    public Sector sector;
+
+}
+
+@Embeddable
+class CategoriaSectorKey implements Serializable {
+
+    @Column(name = "categoria_id")
+    public int categoriaId;
+
+    @Column(name = "sector_id")
+    public int sectorId;
+
 }

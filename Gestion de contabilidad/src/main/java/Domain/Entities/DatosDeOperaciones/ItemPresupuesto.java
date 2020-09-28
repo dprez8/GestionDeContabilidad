@@ -3,20 +3,25 @@ package Domain.Entities.DatosDeOperaciones;
 import Domain.Entities.Operaciones.Presupuesto;
 import javax.persistence.*;
 
+@Entity
+@Table(name="item_presupuesto")
 public class ItemPresupuesto {
 	
 	@Id
 	@Column(name="item_presupuesto_id")
 	private int idItemPresupuesto;
 	@ManyToOne
+    @JoinColumn(name="producto_id", referencedColumnName = "producto_id")
 	private Producto producto;
 	@Column
 	private int cantidad;
 	@Column
 	private double precio;
 	@ManyToOne
+    @JoinColumn(name="item_egreso_id", referencedColumnName = "item_egreso_id")
     private ItemEgreso itemEgresoAsociado;
 	@ManyToOne
+    @JoinColumn(name = "presupuesto_id", referencedColumnName = "presupuesto_id")
     private Presupuesto presupuesto;
 
     protected ItemPresupuesto(){

@@ -13,9 +13,9 @@ public class DocumentoComercial{
 	@ManyToOne
 	@JoinColumn(name = "tipo_documento_id", referencedColumnName = "tipo_documento_id")
 	private TipoDocumento tipo;
-	@Column(columnDefinition = "DATE")
+	@Column(name = "fecha_pedido", columnDefinition = "DATE")
     private LocalDate fechaDePedido;
-    @Column(columnDefinition = "DATE")
+    @Column(name = "fecha_entrega", columnDefinition = "DATE")
 	private LocalDate fechaDeEntrega;
     @Column
     private String descripcion;
