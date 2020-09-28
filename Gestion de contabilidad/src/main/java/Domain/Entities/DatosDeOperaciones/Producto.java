@@ -3,7 +3,7 @@ package Domain.Entities.DatosDeOperaciones;
 import javax.persistence.*;
 
 @Entity
-@Table
+@Table(name="producto")
 public class Producto {
 	
 	@Id

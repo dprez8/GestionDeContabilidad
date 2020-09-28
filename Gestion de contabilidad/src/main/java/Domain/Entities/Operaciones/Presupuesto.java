@@ -23,7 +23,7 @@ public class Presupuesto {
     private int presupuestoId;
     @Column(name="operacion_numero")
     private int operacionNumero;
-    @Transient
+    @OneToMany(mappedBy = "presupuesto")
     private List<ItemPresupuesto> items;
     @ManyToOne
     @JoinColumn(name="egreso_asociado", referencedColumnName = "id")

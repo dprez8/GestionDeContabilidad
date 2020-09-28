@@ -15,15 +15,25 @@ public class Sector {
 	@Column
     private String nombre;
 	//@ManyToMany(fetch = FetchType.LAZY, cascade= CascadeType.ALL)
-	@Transient
+    @ManyToMany
+    @JoinTable(
+            name="categoria_x_sector",
+            inverseJoinColumns=
+            @JoinColumn(name="categoria_id", referencedColumnName="categoria_id"),
+            joinColumns=
+            @JoinColumn(name="sector_id", referencedColumnName="sector_id")
+    )
 	private List<CategoriaEmpresa> categoriaEmpresas;
-	
+
 	@OneToMany(mappedBy = "categoriaEmpresa")
     List<CategoriaPorSector> categorias;
-	
-    
+
+    // no es necesario persistirlo, es para la funcionalidad del sector
     @Transient
 	private HashMap<String, Integer> categoriasExistentes;
+
+    public Sector(){
+    }
 
     public Sector(String nombre){
         this.categoriaEmpresas = new ArrayList<>();
