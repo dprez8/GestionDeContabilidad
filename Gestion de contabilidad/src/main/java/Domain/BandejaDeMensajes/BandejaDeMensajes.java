@@ -15,7 +15,7 @@ public class BandejaDeMensajes{
     }
 
     public void crearMensaje(String cuerpo){
-        Mensaje msg = new Mensaje(cuerpo);
+        Mensaje msg = new Mensaje(cuerpo,this.usuario);
         mensajes.add(msg);
     }
 

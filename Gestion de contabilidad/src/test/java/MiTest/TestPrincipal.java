@@ -150,7 +150,7 @@ public class TestPrincipal {
     public void validadorDeContrasenias() throws IOException, contraseniaCorta, contraseniaMuyComun, repiteContraseniaEnMailOUsuario {
         /**Leo un archivo de config mediante la clase Properties*/
         Properties prop=new Properties();
-        prop.load(new FileReader("src/main/resources/config.properties"));
+        prop.load(new FileReader("src/main/resources/META-INF/config.properties"));
 
         ValidarLongitudCorta validarLongitudCorta           = new ValidarLongitudCorta(Integer.parseInt(prop.getProperty("longitudMinima")));
         ValidarTop10k validarTop10k                         = new ValidarTop10k(prop.getProperty("dataFilePath"));

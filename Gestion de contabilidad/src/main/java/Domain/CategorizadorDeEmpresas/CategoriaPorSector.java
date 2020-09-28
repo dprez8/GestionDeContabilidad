@@ -57,15 +57,6 @@ public class CategoriaPorSector{
 	        	return false;
 	   }
 
-    public boolean dentroDelMinMaxPersonal(Empresa unaEmpresa){
-    	return this.personalMin < unaEmpresa.getCantidadDePersonal() && unaEmpresa.getCantidadDePersonal() <= this.personalMax;
-    }
-
-    public boolean dentroDelMinMaxMonto(Empresa unaEmpresa){
-    	return this.montoMin < unaEmpresa.getVentasAnuales() && unaEmpresa.getVentasAnuales() <= this.montoMax;
-    }
-
-
 	  
 	public CategoriaEmpresa getCategoriaEmpresa() {
 		return categoriaEmpresa;
