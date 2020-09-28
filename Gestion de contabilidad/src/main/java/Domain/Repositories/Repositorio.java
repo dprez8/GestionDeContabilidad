@@ -2,6 +2,8 @@ package Domain.Repositories;
 
 import Domain.Repositories.Daos.IDao;
 
+import java.util.List;
+
 public class Repositorio<T> {
     private IDao<T> dao;
     private Class<T> clase;
@@ -25,6 +27,10 @@ public class Repositorio<T> {
 
     public T buscar(int id){
         return this.dao.buscar(id);
+    }
+
+    public List<T> buscaTodos() {
+        return this.dao.buscarTodos();
     }
 
     public void modificar(T object){

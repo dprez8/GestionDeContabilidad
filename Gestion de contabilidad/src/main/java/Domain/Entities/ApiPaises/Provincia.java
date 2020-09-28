@@ -1,4 +1,4 @@
-package Domain.ApiPaises;
+package Domain.Entities.ApiPaises;
 
 import java.util.List;
 import java.util.Optional;

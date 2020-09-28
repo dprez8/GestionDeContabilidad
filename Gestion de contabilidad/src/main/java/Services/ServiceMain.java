@@ -2,12 +2,7 @@ package Services;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
 import java.util.Properties;
-import java.util.Scanner;
-
-import Domain.ApiPaises.*;
 
 public class ServiceMain {
 

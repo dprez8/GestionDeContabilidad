@@ -3,11 +3,10 @@ package Services;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
 
 import java.util.List;
 
-import Domain.ApiPaises.*;
+import Domain.Entities.ApiPaises.*;
 
 public interface GeorefServices {
 	@GET("classified_locations/countries")

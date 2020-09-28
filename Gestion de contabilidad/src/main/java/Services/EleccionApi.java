@@ -7,12 +7,12 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.Scanner;
 
-import Domain.ApiPaises.Ciudad;
-import Domain.ApiPaises.ListadoDeCiudades;
-import Domain.ApiPaises.ListadoDeProvincias;
-import Domain.ApiPaises.Moneda;
-import Domain.ApiPaises.Pais;
-import Domain.ApiPaises.Provincia;
+import Domain.Entities.ApiPaises.Ciudad;
+import Domain.Entities.ApiPaises.ListadoDeCiudades;
+import Domain.Entities.ApiPaises.ListadoDeProvincias;
+import Domain.Entities.ApiPaises.Moneda;
+import Domain.Entities.ApiPaises.Pais;
+import Domain.Entities.ApiPaises.Provincia;
 
 public class EleccionApi {
 	

@@ -3,9 +3,9 @@ package Domain.Entities.Organizacion;
 import java.util.ArrayList;
 import java.util.List;
 
-import Domain.ApiPaises.Ciudad;
-import Domain.ApiPaises.Pais;
-import Domain.ApiPaises.Provincia;
+import Domain.Entities.ApiPaises.Ciudad;
+import Domain.Entities.ApiPaises.Pais;
+import Domain.Entities.ApiPaises.Provincia;
 import Domain.Entities.Usuarios.Estandar;
 
 import javax.persistence.*;
