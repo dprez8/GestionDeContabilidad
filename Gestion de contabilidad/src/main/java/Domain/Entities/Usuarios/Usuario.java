@@ -3,6 +3,7 @@ package Domain.Entities.Usuarios;
 import Domain.Entities.EntidadPersistente.EntidadPersistente;
 
 import javax.persistence.*;
+import java.nio.charset.StandardCharsets;
 
 @Entity
 @Table(name = "Usuario")
@@ -43,6 +44,5 @@ public abstract class Usuario extends EntidadPersistente {
 	public void setMail(String mail) {
 		this.mail = mail;
 	}
-
 
 }
