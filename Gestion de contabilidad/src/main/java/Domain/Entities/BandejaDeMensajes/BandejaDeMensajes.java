@@ -18,7 +18,7 @@ public class BandejaDeMensajes {
             inverseJoinColumns=
             @JoinColumn(name="mensaje_id", referencedColumnName="mensaje_id"),
             joinColumns=
-            @JoinColumn(name="usuario_id", referencedColumnName="usuario_id")
+            @JoinColumn(name="usuario_id", referencedColumnName="id")
     )
     private List<Mensaje> mensajes = new ArrayList<Mensaje>();
 
@@ -58,7 +58,7 @@ class MensajePorUsuario{
 
     @ManyToOne
     @MapsId("usuarioId")
-    @JoinColumn(name="usuario_id")
+    @JoinColumn(name="id")
     public Usuario usuario;
 
     @ManyToOne

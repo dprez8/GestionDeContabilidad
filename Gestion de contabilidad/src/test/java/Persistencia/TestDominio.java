@@ -41,6 +41,8 @@ public class TestDominio {
 
         Assert.assertEquals("razonSocial",pymeJuridica.getRazonSocial());
 
-        Assert.assertEquals(Empresa.class,pymeJuridica.getTipoEntidadJuridica());
+        Empresa pyme = (Empresa) pymeJuridica.getTipoEntidadJuridica();
+
+        Assert.assertEquals("Construcciones",pyme.getActividad());
     }
 }

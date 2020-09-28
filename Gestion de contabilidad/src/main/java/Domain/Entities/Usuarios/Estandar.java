@@ -1,9 +1,6 @@
 package Domain.Entities.Usuarios;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 import Domain.Entities.BandejaDeMensajes.BandejaDeMensajes;
 import Domain.Entities.Organizacion.*;
