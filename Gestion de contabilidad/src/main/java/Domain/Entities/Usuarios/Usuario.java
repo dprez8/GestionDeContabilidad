@@ -1,19 +1,21 @@
 package Domain.Entities.Usuarios;
 
+import Domain.Entities.EntidadPersistente.EntidadPersistente;
+
 import javax.persistence.*;
 
 @Entity
+@Table(name = "Usuario")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="tipo_de_usuario")
-public abstract class Usuario {
-	// Esta informacion debe venir de una base de datos
-	@Id
-	@Column(name="usuario_id")
-	private int usuarioId;
+@DiscriminatorColumn(name="tipo_usuario")
+public abstract class Usuario extends EntidadPersistente {
+
 	@Column
 	protected String nombre;
+
 	@Column
 	protected String contrasenia;
+
 	@Column
 	protected String mail;
 
