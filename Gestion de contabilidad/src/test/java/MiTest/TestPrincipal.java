@@ -63,9 +63,15 @@ public class TestPrincipal {
         /**Creacion de una organizacion ejemplo*/
 
         this.construccion       = new Sector("Construccion");
-        this.miPyme             = new Empresa(3,50000003.0,"Construccion",construccion);
-        this.pymeJuridica       = new EntidadJuridica();//EntidadJuridica("MiPyme",1234,"Nose",1);
+        this.miPyme             = new Empresa();
+        this.miPyme.setSector(construccion);
+        this.miPyme.setActividad("Construccion");
+        this.miPyme.setVentasAnuales(50000003.0);
+        this.miPyme.setCantidadDePersonal(3);
+
+        this.pymeJuridica       = new EntidadJuridica();
         this.pymeJuridica.setTipoEntidadJuridica(this.miPyme);
+
         /**Creacion de un usuario estandar*/
         this.fernando = new Estandar(pymeJuridica, "Fernando", "1234", "fernando@herbas.com");
 

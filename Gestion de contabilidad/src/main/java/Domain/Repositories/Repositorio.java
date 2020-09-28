@@ -24,7 +24,7 @@ public class Repositorio<T> {
     }
 
     public T buscar(int id){
-        return this.dao.buscar(id,this.clase);
+        return this.dao.buscar(id);
     }
 
     public void modificar(T object){
