@@ -9,6 +9,6 @@ import javax.persistence.Entity;
 public class Osc extends CategoriaEntidadJuridica{
 
     @Column(name = "codigo_osc")
-    private int codigoOsc;
+    private String codigoOsc;
 
 }
