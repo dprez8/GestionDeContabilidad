@@ -5,17 +5,18 @@ import java.time.LocalDate;
 import javax.persistence.*;
 
 @Entity
-@Table
+@Table(name = "pago")
 public class Pago {
 
 	@Id
 	@Column(name="pago_id")
 	private int pagoId;
-	@Column(columnDefinition = "DATE")
+	@Column(name = "fecha_pago",columnDefinition = "DATE")
 	private LocalDate fechaPago;
 	@Column(name="numero_asociado")
 	private int numeroAsociado;
 	@ManyToOne
+	@JoinColumn(name = "medio_id", referencedColumnName = "medio_id")
 	private MedioDePago medioDePago;
 
 

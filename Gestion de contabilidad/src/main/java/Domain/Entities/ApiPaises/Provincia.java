@@ -15,6 +15,7 @@ public class Provincia {
 	@Transient
 	private int idProvincia;
 	@ManyToOne
+	@JoinColumn(name = "pais_id", referencedColumnName = "pais_id")
 	private Pais pais;
 	
 	public Pais getPais() {
