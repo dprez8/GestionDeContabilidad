@@ -30,13 +30,16 @@ public class EntidadJuridica extends Organizacion {
 	@JoinColumn(name = "tipo_entidad_id")
     private CategoriaEntidadJuridica tipoEntidadJuridica;
 
-	@Transient
+	@ManyToOne
+	@JoinColumn(name="pais_id", referencedColumnName = "pais_id")
     private Pais pais;
 
-	@Transient
+	@ManyToOne
+	@JoinColumn(name="provincia_id", referencedColumnName = "provincia_id")
 	private Provincia provincia;
 
-	@Transient
+	@ManyToOne
+	@JoinColumn(name="ciudad_id", referencedColumnName = "ciudad_id")
 	private Ciudad ciudad;
 
 	@Column(name = "calle")

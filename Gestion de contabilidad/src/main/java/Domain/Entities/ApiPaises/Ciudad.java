@@ -1,12 +1,25 @@
 package Domain.Entities.ApiPaises;
 
+import Domain.Entities.EntidadPersistente.EntidadPersistente;
+
+import javax.persistence.*;
 import java.util.List;
 import java.util.Optional;
 
-public class Ciudad {
+@Entity
+@Table(name = "ciudad")
+public class Ciudad{
+	@Id
+	@Column(name="ciudad_id")
 	public String id;
+
+	@Column
 	public String name;
+
+	@Transient
 	private int idCiudad;
+
+	@Transient
 	private static int contadorCiudades;
 	
 	public void setIdCiudad(int idCiudad) {

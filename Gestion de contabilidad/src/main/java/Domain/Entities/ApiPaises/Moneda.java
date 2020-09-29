@@ -3,7 +3,7 @@ package Domain.Entities.ApiPaises;
 import javax.persistence.*;
 
 @Entity
-@Table
+@Table(name = "moneda")
 public class Moneda {
 	
 	@Id

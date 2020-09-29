@@ -18,7 +18,8 @@ public class Empresa extends CategoriaEntidadJuridica{
     @Column
     private String actividad;
 
-    @Transient
+    @ManyToOne
+    @JoinColumn(name="categoria_id", referencedColumnName = "categoria_id")
     private CategoriaEmpresa categoriaEmpresa;
 
     @ManyToOne
