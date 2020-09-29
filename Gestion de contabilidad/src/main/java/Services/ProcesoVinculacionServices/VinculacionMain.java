@@ -1,21 +1,17 @@
 package Services.ProcesoVinculacionServices;
 
-import Domain.ApiVinculador.*;
-import Domain.DatosDeOperaciones.ItemEgreso;
-import Domain.DatosDeOperaciones.Producto;
-import Domain.Operaciones.Egreso.BuilderEgresoConcreto;
-import Domain.Operaciones.Egreso.Egreso;
-import Domain.Operaciones.Ingreso;
-import Services.MercadoLibreServices.EleccionApi;
-import com.google.gson.Gson;
 
-import javax.xml.ws.Response;
+import Domain.Entities.DatosDeOperaciones.ItemEgreso;
+import Domain.Entities.DatosDeOperaciones.Producto;
+import Domain.Entities.Operaciones.Egreso.BuilderEgresoConcreto;
+import Domain.Entities.Operaciones.Egreso.Egreso;
+import Domain.Entities.Operaciones.Ingreso;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -68,7 +64,7 @@ public class VinculacionMain {
 
         //LLAMO AL ARCHIVO DE CONFIG PARA OBTENER LA URL A LA API DE VINCULADOR
         Properties prop=new Properties();
-        prop.load(new FileReader("src/main/resources/config.properties"));
+        prop.load(new FileReader("src/main/resources/config/config.properties"));
 
         VinculacionApi vinculacionApi = new VinculacionApi();
 

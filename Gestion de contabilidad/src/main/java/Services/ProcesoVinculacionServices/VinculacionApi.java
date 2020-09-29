@@ -1,8 +1,8 @@
 package Services.ProcesoVinculacionServices;
 
-import Domain.ApiVinculador.*;
-import Domain.Operaciones.Egreso.Egreso;
-import Domain.Operaciones.Ingreso;
+import Domain.Entities.ApiVinculador.*;
+import Domain.Entities.Operaciones.Egreso.Egreso;
+import Domain.Entities.Operaciones.Ingreso;
 
 import java.io.IOException;
 import java.util.*;

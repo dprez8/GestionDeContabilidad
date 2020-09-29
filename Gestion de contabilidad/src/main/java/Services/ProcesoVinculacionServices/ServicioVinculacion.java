@@ -1,8 +1,8 @@
 package Services.ProcesoVinculacionServices;
 
-import Domain.ApiVinculador.ConfigurarVinculadorRequest;
-import Domain.ApiVinculador.VincularRequest;
-import Domain.ApiVinculador.VincularResponse;
+import Domain.Entities.ApiVinculador.ConfigurarVinculadorRequest;
+import Domain.Entities.ApiVinculador.VincularRequest;
+import Domain.Entities.ApiVinculador.VincularResponse;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
