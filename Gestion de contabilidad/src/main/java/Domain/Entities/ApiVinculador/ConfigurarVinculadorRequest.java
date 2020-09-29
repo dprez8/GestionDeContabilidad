@@ -1,6 +1,4 @@
-package Domain.ApiVinculador;
-
-import java.util.List;
+package Domain.Entities.ApiVinculador;
 
 public class ConfigurarVinculadorRequest {
     public Integer diasDesde;

@@ -1,4 +1,4 @@
-package Domain.ApiVinculador;
+package Domain.Entities.ApiVinculador;
 
 public class IngresoAEnviar {
     public Integer numeroIngreso;

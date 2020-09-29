@@ -1,4 +1,4 @@
-package Domain.ApiVinculador;
+package Domain.Entities.ApiVinculador;
 
 import java.util.ArrayList;
 import java.util.List;
