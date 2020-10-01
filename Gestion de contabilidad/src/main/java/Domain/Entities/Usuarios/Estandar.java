@@ -20,7 +20,7 @@ public class Estandar extends Usuario {
 		this.contrasenia = contrasenia;
 		this.mail = mail;
 		this.miOrganizacion = unaOrganizacion;
-		this.bandejaDeMensajes = new BandejaDeMensajes();
+		this.bandejaDeMensajes = new BandejaDeMensajes(this);
 	}
 
 	public BandejaDeMensajes getBandejaDeMensajes() {

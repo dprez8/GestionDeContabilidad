@@ -4,11 +4,19 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import Domain.Entities.Usuarios.Usuario;
+
 public class BandejaDeMensajes{
     private List<Mensaje> mensajes = new ArrayList<Mensaje>();
+    private Usuario usuario;
+	
+    
+    public BandejaDeMensajes(Usuario usuario){
+		this.usuario=usuario;
+    }
 
     public void crearMensaje(String cuerpo){
-        Mensaje msg = new Mensaje(cuerpo);
+        Mensaje msg = new Mensaje(cuerpo,this.usuario);
         mensajes.add(msg);
     }
 

@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 import Domain.Entities.DatosDeOperaciones.*;
 import Domain.Entities.Organizacion.*;
 
+
 import javax.persistence.*;
 
 @Entity
@@ -41,6 +42,7 @@ public class Egreso extends Operacion {
 	@ManyToOne
 	@JoinColumn(name = "ingreso_asociado", referencedColumnName = "id")
 	private Ingreso ingresoAsociado;
+
 	@Transient
 	private List<CategoriaOperacion> categorias;
 	@Column
