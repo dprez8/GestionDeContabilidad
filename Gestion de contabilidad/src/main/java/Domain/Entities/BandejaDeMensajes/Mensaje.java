@@ -1,12 +1,15 @@
 package Domain.Entities.BandejaDeMensajes;
 
+import Domain.Entities.Usuarios.Usuario;
+
+import java.io.Serializable;
 import java.time.LocalDate;
 
 import javax.persistence.*;
 
 import Domain.Entities.Usuarios.Usuario;
 @Entity
-@Table
+@Table(name="mensaje")
 public class Mensaje{
 	@Id
 	@Column(name="mensaje_id")
@@ -16,8 +19,9 @@ public class Mensaje{
 	@Column
     private String cuerpo;
 	@Column
-	public boolean leido;
+	public boolean leido;	
 	@ManyToOne
+	@JoinColumn(name="usuario_id", referencedColumnName = "id")
 	Usuario usuario;
 
     public Mensaje(String cuerpo,Usuario usuario){

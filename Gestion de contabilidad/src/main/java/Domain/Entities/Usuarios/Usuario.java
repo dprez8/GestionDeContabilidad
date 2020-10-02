@@ -1,19 +1,22 @@
 package Domain.Entities.Usuarios;
 
+import Domain.Entities.EntidadPersistente.EntidadPersistente;
+
 import javax.persistence.*;
+import java.nio.charset.StandardCharsets;
 
 @Entity
+@Table(name = "usuario")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="tipo_de_usuario")
-public abstract class Usuario {
-	// Esta informacion debe venir de una base de datos
-	@Id
-	@Column(name="usuario_id")
-	private int usuarioId;
+@DiscriminatorColumn(name="tipo_usuario")
+public abstract class Usuario extends EntidadPersistente {
+
 	@Column
 	protected String nombre;
+
 	@Column
 	protected String contrasenia;
+
 	@Column
 	protected String mail;
 
@@ -41,6 +44,5 @@ public abstract class Usuario {
 	public void setMail(String mail) {
 		this.mail = mail;
 	}
-
 
 }

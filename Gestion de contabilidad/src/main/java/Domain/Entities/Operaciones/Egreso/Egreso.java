@@ -43,7 +43,14 @@ public class Egreso extends Operacion {
 	@JoinColumn(name = "ingreso_asociado", referencedColumnName = "id")
 	private Ingreso ingresoAsociado;
 
-	@Transient
+	@ManyToMany
+	@JoinTable(
+			name="categoria_x_egreso_x_presupuesto",
+			inverseJoinColumns=
+			@JoinColumn(name="categoria_id", referencedColumnName="categoria_id"),
+			joinColumns=
+			@JoinColumn(name="egreso_id", referencedColumnName="id")
+	)
 	private List<CategoriaOperacion> categorias;
 	@Column
 	private boolean validado;
@@ -114,14 +121,8 @@ public class Egreso extends Operacion {
 	public void setOrganizacion(Organizacion organizacion) {
 		this.organizacion = organizacion;
 	}
-	public void setIngresoAsociado(Ingreso ingreso) throws noAlcanzaIngreso {
-		if(ingreso.montoSobrante() >= this.valorTotal) {
-			this.ingresoAsociado.desasociarEgreso(this);
-			this.ingresoAsociado = ingreso;
-			ingreso.asociarEgreso(this);
-		}
-		else throw new noAlcanzaIngreso("El monto del ingreso asociado es menor al monto del egreso");
-	}
+	public void setIngresoAsociado(Ingreso ingreso) { this.ingresoAsociado = ingreso; }
+	public Ingreso getIngresoAsociado() { return this.ingresoAsociado; }
 
 	public void addItems (ItemEgreso ... unosItems) {
 		Collections.addAll(this.items, unosItems);

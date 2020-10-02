@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import javax.persistence.*;
 
 @Entity
-@Table
+@Table(name="sector")
 public class Sector {
 	@Id
 	@GeneratedValue
@@ -15,14 +15,19 @@ public class Sector {
 	private int sectorId;
 	@Column
     private String nombre;
+
 	@OneToMany(mappedBy = "sector")
     List<CategoriaPorSector> categoriasPorSector;
 	
 	/*@ManyToMany(fetch = FetchType.LAZY, cascade= CascadeType.ALL)
 	@Transient
 	private List<CategoriaEmpresa> categoriaEmpresas;
+
     @Transient
 	private HashMap<String, Integer> categoriasExistentes;*/
+
+    public Sector(){
+    }
 
     public Sector(String nombre){
         this.categoriasPorSector = new ArrayList<>();

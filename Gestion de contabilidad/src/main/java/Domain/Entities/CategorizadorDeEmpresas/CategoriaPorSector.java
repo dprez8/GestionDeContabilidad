@@ -6,7 +6,7 @@ import javax.persistence.*;
 import Domain.Entities.Organizacion.Empresa;
 
 @Entity
-@Table(name="Categoria_x_Sector")
+@Table(name="categoria_x_sector")
 public class CategoriaPorSector{
     
 	@EmbeddedId

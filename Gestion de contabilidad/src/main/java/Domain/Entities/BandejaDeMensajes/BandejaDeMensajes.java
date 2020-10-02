@@ -1,12 +1,17 @@
 package Domain.Entities.BandejaDeMensajes;
 
+import Domain.Entities.Usuarios.Usuario;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.lang.annotation.Target;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import Domain.Entities.Usuarios.Usuario;
 
 public class BandejaDeMensajes{
+
     private List<Mensaje> mensajes = new ArrayList<Mensaje>();
     private Usuario usuario;
 	

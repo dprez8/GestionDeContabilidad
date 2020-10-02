@@ -5,7 +5,7 @@ import java.util.Optional;
 import javax.persistence.*;
 
 @Entity
-@Table
+@Table(name="provicia")
 public class Provincia {
 	@Id
 	@Column(name="provincia_id")
@@ -15,6 +15,7 @@ public class Provincia {
 	@Transient
 	private int idProvincia;
 	@ManyToOne
+	@JoinColumn(name = "pais_id", referencedColumnName = "pais_id")
 	private Pais pais;
 	
 	public Pais getPais() {

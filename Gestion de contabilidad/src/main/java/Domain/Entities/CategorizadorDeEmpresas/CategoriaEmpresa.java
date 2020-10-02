@@ -7,8 +7,11 @@ import java.util.List;
 import javax.persistence.*;
 
 import Domain.Entities.Organizacion.Empresa;
+
+import java.io.Serializable;
+
 @Entity
-@Table
+@Table(name="categoria_empresa")
 public class CategoriaEmpresa {
    
 	@Id
@@ -17,12 +20,14 @@ public class CategoriaEmpresa {
 	private int categoriaId;
 	@Column
 	private String nombre;
+
 	@OneToMany(mappedBy = "categoriaEmpresa")
     List<CategoriaPorSector> categoriasPorSector;
  
     public CategoriaEmpresa(String categoria){
         this.nombre      = categoria;
         this.categoriasPorSector = new ArrayList<>();
+
     }
 
     public String getNombre(){
@@ -39,3 +44,4 @@ public class CategoriaEmpresa {
     	Collections.addAll(this.categoriasPorSector, categoria_sector);
     }
 }
+

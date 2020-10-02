@@ -14,7 +14,7 @@ import Domain.Entities.Operaciones.Egreso.Egreso;
 import javax.persistence.*;
 
 @Entity
-@Table
+@Table(name="presupuesto")
 public class Presupuesto {
 
     @Id
@@ -23,7 +23,7 @@ public class Presupuesto {
     private int presupuestoId;
     @Column(name="operacion_numero")
     private int operacionNumero;
-    @Transient
+    @OneToMany(mappedBy = "presupuesto")
     private List<ItemPresupuesto> items;
     @ManyToOne
     @JoinColumn(name="egreso_asociado", referencedColumnName = "id")
@@ -33,7 +33,15 @@ public class Presupuesto {
     private DocumentoComercial documento;
     @Column(name="fecha_vigente", columnDefinition = "DATE")
     private LocalDate fechaVigente;
-    @Transient
+
+    @ManyToMany
+    @JoinTable(
+            name="categoria_x_egreso_x_presupuesto",
+            inverseJoinColumns=
+            @JoinColumn(name="categoria_id", referencedColumnName="categoria_id"),
+            joinColumns=
+            @JoinColumn(name="presupuesto_id", referencedColumnName="presupuesto_id")
+    )
     private List<CategoriaOperacion> categorias;
     @ManyToOne
     @JoinColumn(name="proveedor_id", referencedColumnName = "proveedor_id")

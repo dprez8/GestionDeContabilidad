@@ -37,36 +37,4 @@ public class CategoriaOperacion {
     }
 }
 
-// propia del mapeo
-@Entity
-@Table(name="categoria_x_operacion")
-class CategoriaPorOperacion {
 
-    @EmbeddedId
-    CategoriaOperacionKey id;
-
-    @ManyToOne
-    @MapsId("categoriaId")
-    @JoinColumn(name="categoria_id")
-    public CategoriaOperacion categoria;
-
-    @ManyToOne
-    @MapsId("operacionId")
-    @JoinColumn(name = "operacion_id")
-    public Operacion operacion;
-
-    @Column
-    public String descripcion;
-
-}
-
-@Embeddable
-class CategoriaOperacionKey implements Serializable {
-
-    @Column(name = "categoria_id")
-    public int categoriaId;
-
-    @Column(name = "operacion_id")
-    public int operacionId;
-
-}

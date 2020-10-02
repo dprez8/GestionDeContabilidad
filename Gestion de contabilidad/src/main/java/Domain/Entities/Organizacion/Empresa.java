@@ -4,10 +4,7 @@ package Domain.Entities.Organizacion;
 import Domain.CategorizadorDeEmpresas.CategorizadorDeEmpresas;
 import Domain.Entities.CategorizadorDeEmpresas.*;
 
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 @Entity
 @DiscriminatorValue("empresa")
@@ -22,10 +19,12 @@ public class Empresa extends CategoriaEntidadJuridica{
     @Column
     private String actividad;
 
-    @Transient
+    @ManyToOne
+    @JoinColumn(name="categoria_id", referencedColumnName = "categoria_id")
     private CategoriaEmpresa categoriaEmpresa;
 
-    @Transient
+    @ManyToOne
+    @JoinColumn(name = "sector_id",referencedColumnName = "sector_id")
     private Sector sector;
 
     /*******************Setters & Getters******************/

@@ -1,0 +1,42 @@
+package Domain.Entities.Criterios;
+
+import Domain.Entities.Operaciones.Egreso;
+import Domain.Entities.Operaciones.Ingreso;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class Criterio {
+    protected List<Egreso> egresos;
+    protected List<Ingreso> ingresos;
+    protected int posicionEgreso;
+    protected int posicionIngreso;
+
+    public Criterio() {
+        this.egresos = new ArrayList<Egreso>();
+        this.ingresos = new ArrayList<Ingreso>();
+    }
+
+    public void ordenar() {
+        this.posicionEgreso = 0;
+        this.posicionIngreso = 0;
+    }
+    public abstract void siguiente();
+    public abstract boolean termino();
+
+    public Egreso getEgreso() {
+        return this.egresos.get(this.posicionEgreso);
+    }
+
+    public void setEgresos(List<Egreso> egresos) {
+        this.egresos = egresos;
+    }
+
+    public Ingreso getIngreso() {
+        return this.ingresos.get(this.posicionIngreso);
+    }
+
+    public void setIngresos(List<Ingreso> ingresos) {
+        this.ingresos = ingresos;
+    }
+}

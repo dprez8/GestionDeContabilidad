@@ -6,6 +6,7 @@ import Domain.Entities.Organizacion.EntidadBase;
 import Domain.Entities.Organizacion.EntidadJuridica;
 import Domain.Repositories.Daos.DaoHibernate;
 import Domain.Repositories.Repositorio;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,5 +33,16 @@ public class TestDominio {
         pymeJuridica.setTipoEntidadJuridica(pyme);
 
         this.repoEntidadJuridica.agregar(pymeJuridica);
+    }
+
+    @Test
+    public void obtenerUnaEntidadJuridica() {
+        EntidadJuridica pymeJuridica = this.repoEntidadJuridica.buscar(1);
+
+        Assert.assertEquals("razonSocial",pymeJuridica.getRazonSocial());
+
+        Empresa pyme = (Empresa) pymeJuridica.getTipoEntidadJuridica();
+
+        Assert.assertEquals("Construcciones",pyme.getActividad());
     }
 }

@@ -28,6 +28,10 @@ public abstract class Operacion {
 		this.operacionNumero = operacionNumero;
 	}
 
+	public int getOperacionNumero() {
+		return this.operacionNumero;
+	}
+
 	public void setFechaOperacion(LocalDate fecha) {
 		this.fechaOperacion = fecha;
 	}
