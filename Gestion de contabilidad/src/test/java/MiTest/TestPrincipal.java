@@ -77,7 +77,7 @@ public class TestPrincipal {
         this.fernando = new Estandar(pymeJuridica, "Fernando", "1234", "fernando@herbas.com");
 
         /**Creacion de un repositorio de egresos*/
-        this.repoEgresos = new Repositorio<Egreso>(new DaoMemoria<Egreso>(),Egreso.class); //Creo el repositorio de egresos
+        this.repoEgresos = new Repositorio<Egreso>(new DaoMemoria<Egreso>()); //Creo el repositorio de egresos
 
         /**Creacion del validador de contraseñas*/
         this.validadorDeContrasenia = new ValidadorDeContrasenia();
