@@ -14,8 +14,11 @@ public abstract class Usuario extends EntidadPersistente {
 	@Column
 	protected String nombre;
 
-	@Column
+	@Transient
 	protected String contrasenia;
+	
+	@Column(name="contrasenia")
+	protected String hashedPassword;
 
 	@Column
 	protected String mail;

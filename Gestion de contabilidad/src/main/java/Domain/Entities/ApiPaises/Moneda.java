@@ -1,5 +1,7 @@
 package Domain.Entities.ApiPaises;
 
+import java.util.List;
+
 import javax.persistence.*;
 
 @Entity
@@ -15,4 +17,10 @@ public class Moneda {
 	public String symbol;
 	@Column
 	public String decimal_places;
+	
+	public String getId(){
+		return id;
+	}
 }
+
+
