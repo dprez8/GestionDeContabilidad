@@ -35,6 +35,11 @@ public class DaoMemoria<T> implements IDao<T> {
     }
 
     @Override
+    public T buscarPorQuery(String query) {
+        return null;
+    }
+
+    @Override
     public List<T> buscarTodos() {
         return (List<T>) this.datos;
     }

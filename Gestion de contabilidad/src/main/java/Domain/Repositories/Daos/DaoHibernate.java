@@ -53,4 +53,8 @@ public class DaoHibernate<T> implements IDao<T>{
         EntityManagerHelper.getEntityManager().remove(unObjeto);
         EntityManagerHelper.getEntityManager().getTransaction().commit();
     }
+
+    public T buscarPorQuery(String query) {
+        return (T) EntityManagerHelper.createQuery(query).getSingleResult();
+    }
 }

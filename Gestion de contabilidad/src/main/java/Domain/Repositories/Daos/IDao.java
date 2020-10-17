@@ -13,5 +13,7 @@ public interface IDao<T> {
 
     T buscar(int id);
 
+    T buscarPorQuery(String query);
+
     List<T> buscarTodos();
 }

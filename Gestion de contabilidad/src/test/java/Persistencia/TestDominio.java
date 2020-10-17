@@ -16,7 +16,7 @@ public class TestDominio {
 
     @Before
     public void antesDePersistir() {
-        this.repoEntidadJuridica = new Repositorio<EntidadJuridica>(new DaoHibernate<EntidadJuridica>(EntidadJuridica.class),EntidadJuridica.class);
+        this.repoEntidadJuridica = new Repositorio<EntidadJuridica>(new DaoHibernate<EntidadJuridica>(EntidadJuridica.class));
     }
     @Test
     public void persistirUnaEntidadJuridica(){
