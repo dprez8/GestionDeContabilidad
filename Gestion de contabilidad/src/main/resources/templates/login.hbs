@@ -1,0 +1,51 @@
+{{> html_start.hbs}}
+<body class="text-center">
+    <link type="text/css" rel="stylesheet" href="css/login.css"/>
+    <form class="form-signin" id="loginForm">
+        <img class="mb-4" src="img/gesoc_logo.png" alt="" width="150" height="150">
+        <h1 class="h3 mb-3 font-weight-normal">Por favor inicia sesión</h1>
+        <label for="inputUser" class="sr-only">Usuario</label>
+        <input type="text" v-model="user" class="form-control" placeholder="Usuario" required="" autofocus="">
+        <label for="inputPassword" class="sr-only">Contraseña</label>
+        <input type="password" v-model="pass" class="form-control" placeholder="Contraseña" required="">
+        <div class="checkbox mb-3">
+            <label>
+                <input type="checkbox" value="remember-me" v-model="remember"> Recuerdame
+            </label>
+        </div>
+        <b-alert v-model="showAlert" variant="danger" dismissible>
+            \{{alertMsg}}
+        </b-alert>
+        <button v-on:click.prevent="loginIn" class="btn btn-lg btn-primary btn-block" type="submit">Iniciar sesión</button>
+        <p class="mt-5 mb-3 text-muted">© lololol</p>
+    </form>
+    <script>
+        var login = new Vue({
+            el: "#loginForm",
+            data: {
+                user: "",
+                pass: "",
+                remember: false,
+                showAlert: false,
+                alertMsg: ""
+            },
+            methods: {
+                loginIn: function() {
+
+                    console.log(`Usuario: ${this.user}`);
+                    console.log(`Contraseña: ${this.pass}`);
+                    console.log(`Recuerdame: ${this.remember}`);
+
+                    // AJAX a la API -->
+                },
+                loginFail: function() {
+
+                },
+                loginSuccess: function() {
+
+                }
+            }
+        })
+    </script>
+</body>
+{{> html_end.hbs}}

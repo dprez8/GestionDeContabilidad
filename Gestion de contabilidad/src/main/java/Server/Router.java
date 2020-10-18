@@ -1,10 +1,10 @@
-/*
 package Server;
 
-import Domain.Controllers.OperacionesRestController;
-import Spark.utils.HandlebarsTemplateEngineBuilder;
+import Domain.Controllers.LoginController;
+import Spark.utils.BooleanHelper;
 import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
+import Spark.utils.HandlebarsTemplateEngineBuilder;
 
 public class Router {
     private static HandlebarsTemplateEngine engine;
@@ -23,7 +23,8 @@ public class Router {
     }
 
     private static void configure(){
+        LoginController loginController = new LoginController();
 
+        Spark.get("/login", loginController::mostrarLogin, Router.engine);
     }
 }
-*/
