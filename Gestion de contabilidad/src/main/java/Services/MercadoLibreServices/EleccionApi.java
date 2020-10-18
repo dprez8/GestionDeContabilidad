@@ -51,10 +51,10 @@ public class EleccionApi {
 	}
 public static void BajarDatosApiMercadoLibreABaseDeDatos(Properties prop) throws IOException{
 		
-		Repositorio<Pais>repoPais = new Repositorio<Pais>(new DaoHibernate<Pais>(Pais.class),Pais.class);
-		Repositorio<Provincia>repoProvincia = new Repositorio<Provincia>(new DaoHibernate<Provincia>(Provincia.class),Provincia.class);
-		Repositorio<Ciudad>repoCiudad = new Repositorio<Ciudad>(new DaoHibernate<Ciudad>(Ciudad.class),Ciudad.class);
-		Repositorio<Moneda>repoMoneda = new Repositorio<Moneda>(new DaoHibernate<Moneda>(Moneda.class),Moneda.class);
+		Repositorio<Pais>repoPais = new Repositorio<Pais>(new DaoHibernate<Pais>(Pais.class));
+		Repositorio<Provincia>repoProvincia = new Repositorio<Provincia>(new DaoHibernate<Provincia>(Provincia.class));
+		Repositorio<Ciudad>repoCiudad = new Repositorio<Ciudad>(new DaoHibernate<Ciudad>(Ciudad.class));
+		Repositorio<Moneda>repoMoneda = new Repositorio<Moneda>(new DaoHibernate<Moneda>(Moneda.class));
 		
 		ServicioGeoref servicioGeoref = ServicioGeoref.instancia(prop.getProperty("URLML"));		
 		List<Pais> paisesList = servicioGeoref.ListadoDePaises();

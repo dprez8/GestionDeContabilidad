@@ -17,8 +17,8 @@ public class Login {
 	
     @Before
     public void antesDePersistir() {
-        this.repoUsuarios = new Repositorio<Usuario>(new DaoHibernate<Usuario>(Usuario.class),Usuario.class);
-        this.repoEntidadJuridica = new Repositorio<EntidadJuridica>(new DaoHibernate<EntidadJuridica>(EntidadJuridica.class),EntidadJuridica.class);
+        this.repoUsuarios = new Repositorio<Usuario>(new DaoHibernate<Usuario>(Usuario.class));
+        this.repoEntidadJuridica = new Repositorio<EntidadJuridica>(new DaoHibernate<EntidadJuridica>(EntidadJuridica.class));
     }
 	 @Test
 	 public void crearUsuario(){
