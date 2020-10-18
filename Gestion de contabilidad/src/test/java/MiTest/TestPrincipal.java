@@ -45,7 +45,7 @@ public class TestPrincipal {
     private ValidadorDeContrasenia validadorDeContrasenia;
 
     @Before
-    public void antesDeTestear(){
+    public void antesDeTestear() throws IOException, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, contraseniaCorta{
 
         /**Creacion de los datos de egreso*/
         this.ram  = new Producto("4GB DDR3");
@@ -163,9 +163,9 @@ public class TestPrincipal {
         ValidarTop10k validarTop10k                         = new ValidarTop10k(prop.getProperty("dataFilePath"));
         ValidarIgualAMailOUsuario validarIgualAMailOUsuario = new ValidarIgualAMailOUsuario();
 
-        this.validadorDeContrasenia.addValidaciones(validarLongitudCorta,validarTop10k,validarIgualAMailOUsuario);
+        ValidadorDeContrasenia.addValidaciones(validarLongitudCorta,validarTop10k,validarIgualAMailOUsuario);
 
-        this.validadorDeContrasenia.validarContrasenia(this.fernando);
+        ValidadorDeContrasenia.validarContrasenia(this.fernando);
 
         /**Para capturar la excepcion, si se desea, comentar la linea de arriba y el expected en la anotacion @Test*/
         /*

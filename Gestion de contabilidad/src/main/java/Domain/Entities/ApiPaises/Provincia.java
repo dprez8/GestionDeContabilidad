@@ -8,7 +8,10 @@ import javax.persistence.*;
 @Table(name="provicia")
 public class Provincia {
 	@Id
+	@GeneratedValue
 	@Column(name="provincia_id")
+	private int clave;
+	@Column(name="provincia_code")
 	public String id;
 	@Column
 	public String name;

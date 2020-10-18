@@ -17,13 +17,14 @@ public class ValidadorDeContrasenia {
         addValidaciones(validaciones);
     }
 
-    public void addValidaciones(ValidacionDeContrasenia... nuevasValidaciones){
-        Collections.addAll(this.validaciones, nuevasValidaciones);
+    public static void addValidaciones(ValidacionDeContrasenia... nuevasValidaciones){
+        Collections.addAll(validaciones, nuevasValidaciones);
     }
 
-    public void validarContrasenia(Usuario usuario) throws IOException, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, contraseniaCorta {
+    public static boolean validarContrasenia(Usuario usuario) throws IOException, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, contraseniaCorta {
         for(ValidacionDeContrasenia validador : validaciones){
             validador.validarConstrasenia(usuario);
         }
+        return true;
     }
 }

@@ -7,5 +7,5 @@ import Domain.Entities.Usuarios.Usuario;
 import java.io.IOException;
 
 public abstract class ValidacionDeContrasenia {
-    public abstract void validarConstrasenia(Usuario usuario) throws repiteContraseniaEnMailOUsuario, contraseniaCorta, contraseniaMuyComun, IOException;
+    public abstract boolean validarConstrasenia(Usuario usuario) throws repiteContraseniaEnMailOUsuario, contraseniaCorta, contraseniaMuyComun, IOException;
 }

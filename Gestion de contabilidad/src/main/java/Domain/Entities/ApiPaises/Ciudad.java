@@ -9,8 +9,13 @@ import java.util.Optional;
 @Entity
 @Table(name = "ciudad")
 public class Ciudad{
+	
 	@Id
+	@GeneratedValue
 	@Column(name="ciudad_id")
+	private int clave;
+	
+	@Column(name="ciudad_code")
 	public String id;
 
 	@Column

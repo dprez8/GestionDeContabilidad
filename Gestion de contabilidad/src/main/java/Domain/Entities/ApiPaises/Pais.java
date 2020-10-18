@@ -4,12 +4,18 @@ import java.util.List;
 import java.util.Optional;
 import javax.persistence.*;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 @Entity
 @Table(name= "pais")
 public class Pais {
 	
 	@Id
+	@GeneratedValue
 	@Column(name="pais_id")
+	private int clave;
+	@Column(name="pais_code")
 	public String id;
 	@Column
 	public String name;
