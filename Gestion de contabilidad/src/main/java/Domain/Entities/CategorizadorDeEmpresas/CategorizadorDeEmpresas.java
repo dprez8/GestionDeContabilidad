@@ -1,4 +1,4 @@
-package Domain.CategorizadorDeEmpresas;
+package Domain.Entities.CategorizadorDeEmpresas;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import Domain.Entities.CategorizadorDeEmpresas.CategoriaEmpresa;
-import Domain.Entities.CategorizadorDeEmpresas.CategoriaPorSector;
 import Domain.Entities.Organizacion.Empresa;
 
 public class CategorizadorDeEmpresas {

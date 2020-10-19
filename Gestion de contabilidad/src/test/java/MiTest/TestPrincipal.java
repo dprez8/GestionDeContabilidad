@@ -1,6 +1,6 @@
 package MiTest;
 
-import Domain.CategorizadorDeEmpresas.CategorizadorDeEmpresas;
+import Domain.Entities.CategorizadorDeEmpresas.CategorizadorDeEmpresas;
 import Domain.Entities.CategorizadorDeEmpresas.*;
 import Domain.Entities.DatosDeOperaciones.*;
 import Domain.Exceptions.contraseniaCorta;

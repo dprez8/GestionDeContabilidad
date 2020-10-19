@@ -1,7 +1,7 @@
 package Domain.Entities.Organizacion;
 
 
-import Domain.CategorizadorDeEmpresas.CategorizadorDeEmpresas;
+import Domain.Entities.CategorizadorDeEmpresas.CategorizadorDeEmpresas;
 import Domain.Entities.CategorizadorDeEmpresas.*;
 
 import javax.persistence.*;
