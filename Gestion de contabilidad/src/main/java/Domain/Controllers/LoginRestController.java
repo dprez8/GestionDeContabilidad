@@ -15,10 +15,8 @@ import javax.persistence.NoResultException;
 import java.nio.charset.StandardCharsets;
 
 public class LoginRestController {
-    private RepositorioUsuarios repositorioUsuarios;
 
     public LoginRestController() {
-        repositorioUsuarios = new RepositorioUsuarios(new DaoHibernate<Usuario>(Usuario.class));
     }
 
     public String login(Request request, Response response) {
@@ -40,6 +38,10 @@ public class LoginRestController {
                     .setParameter("password",usuarioRequest.password)
                     .getSingleResult();
 
+             if(usuario != null) {
+                 request.session(true);
+                 request.session().attribute("id", usuario.getId());
+             }
              loginResponse.code = 200;
              loginResponse.message = "Se inicio sesion exitosamente";
         }
