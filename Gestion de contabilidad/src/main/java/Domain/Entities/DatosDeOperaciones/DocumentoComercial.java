@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import javax.persistence.*;
 @Entity
-@Table
+@Table(name="documento_comercial")
 public class DocumentoComercial{
 	@Id
 	@GeneratedValue

@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.nio.charset.StandardCharsets;
 
 @Entity
-@Table(name = "Usuario")
+@Table(name = "usuario")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="tipo_usuario")
 public abstract class Usuario extends EntidadPersistente {
@@ -14,8 +14,11 @@ public abstract class Usuario extends EntidadPersistente {
 	@Column
 	protected String nombre;
 
-	@Column
+	@Transient
 	protected String contrasenia;
+	
+	@Column(name="contrasenia")
+	protected String hashedPassword;
 
 	@Column
 	protected String mail;

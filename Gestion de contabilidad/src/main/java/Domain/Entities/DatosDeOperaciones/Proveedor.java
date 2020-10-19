@@ -5,7 +5,7 @@ import javax.persistence.*;
 import Domain.Entities.ApiPaises.Pais;
 import Domain.Entities.ApiPaises.Provincia;
 @Entity
-@Table
+@Table(name="proveedor")
 public class Proveedor {
 	@Id
 	@GeneratedValue

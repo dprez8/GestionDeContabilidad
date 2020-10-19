@@ -3,7 +3,7 @@ package Domain.Entities.DatosDeOperaciones;
 import javax.persistence.*;
 
 @Entity
-@Table
+@Table(name="medio_de_pago")
 public class MedioDePago {
     @Id
 	@Column(name="medio_id")

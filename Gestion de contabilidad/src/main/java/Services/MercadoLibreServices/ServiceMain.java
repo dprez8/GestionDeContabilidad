@@ -9,7 +9,7 @@ public class ServiceMain {
 	public static void main(String[] args) throws IOException {
 		//LLAMO AL ARCHIVO DE CONFIG PARA OBTENER LA URL A LA API DE ML
 		Properties prop=new Properties();
-		prop.load(new FileReader("src/main/resources/META-INF/config.properties"));
+		prop.load(new FileReader("src/main/resources/config/config.properties"));
 		
 		EleccionApi.instancia();
 		

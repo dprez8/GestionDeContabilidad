@@ -5,7 +5,7 @@ import java.util.Optional;
 import javax.persistence.*;
 
 @Entity
-@Table(name= "Pais")
+@Table(name= "pais")
 public class Pais {
 	
 	@Id
@@ -13,11 +13,14 @@ public class Pais {
 	public String id;
 	@Column
 	public String name;
-	@Column
+	@Transient
 	public String currency_id;
+	@ManyToOne
+	@JoinColumn(name = "moneda_id", referencedColumnName = "moneda_id")
+	public Moneda moneda;
 	@Transient
 	private int idPais;
-	@Column
+	@Transient
 	private static int contadorPaises;
 	
 
@@ -35,6 +38,15 @@ public class Pais {
 	public void asignarId(){
 		contadorPaises++;
 		this.idPais=contadorPaises;
+	}
+	
+	
+	public Moneda getMoneda() {
+		return moneda;
+	}
+
+	public void setMoneda(Moneda moneda) {
+		this.moneda = moneda;
 	}
 
 	public static Optional<Pais> paisConId(List<Pais> listaPaises,int idElegido){

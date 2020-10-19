@@ -13,6 +13,9 @@ import Domain.Entities.ApiPaises.ListadoDeProvincias;
 import Domain.Entities.ApiPaises.Moneda;
 import Domain.Entities.ApiPaises.Pais;
 import Domain.Entities.ApiPaises.Provincia;
+import Domain.Entities.Organizacion.EntidadJuridica;
+import Domain.Repositories.Repositorio;
+import Domain.Repositories.Daos.DaoHibernate;
 
 public class EleccionApi {
 	
@@ -48,6 +51,11 @@ public class EleccionApi {
 	}
 public static void BajarDatosApiMercadoLibreABaseDeDatos(Properties prop) throws IOException{
 		
+		Repositorio<Pais>repoPais = new Repositorio<Pais>(new DaoHibernate<Pais>(Pais.class));
+		Repositorio<Provincia>repoProvincia = new Repositorio<Provincia>(new DaoHibernate<Provincia>(Provincia.class));
+		Repositorio<Ciudad>repoCiudad = new Repositorio<Ciudad>(new DaoHibernate<Ciudad>(Ciudad.class));
+		Repositorio<Moneda>repoMoneda = new Repositorio<Moneda>(new DaoHibernate<Moneda>(Moneda.class));
+		
 		ServicioGeoref servicioGeoref = ServicioGeoref.instancia(prop.getProperty("URLML"));		
 		List<Pais> paisesList = servicioGeoref.ListadoDePaises();
 		List<Provincia> provinciasList = new ArrayList<>();
@@ -62,26 +70,40 @@ public static void BajarDatosApiMercadoLibreABaseDeDatos(Properties prop) throws
 		for(Pais pais: paisesList){
 			
 			moneda = servicioGeoref.Moneda(pais);
+			pais.setMoneda(moneda);
 			
-			if(moneda!=null)
+			
+			if(moneda!=null) {
 				monedasList.add(moneda);
-			
+				repoMoneda.agregar(moneda);	
+			}
+			/*
 			provincias = servicioGeoref.ListadoDeProvincias(pais);
 			
 			if(provincias.states.size()!=0){
 				for(Provincia provincia: provincias.states){
 					provinciasList.add(provincia);
+					provincia.setPais(pais);
 					ciudades = servicioGeoref.ListadoDeCiudades(provincia);
 					
 					if(ciudades.cities.size()!=0) {
 						for(Ciudad ciudad:ciudades.cities){
 							ciudadesList.add(ciudad);
+							ciudad.setProvincia(provincia);
+							repoCiudad.agregar(ciudad);
 						}
 					}
 					System.out.println("Guardando datos de: "+provincia.name);
+					repoProvincia.agregar(provincia);
 				}
 			}
+		*/
+			repoPais.agregar(pais);
+		
 		}
+		
+	
+		
 		System.out.println("Carga de Datos con exito");
 	}
 	

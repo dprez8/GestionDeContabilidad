@@ -3,7 +3,7 @@ package Domain.Entities.DatosDeOperaciones;
 import javax.persistence.*;
 
 @Entity
-@Table
+@Table(name="tipo_de_documento")
 public class TipoDocumento {
 	@Id
 	@GeneratedValue

@@ -1,6 +1,7 @@
 package Domain.Entities.Organizacion;
 
 
+import Domain.CategorizadorDeEmpresas.CategorizadorDeEmpresas;
 import Domain.Entities.CategorizadorDeEmpresas.*;
 
 import javax.persistence.*;
@@ -47,7 +48,7 @@ public class Empresa extends CategoriaEntidadJuridica{
         this.actividad = actividad;
     }
     public void cacularCategoria(){
-        this.categoriaEmpresa = this.sector.obtenerCategoriaDe(this);
+        this.categoriaEmpresa = CategorizadorDeEmpresas.obtenerCategoriaDe(this);
     }
 
     public Sector getSector() {

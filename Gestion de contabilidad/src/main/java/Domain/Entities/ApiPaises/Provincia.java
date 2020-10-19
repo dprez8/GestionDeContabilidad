@@ -5,7 +5,7 @@ import java.util.Optional;
 import javax.persistence.*;
 
 @Entity
-@Table
+@Table(name="provicia")
 public class Provincia {
 	@Id
 	@Column(name="provincia_id")

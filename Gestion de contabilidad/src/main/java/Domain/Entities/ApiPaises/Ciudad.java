@@ -18,6 +18,10 @@ public class Ciudad{
 
 	@Transient
 	private int idCiudad;
+	
+	@ManyToOne
+	@JoinColumn(name = "provincia_id", referencedColumnName = "provincia_id")
+	private Provincia provincia;
 
 	@Transient
 	private static int contadorCiudades;
@@ -38,6 +42,15 @@ public class Ciudad{
 		this.idCiudad=contadorCiudades;
 	}
 	
+	
+	public Provincia getProvincia() {
+		return provincia;
+	}
+
+	public void setProvincia(Provincia provincia) {
+		this.provincia = provincia;
+	}
+
 	public static Optional<Ciudad> ciudadConId(List<Ciudad> listaCiudades,int idElegido){
 		return listaCiudades.stream().filter(p->p.idCiudad==idElegido).findFirst();
 	}
