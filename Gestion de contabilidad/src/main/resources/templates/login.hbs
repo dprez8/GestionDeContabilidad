@@ -1,51 +1,101 @@
-{{> html_start.hbs}}
-<body class="text-center">
-    <link type="text/css" rel="stylesheet" href="css/login.css"/>
-    <form class="form-signin" id="loginForm">
-        <img class="mb-4" src="img/gesoc_logo.png" alt="" width="150" height="150">
-        <h1 class="h3 mb-3 font-weight-normal">Por favor inicia sesión</h1>
-        <label for="inputUser" class="sr-only">Usuario</label>
-        <input type="text" v-model="user" class="form-control" placeholder="Usuario" required="" autofocus="">
-        <label for="inputPassword" class="sr-only">Contraseña</label>
-        <input type="password" v-model="pass" class="form-control" placeholder="Contraseña" required="">
-        <div class="checkbox mb-3">
-            <label>
-                <input type="checkbox" value="remember-me" v-model="remember"> Recuerdame
-            </label>
-        </div>
-        <b-alert v-model="showAlert" variant="danger" dismissible>
-            \{{alertMsg}}
-        </b-alert>
-        <button v-on:click.prevent="loginIn" class="btn btn-lg btn-primary btn-block" type="submit">Iniciar sesión</button>
-        <p class="mt-5 mb-3 text-muted">© lololol</p>
-    </form>
-    <script>
-        var login = new Vue({
-            el: "#loginForm",
-            data: {
-                user: "",
-                pass: "",
-                remember: false,
-                showAlert: false,
-                alertMsg: ""
-            },
-            methods: {
-                loginIn: function() {
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        {{> head.hbs}}
+    </head>
+    <body class="text-center">
+        <link type="text/css" rel="stylesheet" href="css/login.css"/>
+        <form class="form-signin" id="loginForm">
+            <img class="mb-4" src="img/gesoc_logo.png" alt="" width="150" height="150">
+            <h1 class="h3 mb-3 font-weight-normal">Por favor inicia sesión</h1>
+            <label for="inputUser" class="sr-only">Usuario</label>
+            <input type="text" v-model="user" class="form-control" placeholder="Usuario" required="" autofocus="">
+            <label for="inputPassword" class="sr-only">Contraseña</label>
+            <input type="password" v-model="pass" class="form-control" placeholder="Contraseña" required="">
+            <div class="checkbox mb-3">
+                <label>
+                    <input type="checkbox" value="remember-me"> Recuerdame
+                </label>
+            </div>
+            <login-alert
+                v-for="alert in alerts"
+                v-bind:key="alert.id"
+                v-bind:msg="alert.msg"
+                v-bind:show="alert.show"
 
-                    console.log(`Usuario: ${this.user}`);
-                    console.log(`Contraseña: ${this.pass}`);
-                    console.log(`Recuerdame: ${this.remember}`);
+                v-model="alert.show"
+            ></login-alert>
+            <button v-on:click.prevent="loginIn" class="btn btn-lg btn-primary btn-block" type="submit">Iniciar sesión</button>
+            <p class="mt-5 mb-3 text-muted">© lololol</p>
+        </form>
+        <script>
+            Vue.component('login-alert', {
+                props: ["msg", "show"],
+                template: `
+                    <b-alert v-model="showAlert" variant="danger" dismissible>
+                        \{{ msg }}
+                    </b-alert>
+                `,
+                computed: {
+                    showAlert: {
+                        get() {
+                            return this.show
+                        },
+                        set(showAlert) {
+                            this.$emit('input', showAlert);
+                        }
+                    }
+                } 
+            });
 
-                    // AJAX a la API -->
+            var login = new Vue({
+                el: "#loginForm",
+                data: {
+                    user: "",
+                    pass: "",
+                    alerts: [
+                        {
+                            id: 1,
+                            msg: "Por favor ingrese un usuario",
+                            show: false
+                        },{
+                            id: 2,
+                            msg: "Por favor ingrese una contraseña",
+                            show: false
+                        },{
+                            id: 3,
+                            msg: "No coincide usuario y/o contraseña",
+                            show: false
+                        }
+                    ]
                 },
-                loginFail: function() {
+                methods: {
+                    loginIn: function() {
 
-                },
-                loginSuccess: function() {
+                        console.log(`Usuario: ${this.user}`);
+                        console.log(`Contraseña: ${this.pass}`);
 
+                        if(this.user == "") {
+                            this.alerts[0].show = true;
+                        } 
+                        if(this.pass == "") {
+                            this.alerts[1].show = true;
+                        }
+
+                        if(this.user != "" && this.pass != "") {
+                            this.alerts[2].show = true;
+                        }
+
+                        // AJAX a la API -->
+                    },
+                    loginFail: function() {
+
+                    },
+                    loginSuccess: function() {
+
+                    }
                 }
-            }
-        })
-    </script>
-</body>
-{{> html_end.hbs}}
+            });
+        </script>
+    </body>
+</html>
