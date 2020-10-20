@@ -1,6 +1,8 @@
 
 package Server;
 
+import Domain.Controllers.DireccionPostalController;
+import Domain.Controllers.LoginRestController;
 import Spark.utils.BooleanHelper;
 import Spark.utils.HandlebarsTemplateEngineBuilder;
 import spark.Spark;
@@ -23,6 +25,11 @@ public class Router {
     }
 
     private static void configure(){
+        LoginRestController loginRestController = new LoginRestController();
+        DireccionPostalController direccionController = new DireccionPostalController();
 
+        Spark.post("/api/login",loginRestController::login);
+        Spark.get("/api/pais",direccionController::listadoDePaises);
+        Spark.get("/api/pais/:clave",direccionController::listadoDeProvincias);
     }
 }

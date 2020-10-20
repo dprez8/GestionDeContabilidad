@@ -26,6 +26,7 @@ public class Login {
 	private Repositorio<EntidadJuridica> repoEntidadJuridica;
 	
     @Before
+
     public void antesDePersistir() throws FileNotFoundException, IOException {
         this.repoUsuarios = new Repositorio<Usuario>(new DaoHibernate<Usuario>(Usuario.class));
         this.repoEntidadJuridica = new Repositorio<EntidadJuridica>(new DaoHibernate<EntidadJuridica>(EntidadJuridica.class));
@@ -43,7 +44,7 @@ public class Login {
 	 public void crearUsuario() throws IOException, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, contraseniaCorta{
 		 EntidadJuridica coca= new EntidadJuridica();
 		 EntidadJuridica pepsi = new EntidadJuridica(); 
-		 Estandar eteSech = new Estandar(coca, "eteSech", "1234c", "eteSech@gmail.com");
+		 Estandar eteSech = new Estandar(coca, "eteSech", "1234hgchh", "eteSech@gmail.com");
 		 Estandar elPepe = new Estandar(pepsi, "elPepe", "4356p4epe", "elPepe@gmail.com");
 		 repoUsuarios.agregar(eteSech);
 		 repoUsuarios.agregar(elPepe);

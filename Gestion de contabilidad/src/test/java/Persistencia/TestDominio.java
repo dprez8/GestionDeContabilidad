@@ -33,11 +33,12 @@ public class TestDominio {
         pymeJuridica.setTipoEntidadJuridica(pyme);
 
         this.repoEntidadJuridica.agregar(pymeJuridica);
+        System.out.println("Numero"+ pymeJuridica.getId());
     }
 
     @Test
     public void obtenerUnaEntidadJuridica() {
-        EntidadJuridica pymeJuridica = this.repoEntidadJuridica.buscar(1);
+        EntidadJuridica pymeJuridica = this.repoEntidadJuridica.buscar(3);
 
         Assert.assertEquals("razonSocial",pymeJuridica.getRazonSocial());
 
