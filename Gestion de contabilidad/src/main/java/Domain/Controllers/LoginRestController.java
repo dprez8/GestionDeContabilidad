@@ -42,12 +42,10 @@ public class LoginRestController {
 
              loginResponse.code = 200;
              loginResponse.message = "Se inicio sesion exitosamente";
-             response.status(200);
         }
         catch (NoResultException ex){
             loginResponse.code = 404;
             loginResponse.message =  "No coincide el usuario con la contraseña";
-            response.status(404);
         }
         String jsonLogin = gson.toJson(loginResponse);
 
