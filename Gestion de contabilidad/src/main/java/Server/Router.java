@@ -3,6 +3,7 @@ package Server;
 
 import Domain.Controllers.LoginRestController;
 import Domain.Controllers.LoginController;
+import Domain.Controllers.PanelController;
 import Spark.utils.BooleanHelper;
 import Spark.utils.HandlebarsTemplateEngineBuilder;
 import spark.Spark;
@@ -28,8 +29,11 @@ public class Router {
     private static void configure(){
         LoginRestController loginRestController = new LoginRestController();
         LoginController loginController = new LoginController();
+        PanelController panelController = new PanelController();
 
         Spark.post("/api/login",loginRestController::login);
         Spark.get("/login", loginController::mostrarLogin, Router.engine);
+        Spark.get("/", panelController::mostrarPanel, Router.engine);
+        Spark.get("/operaciones", panelController::mostrarOperaciones, Router.engine);
     }
 }

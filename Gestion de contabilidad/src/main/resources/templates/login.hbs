@@ -25,7 +25,10 @@
 
                 v-model="alert.show"
             ></login-alert>
-            <button v-on:click.prevent="loginIn" class="btn btn-lg btn-primary btn-block" type="submit">Iniciar sesión</button>
+            <button v-on:click.prevent="loginIn" class="btn btn-primary btn-block" type="submit">
+                <span class="spinner-border spinner-border-sm mr-2" v-bind:class="{ 'd-none': !loginButton.loading}" role="status" aria-hidden="true"></span>
+                \{{ loginButton.label }}
+            </button>
             <p class="mt-5 mb-3 text-muted">© lololol</p>
         </form>
         <script>
@@ -53,6 +56,10 @@
                 data: {
                     user: "",
                     pass: "",
+                    loginButton: {
+                        label: "Iniciar sesión",
+                        loading: false
+                    },
                     alerts: [
                         {
                             id: 1,
@@ -83,16 +90,38 @@
                         }
 
                         if(this.user != "" && this.pass != "") {
-                            this.alerts[2].show = true;
-                        }
+                            this.loginButton.loading = true;
+                            this.loginButton.label = "Cargando...";
+                            $.ajax({
+                                url: "http://localhost/api/login",
+                                type: "POST",
+                                dataType: "json",
+                                data: JSON.stringify({
+                                    username: this.user,
+                                    password: this.pass
+                                }),
+                                success: function(data) {
+                                    if(data.code == 200) 
+                                        login.loginSuccess();
+                                    else
+                                        login.loginFail();
+                                },
+                                error: function(data) {
+                                    console.log(data);
+                                },
+                                complete: function() {
+                                    login.loginButton.loading = false;
+                                    login.loginButton.label = "Iniciar sesión";
+                                }
 
-                        // AJAX a la API -->
+                            })
+                        }
                     },
                     loginFail: function() {
-
+                        this.alerts[2].show = true;
                     },
                     loginSuccess: function() {
-
+                        window.location.href = "http://localhost/";
                     }
                 }
             });
