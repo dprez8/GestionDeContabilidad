@@ -36,8 +36,8 @@ public class Router {
         PanelController panelController = new PanelController();
         
         Spark.get("/login", loginController::mostrarLogin, Router.engine);
-        Spark.get("/", panelController::mostrarInicio, Router.engine);
-        Spark.get("/operaciones", panelController::mostrarOperaciones, Router.engine);
+        Spark.get("/*", panelController::mostrarInicio, Router.engine);
+        //Spark.get("/operaciones", panelController::mostrarOperaciones, Router.engine);
     }
 
     private static void rutasApi() {

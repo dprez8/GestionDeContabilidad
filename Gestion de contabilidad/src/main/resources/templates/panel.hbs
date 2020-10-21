@@ -47,8 +47,8 @@
                 <!-- Sidebar -->
                 <div class="bg-light border-right" id="sidebar-wrapper">
                     <div class="list-group list-group-flush">
-                        <template v-for="(item, index) in sidebar">
-                            <a class="list-group-item list-group-item-action bg-light btn" v-on:click="cargarPagina(item.panel, item.url)">\{{ item.label }}</a>
+                        <template v-for="(page, index) in sidebar">
+                            <router-link class="list-group-item list-group-item-action bg-light" v-bind:to="page.path">\{{ page.label }}</router-link>
                         </template>
                     </div>
                 </div>
@@ -58,18 +58,24 @@
                 <div class="w-100">
                     <!-- Breadcrum -->
                     <b-breadcrumb>
-                        <b-breadcrumb-item v-on:click="cargarPagina('inicio', '/')">
-                            <b-icon icon="house-fill" scale="1.25" shift-v="1.25" aria-hidden="true"></b-icon>
+                        <b-breadcrumb-item>
+                            <router-link to="/">
+                                <b-icon icon="house-fill" scale="1.25" shift-v="1.25" aria-hidden="true"></b-icon>
+                            </router-link>
                         </b-breadcrumb-item>
-                        <template v-for="(item, index) in breadcrumb.items">
-                            <b-breadcrumb-item v-on:click="cargarPagina(item.panel, item.url)">\{{ item.label }}</b-breadcrumb-item>
+                        <template v-for="(page, index) in breadcrumb">
+                            <b-breadcrumb-item>
+                                <router-link v-bind:to="page.path" v-bind:active="page.active">
+                                    \{{ page.label }}
+                                </router-link>
+                            </b-breadcrumb-item>
                         </template>
                     </b-breadcrumb>
                     <!-- /$breadcrum-wrapper -->
 
                     <!-- Page Content -->
                     <div id="page-content-wrapper">
-                        <component v-bind:is="page.panel"></component>
+                        <router-view></router-view>
                     </div>
                     <!-- /#page-content-wrapper -->
                 </div>
@@ -81,10 +87,13 @@
         <!-- /#panel-wrapper -->
 
         <script>
-            Vue.component('inicio', {
+            const error404 = {
+                template: `{{> 404.hbs}}`,
+            };
+            const inicio = {
                 template: `{{> inicio.hbs}}`,
-            });
-            Vue.component('operaciones', {
+            };
+            const operaciones = {
                 data() {
                     return {
                         criterios: [{
@@ -98,6 +107,80 @@
                     }
                 },
                 template: `{{> operaciones.hbs}}`
+            };
+
+            const router = new VueRouter({
+                routes: [
+                    {
+                        name: 'inicio',
+                        path: '/',
+                        component: inicio,
+                        meta: {
+                            breadcrumb: []
+                        }
+                    },
+                    {
+                        name: 'operaciones',
+                        path: '/operaciones',
+                        component: operaciones,
+                        meta: {
+                            breadcrumb: [
+                                {
+                                    label: "Operaciones",
+                                    type: "fixed",
+                                    path: "/operaciones",
+                                    active: true
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        name: 'egreso',
+                        path: '/operaciones/egreso/:id',
+                        component: operaciones,
+                        meta: {
+                            breadcrumb: [
+                                {
+                                    label: "Operaciones",
+                                    type: "fixed",
+                                    path: "/operaciones"
+                                },
+                                {
+                                    label: "Egreso",
+                                    type: "fixed",
+                                    path: "/operaciones"
+                                },
+                                {
+                                    label: "id",
+                                    type: "dynamic",
+                                    path: "/operaciones/egreso/id",
+                                    active: true
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        name: 'bandeja',
+                        path: '/bandeja',
+                        component: app,
+                        meta: {
+                            breadcrumb: [
+                                {
+                                    label: "Bandeja de mensajes",
+                                    type: "fixed",
+                                    path: "/bandeja",
+                                    active: true
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        name: 'error404',
+                        path: '/*',
+                        component: error404
+                    }
+                ],
+                mode: 'history'
             });
 
             var app = new Vue({
@@ -105,61 +188,52 @@
                 data: {
                     sidebar: [
                         {
-                            panel: "operaciones",
-                            url: "/operaciones",
-                            label: "Operaciones"
+                            label: "Operaciones",
+                            path: '/operaciones',
+                        },
+                        {
+                            label: "Bandeja de mensajes",
+                            path: '/bandeja'
+                        },
+                        {
+                            label: "TEST",
+                            path: '/operaciones/egreso/3'
                         }
                     ],
-                    breadcrumb: {
-                        items: []
-                    },
-                    page: {
-                        panel: '{{ panelSelected }}',
-                        url: window.location.pathname
-                    }
+                    breadcrumb: []
                 },
                 methods: {
-                    cargarPagina(panel, url) {
-                        this.page.panel = panel;
-                        this.page.url = url;
-                        window.history.pushState(this.page, "", `${this.page.url}`);
+                    updateBreadcrumb() {
 
-                        console.log(url);
+                        var breadcrumb = this.$route.meta.breadcrumb;
 
-                        this.cargarBreadcrumb();
-                    },
-                    cargarBreadcrumb() {
-                        var urlSplit = this.page.url.split("/");
-                        urlSplit.splice(0,1);
+                        if(breadcrumb == undefined)
+                            return;
 
-                        // FIXXXXXXXXXXXXXXXXXXXXXXXXXX
+                        breadcrumb.forEach(crumb => {
+                            if(crumb.type == "dynamic") {
+                                var key = crumb.label;
+                                var dynamicLabel = this.$route.params[key];
 
-                        var items = urlSplit.map(function(path) {
-                            return {
-                                panel: path,
-                                url: path,
-                                label: capitalizeFirstLetter(path)
-                            };
+                                if(dynamicLabel != undefined) {
+                                    crumb.label = dynamicLabel;
+                                    crumb.path = crumb.path.replace(key, dynamicLabel);
+                                }
+                            }
                         });
-
-                        this.breadcrumb.items = items;
+                        this.breadcrumb = breadcrumb;
                     }
+                },
+                router: router,
+                watch: {
+                    $route(to, from) {
+                        this.updateBreadcrumb();
+                    }
+                },
+                mounted() {
+                    this.updateBreadcrumb();
                 }
             });
-
-            window.onpopstate = function(e){
-                console.log(e);
-                if(e.state){
-                    app.page = e.state;
-                    app.cargarBreadcrumb();
-                }
-            };
-            window.history.replaceState(app.page, "");
-            app.cargarBreadcrumb();
-
-            function capitalizeFirstLetter(string) {
-                return string.charAt(0).toUpperCase() + string.slice(1);
-            }
         </script>
     </body>
 </html>
