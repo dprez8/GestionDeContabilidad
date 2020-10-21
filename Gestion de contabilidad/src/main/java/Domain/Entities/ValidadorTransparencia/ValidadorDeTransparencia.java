@@ -25,7 +25,7 @@ public class ValidadorDeTransparencia {
 		egreso.getRevisores()
 				.forEach(revisor -> revisor
 						.getBandejaDeMensajes()
-						.addMensajes(mensajes));
+						.addMensajesString(mensajes));
 	}
 
 	private String validarYConcatenarResultado(Egreso egreso, ValidacionDeTransparencia unaValidacion){

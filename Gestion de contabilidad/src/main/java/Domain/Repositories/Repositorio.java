@@ -27,7 +27,7 @@ public class Repositorio<T> {
         return this.dao.buscar(id);
     }
 
-    public List<T> buscaTodos() {
+    public List<T> buscarTodos() {
         return this.dao.buscarTodos();
     }
 
