@@ -5,7 +5,7 @@ import java.util.Optional;
 import javax.persistence.*;
 
 @Entity
-@Table(name="provicia")
+@Table(name="provincia")
 public class Provincia {
 	@Id
 	@GeneratedValue

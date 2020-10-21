@@ -2,6 +2,7 @@ package Domain.Entities.DatosDeOperaciones;
 
 import javax.persistence.*;
 
+import Domain.Entities.ApiPaises.Ciudad;
 import Domain.Entities.ApiPaises.Pais;
 import Domain.Entities.ApiPaises.Provincia;
 @Entity
@@ -22,8 +23,9 @@ public class Proveedor {
 	@ManyToOne
 	@JoinColumn(name="provincia_id", referencedColumnName = "provincia_id")
 	private Provincia provincia;
-	@Column
-	private String ciudad;
+	@ManyToOne
+	@JoinColumn(name="ciudad_id", referencedColumnName = "ciudad_id")
+	private Ciudad ciudad;
 	@Column
 	private String calle;
 	@Column
@@ -67,11 +69,11 @@ public class Proveedor {
 		this.provincia = provincia;
 	}
 
-	public String getCiudad() {
+	public Ciudad getCiudad() {
 		return ciudad;
 	}
 
-	public void setCiudad(String ciudad) {
+	public void setCiudad(Ciudad ciudad) {
 		this.ciudad = ciudad;
 	}
 

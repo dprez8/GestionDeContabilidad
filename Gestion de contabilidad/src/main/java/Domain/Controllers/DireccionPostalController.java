@@ -145,12 +145,12 @@ public class DireccionPostalController {
              
 
              vinculadorCiudad.code = 200;
-             vinculadorCiudad.message = "Provincias cargadas";
+             vinculadorCiudad.message = "Ciudades cargadas";
              response.status(200);
 		}
         catch (NullPointerException ex){
         	 vinculadorCiudad.code = 404;
-        	 vinculadorCiudad.message =  "No se logro cargarlas provincias";
+        	 vinculadorCiudad.message =  "No se logro cargarlas ciudades";
             response.status(404);
         }
 		
