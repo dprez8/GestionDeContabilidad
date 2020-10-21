@@ -4,63 +4,162 @@
         {{> head.hbs}}
     </head>
     <body cz-shortcut-listen="true">
-        <link type="text/css" rel="stylesheet" href="http://localhost/css/simple-sidebar.css"/>
-        <nav class="navbar navbar-expand-md navbar-light bg-light border-bottom">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <a id="navbar-organizacion" class="navbar-brand mr-2" href="#">
-                <img src="http://localhost/img/utn_logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
-                Organización
-            </a>
-            <div>
-                <form class="form-inline">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">
-                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-search" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z"/>
-                            <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/>
-                        </svg>
-                    </button>
-                </form>
-            </div>
-        </nav>
-
-        <div class="d-flex" id="wrapper">
-            <!-- Sidebar -->
-            <div class="bg-light border-right" id="sidebar-wrapper">
-                <div class="list-group list-group-flush">
-                    <a href="/operaciones" class="list-group-item list-group-item-action bg-light">Operaciones</a>
-                    <a href="#" class="list-group-item list-group-item-action bg-light">Botón 2</a>
-                    <a href="#" class="list-group-item list-group-item-action bg-light">Botón 3</a>
-                    <a href="#" class="list-group-item list-group-item-action bg-light">Botón 4</a>
-                    <a href="#" class="list-group-item list-group-item-action bg-light">Botón 5</a>
-                    <a href="#" class="list-group-item list-group-item-action bg-light">Botón 6</a>
+        <link type="text/css" rel="stylesheet" href="http://{{ ip }}/css/navbar.css"/>
+        <link type="text/css" rel="stylesheet" href="http://{{ ip }}/css/simple-sidebar.css"/>
+        <link type="text/css" rel="stylesheet" href="http://{{ ip }}/css/dropdown.css"/>
+        <!-- Panel -->
+        <div id="panel">
+            <!-- Navbar -->
+            <nav class="navbar navbar-expand-md navbar-light bg-light border-bottom">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <!-- Nombre de organizacion -->
+                <div id="navbar-organizacion" class="navbar-brand mr-2" href="#">
+                    <img src="http://{{ ip }}/img/utn_logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
+                    <span class="p-2">Organización</span>
                 </div>
-            </div>
-            <!-- /#sidebar-wrapper -->
-
-            <!-- Rightside -->
-            <div class="w-100">
-                <!-- Breadcrum -->
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item"><a href="#">Library</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Data</li>
-                    </ol>
-                </nav>
-                <!-- /$sreadcrum-wrapper -->
-
-                <!-- Page Content -->
-                <div id="page-content-wrapper">
-                    {{> (lookup . 'panelSelected')}}
+                <!-- Busqueda -->
+                <div>
+                    <form class="form-inline">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">
+                            <b-icon-search></b-icon-search>
+                        </button>
+                    </form>
                 </div>
-                <!-- /#page-content-wrapper -->
-            </div>
-            <!-- /#rightside-wrapper -->
+                <!-- Avatar -->
+                <div class="ml-auto" v-b-toggle.user-content>
+                    <b-avatar variant="primary" text="J" src="http://{{ ip }}/img/usuarios/user.png"></b-avatar>
+                </div>
+                <!-- Panel de opciones de usuario -->
+                <b-collapse id="user-content" class="p-2">
+                    <b-list-group>
+                        <b-list-group-item>Javier</b-list-group-item>
+                        <b-list-group-item button><b-icon-gear-fill class="mr-2"></b-icon-gear-fill> Configuración</b-list-group-item>
+                        <b-list-group-item button><b-icon-box-arrow-left class="mr-2"></b-icon-box-arrow-left> Cerrar sesión</b-list-group-item>
+                    </b-list-group>
+                </b-collapse>
+            </nav>
+            <!-- /#navbar-wrapper -->
 
+            <div class="d-flex" id="wrapper">
+                <!-- Sidebar -->
+                <div class="bg-light border-right" id="sidebar-wrapper">
+                    <div class="list-group list-group-flush">
+                        <template v-for="(item, index) in sidebar">
+                            <a class="list-group-item list-group-item-action bg-light btn" v-on:click="cargarPagina(item.panel, item.url)">\{{ item.label }}</a>
+                        </template>
+                    </div>
+                </div>
+                <!-- /#sidebar-wrapper -->
+
+                <!-- Rightside -->
+                <div class="w-100">
+                    <!-- Breadcrum -->
+                    <b-breadcrumb>
+                        <b-breadcrumb-item v-on:click="cargarPagina('inicio', '/')">
+                            <b-icon icon="house-fill" scale="1.25" shift-v="1.25" aria-hidden="true"></b-icon>
+                        </b-breadcrumb-item>
+                        <template v-for="(item, index) in breadcrumb.items">
+                            <b-breadcrumb-item v-on:click="cargarPagina(item.panel, item.url)">\{{ item.label }}</b-breadcrumb-item>
+                        </template>
+                    </b-breadcrumb>
+                    <!-- /$breadcrum-wrapper -->
+
+                    <!-- Page Content -->
+                    <div id="page-content-wrapper">
+                        <component v-bind:is="page.panel"></component>
+                    </div>
+                    <!-- /#page-content-wrapper -->
+                </div>
+                <!-- /#rightside-wrapper -->
+
+            </div>
+            <!-- /#wrapper -->
         </div>
-        <!-- /#wrapper -->
+        <!-- /#panel-wrapper -->
+
+        <script>
+            Vue.component('inicio', {
+                template: `{{> inicio.hbs}}`,
+            });
+            Vue.component('operaciones', {
+                data() {
+                    return {
+                        criterios: [{
+                            id: "crit-1",
+                            nombre: "Criterio 1"
+                        },
+                        {
+                            id: "crit-2",
+                            nombre: "Criterio 2"
+                        }]
+                    }
+                },
+                template: `{{> operaciones.hbs}}`
+            });
+
+            var app = new Vue({
+                el: "#panel",
+                data: {
+                    sidebar: [
+                        {
+                            panel: "operaciones",
+                            url: "/operaciones",
+                            label: "Operaciones"
+                        }
+                    ],
+                    breadcrumb: {
+                        items: []
+                    },
+                    page: {
+                        panel: '{{ panelSelected }}',
+                        url: window.location.pathname
+                    }
+                },
+                methods: {
+                    cargarPagina(panel, url) {
+                        this.page.panel = panel;
+                        this.page.url = url;
+                        window.history.pushState(this.page, "", `${this.page.url}`);
+
+                        console.log(url);
+
+                        this.cargarBreadcrumb();
+                    },
+                    cargarBreadcrumb() {
+                        var urlSplit = this.page.url.split("/");
+                        urlSplit.splice(0,1);
+
+                        // FIXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+                        var items = urlSplit.map(function(path) {
+                            return {
+                                panel: path,
+                                url: path,
+                                label: capitalizeFirstLetter(path)
+                            };
+                        });
+
+                        this.breadcrumb.items = items;
+                    }
+                }
+            });
+
+            window.onpopstate = function(e){
+                console.log(e);
+                if(e.state){
+                    app.page = e.state;
+                    app.cargarBreadcrumb();
+                }
+            };
+            window.history.replaceState(app.page, "");
+            app.cargarBreadcrumb();
+
+            function capitalizeFirstLetter(string) {
+                return string.charAt(0).toUpperCase() + string.slice(1);
+            }
+        </script>
     </body>
 </html>

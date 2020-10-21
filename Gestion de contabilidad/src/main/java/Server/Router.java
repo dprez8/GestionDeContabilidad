@@ -27,13 +27,22 @@ public class Router {
     }
 
     private static void configure(){
-        LoginRestController loginRestController = new LoginRestController();
+        rutasVista();
+        rutasApi();
+    }
+
+    private static void rutasVista() {
         LoginController loginController = new LoginController();
         PanelController panelController = new PanelController();
-
-        Spark.post("/api/login",loginRestController::login);
+        
         Spark.get("/login", loginController::mostrarLogin, Router.engine);
-        Spark.get("/", panelController::mostrarPanel, Router.engine);
+        Spark.get("/", panelController::mostrarInicio, Router.engine);
         Spark.get("/operaciones", panelController::mostrarOperaciones, Router.engine);
+    }
+
+    private static void rutasApi() {
+        LoginRestController loginRestController = new LoginRestController();
+        
+        Spark.post("/api/login",loginRestController::login);
     }
 }

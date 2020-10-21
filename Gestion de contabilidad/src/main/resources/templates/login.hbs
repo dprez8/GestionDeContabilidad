@@ -93,7 +93,7 @@
                             this.loginButton.loading = true;
                             this.loginButton.label = "Cargando...";
                             $.ajax({
-                                url: "http://localhost/api/login",
+                                url: "http://{{ ip }}/api/login",
                                 type: "POST",
                                 dataType: "json",
                                 data: JSON.stringify({
@@ -121,7 +121,7 @@
                         this.alerts[2].show = true;
                     },
                     loginSuccess: function() {
-                        window.location.href = "http://localhost/";
+                        window.location.href = "http://{{ ip }}/";
                     }
                 }
             });
