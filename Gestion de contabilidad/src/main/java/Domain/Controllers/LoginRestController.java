@@ -17,8 +17,8 @@ public class LoginRestController {
 
     public String login(Request request, Response response) {
         Gson gson = new Gson();
-        CodeResponse errorResponse = new CodeResponse();
-        Usuario usuario = null;
+        Respuesta errorResponse = new Respuesta();
+        Usuario usuario;
 
         //Obtengo por post el json de nombre de usuario y contraseña, transformandolo en un objeto de la innerclass UsuarioRequest
         UsuarioRequest usuarioRequest = gson.fromJson(request.body(),UsuarioRequest.class);

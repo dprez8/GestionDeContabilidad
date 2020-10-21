@@ -72,8 +72,8 @@ public class DireccionPostalController {
         response.status(200);
         }
         catch (NullPointerException ex){
-            respuesta.code = 404;
-            respuesta.message =  "No se logró cargar los paises";
+            respuesta.setCode(404);
+            respuesta.setMessage("No se logró cargar los paises");
             response.status(404);
             }
        
