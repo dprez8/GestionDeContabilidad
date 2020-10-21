@@ -1,10 +1,6 @@
 package Domain.Controllers;
 
-import Domain.Entities.Usuarios.Administrador;
-import Domain.Entities.Usuarios.Estandar;
 import Domain.Entities.Usuarios.Usuario;
-import Domain.Repositories.Daos.DaoHibernate;
-import Domain.Repositories.Daos.RepositorioUsuarios;
 import com.google.common.hash.Hashing;
 import com.google.gson.Gson;
 import db.EntityManagerHelper;
@@ -15,15 +11,13 @@ import javax.persistence.NoResultException;
 import java.nio.charset.StandardCharsets;
 
 public class LoginRestController {
-    private RepositorioUsuarios repositorioUsuarios;
 
     public LoginRestController() {
-        repositorioUsuarios = new RepositorioUsuarios(new DaoHibernate<Usuario>(Usuario.class));
     }
 
     public String login(Request request, Response response) {
         Gson gson = new Gson();
-        Respuesta loginResponse = new Respuesta();
+        CodeResponse errorResponse = new CodeResponse();
         Usuario usuario = null;
 
         //Obtengo por post el json de nombre de usuario y contraseña, transformandolo en un objeto de la innerclass UsuarioRequest
@@ -40,14 +34,18 @@ public class LoginRestController {
                     .setParameter("password",usuarioRequest.password)
                     .getSingleResult();
 
-             loginResponse.code = 200;
-             loginResponse.message = "Se inicio sesion exitosamente";
+             if(usuario != null) {
+                 request.session(true);
+                 request.session().attribute("id", usuario.getId());
+             }
+             errorResponse.setCode(200);
+             errorResponse.setMessage("Se inicio sesion exitosamente");
         }
         catch (NoResultException ex){
-            loginResponse.code = 404;
-            loginResponse.message =  "No coincide el usuario con la contraseña";
+            errorResponse.setCode(404);
+            errorResponse.setMessage("No coincide el usuario con la contraseña");
         }
-        String jsonLogin = gson.toJson(loginResponse);
+        String jsonLogin = gson.toJson(errorResponse);
 
         response.type("application/json");
         response.body(jsonLogin);

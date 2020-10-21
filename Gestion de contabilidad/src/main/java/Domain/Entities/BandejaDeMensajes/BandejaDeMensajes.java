@@ -2,9 +2,6 @@ package Domain.Entities.BandejaDeMensajes;
 
 import Domain.Entities.Usuarios.Usuario;
 
-import javax.persistence.*;
-import java.io.Serializable;
-import java.lang.annotation.Target;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -25,7 +22,7 @@ public class BandejaDeMensajes{
         mensajes.add(msg);
     }
 
-    public void addMensajes(List<String> variosMensajes){
+    public void addMensajesString(List<String> variosMensajes){
         variosMensajes.forEach(unCuerpo->crearMensaje(unCuerpo));
     }
     public void ordenarPorFechaRecienteUltimo(){
@@ -40,6 +37,14 @@ public class BandejaDeMensajes{
     }*/
     public List<Mensaje> filtrarPorFecha(LocalDate fecha){
         return mensajes.stream().filter(a->a.getFecha().equals(fecha)).collect(Collectors.toList());
+    }
+
+    public void addMensajes(Mensaje ... mensajes) {
+        Collections.addAll(this.mensajes,mensajes);
+    }
+
+    public void setMensajes(List<Mensaje> mensajes) {
+        this.mensajes = mensajes;
     }
 
     public List<Mensaje> getMensajes() {

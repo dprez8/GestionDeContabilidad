@@ -24,6 +24,8 @@ public class Login {
 
 	private Repositorio<Usuario> repoUsuarios;
 	private Repositorio<EntidadJuridica> repoEntidadJuridica;
+	private Estandar elPepe;
+	private EntidadJuridica pepsi;
 	
     @Before
 
@@ -39,15 +41,23 @@ public class Login {
         ValidarIgualAMailOUsuario validarIgualAMailOUsuario = new ValidarIgualAMailOUsuario();
 
         ValidadorDeContrasenia.addValidaciones(validarLongitudCorta,validarTop10k,validarIgualAMailOUsuario);
+		this.pepsi = new EntidadJuridica();
+        this.elPepe = new Estandar(this.pepsi, "elPepe", "456pepe", "elPepe@gmail.com");
     }
 	 @Test
 	 public void crearUsuario() throws IOException, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, contraseniaCorta{
 		 EntidadJuridica coca= new EntidadJuridica();
-		 EntidadJuridica pepsi = new EntidadJuridica(); 
-		 Estandar eteSech = new Estandar(coca, "eteSech", "1234hgchh", "eteSech@gmail.com");
-		 Estandar elPepe = new Estandar(pepsi, "elPepe", "4356p4epe", "elPepe@gmail.com");
-		 repoUsuarios.agregar(eteSech);
+		 Estandar eteSech = new Estandar(coca, "eteSech", "1234compa", "eteSech@gmail.com");
+
 		 repoUsuarios.agregar(elPepe);
+		 repoUsuarios.agregar(eteSech);
 		 
+	 }
+
+	 @Test
+	public void recuperarAPepe() {
+    	Usuario elPepe = repoUsuarios.buscar(4);
+    	Assert.assertEquals(Estandar.class,elPepe.getClass());
+    	System.out.println("tipo_usuario: " + elPepe.getClass());
 	 }
 }

@@ -2,6 +2,7 @@
 package Server;
 
 import Domain.Controllers.DireccionPostalController;
+import Domain.Controllers.BandejaDeMensajesRestController;
 import Domain.Controllers.LoginRestController;
 import Domain.Controllers.ProveedorController;
 import Spark.utils.BooleanHelper;
@@ -29,11 +30,14 @@ public class Router {
         LoginRestController loginRestController = new LoginRestController();
         DireccionPostalController direccionController = new DireccionPostalController();
         ProveedorController proveedorController = new ProveedorController();
+        BandejaDeMensajesRestController bandejaDeMensajesRestController= new BandejaDeMensajesRestController();
+        
         Spark.post("/api/login",loginRestController::login);
         Spark.get("/api/pais",direccionController::listadoDePaises);
         Spark.get("/api/pais/:clavePais/provincia",direccionController::listadoDeProvincias);
         Spark.get("/api/pais/:clavePais/provincia/:claveProvincia/ciudad",direccionController::listadoDeCiudades);
         Spark.get("/api/proveedor/nuevo",proveedorController::crearProveedor);
-        
+        Spark.get("api/bandeja",bandejaDeMensajesRestController::mostrarMensajes);
+
     }
 }

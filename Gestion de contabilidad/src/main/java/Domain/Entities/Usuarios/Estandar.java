@@ -28,7 +28,7 @@ public class Estandar extends Usuario {
 	@Transient
 	private BandejaDeMensajes bandejaDeMensajes;
 
-	protected Estandar(){
+	public Estandar(){
 		this.bandejaDeMensajes = new BandejaDeMensajes(this);
 	}
 

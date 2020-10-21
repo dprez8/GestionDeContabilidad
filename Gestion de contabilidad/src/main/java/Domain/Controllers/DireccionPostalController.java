@@ -58,7 +58,7 @@ public class DireccionPostalController {
         List<Pais> paises=new ArrayList<>();
 
    	 	this.repoPais = new Repositorio<Pais>(new DaoHibernate<Pais>(Pais.class));
-        paises= this.repoPais.buscaTodos();
+        paises= this.repoPais.buscarTodos();
         VinculadorPais vinculadorPais = new VinculadorPais();
         
         
