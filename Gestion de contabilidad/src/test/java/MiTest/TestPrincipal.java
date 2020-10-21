@@ -56,8 +56,8 @@ public class TestPrincipal {
 
         TipoDocumento facturaA = new TipoDocumento("Factura A");
         this.factura = new DocumentoComercial(facturaA, 11111);
-        this.efectivo = new MedioDePago("Rapi Pago","Ticket","rapipago");
-        this.pago = new Pago(1,LocalDate.of(2020, Month.AUGUST,14),1231231,efectivo);
+        this.efectivo = new MedioDePago("Ticket","rapipago");
+        this.pago = new Pago(LocalDate.of(2020, Month.AUGUST,14),1231231,efectivo);
         
         this.lautaroIturregui = new Proveedor("Lautaro Iturregui",2);
 

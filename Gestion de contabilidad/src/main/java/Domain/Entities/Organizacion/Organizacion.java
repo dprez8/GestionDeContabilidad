@@ -21,8 +21,8 @@ public abstract class Organizacion extends EntidadPersistente {
 	@Column(name = "nombre_ficticio")
     protected String nombreFicticio;
 
-	@Transient
-    //@OneToMany(mappedBy = "organizacion",cascade = CascadeType.ALL) //del otro lado es ManyToOne
+
+    @OneToMany(mappedBy = "organizacion",cascade = CascadeType.ALL,fetch = FetchType.LAZY) //del otro lado es ManyToOne
     protected List<Operacion> operaciones;
 
 	@OneToMany(mappedBy = "miOrganizacion",cascade = CascadeType.ALL,fetch = FetchType.LAZY)

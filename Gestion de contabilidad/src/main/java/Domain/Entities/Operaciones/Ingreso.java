@@ -16,7 +16,7 @@ public class Ingreso extends Operacion {
     private String descripcion;
     @Column
     private double montoTotal;
-    @OneToMany(mappedBy = "ingresoAsociado")
+    @OneToMany(mappedBy = "ingresoAsociado",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Egreso> egresos;
 
     protected Ingreso(){

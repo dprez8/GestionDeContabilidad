@@ -1,21 +1,17 @@
 package Domain.Entities.DatosDeOperaciones;
 
+import Domain.Entities.EntidadPersistente.EntidadPersistente;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name="producto")
-public class Producto {
-	
-	@Id
-    @GeneratedValue
-	@Column(name="producto_id")
-	private int idProducto;
-	@Column(name="nombre_producto")
-    private String nombreProducto;
-	@Column
-	private double precio;
+public class Producto extends EntidadPersistente {
 
-    protected Producto(){
+    @Column(name="nombre_producto")
+    private String nombreProducto;
+
+    public Producto(){
     }
 
     public Producto(String nombreProducto){
@@ -24,5 +20,11 @@ public class Producto {
     public String getNombreProducto() {
         return nombreProducto;
     }
+
+
+    public void setNombreProducto(String nombreProducto) {
+        this.nombreProducto = nombreProducto;
+    }
+
 }
 
