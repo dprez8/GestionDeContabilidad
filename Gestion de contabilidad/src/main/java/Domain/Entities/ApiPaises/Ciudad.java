@@ -48,6 +48,22 @@ public class Ciudad{
 	}
 	
 	
+	public int getClave() {
+		return clave;
+	}
+
+	public void setClave(int clave) {
+		this.clave = clave;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public Provincia getProvincia() {
 		return provincia;
 	}

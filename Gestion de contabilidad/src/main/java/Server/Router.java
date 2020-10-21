@@ -30,6 +30,8 @@ public class Router {
 
         Spark.post("/api/login",loginRestController::login);
         Spark.get("/api/pais",direccionController::listadoDePaises);
-        Spark.get("/api/pais/:clave",direccionController::listadoDeProvincias);
+        Spark.get("/api/pais/:clavePais",direccionController::listadoDeProvincias);
+        Spark.get("/api/pais/:clavePais/provincia/:claveProvincia",direccionController::listadoDeCiudades);
+        
     }
 }

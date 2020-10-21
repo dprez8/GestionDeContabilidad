@@ -12,6 +12,7 @@ import org.junit.Test;
 import com.google.gson.Gson;
 
 import Domain.Controllers.Respuesta;
+import Domain.Entities.ApiPaises.Ciudad;
 import Domain.Entities.ApiPaises.Pais;
 import Domain.Entities.ApiPaises.Provincia;
 import Domain.Repositories.Repositorio;
@@ -21,7 +22,8 @@ import db.EntityManagerHelper;
 
 public class ObtenerPaises {
 	private Repositorio<Pais> repoPais;
-		@Test
+	Repositorio<Provincia> repoProvincia;
+		/*@Test
 		public void listadoDePaises() {
 	      
 	        List<Pais> paises=new ArrayList<>();
@@ -49,6 +51,21 @@ public class ObtenerPaises {
 	      
 	             for(Provincia provincia: provincias) {
 	            	 System.out.println("Provincia: "+provincia.name);
+	             } 
+		}*/
+		@SuppressWarnings("unchecked")
+		@Test
+		public void listadoDeCiudades(){
+			Provincia provinciaBuscada= new Provincia();
+			this.repoProvincia = new Repositorio<Provincia>(new DaoHibernate<Provincia>(Provincia.class));
+			provinciaBuscada = repoProvincia.buscar(398);
+			List<Ciudad> ciudades= new ArrayList<>();
+
+				ciudades = EntityManagerHelper.createQuery("SELECT c FROM Ciudad c WHERE c.provincia.clave= :code")
+				        .setParameter("code",provinciaBuscada.getClave()).getResultList();
+				
+				for(Ciudad ciudad: ciudades) {
+	            	 System.out.println("Provincia: "+ciudad.name);
 	             } 
 		}
 }
