@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import Domain.Entities.Organizacion.EntidadJuridica;
@@ -29,7 +30,7 @@ public class Login {
 	
     @Before
 
-    public void antesDePersistir() throws FileNotFoundException, IOException {
+    public void antesDePersistir() throws FileNotFoundException, IOException, contraseniaCorta, contraseniaMuyComun, repiteContraseniaEnMailOUsuario {
         this.repoUsuarios = new Repositorio<Usuario>(new DaoHibernate<Usuario>(Usuario.class));
         this.repoEntidadJuridica = new Repositorio<EntidadJuridica>(new DaoHibernate<EntidadJuridica>(EntidadJuridica.class));
        

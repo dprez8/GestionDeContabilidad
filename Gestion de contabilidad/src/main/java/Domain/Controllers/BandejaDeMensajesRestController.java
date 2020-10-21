@@ -5,6 +5,7 @@ import Domain.Entities.Usuarios.Estandar;
 import Domain.Entities.Usuarios.Usuario;
 import Domain.Repositories.Daos.DaoHibernate;
 import Domain.Repositories.Repositorio;
+import com.google.gson.Gson;
 import spark.Request;
 import spark.Response;
 
@@ -15,23 +16,29 @@ import java.util.stream.Collectors;
 public class BandejaDeMensajesRestController {
     private Repositorio<Usuario> repoUsuarios;
     private Repositorio<Mensaje> repoMensajes;
-    private CodeResponse codeResponse;
+    private Respuesta codeResponse;
 
     public BandejaDeMensajesRestController() {
         this.repoUsuarios = new Repositorio<>(new DaoHibernate<Usuario>(Usuario.class));
         this.repoMensajes = new Repositorio<>(new DaoHibernate<Mensaje>(Mensaje.class));
-        this.codeResponse = new CodeResponse();
+        this.codeResponse = new Respuesta();
     }
 
     public String mostrarMensajes(Request request, Response response) {
+
+        Gson gson = new Gson();
 
         Estandar usuario = (Estandar) asignarUsuarioSiEstaLogueado(request);
 
         filtrarMensajesDeUsuario(usuario);
 
-        response.type("application/json");
+        //Supongo que no es tan directa la relacion para mapear estos datos, aun debo resolver esto
+        String jsonBandeja = gson.toJson(usuario.getBandejaDeMensajes());
 
-        return "";
+        response.type("application/json");
+        response.body(jsonBandeja);
+
+        return response.body();
     }
 
     private Usuario asignarUsuarioSiEstaLogueado(Request request){
