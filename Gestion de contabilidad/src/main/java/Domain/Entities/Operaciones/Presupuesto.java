@@ -107,6 +107,22 @@ public class Presupuesto extends EntidadPersistente {
         this.proveedor = proveedor;
     }
 
+    public void setOperacionNumero(int operacionNumero) {
+        this.operacionNumero = operacionNumero;
+    }
+
+    public void setItems(List<ItemPresupuesto> items) {
+        this.items = items;
+    }
+
+    public void setEgresoAsociado(Egreso egresoAsociado) {
+        this.egresoAsociado = egresoAsociado;
+    }
+
+    public void setCategorias(List<CategoriaOperacion> categorias) {
+        this.categorias = categorias;
+    }
+
     /********************************************/
     private Double calcularValorTotal(){
         return items.stream().collect(Collectors.summingDouble(unItem->unItem.valorTotal()));

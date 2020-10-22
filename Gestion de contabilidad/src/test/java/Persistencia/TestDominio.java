@@ -14,12 +14,12 @@ import Domain.Exceptions.contraseniaMuyComun;
 import Domain.Exceptions.repiteContraseniaEnMailOUsuario;
 import Domain.Repositories.Daos.DaoHibernate;
 import Domain.Repositories.Repositorio;
+import db.EntityManagerHelper;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.io.PipedReader;
 import java.time.LocalDate;
 import java.time.Month;
 
@@ -29,7 +29,14 @@ public class TestDominio {
     private Repositorio<Usuario> repoUsuarios;
     private Repositorio<Egreso> repoEgresos;
     private Repositorio<ItemEgreso> repoItems;
+    private Repositorio<ItemPresupuesto> repoItemPresupuesto;
     private Repositorio<Producto> repoProductos;
+    private Repositorio<Pago> repoPagos;
+    private Repositorio<MedioDePago> repoMedioDePagos;
+    private Repositorio<Proveedor> repoProveedores;
+    private Repositorio<DocumentoComercial> repoDocumentos;
+    private Repositorio<TipoDocumento> repoTipoDocumento;
+    private Repositorio<Presupuesto> repoPresupuestos;
 
     @Before
     public void antesDePersistir() {
@@ -38,9 +45,17 @@ public class TestDominio {
         this.repoEgresos         = new Repositorio<>(new DaoHibernate<>(Egreso.class));
         this.repoItems           = new Repositorio<>(new DaoHibernate<>(ItemEgreso.class));
         this.repoProductos       = new Repositorio<>(new DaoHibernate<>(Producto.class));
+        this.repoPagos           = new Repositorio<>(new DaoHibernate<>(Pago.class));
+        this.repoMedioDePagos    = new Repositorio<>(new DaoHibernate<>(MedioDePago.class));
+        this.repoItemPresupuesto = new Repositorio<>(new DaoHibernate<>(ItemPresupuesto.class));
+        this.repoProveedores     = new Repositorio<>(new DaoHibernate<>(Proveedor.class));
+        this.repoDocumentos      = new Repositorio<>(new DaoHibernate<>(DocumentoComercial.class));
+        this.repoTipoDocumento   = new Repositorio<>(new DaoHibernate<>(TipoDocumento.class));
+        this.repoPresupuestos    = new Repositorio<>(new DaoHibernate<>(Presupuesto.class));
     }
+
     @Test
-    public void persistirUnaEntidadJuridica(){
+    public void persistirUnaEntidadJuridica (){
 
         Empresa pyme = new Empresa();
         pyme.setCantidadDePersonal(3);
@@ -52,13 +67,14 @@ public class TestDominio {
         pepsi.setAltura(1234);
         pepsi.setRazonSocial("razonSocial");
         pepsi.setTipoEntidadJuridica(pyme);
+        pepsi.setNombreFicticio("Pepsi");
 
         this.repoEntidadJuridica.agregar(pepsi);
         System.out.println("Numero"+ pepsi.getId());
     }
 
     @Test
-    public void obtenerAPepsi() {
+    public void obtenerAPepsi () {
         EntidadJuridica pymeJuridica = this.repoEntidadJuridica.buscar(1);
 
         Assert.assertEquals("razonSocial",pymeJuridica.getRazonSocial());
@@ -75,14 +91,14 @@ public class TestDominio {
     }
 
     @Test
-    public void recuperarAElPepe() {
+    public void recuperarAElPepe () {
         Usuario elPepe = repoUsuarios.buscar(1);
         Assert.assertEquals(Estandar.class,elPepe.getClass());
         System.out.println("tipo_usuario: " + elPepe.getClass());
     }
 
     @Test
-    public void persistirUnEgreso () {
+    public void persistirUnEgresoYDosPresupuestos () {
         /**Creacion de los datos de egreso y sus presupuestos, ejemplo*/
         Producto RAM = new Producto("Memoria RAM 4 gb DDR3");
         ItemEgreso RAMs = new ItemEgreso();
@@ -91,7 +107,7 @@ public class TestDominio {
         RAMs.setProducto(RAM);
 
         Producto placaDeVideo = new Producto("4GB DDR5");
-        ItemEgreso placasDeVideo = new ItemEgreso(placaDeVideo, 2, 5000);
+        ItemEgreso placasDeVideo = new ItemEgreso();
         placasDeVideo.setCantidad(2);
         placasDeVideo.setPrecio(5000);
         placasDeVideo.setProducto(placaDeVideo);
@@ -101,11 +117,14 @@ public class TestDominio {
 
         this.repoItems.agregar(RAMs);
         this.repoItems.agregar(placasDeVideo);
-/*
+
         TipoDocumento FacturaA = new TipoDocumento("Factura A");
         DocumentoComercial unDocumento = new DocumentoComercial();
         unDocumento.setNumDocumento(111);
         unDocumento.setTipo(FacturaA);
+
+        this.repoTipoDocumento.agregar(FacturaA);
+        this.repoDocumentos.agregar(unDocumento);
 
         MedioDePago efectivo = new MedioDePago("Ticket","rapipago");
         Pago unPago = new Pago();
@@ -113,8 +132,14 @@ public class TestDominio {
         unPago.setFechaPago(LocalDate.of(2020, Month.AUGUST,14));
         unPago.setNumeroAsociado(1231231);
 
+        this.repoMedioDePagos.agregar(efectivo);
+        this.repoPagos.agregar(unPago);
+
         Proveedor lautaroRobles = new Proveedor("Lautaro Robles", 41424242);
         Proveedor lautaroIturregui = new Proveedor("Lautaro Iturregui", 2224222);
+
+        this.repoProveedores.agregar(lautaroRobles);
+        this.repoProveedores.agregar(lautaroIturregui);
 
         ItemPresupuesto RAMpresupuesto = new ItemPresupuesto(RAM, RAMs, 1, 3000);
         ItemPresupuesto placaVideoPresupuesto = new ItemPresupuesto(placaDeVideo, placasDeVideo, 2, 5000);
@@ -122,8 +147,13 @@ public class TestDominio {
         ItemPresupuesto RAM2presupuesto = new ItemPresupuesto(RAM, RAMs, 1, 3500);
         ItemPresupuesto placaVide2Presupuesto = new ItemPresupuesto(placaDeVideo, placasDeVideo, 2, 6000);
 
+        this.repoItemPresupuesto.agregar(RAMpresupuesto);
+        this.repoItemPresupuesto.agregar(placaVideoPresupuesto);
+        this.repoItemPresupuesto.agregar(RAM2presupuesto);
+        this.repoItemPresupuesto.agregar(placaVide2Presupuesto);
+
         /*******************************************************************/
-        /*BuilderEgresoConcreto egresoBuilder = new BuilderEgresoConcreto();
+        BuilderEgresoConcreto egresoBuilder = new BuilderEgresoConcreto();
 
         EntidadJuridica pepsi = this.repoEntidadJuridica.buscar(1);
 
@@ -135,8 +165,20 @@ public class TestDominio {
                 .agregarItems(RAMs,placasDeVideo)
                 .build();
 
+        this.repoEgresos.agregar(unaCompra);
+        RAMs.setEgresoAsociado(unaCompra);
+        placasDeVideo.setEgresoAsociado(unaCompra);
+
+        this.repoItems.modificar(RAMs);
+        this.repoItems.modificar(placasDeVideo);
+
+        Estandar elPepe = (Estandar) repoUsuarios.buscar(1);
+        unaCompra.addRevisores(elPepe);
+
+        this.repoEgresos.modificar(unaCompra);
+
         /**Creacion de dos presupuestos con un egreso*/
-       /* Presupuesto primerPresupuesto = new Presupuesto(4000, unaCompra);
+        Presupuesto primerPresupuesto = new Presupuesto(4000, unaCompra);
         primerPresupuesto.setDocumento(unDocumento);
         primerPresupuesto.setFechaVigente(LocalDate.of(2020, Month.AUGUST,14));
         primerPresupuesto.setProveedor(lautaroIturregui);
@@ -148,15 +190,40 @@ public class TestDominio {
         segundoPresupuesto.setProveedor(lautaroRobles);
         segundoPresupuesto.addItems(placaVide2Presupuesto,RAM2presupuesto);
 
-        /**Configuracion del egreso para pruebas*/
-       /* Estandar elPepe = (Estandar) this.repoUsuarios.buscar(1);
+        this.repoPresupuestos.agregar(primerPresupuesto);
+        this.repoPresupuestos.agregar(segundoPresupuesto);
+        RAMpresupuesto.setPresupuesto(primerPresupuesto);
+        placaVideoPresupuesto.setPresupuesto(primerPresupuesto);
+        placaVide2Presupuesto.setPresupuesto(segundoPresupuesto);
+        RAM2presupuesto.setPresupuesto(segundoPresupuesto);
+        this.repoItemPresupuesto.modificar(RAMpresupuesto);
+        this.repoItemPresupuesto.modificar(placaVideoPresupuesto);
+        this.repoItemPresupuesto.modificar(RAM2presupuesto);
+        this.repoItemPresupuesto.modificar(placaVide2Presupuesto);
 
-        pepsi.addOperaciones(unaCompra);
-        unaCompra.addRevisores(elPepe);
-        unaCompra.addPresupuestos(primerPresupuesto,segundoPresupuesto);
-        //this.repoEgresos.agregar(unaCompra);
+    }
 
-        */
+    @Test
+    public void obtenerEgresoYSusPresupuestos() {
+
+        Egreso  unaCompra            = this.repoEgresos.buscar(0);
+        Presupuesto primerPresupuesto = this.repoPresupuestos.buscar(1);
+        Presupuesto segundoPresupuesto= this.repoPresupuestos.buscar(2);
+
+        EntidadJuridica pepsiCompra = (EntidadJuridica) unaCompra.getOrganizacion();
+
+        Assert.assertEquals(0,unaCompra.getId());
+        Assert.assertEquals(0,primerPresupuesto.getEgresoAsociado().getId());
+        Assert.assertEquals(0,segundoPresupuesto.getEgresoAsociado().getId());
+        Assert.assertEquals("Ticket",unaCompra.getPago().getMedioDePago().getTipoPago());
+        Assert.assertEquals("Factura A",unaCompra.getDocumento().getTipo().getNombreTipoDeDocumento());
+        Assert.assertEquals("razonSocial",pepsiCompra.getRazonSocial());
+        Assert.assertEquals("4GB DDR5",unaCompra.getItems().get(1).getProducto().getNombreProducto());
+        Assert.assertEquals("Memoria RAM 4 gb DDR3",unaCompra.getItems().get(0).getProducto().getNombreProducto());
+        Assert.assertEquals(2,unaCompra.getPresupuestos().get(0).getId());
+        Assert.assertEquals(1,unaCompra.getPresupuestos().get(1).getId());
+        Assert.assertEquals(1,unaCompra.getRevisores().get(0).getId());
+
     }
 
 }

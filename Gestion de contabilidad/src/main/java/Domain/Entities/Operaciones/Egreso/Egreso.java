@@ -31,7 +31,7 @@ public class Egreso extends Operacion {
 	private List<ItemEgreso> items;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name= "pago_id")
+	@JoinColumn(name= "pago_id",referencedColumnName = "id")
 	private Pago pago;
 
 	@ManyToOne

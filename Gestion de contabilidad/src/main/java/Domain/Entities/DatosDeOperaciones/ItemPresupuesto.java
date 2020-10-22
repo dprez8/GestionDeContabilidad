@@ -56,5 +56,29 @@ public class ItemPresupuesto extends EntidadPersistente {
     public ItemEgreso getItemEgresoAsociado() {
         return itemEgresoAsociado;
     }
+
+    public void setProducto(Producto producto) {
+        this.producto = producto;
+    }
+
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public void setPrecio(double precio) {
+        this.precio = precio;
+    }
+
+    public void setItemEgresoAsociado(ItemEgreso itemEgresoAsociado) {
+        this.itemEgresoAsociado = itemEgresoAsociado;
+    }
+
+    public Presupuesto getPresupuesto() {
+        return presupuesto;
+    }
+
+    public void setPresupuesto(Presupuesto presupuesto) {
+        this.presupuesto = presupuesto;
+    }
     /**********************/
 }

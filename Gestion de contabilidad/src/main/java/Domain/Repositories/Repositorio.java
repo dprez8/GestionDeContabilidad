@@ -32,7 +32,7 @@ public class Repositorio<T> {
     }
 
     public void modificar(T object){
-        this.modificar(object);
+        this.dao.modificar(object);
     }
 
     public boolean existe(int id){
