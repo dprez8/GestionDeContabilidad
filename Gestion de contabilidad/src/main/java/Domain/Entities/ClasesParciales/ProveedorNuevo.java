@@ -1,8 +1,6 @@
 package Domain.Entities.ClasesParciales;
 
 public class ProveedorNuevo {
-	public int code;
-    public String message;
     public String nombre;
     public int documento;
     public int paisId;

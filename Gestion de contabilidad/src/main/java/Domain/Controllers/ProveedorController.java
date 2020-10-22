@@ -31,23 +31,23 @@ public class ProveedorController {
 		this.repoProveedor = new Repositorio<Proveedor>(new DaoHibernate<Proveedor>(Proveedor.class));
 		ProveedorNuevo proveedorNuevo = gson2.fromJson(request.body(),ProveedorNuevo.class);
 		Proveedor proveedor=mapProveedor(proveedorNuevo);
-		ProveedorRespuesta p= new ProveedorRespuesta();
+		ProveedorRespuesta proveedorCreado= new ProveedorRespuesta();
 		try{
 	
            repoProveedor.agregar(proveedor);
-             p.code = 200;
-             p.message = "Proveedor Agregado";
-             p.id=proveedor.getProveedorId();
+             proveedorCreado.code = 200;
+             proveedorCreado.message = "Proveedor Agregado";
+             proveedorCreado.id=proveedor.getProveedorId();
              response.status(200);
 		}
         catch (NullPointerException ex){
-        	 p.code = 404;
-        	 p.message =  "No se logro crear el proveedor: "+proveedor.getProveedorId();
+        	 proveedorCreado.code = 404;
+        	 proveedorCreado.message =  "No se logro crear el proveedor: "+proveedor.getProveedorId();
             response.status(404);
         }
 		
 
-        String jsonProveedor = gson2.toJson(p);
+        String jsonProveedor = gson2.toJson(proveedorCreado);
        
         response.type("application/json");
         response.body(jsonProveedor);

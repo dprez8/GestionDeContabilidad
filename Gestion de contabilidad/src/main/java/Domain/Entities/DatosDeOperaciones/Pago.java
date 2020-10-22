@@ -16,7 +16,7 @@ public class Pago {
 	@Column(name="numero_asociado")
 	private int numeroAsociado;
 	@ManyToOne
-	@JoinColumn(name = "medio_id", referencedColumnName = "medio_id")
+	@JoinColumn(name = "medio_id", referencedColumnName = "id")
 	private MedioDePago medioDePago;
 
 
