@@ -12,7 +12,7 @@ public class PanelController {
 
         Map<String, String> parametros = new HashMap<>();
 
-        parametros.put("ip", "181.21.245.54");
+        parametros.put("ip", "181.21.133.179");
         parametros.put("titulo", "Inicio");
         parametros.put("panelSelected", "inicio"); // Se puede especificar que template usar en esta variable
 

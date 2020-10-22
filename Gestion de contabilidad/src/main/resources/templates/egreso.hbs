@@ -1,102 +1,80 @@
 <b-table-simple small responsive striped class="mb-0">
     <b-thead head-variant="light">
         <b-tr>
-            <b-th colspan="2">Proveedor</b-th>
-            <b-th colspan="2">Medio de Pago</b-th>
+            <b-th colspan="1">Proveedor</b-th>
+            <b-th colspan="1">Medio de Pago</b-th>
             <b-th colspan="1">Documento Comercial</b-th>
         </b-tr>
     </b-thead>
     <b-tbody>
         <b-tr>
-            <b-td colspan="2">
-                <b-table-simple small responsive striped class="mb-0">
-                    <b-thead head-variant="light">
-                        <b-tr>
-                            <b-th colspan="1">Nombre</b-th>
-                            <b-th colspan="1">DNI</b-th>
-                            <b-th colspan="1">Ver más</b-th>
-                        </b-tr>
-                    </b-thead>
-                    <b-tbody>
-                        <b-tr>
-                            <b-th class="">Fulano</b-th>
-                            <b-td>11.495.593</b-td>
-                            <b-td>
-                                <b-button size="sm" variant="outline-primary">Ver más</b-button>
-                            </b-td>
-                        </b-tr>
-                    </b-tbody>
-                </b-table-simple>
-            </b-td>
-            <b-td colspan="2">
-                <b-table-simple small responsive striped class="mb-0">
-                    <b-thead head-variant="light">
-                        <b-tr>
-                            <b-th colspan="1">Medio</b-th>
-                            <b-th colspan="1">Total</b-th>
-                            <b-th colspan="1">Ver más</b-th>
-                        </b-tr>
-                    </b-thead>
-                    <b-tbody>
-                        <b-tr>
-                            <b-th class="">Efectivo</b-th>
-                            <b-td>123456</b-td>
-                            <b-td>
-                                <b-button size="sm" variant="outline-primary">Ver más</b-button>
-                            </b-td>
-                        </b-tr>
-                    </b-tbody>
-                </b-table-simple>
+            <b-td colspan="1">
+                <b-table small responsive striped class="mb-0" :fields="campos_proveedor" :items="items_proveedor"
+                    head-variant="light">
+                    <template #cell(see_more)="data">
+                        <b-button size="sm" v-on:click="data.see_more" variant="outline-primary">Ver detalle
+                        </b-button>
+                    </template>
+                </b-table>
             </b-td>
             <b-td colspan="1">
-                <b-table-simple small responsive striped class="mb-0">
-                    <b-thead head-variant="light">
-                        <b-tr>
-                            <b-th colspan="1">Documento</b-th>
-                        </b-tr>
-                    </b-thead>
-                    <b-tbody>
-                        <b-tr>
-                            <b-td>
-                                <b-button size="sm" variant="outline-primary">Ver documento</b-button>
-                            </b-td>
-                        </b-tr>
-                    </b-tbody>
-                </b-table-simple>
+                <b-table small responsive striped class="mb-0" :fields="campos_mediodepago" :items="items_mediodepago"
+                    head-variant="light">
+                    <template #cell(see_more)="data">
+                        <b-button size="sm" v-on:click="data.see_more" variant="outline-primary">Ver detalle
+                        </b-button>
+                    </template>
+                </b-table>
             </b-td>
-        </b-tr>
-        <b-tr>
-            <b-td colspan="8">
-                <b-table-simple small responsive striped class="mb-0">
-                    <b-thead head-variant="light">
-                        <b-tr>
-                            <b-th colspan="1">Producto</b-th>
-                            <b-th colspan="1">Cantidad</b-th>
-                            <b-th colspan="1">Precio</b-th>
-                        </b-tr>
-                    </b-thead>
-                    <b-tbody>
-                        <b-tr>
-                            <b-th>Item 1</b-th>
-                            <b-td>2</b-td>
-                            <b-td>$1000</b-td>
-                        </b-tr>
-                        <b-tr>
-                            <b-td></b-td>
-                            <b-th>Total</b-th>
-                            <b-td>$2000</b-td>
-                        </b-tr>
-                    </b-tbody>
-                </b-table-simple>
+            <b-td colspan="1">
+                <b-table small responsive striped class="mb-0" :fields="campos_documentocomercial"
+                    :items="items_documentocomercial" head-variant="light">
+                    <template #cell(see_more)="data">
+                        <b-button size="sm" v-on:click="data.see_more" variant="outline-primary">Ver documento
+                        </b-button>
+                    </template>
+                </b-table>
             </b-td>
         </b-tr>
     </b-tbody>
+</b-table-simple>
+<b-table-simple small responsive striped class="mb-0">
+    <b-thead head-variant="light">
+        <b-tr>
+            <b-th colspan="1">Items</b-th>
+        </b-tr>
+    </b-thead>
+    <b-tbody>
+    </b-tbody>
+</b-table-simple>
+<b-table small responsive striped class="mb-0" :fields="campos_itemsegreso" :items="items_itemsegreso"
+    head-variant="light" foot-clone>
+    <!-- A custom formatted footer cell for field 'name' -->
+    <template #foot(name)="data">
+        <span class="text-danger">Total</span>
+    </template>
+    <template #foot(price)="data">
+        <span class="text-danger">1234567</span>
+    </template>
+    <template #foot(quantity)="data"><i></i>
+    </template>
+</b-table>
+<b-table-simple small responsive striped class="mb-0">
+    <b-tbody>
+    </b-tbody>
     <b-tfoot>
         <b-tr>
-            <b-td colspan="8" variant="secondary" class="">
+            <b-td colspan="2" variant="secondary">
                 <b-button variant="outline-primary">
-                    <b-avatar size="sm" variant="primary" icon="plus"></b-avatar> Nuevo egreso
+                    Ver ingreso asociado
                 </b-button>
+            </b-td>
+            <b-td colspan="2" variant="secondary">
+                <b-button variant="outline-primary">
+                    Presupuestos asociados
+                </b-button>
+            </b-td>
+            <b-td colspan="4" variant="secondary">
             </b-td>
         </b-tr>
     </b-tfoot>

@@ -7,48 +7,64 @@
         <link type="text/css" rel="stylesheet" href="http://{{ ip }}/css/navbar.css"/>
         <link type="text/css" rel="stylesheet" href="http://{{ ip }}/css/simple-sidebar.css"/>
         <link type="text/css" rel="stylesheet" href="http://{{ ip }}/css/dropdown.css"/>
+        <link type="text/css" rel="stylesheet" href="http://{{ ip }}/css/transitions.css"/>
         <!-- Panel -->
         <div id="panel">
             <!-- Navbar -->
-            <nav class="navbar navbar-expand-md navbar-light bg-light border-bottom">
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <nav class="navbar navbar-expand-md navbar-light bg-light border-bottom d-flex flex-nowrap">
+                <button class="navbar-toggler border-0 p-1 mr-2" data-toggle="collapse" v-on:click="sidebarShow = !sidebarShow">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <!-- Nombre de organizacion -->
-                <div id="navbar-organizacion" class="navbar-brand mr-2" href="#">
+                <div id="navbar-organizacion" class="navbar-brand mr-2" v-bind:class="{'hide-organizacion': searchSelected}">
                     <img src="http://{{ ip }}/img/utn_logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
                     <span class="p-2">Organización</span>
                 </div>
                 <!-- Busqueda -->
-                <div>
-                    <form class="form-inline">
-                        <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">
-                        <button class="btn btn-outline-success" type="submit">
-                            <b-icon-search></b-icon-search>
-                        </button>
-                    </form>
-                </div>
+                <form id="search-wrapper" v-bind:class="{'show-search': searchSelected}" v-on:submit.prevent="search()">
+                    <b-input-group class="mr-2" style="flex-wrap: nowrap">
+                        <b-input-group-prepend>
+                            <b-button variant="outline" class="border-secondary" type="submit"
+                                v-model="query" 
+                                v-on:focus="searchSelected = true" 
+                                v-on:blur="searchSelected = false"
+                            ><b-icon-search></b-icon-search></b-button>
+                        </b-input-group-prepend>
+                        <b-form-input class="border-secondary" placeholder="Buscar"
+                            v-model="query" 
+                            v-on:focus="searchSelected = true" 
+                            v-on:blur="searchSelected = false"
+                        ></b-form-input>
+                    </b-input-group>
+                </form>
                 <!-- Avatar -->
                 <div class="ml-auto" v-b-toggle.user-content>
                     <b-avatar variant="primary" text="J" src="http://{{ ip }}/img/usuarios/user.png"></b-avatar>
                 </div>
                 <!-- Panel de opciones de usuario -->
-                <b-collapse id="user-content" class="p-2">
+                <b-collapse class="shadow-lg" id="user-content" class="p-2">
                     <b-list-group>
                         <b-list-group-item>Javier</b-list-group-item>
-                        <b-list-group-item button><b-icon-gear-fill class="mr-2"></b-icon-gear-fill> Configuración</b-list-group-item>
-                        <b-list-group-item button><b-icon-box-arrow-left class="mr-2"></b-icon-box-arrow-left> Cerrar sesión</b-list-group-item>
+                        <b-list-group-item to="/configuracion" v-b-toggle.user-content>
+                                <b-icon-gear-fill class="mr-2"></b-icon-gear-fill> Configuración
+                        </b-list-group-item>
+                        <b-list-group-item v-b-toggle.user-content>
+                            <b-icon-box-arrow-left class="mr-2"></b-icon-box-arrow-left> Cerrar sesión
+                        </b-list-group-item>
                     </b-list-group>
                 </b-collapse>
             </nav>
             <!-- /#navbar-wrapper -->
 
-            <div class="d-flex" id="wrapper">
+            <div class="d-flex" v-bind:class="{toggled: !sidebarShow}" id="wrapper">
                 <!-- Sidebar -->
                 <div class="bg-light border-right" id="sidebar-wrapper">
                     <div class="list-group list-group-flush">
                         <template v-for="(page, index) in sidebar">
-                            <router-link class="list-group-item list-group-item-action bg-light" v-bind:to="page.path">\{{ page.label }}</router-link>
+                            <router-link class="list-group-item list-group-item-action bg-light"
+                                v-on:click.native="sidebarShow = true"
+                                v-bind:to="page.path"
+                            >\{{ page.label }}</router-link>
                         </template>
                     </div>
                 </div>
@@ -57,7 +73,7 @@
                 <!-- Rightside -->
                 <div class="w-100">
                     <!-- Breadcrum -->
-                    <b-breadcrumb>
+                    <b-breadcrumb class="m-0 border-bottom" style="border-radius: 0;">
                         <b-breadcrumb-item>
                             <router-link to="/">
                                 <b-icon icon="house-fill" scale="1.25" shift-v="1.25" aria-hidden="true"></b-icon>
@@ -74,8 +90,10 @@
                     <!-- /$breadcrum-wrapper -->
 
                     <!-- Page Content -->
-                    <div id="page-content-wrapper">
-                        <router-view></router-view>
+                    <div class="container-fluid overflow-auto" style="height: calc(100vh - 106px)">
+                        <transition name="fade" mode="out-in">
+                            <router-view></router-view>
+                        </transition>
                     </div>
                     <!-- /#page-content-wrapper -->
                 </div>
@@ -88,25 +106,193 @@
 
         <script>
             const error404 = {
-                template: `{{> 404.hbs}}`,
+                template: `{{> 404.hbs}}`
             };
             const inicio = {
-                template: `{{> inicio.hbs}}`,
+                template: `{{> inicio.hbs}}`
+            };
+            const asociarCategoria = {
+                template: `{{> asociarCategoria.hbs}}`,
+                data() {
+                    return {
+                        criterios: [
+                            {
+                                name: "Alcance del proyecto",
+                                criterios: [
+                                    {
+                                        name: "Tamaño del proyecto",
+                                        criterios: [],
+                                        categorias: [
+                                            {
+                                                name: "Grande"
+                                            },
+                                            {
+                                                name: "Chico"
+                                            }
+                                        ]
+                                    }
+                                ],
+                                categorias: [
+                                    {
+                                        name: "Nacional"
+                                    },
+                                    {
+                                        name: "Internacional"
+                                    }
+                                ]
+                            },
+                            {
+                                name: "Cliente",
+                                criterios: [],
+                                categorias: [
+                                    {
+                                        name: "Comafi"
+                                    },
+                                    {
+                                        name: "Santander"
+                                    }
+                                ]
+                            },
+                        ]
+                    }
+                },
+                methods: {
+                    construirArbol() {
+                        /*
+                        criterio[0] -> name
+                        criterio[0] -> criterios not empty
+                        criterio[0] -> criterio[0] -> name 
+                        criterio[0] -> criterio[0] -> criterios is empty
+                        criterio[0] -> criterio[0] -> categorias until undefined
+                        criterio[0] -> criterio[1] -> is undefined
+                        criterio[0] -> categorias until undefined 
+                        criterio[1] -> not undefined
+                        criterio[1] -> name
+                        criterio[1] -> criterios is empty
+                        criterio[1] -> categorias until undefined
+                        criterio[2] -> is undefined
+                        */
+
+                        var actualNode = undefined;
+                        var prevNode = undefined;
+                    }
+                }
             };
             const operaciones = {
                 data() {
                     return {
-                        criterios: [{
-                            id: "crit-1",
-                            nombre: "Criterio 1"
-                        },
-                        {
-                            id: "crit-2",
-                            nombre: "Criterio 2"
-                        }]
+                        campos_egreso: [
+                            { key: 'egreso_name', label: 'Egreso' },
+                            { key: 'verified', label: 'Estado' },
+                            { key: 'total', label: 'Total' },
+                            { key: 'emitido', label: 'Emitido' },
+                            'show_details'
+                        ],
+                        items_egreso: [
+                            { egreso_name: 'Egreso 1234', status: true, total: 42234, emitido: "12/12/2020", detalle: { undato: false, dato: 123456 } },
+                        ],
+                        campos_proveedor: [
+                            { key: 'name', label: 'Razón Social' },
+                            { key: 'dni', label: 'DNI' },
+                            { key: 'see_more', label: 'Ver detalle' },
+                        ],
+                        items_proveedor: [
+                            { name: 'Un proveedor', dni: "12345678", detalle: "verDetalleProveedor(1234)" },
+                        ],
+                        campos_mediodepago: [
+                            { key: 'name', label: 'Medio' },
+                            { key: 'total', label: 'Total' },
+                        ],
+                        items_mediodepago: [
+                            { name: 'Efectivo', total: '12345' },
+                        ],
+                        campos_documentocomercial: [
+                            { key: 'see_more', label: 'Ver Documento' },
+                        ],
+                        items_documentocomercial: [
+                            { see_more: 'VerDetalleDocumentoComercial(1234)' },
+                        ],
+                        campos_itemsegreso: [
+                            { key: 'name', label: 'Producto' },
+                            { key: 'quantity', label: 'Cantidad' },
+                            { key: 'price', label: 'Precio' },
+                        ],
+                        items_itemsegreso: [
+                            { name: 'Un producto', quantity: 3, price: 1234 },
+                        ]
                     }
                 },
-                template: `{{> operaciones.hbs}}`
+                components: {
+                    'asociar-categoria': asociarCategoria
+                },
+                template: `{{> egreso-2.hbs}}`
+            };
+            const bandeja = {
+                template: `{{> bandeja.hbs}}`,
+                data() {
+                    return {
+                        mensajes: {
+                            "1": {
+                                id: 1,
+                                fecha: "2020-10-21",
+                                leido: false,
+                                cuerpo: "Habia una vez trus xdxdxd lorem ipsum dolor sit amet dadadadadada"
+                            },
+                            "2": {
+                                id: 2,
+                                fecha: "1999-4-3",
+                                leido: false,
+                                cuerpo: `Lorem ipsum dolor sit amet consectetur adipiscing elit lectus proin ridiculus, sapien volutpat cras nisi faucibus inceptos semper mauris ornare, porttitor tempus nunc dictum senectus gravida vitae velit duis. Placerat non vitae curae luctus himenaeos arcu aptent duis ligula sed nulla nascetur, a massa mi vulputate tellus at magnis sagittis montes convallis. Rutrum nulla nascetur natoque urna inceptos consequat arcu proin, iaculis at et facilisi mattis aliquam tempor, conubia fermentum nam per montes aliquet vivamus.
+
+Neque lobortis mus hendrerit penatibus gravida curae ac, sociis laoreet venenatis est nisl cursus urna blandit, maecenas mattis torquent ullamcorper dis interdum. Fringilla aenean laoreet ultrices convallis tortor commodo euismod turpis et himenaeos, eros lacinia in rutrum nunc risus diam fusce varius. Erat dui pulvinar volutpat ullamcorper est posuere senectus, curabitur lectus facilisi ultricies nam lobortis vehicula, platea mus turpis per praesent mi.`
+                            },
+                            "3": {
+                                id: 3,
+                                fecha: "1999-4-3",
+                                leido: true,
+                                cuerpo: `Lorem ipsum dolor sit amet consectetur adipiscing elit lectus proin ridiculus, sapien volutpat cras nisi faucibus inceptos semper mauris ornare, porttitor tempus nunc dictum senectus gravida vitae velit duis. Placerat non vitae curae luctus himenaeos arcu aptent duis ligula sed nulla nascetur, a massa mi vulputate tellus at magnis sagittis montes convallis. Rutrum nulla nascetur natoque urna inceptos consequat arcu proin, iaculis at et facilisi mattis aliquam tempor, conubia fermentum nam per montes aliquet vivamus.
+
+Neque lobortis mus hendrerit penatibus gravida curae ac, sociis laoreet venenatis est nisl cursus urna blandit, maecenas mattis torquent ullamcorper dis interdum. Fringilla aenean laoreet ultrices convallis tortor commodo euismod turpis et himenaeos, eros lacinia in rutrum nunc risus diam fusce varius. Erat dui pulvinar volutpat ullamcorper est posuere senectus, curabitur lectus facilisi ultricies nam lobortis vehicula, platea mus turpis per praesent mi.`
+                            },
+                            "4": {
+                                id: 4,
+                                fecha: "2019-9-12",
+                                leido: true,
+                                cuerpo: `avida curae ac, sociis laoreet venenatis est nisl cursus urna blandit, maecenas mattis torquent ullamcorper dis interdum. Fringilla aenean laoreet ultrices convallis tortor commodo euismod turpis et himenaeos, eros lacinia in rutrum nunc risus diam fusce varius. Erat dui pulvinar volutpat ullamcorper est posuere senectus, curabitur lectus facilisi ultricies nam lobortis vehicula, platea mus turpis per praesent mi.`
+                            },
+                            "5": {
+                                id: 5,
+                                fecha: "1999-4-3",
+                                leido: true,
+                                cuerpo: `Lorem ipsum dolor sit amet consectetur adipiscing elit lectus proin ridiculus, sapien volutpat cras nisi faucibus inceptos semper mauris ornare, porttitor tempus nunc dictum senectus gravida vitae velit duis. Placerat non vitae curae luctus himenaeos arcu aptent duis ligula sed nulla nascetur, a massa mi vulputate tellus at magnis sagittis montes convallis. Rutrum nulla nascetur natoque urna inceptos consequat arcu proin, iaculis at et facilisi mattis aliquam tempor, conubia fermentum nam per montes aliquet vivamus.
+
+Neque lobortis mus hendrerit penatibus gravida curae ac, sociis laoreet venenatis est nisl cursus urna blandit, maecenas mattis torquent ullamcorper dis interdum. Fringilla aenean laoreet ultrices convallis tortor commodo euismod turpis et himenaeos, eros lacinia in rutrum nunc risus diam fusce varius. Erat dui pulvinar volutpat ullamcorper est posuere senectus, curabitur lectus facilisi ultricies nam lobortis vehicula, platea mus turpis per praesent mi.`
+                            }
+                        },
+                        selected: null
+                    }
+                },
+                methods: {
+                    convertDate: convertDate,
+                    selectMessage() {
+                        var id = this.$route.params.id;
+                        this.selected = id;
+                    }
+                },
+                watch: {
+                    $route(to, from) {
+                        this.selectMessage()
+                    }
+                },
+                mounted() {
+                    this.selectMessage();
+                }
+            };
+            const configuracion = {
+                template: `{{> configuracion.hbs}}`
+            };
+            const agregarEgreso = {
+                template: `{{> agregarEgreso.hbs}}`
             };
 
             const router = new VueRouter({
@@ -135,6 +321,51 @@
                         }
                     },
                     {
+                        name: 'egresos',
+                        path: '/operaciones/egreso',
+                        component: operaciones,
+                        meta: {
+                            breadcrumb: [
+                                {
+                                    label: "Operaciones",
+                                    type: "fixed",
+                                    path: "/operaciones"
+                                },
+                                {
+                                    label: "Egresos",
+                                    type: "fixed",
+                                    path: "/operaciones/egreso",
+                                    active: true
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        name: 'agregarEgreso',
+                        path: '/operaciones/egreso/agregar',
+                        component: agregarEgreso,
+                        meta: {
+                            breadcrumb: [
+                                {
+                                    label: "Operaciones",
+                                    type: "fixed",
+                                    path: "/operaciones"
+                                },
+                                {
+                                    label: "Egresos",
+                                    type: "fixed",
+                                    path: "/operaciones/egreso"
+                                },
+                                {
+                                    label: "Agregar",
+                                    type: "fixed",
+                                    path: "/operaciones/egreso/agregar",
+                                    active: true
+                                }
+                            ]
+                        }
+                    },
+                    {
                         name: 'egreso',
                         path: '/operaciones/egreso/:id',
                         component: operaciones,
@@ -148,7 +379,7 @@
                                 {
                                     label: "Egreso",
                                     type: "fixed",
-                                    path: "/operaciones"
+                                    path: "/operaciones/egreso"
                                 },
                                 {
                                     label: "id",
@@ -162,13 +393,48 @@
                     {
                         name: 'bandeja',
                         path: '/bandeja',
-                        component: app,
+                        component: bandeja,
                         meta: {
                             breadcrumb: [
                                 {
                                     label: "Bandeja de mensajes",
                                     type: "fixed",
                                     path: "/bandeja",
+                                    active: true
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        name: 'mensaje',
+                        path: '/bandeja/:id',
+                        component: bandeja,
+                        meta: {
+                            breadcrumb: [
+                                {
+                                    label: "Bandeja de mensajes",
+                                    type: "fixed",
+                                    path: "/bandeja"
+                                },
+                                {
+                                    label: "id",
+                                    type: "dynamic",
+                                    path: "/bandeja/id",
+                                    active: true
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        name: 'configuracion',
+                        path: '/configuracion',
+                        component: configuracion,
+                        meta: {
+                            breadcrumb: [
+                                {
+                                    label: "Configuracion",
+                                    type: "fixed",
+                                    path: "/configuracion",
                                     active: true
                                 }
                             ]
@@ -198,17 +464,26 @@
                         {
                             label: "TEST",
                             path: '/operaciones/egreso/3'
+                        },
+                        {
+                            label: "TESTOSTERONA",
+                            path: '/operaciones/egreso/agregar'
                         }
                     ],
-                    breadcrumb: []
+                    sidebarShow: true,
+                    breadcrumb: [],
+                    query: '',
+                    searchSelected: false
                 },
                 methods: {
                     updateBreadcrumb() {
-
-                        var breadcrumb = this.$route.meta.breadcrumb;
-
-                        if(breadcrumb == undefined)
+                        
+                        if(this.$route.meta.breadcrumb == undefined){
+                            this.breadcrumb = [];
                             return;
+                        }
+
+                        var breadcrumb = JSON.parse(JSON.stringify(this.$route.meta.breadcrumb));
 
                         breadcrumb.forEach(crumb => {
                             if(crumb.type == "dynamic") {
@@ -222,6 +497,9 @@
                             }
                         });
                         this.breadcrumb = breadcrumb;
+                    },
+                    search() {
+                        console.log(this.query);
                     }
                 },
                 router: router,
@@ -234,6 +512,13 @@
                     this.updateBreadcrumb();
                 }
             });
+            
+            function convertDate(date) {
+                var dateParsed = new Date(Date.parse(date));
+                return ('0' + dateParsed.getDate()).slice(-2) + '/'
+                    + ('0' + (dateParsed.getMonth()+1)).slice(-2) + '/'
+                    + dateParsed.getFullYear();
+            }
         </script>
     </body>
 </html>

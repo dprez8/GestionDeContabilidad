@@ -1,82 +1,79 @@
 <div class="container-fluid">
-    <!-- <h1 class="mt-4">Tenemos operaciones :D</h1> !-->
+    <span>Buscar egresos e ingresos por categoría</span>
     <div class="container-fluid">
-        <span>Buscar egresos e ingresos por categoría</span>
-        <div class="container-fluid">
-            <b-dropdown id="dropdown-criterios" text="Criterio 1" class="m-md-2 custom">
-                <template v-for="(criterio, index) in criterios">
-                    <a class="dropdown-item btn" v-on:click="cambiarCriterio(criterio.id)">\{{ criterio.nombre }}</a>
-                </template>
-                <b-dropdown-item>First Action</b-dropdown-item>
-                <b-dropdown-item>Second Action</b-dropdown-item>
-                <b-dropdown-item>Third Action</b-dropdown-item>
-                <b-dropdown-item>Fourth action</b-dropdown-item>
-                <b-dropdown-item>Fifth Action</b-dropdown-item>
-                <b-dropdown-item>Sixth Action</b-dropdown-item>
-                <!-- revisar esto para ver como solucionamos el tema de que se muestren muchos elementos... podria ocurrir igual esto?-->
-            </b-dropdown>
-            <b-badge pill>?</b-badge>
-        </div>
-        <b-button-group>
-            <!-- cambiar a un dropdown si quizas vayan a haber muchas categorias por criterio -->
-            <b-button>Categoria 1</b-button>
-            <b-button>Categoria 2</b-button>
-            <b-button>Categoria 3</b-button>
-        </b-button-group>
-        <b-nav tabs fill>
-            <b-nav-item active>Egresos</b-nav-item>
-            <b-nav-item>Ingreso</b-nav-item>
-        </b-nav>
-        <div>
-            <b-table-simple small responsive striped>
-                <b-thead head-variant="dark">
-                    <b-tr>
-                        <b-th colspan="1">Egreso</b-th>
-                        <b-th colspan="1">Estado</b-th>
-                        <b-th colspan="1">Total</b-th>
-                        <b-th colspan="1">Emitido</b-th>
-                        <b-th colspan="1">Detalle</b-th>
-                    </b-tr>
-                </b-thead>
-                <b-tbody>
-                    <b-tr>
-                        <b-th class="">Egreso 3480</b-th>
-                        <b-td>
-                            <b-badge href="" variant="warning">Sin validar</b-badge>
-                        </b-td>
-                        <b-td>$6.780</b-td>
-                        <b-td>29/02/2021</b-td>
-                        <b-td>
-                            <b-button size="sm" variant="outline-primary">Ver detalle</b-button>
-                        </b-td>
-                    </b-tr>
-                    <b-tr>
-                        <b-td colspan="8">
-                        {{> egreso.hbs}}
-                        </b-td>
-                    </b-tr>
-                    <b-tr>
-                        <b-th class="">Egreso 6780</b-th>
-                        <b-td>
-                            <b-badge href="" variant="success">Validado</b-badge>
-                        </b-td>
-                        <b-td>$69.420</b-td>
-                        <b-td>31/01/2020</b-td>
-                        <b-td>
-                            <b-button size="sm" variant="outline-primary">Ver detalle</b-button>
-                        </b-td>
-                    </b-tr>
-                </b-tbody>
-                <b-tfoot>
-                    <b-tr>
-                        <b-td colspan="8" variant="secondary" class="">
-                            <b-button variant="outline-primary">
-                                <b-avatar size="sm" variant="primary" icon="plus"></b-avatar> Nuevo egreso
-                            </b-button>
-                        </b-td>
-                    </b-tr>
-                </b-tfoot>
-            </b-table-simple>
-        </div>
+        <b-dropdown id="dropdown-criterios" text="Criterio 1" class="m-md-2 custom">
+            <template v-for="(criterio, index) in criterios">
+                <a class="dropdown-item btn" v-on:click="cambiarCriterio(criterio.id)">\{{ criterio.nombre }}</a>
+            </template>
+            <b-dropdown-item>First Action</b-dropdown-item>
+            <b-dropdown-item>Second Action</b-dropdown-item>
+            <b-dropdown-item>Third Action</b-dropdown-item>
+            <b-dropdown-item>Fourth action</b-dropdown-item>
+            <b-dropdown-item>Fifth Action</b-dropdown-item>
+            <b-dropdown-item>Sixth Action</b-dropdown-item>
+            <!-- revisar esto para ver como solucionamos el tema de que se muestren muchos elementos... podria ocurrir igual esto?-->
+        </b-dropdown>
+        <b-badge pill>?</b-badge>
+    </div>
+    <b-button-group>
+        <!-- cambiar a un dropdown si quizas vayan a haber muchas categorias por criterio -->
+        <b-button>Categoria 1</b-button>
+        <b-button>Categoria 2</b-button>
+        <b-button>Categoria 3</b-button>
+    </b-button-group>
+    <b-nav tabs fill class="mt-2">
+        <b-nav-item active>Egresos</b-nav-item>
+        <b-nav-item>Ingreso</b-nav-item>
+    </b-nav>
+    <div>
+        <b-table-simple small responsive striped>
+            <b-thead head-variant="dark">
+                <b-tr>
+                    <b-th colspan="1">Egreso</b-th>
+                    <b-th colspan="1">Estado</b-th>
+                    <b-th colspan="1">Total</b-th>
+                    <b-th colspan="1">Emitido</b-th>
+                    <b-th colspan="1">Detalle</b-th>
+                </b-tr>
+            </b-thead>
+            <b-tbody>
+                <b-tr>
+                    <b-th class="">Egreso 3480</b-th>
+                    <b-td>
+                        <b-badge href="" variant="warning">Sin validar</b-badge>
+                    </b-td>
+                    <b-td>$6.780</b-td>
+                    <b-td>29/02/2021</b-td>
+                    <b-td>
+                        <b-button size="sm" variant="outline-primary">Ver detalle</b-button>
+                    </b-td>
+                </b-tr>
+                <b-tr>
+                    <b-td colspan="8">
+                    {{> egreso.hbs}}
+                    </b-td>
+                </b-tr>
+                <b-tr>
+                    <b-th class="">Egreso 6780</b-th>
+                    <b-td>
+                        <b-badge href="" variant="success">Validado</b-badge>
+                    </b-td>
+                    <b-td>$69.420</b-td>
+                    <b-td>31/01/2020</b-td>
+                    <b-td>
+                        <b-button size="sm" variant="outline-primary">Ver detalle</b-button>
+                    </b-td>
+                </b-tr>
+            </b-tbody>
+            <b-tfoot>
+                <b-tr>
+                    <b-td colspan="8" variant="secondary" class="">
+                        <b-button variant="outline-primary">
+                            <b-avatar size="sm" variant="primary" icon="plus"></b-avatar> Nuevo egreso
+                        </b-button>
+                    </b-td>
+                </b-tr>
+            </b-tfoot>
+        </b-table-simple>
     </div>
 </div>

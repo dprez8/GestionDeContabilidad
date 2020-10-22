@@ -1,0 +1,26 @@
+<div class="row">
+    <b-table small responsive striped class="mb-0" :fields="campos_egreso" :items="items_egreso" head-variant="dark">
+        <template #cell(verified)="data">
+            <b-badge v-if="data.verified" variant="warning">Sin validar</b-badge>
+            <b-badge v-else variant="success">Validado</b-badge>
+        </template>
+
+        <template #cell(total)="data">
+            \{{ data.total }}
+        </template>
+        <template #cell(show_details)="data">
+            <b-button size="sm" v-on:click="data.toggleDetails" variant="outline-primary" style="min-width:110px">
+                \{{ data.detailsShowing ? "Ocultar" : "Mostrar"}} detalle
+            </b-button>
+        </template>
+        <template #row-details="data">
+            {{>egreso.hbs }}
+        </template>
+    </b-table>
+
+    <b-modal id="modal-asociar-categoria" centered title="Asociar a categoría">
+        <asociar-categoria></asociar-categoria>
+    </b-modal>
+
+    <b-button class="m-2" v-b-modal.modal-asociar-categoria>Asociar a categoría</b-button>
+</div>
