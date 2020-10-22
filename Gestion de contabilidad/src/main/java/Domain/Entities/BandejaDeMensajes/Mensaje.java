@@ -8,16 +8,22 @@ import java.time.LocalDate;
 import javax.persistence.*;
 
 import Domain.Entities.Usuarios.Usuario;
+import com.google.gson.annotations.Expose;
+
 @Entity
 @Table(name="mensaje")
 public class Mensaje{
+	@Expose
 	@Id
 	@Column(name="mensaje_id")
 	private int mensajeId;
+	@Expose
 	@Column(columnDefinition = "DATE")
     private LocalDate fechaCreacion;
+	@Expose
 	@Column
     private String cuerpo;
+	@Expose
 	@Column
 	public boolean leido;	
 	@ManyToOne

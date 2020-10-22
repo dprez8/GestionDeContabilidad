@@ -1,16 +1,15 @@
 package Domain.Entities.DatosDeOperaciones;
 
+import Domain.Entities.EntidadPersistente.EntidadPersistente;
+
 import java.time.LocalDate;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "pago")
-public class Pago {
+public class Pago extends EntidadPersistente {
 
-	@Id
-	@Column(name="pago_id")
-	private int pagoId;
 	@Column(name = "fecha_pago",columnDefinition = "DATE")
 	private LocalDate fechaPago;
 	@Column(name="numero_asociado")
@@ -20,22 +19,13 @@ public class Pago {
 	private MedioDePago medioDePago;
 
 
-	protected Pago() {
+	public Pago() {
 	}
 
-	public Pago(int pagoId, LocalDate fechaPago, int numeroAsociado, MedioDePago medioDePago) {
-		this.pagoId = pagoId;
+	public Pago(LocalDate fechaPago, int numeroAsociado, MedioDePago medioDePago) {
 		this.fechaPago = fechaPago;
 		this.numeroAsociado = numeroAsociado;
 		this.medioDePago = medioDePago;
-	}
-
-	public int getPagoId() {
-		return pagoId;
-	}
-
-	public void setPagoId(int pagoId) {
-		this.pagoId = pagoId;
 	}
 
 	public LocalDate getFechaPago() {

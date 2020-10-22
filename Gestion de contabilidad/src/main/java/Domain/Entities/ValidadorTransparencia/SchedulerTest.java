@@ -38,9 +38,11 @@ public class SchedulerTest {
         TipoDocumento FacturaA = new TipoDocumento("Factura A");
 
         DocumentoComercial unDocumento = new DocumentoComercial(FacturaA, 11111);
-
-        MedioDePago efectivo = new MedioDePago("Rapi Pago","Ticket","rapipago");
-        Pago unPago = new Pago(1,LocalDate.of(2020, Month.AUGUST,14),1231231,efectivo);
+        
+        TipoPago dineroEnCuenta= new TipoPago();
+        MedioDePago rapiPago = new MedioDePago("rapipago",dineroEnCuenta);
+        MedioDePago efectivo = new MedioDePago("Ticket",dineroEnCuenta);
+        Pago unPago = new Pago(LocalDate.of(2020, Month.AUGUST,14),1231231,efectivo);
 
         Proveedor lautaroRobles = new Proveedor("Lautaro Robles", 41424242);
         Proveedor lautaroIturregui = new Proveedor("Lautaro Iturregui", 2224222);
@@ -95,7 +97,7 @@ public class SchedulerTest {
         unaCompra.addPresupuestos(primerPresupuesto,segundoPresupuesto);
 
         /**Inicio scheduler para validar el egreso*/
-        Scheduler.setPeriodo(100);
+        Scheduler.setPeriodo(10000);
         Scheduler.arrancarTarea(unaEntidad,validador);
 
         /**Solo es necesario un revisor para ver los mensajes*/
