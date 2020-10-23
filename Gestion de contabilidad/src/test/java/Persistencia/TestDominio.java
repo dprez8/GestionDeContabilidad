@@ -9,6 +9,7 @@ import Domain.Entities.Organizacion.EntidadBase;
 import Domain.Entities.Organizacion.EntidadJuridica;
 import Domain.Entities.Usuarios.Estandar;
 import Domain.Entities.Usuarios.Usuario;
+import Domain.Entities.ValidadorTransparencia.*;
 import Domain.Exceptions.contraseniaCorta;
 import Domain.Exceptions.contraseniaMuyComun;
 import Domain.Exceptions.repiteContraseniaEnMailOUsuario;
@@ -22,6 +23,8 @@ import org.junit.Test;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class TestDominio {
 
@@ -33,6 +36,7 @@ public class TestDominio {
     private Repositorio<Producto> repoProductos;
     private Repositorio<Pago> repoPagos;
     private Repositorio<MedioDePago> repoMedioDePagos;
+    private Repositorio<TipoPago> repoTipoPago;
     private Repositorio<Proveedor> repoProveedores;
     private Repositorio<DocumentoComercial> repoDocumentos;
     private Repositorio<TipoDocumento> repoTipoDocumento;
@@ -52,6 +56,7 @@ public class TestDominio {
         this.repoDocumentos      = new Repositorio<>(new DaoHibernate<>(DocumentoComercial.class));
         this.repoTipoDocumento   = new Repositorio<>(new DaoHibernate<>(TipoDocumento.class));
         this.repoPresupuestos    = new Repositorio<>(new DaoHibernate<>(Presupuesto.class));
+        this.repoTipoPago        = new Repositorio<>(new DaoHibernate<>(TipoPago.class));
     }
 
     @Test
@@ -126,12 +131,17 @@ public class TestDominio {
         this.repoTipoDocumento.agregar(FacturaA);
         this.repoDocumentos.agregar(unDocumento);
 
-        MedioDePago efectivo = new MedioDePago("Ticket","rapipago");
+        TipoPago ticket = new TipoPago();
+        ticket.setTipoPago("Ticket");
+        MedioDePago efectivo = new MedioDePago();
+        efectivo.setMedioDePago("efectivo");
+        efectivo.setTipoPago(ticket);
         Pago unPago = new Pago();
         unPago.setMedioDePago(efectivo);
         unPago.setFechaPago(LocalDate.of(2020, Month.AUGUST,14));
         unPago.setNumeroAsociado(1231231);
 
+        this.repoTipoPago.agregar(ticket);
         this.repoMedioDePagos.agregar(efectivo);
         this.repoPagos.agregar(unPago);
 
@@ -215,7 +225,7 @@ public class TestDominio {
         Assert.assertEquals(0,unaCompra.getId());
         Assert.assertEquals(0,primerPresupuesto.getEgresoAsociado().getId());
         Assert.assertEquals(0,segundoPresupuesto.getEgresoAsociado().getId());
-        Assert.assertEquals("Ticket",unaCompra.getPago().getMedioDePago().getTipoPago());
+        Assert.assertEquals("Ticket",unaCompra.getPago().getMedioDePago().getTipoPago().getTipoPago());
         Assert.assertEquals("Factura A",unaCompra.getDocumento().getTipo().getNombreTipoDeDocumento());
         Assert.assertEquals("razonSocial",pepsiCompra.getRazonSocial());
         Assert.assertEquals("4GB DDR5",unaCompra.getItems().get(1).getProducto().getNombreProducto());
@@ -224,6 +234,26 @@ public class TestDominio {
         Assert.assertEquals(1,unaCompra.getPresupuestos().get(1).getId());
         Assert.assertEquals(1,unaCompra.getRevisores().get(0).getId());
 
+    }
+
+    @Test
+    public void persistirUnMensajeAPepe (){
+        EntidadJuridica pepsi = this.repoEntidadJuridica.buscar(1);
+
+        /**Creacion de los validadores*/
+        ValidarCantidadMinima validacionMinima = new ValidarCantidadMinima(1);
+        ValidarConPresupuesto validacionPresupuesto = new ValidarConPresupuesto();
+        ValidarMenorValor validacionMenorValor = new ValidarMenorValor();
+
+        ValidadorDeTransparencia validador = new ValidadorDeTransparencia(validacionMinima,validacionPresupuesto,validacionMenorValor);
+
+        //Scheduler.setPeriodo(0);
+        //Scheduler.arrancarTarea(pepsi,validador);
+
+        List<Egreso> egresos = pepsi.getEgresos().stream().filter(a -> a.isValidado() == false).collect(Collectors.toList()); //Lo egresos que no han sido validados o no pasaron las pruebas anteriormente
+        egresos.forEach(egreso -> validador.validarEgreso(egreso));
+
+        Assert.assertEquals(true,pepsi.getEgresos().get(0).isValidado());
     }
 
 }

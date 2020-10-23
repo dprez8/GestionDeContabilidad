@@ -11,4 +11,12 @@ import Domain.Entities.EntidadPersistente.EntidadPersistente;
 public class TipoPago extends EntidadPersistente {
 	@Column(name="tipo_pago")
 	private String tipoPago;
+
+	public String getTipoPago() {
+		return tipoPago;
+	}
+
+	public void setTipoPago(String tipoPago) {
+		this.tipoPago = tipoPago;
+	}
 }

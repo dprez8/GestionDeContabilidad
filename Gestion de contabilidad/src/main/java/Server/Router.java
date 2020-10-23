@@ -41,7 +41,7 @@ public class Router {
         Spark.get("/api/proveedor",proveedorController::crearProveedor);
         Spark.get("/api/medios",medioController::listadoMediosDePago);
         Spark.get("/api/medio",medioController::listadoTiposDePago);
-        Spark.get("api/bandeja",bandejaDeMensajesRestController::mostrarMensajes);
-
+        //Spark.get("api/bandeja",bandejaDeMensajesRestController::mostrarMensajes);
+        Spark.get("api/bandeja/:usuarioId",bandejaDeMensajesRestController::mostrarMensajes);
     }
 }

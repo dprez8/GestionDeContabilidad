@@ -18,9 +18,12 @@ public class MedioDePago extends EntidadPersistente {
     private TipoPago tipoPago;
 
 
+	public MedioDePago() {
 
-	public MedioDePago(String medio_id,TipoPago tipoPago) {
-		this.medioDePago= medio_id;
+	}
+
+	public MedioDePago(String medio,TipoPago tipoPago) {
+		this.medioDePago= medio;
 		this.tipoPago= tipoPago;
 	}
 

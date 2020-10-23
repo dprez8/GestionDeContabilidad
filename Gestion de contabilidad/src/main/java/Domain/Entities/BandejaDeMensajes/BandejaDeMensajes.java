@@ -14,7 +14,11 @@ public class BandejaDeMensajes{
     private List<Mensaje> mensajes = new ArrayList<Mensaje>();
     private Usuario usuario;
 	private Repositorio<Mensaje> repoMensajes;
-    
+
+	public BandejaDeMensajes(){
+
+    }
+
     public BandejaDeMensajes(Usuario usuario){
 		this.usuario=usuario;
 		this.repoMensajes = new Repositorio<Mensaje>(new DaoHibernate<Mensaje>(Mensaje.class));
@@ -23,7 +27,7 @@ public class BandejaDeMensajes{
     public void crearMensaje(String cuerpo){
         Mensaje msg = new Mensaje(cuerpo,this.usuario);
         mensajes.add(msg);
-        //this.repoMensajes.agregar(msg);
+        this.repoMensajes.agregar(msg);
     }
 
     public void addMensajesString(List<String> variosMensajes){

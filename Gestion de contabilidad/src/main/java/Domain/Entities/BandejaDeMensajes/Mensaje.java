@@ -1,31 +1,30 @@
 package Domain.Entities.BandejaDeMensajes;
 
+import Domain.Entities.EntidadPersistente.EntidadPersistente;
 import Domain.Entities.Usuarios.Usuario;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 
 import javax.persistence.*;
 
-import Domain.Entities.Usuarios.Usuario;
 import com.google.gson.annotations.Expose;
 
 @Entity
 @Table(name="mensaje")
-public class Mensaje{
-	@Expose
-	@Id
-	@Column(name="mensaje_id")
-	private int mensajeId;
+public class Mensaje extends EntidadPersistente {
+
 	@Expose
 	@Column(columnDefinition = "DATE")
     private LocalDate fechaCreacion;
+
 	@Expose
 	@Column
     private String cuerpo;
+
 	@Expose
 	@Column
 	public boolean leido;	
+
 	@ManyToOne
 	@JoinColumn(name="usuario_id", referencedColumnName = "id")
 	Usuario usuario;
@@ -35,6 +34,9 @@ public class Mensaje{
         this.cuerpo = cuerpo;
         this.usuario = usuario;
     }
+
+    public Mensaje(){
+	}
 
     public LocalDate getFecha() {
         return fechaCreacion;

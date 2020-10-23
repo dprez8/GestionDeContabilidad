@@ -1,6 +1,7 @@
 package Domain.Controllers;
 
 
+import Domain.Controllers.AdaptersJson.LocalDateAdapter;
 import Domain.Entities.BandejaDeMensajes.Mensaje;
 import Domain.Entities.Usuarios.Estandar;
 import Domain.Entities.Usuarios.Usuario;
@@ -29,11 +30,16 @@ public class BandejaDeMensajesRestController {
 
     public String mostrarMensajes(Request request, Response response) {
         /**anotar los campos que se debe serializar con @Expose**/
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        Gson gson = new GsonBuilder()
+                .excludeFieldsWithoutExposeAnnotation()
+                .registerTypeAdapter(LocalDateAdapter.class, new LocalDateAdapter().nullSafe())
+                .create();
 
         BandejaResponse bandejaResponse;
 
-        Estandar usuario = (Estandar) asignarUsuarioSiEstaLogueado(request);
+        //Estandar usuario = (Estandar) asignarUsuarioSiEstaLogueado(request);
+
+        Estandar usuario = (Estandar) asignarUsuarioPorRequestParams(request);
 
         response.type("application/json");
 
@@ -88,6 +94,16 @@ public class BandejaDeMensajesRestController {
         bandejaResponse.usuarioId   = estandar.getId();
         bandejaResponse.mensajes    = estandar.getBandejaDeMensajes().getMensajes();
         return bandejaResponse;
+    }
+
+    private Usuario asignarUsuarioPorRequestParams(Request request) {
+        try {
+            Usuario usuario =  this.repoUsuarios.buscar(new Integer(request.params("usuarioId")));
+            return usuario;
+        }
+        catch (NullPointerException ex) {
+            return null;
+        }
     }
 
     private class BandejaResponse {
