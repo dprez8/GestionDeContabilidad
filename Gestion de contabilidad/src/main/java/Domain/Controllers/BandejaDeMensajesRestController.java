@@ -13,6 +13,7 @@ import com.google.gson.annotations.Expose;
 import spark.Request;
 import spark.Response;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,7 +33,7 @@ public class BandejaDeMensajesRestController {
         /**anotar los campos que se debe serializar con @Expose**/
         Gson gson = new GsonBuilder()
                 .excludeFieldsWithoutExposeAnnotation()
-                .registerTypeAdapter(LocalDateAdapter.class, new LocalDateAdapter().nullSafe())
+                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())
                 .create();
 
         BandejaResponse bandejaResponse;
