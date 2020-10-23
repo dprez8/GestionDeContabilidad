@@ -8,6 +8,7 @@
         <link type="text/css" rel="stylesheet" href="http://{{ ip }}/css/simple-sidebar.css"/>
         <link type="text/css" rel="stylesheet" href="http://{{ ip }}/css/dropdown.css"/>
         <link type="text/css" rel="stylesheet" href="http://{{ ip }}/css/transitions.css"/>
+        <link type="text/css" rel="stylesheet" href="http://{{ ip }}/css/criterio.css"/>
         <!-- Panel -->
         <div id="panel">
             <!-- Navbar -->
@@ -111,15 +112,30 @@
             const inicio = {
                 template: `{{> inicio.hbs}}`
             };
+            const criterio = {
+                name: 'criterio',
+                template: `{{> criterio.hbs}}`,
+                props: {
+                    criterio: Object,
+                    seleccionoCategoria: Function
+                },
+                data() {
+                    return {
+                        isOpen: false
+                    }
+                }
+            };
             const asociarCategoria = {
                 template: `{{> asociarCategoria.hbs}}`,
                 data() {
                     return {
                         criterios: [
                             {
+                                id: "1",
                                 name: "Alcance del proyecto",
                                 criterios: [
                                     {
+                                        id: "2",
                                         name: "Tamaño del proyecto",
                                         criterios: [],
                                         categorias: [
@@ -142,40 +158,57 @@
                                 ]
                             },
                             {
-                                name: "Cliente",
-                                criterios: [],
-                                categorias: [
+                                id: "3",
+                                name: "Clientes",
+                                criterios: [
                                     {
-                                        name: "Comafi"
+                                        id: "4",
+                                        name: "Mayoristas",
+                                        criterios: [],
+                                        categorias: [
+                                            {
+                                                name: "Carrefour"
+                                            },
+                                            {
+                                                name: "Coto"
+                                            },
+                                            {
+                                                name: "La Serenisima"
+                                            }
+                                        ]
                                     },
                                     {
-                                        name: "Santander"
+                                        id: "5",
+                                        name: "Minoristas",
+                                        criterios: [],
+                                        categorias: [
+                                            {
+                                                name: "Pollos Hermanos"
+                                            },
+                                            {
+                                                name: "Banco comafi"
+                                            }
+                                        ]
                                     }
-                                ]
-                            },
-                        ]
+                                ],
+                                categorias: []
+                            }
+                        ],
+                        categoriasSeleccionadas: []
                     }
                 },
                 methods: {
-                    construirArbol() {
-                        /*
-                        criterio[0] -> name
-                        criterio[0] -> criterios not empty
-                        criterio[0] -> criterio[0] -> name 
-                        criterio[0] -> criterio[0] -> criterios is empty
-                        criterio[0] -> criterio[0] -> categorias until undefined
-                        criterio[0] -> criterio[1] -> is undefined
-                        criterio[0] -> categorias until undefined 
-                        criterio[1] -> not undefined
-                        criterio[1] -> name
-                        criterio[1] -> criterios is empty
-                        criterio[1] -> categorias until undefined
-                        criterio[2] -> is undefined
-                        */
-
-                        var actualNode = undefined;
-                        var prevNode = undefined;
+                    seleccionoCategoria(criterio, selected) {
+                        if(selected)
+                            this.categoriasSeleccionadas.push(criterio);
+                        else {
+                            var index = this.categoriasSeleccionadas.indexOf(criterio);
+                            this.categoriasSeleccionadas.splice(index, 1);
+                        }
                     }
+                },
+                components: {
+                    'criterio': criterio
                 }
             };
             const operaciones = {
@@ -225,7 +258,7 @@
                 components: {
                     'asociar-categoria': asociarCategoria
                 },
-                template: `{{> egreso-2.hbs}}`
+                template: `{{> operaciones.hbs}}`
             };
             const bandeja = {
                 template: `{{> bandeja.hbs}}`,
@@ -292,7 +325,22 @@ Neque lobortis mus hendrerit penatibus gravida curae ac, sociis laoreet venenati
                 template: `{{> configuracion.hbs}}`
             };
             const agregarEgreso = {
-                template: `{{> agregarEgreso.hbs}}`
+                template: `{{> agregarEgreso.hbs}}`,
+                data() {
+                    return {
+                        campos_itemsegreso: [
+                                { key: 'name', label: 'Producto' },
+                                { key: 'quantity', label: 'Cantidad' },
+                                { key: 'price', label: 'Precio' },
+                        ],
+                        items_itemsegreso: [
+                            { name: 'Un producto', quantity: 3, price: 1234 },
+                        ]
+                    }
+                },
+                components: {
+                    'asociar-categoria': asociarCategoria
+                }    
             };
 
             const router = new VueRouter({
@@ -460,14 +508,6 @@ Neque lobortis mus hendrerit penatibus gravida curae ac, sociis laoreet venenati
                         {
                             label: "Bandeja de mensajes",
                             path: '/bandeja'
-                        },
-                        {
-                            label: "TEST",
-                            path: '/operaciones/egreso/3'
-                        },
-                        {
-                            label: "TESTOSTERONA",
-                            path: '/operaciones/egreso/agregar'
                         }
                     ],
                     sidebarShow: true,

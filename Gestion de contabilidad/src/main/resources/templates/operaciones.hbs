@@ -1,10 +1,7 @@
-<div class="container-fluid">
-    <span>Buscar egresos e ingresos por categoría</span>
-    <div class="container-fluid">
-        <b-dropdown id="dropdown-criterios" text="Criterio 1" class="m-md-2 custom">
-            <template v-for="(criterio, index) in criterios">
-                <a class="dropdown-item btn" v-on:click="cambiarCriterio(criterio.id)">\{{ criterio.nombre }}</a>
-            </template>
+<div>
+    <div class="py-2">
+        <p>Buscar egresos e ingresos por categoría</p>
+        <b-dropdown id="dropdown-criterios" text="Criterio 1">
             <b-dropdown-item>First Action</b-dropdown-item>
             <b-dropdown-item>Second Action</b-dropdown-item>
             <b-dropdown-item>Third Action</b-dropdown-item>
@@ -15,65 +12,43 @@
         </b-dropdown>
         <b-badge pill>?</b-badge>
     </div>
-    <b-button-group>
-        <!-- cambiar a un dropdown si quizas vayan a haber muchas categorias por criterio -->
-        <b-button>Categoria 1</b-button>
-        <b-button>Categoria 2</b-button>
-        <b-button>Categoria 3</b-button>
-    </b-button-group>
+    <div>
+        <b-badge pill class="mr-1">Categoria 1</b-badge>
+        <b-badge pill class="mr-1">Categoria 2</b-badge>
+        <b-badge pill class="mr-1">Categoria 3</b-badge>
+    </div>
     <b-nav tabs fill class="mt-2">
         <b-nav-item active>Egresos</b-nav-item>
         <b-nav-item>Ingreso</b-nav-item>
     </b-nav>
-    <div>
-        <b-table-simple small responsive striped>
-            <b-thead head-variant="dark">
-                <b-tr>
-                    <b-th colspan="1">Egreso</b-th>
-                    <b-th colspan="1">Estado</b-th>
-                    <b-th colspan="1">Total</b-th>
-                    <b-th colspan="1">Emitido</b-th>
-                    <b-th colspan="1">Detalle</b-th>
-                </b-tr>
-            </b-thead>
-            <b-tbody>
-                <b-tr>
-                    <b-th class="">Egreso 3480</b-th>
-                    <b-td>
-                        <b-badge href="" variant="warning">Sin validar</b-badge>
-                    </b-td>
-                    <b-td>$6.780</b-td>
-                    <b-td>29/02/2021</b-td>
-                    <b-td>
-                        <b-button size="sm" variant="outline-primary">Ver detalle</b-button>
-                    </b-td>
-                </b-tr>
-                <b-tr>
-                    <b-td colspan="8">
-                    {{> egreso.hbs}}
-                    </b-td>
-                </b-tr>
-                <b-tr>
-                    <b-th class="">Egreso 6780</b-th>
-                    <b-td>
-                        <b-badge href="" variant="success">Validado</b-badge>
-                    </b-td>
-                    <b-td>$69.420</b-td>
-                    <b-td>31/01/2020</b-td>
-                    <b-td>
-                        <b-button size="sm" variant="outline-primary">Ver detalle</b-button>
-                    </b-td>
-                </b-tr>
-            </b-tbody>
-            <b-tfoot>
-                <b-tr>
-                    <b-td colspan="8" variant="secondary" class="">
-                        <b-button variant="outline-primary">
-                            <b-avatar size="sm" variant="primary" icon="plus"></b-avatar> Nuevo egreso
-                        </b-button>
-                    </b-td>
-                </b-tr>
-            </b-tfoot>
-        </b-table-simple>
+    <div class="border">
+        <b-table small responsive striped class="mb-0" :fields="campos_egreso" :items="items_egreso" head-variant="dark">
+            <template #cell(verified)="data">
+                <b-badge v-if="data.verified" variant="warning">Sin validar</b-badge>
+                <b-badge v-else variant="success">Validado</b-badge>
+            </template>
+
+            <template #cell(total)="data">
+                \{{ data.total }}
+            </template>
+            <template #cell(show_details)="data">
+                <b-button size="sm" v-on:click="data.toggleDetails" variant="outline-primary" style="min-width:110px">
+                    \{{ data.detailsShowing ? "Ocultar" : "Mostrar"}} detalle
+                </b-button>
+            </template>
+            <template #row-details="data">
+                {{> egreso.hbs}}
+            </template>
+        </b-table>
+        <b-button class="m-2" variant="outline-primary" to="/operaciones/egreso/agregar">
+            <b-icon-plus></b-icon-plus>
+            Agregar Egreso
+        </b-button>
     </div>
+    
+    <b-modal id="modal-asociar-categoria" scrollable centered title="Asociar a categoría">
+        <asociar-categoria></asociar-categoria>
+    </b-modal>
+
+    <b-button class="mt-2" v-b-modal.modal-asociar-categoria>Asociar a categoría</b-button>
 </div>

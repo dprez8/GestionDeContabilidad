@@ -1,0 +1,6 @@
+.criterio-toggle > svg {
+    transition: 0.25s transform;
+}
+.criterio-toggle.not-collapsed > svg {
+    transform: rotate(90deg);
+}
