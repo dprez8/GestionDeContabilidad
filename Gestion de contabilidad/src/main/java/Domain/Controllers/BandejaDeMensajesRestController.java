@@ -38,9 +38,9 @@ public class BandejaDeMensajesRestController {
 
         BandejaResponse bandejaResponse;
 
-        //Estandar usuario = (Estandar) asignarUsuarioSiEstaLogueado(request);
+        Estandar usuario = (Estandar) asignarUsuarioSiEstaLogueado(request);
 
-        Estandar usuario = (Estandar) asignarUsuarioPorRequestParams(request);
+        //Estandar usuario = (Estandar) asignarUsuarioPorRequestParams(request);
 
         response.type("application/json");
 
