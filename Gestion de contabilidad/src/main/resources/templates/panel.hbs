@@ -127,6 +127,10 @@
             };
             const asociarCategoria = {
                 template: `{{> asociarCategoria.hbs}}`,
+                props: {
+                    confirmarAccion: Function,
+                    cancelarAccion: Function
+                },
                 data() {
                     return {
                         criterios: [
@@ -418,33 +422,50 @@ Neque lobortis mus hendrerit penatibus gravida curae ac, sociis laoreet venenati
                         proveedoresSelect: [
                             { value: 1, text: "Roberto Samuel"}
                         ],
-                        proveedorAAgregar: null,
                         mediosDePagoSelect: [
-                            { value: 1, text: "Tarjeta de Débito"},
-                            { value: 2, text: "Tarjeta de Crédito"},
-                            { value: 3, text: "Cheque"},
-                            { value: 4, text: "Efectivo"},
+                            { value: 1, text: "Tarjeta de Débito", type: "credit_card"},
+                            { value: 2, text: "Tarjeta de Crédito", type: "debit_card"},
+                            { value: 3, text: "Cheque", type: "cheque"},
+                            { value: 4, text: "Efectivo", type: "cash"}
                         ],
                         mediosDePagoType: {
                             credit_card: []
-                        }
+                        },
+                        tipoDocumentoSelect: [
+                            { value: 1, text: "Factura A"},
+                            { value: 2, text: "Factura B"},
+                            { value: 3, text: "Factura C"}
+                        ],
+                        proveedorAAgregar: null,
+                        categoriasAAsociar: [],
                     }
                 },
                 methods: {
                     confirmar() {
-                        console.log(this.items_egreso.items);
+                        if(this.proveedorAAgregar != null) {
+                            // Hay que agregar un proveedor antes de agregar el egreso
+                            console.log("POST '/api/proveedor'");
+                            console.log(JSON.stringify(this.proveedorAAgregar, null, 4));
+                        }
 
-                        this.addItem();
+                        console.log("POST '/api/operaciones/egreso'");
+                        console.log(JSON.stringify(this.egreso, null, 4));
+
+                        if(this.categoriasAAsociar.length) {
+                            // Hay que crear el egreso y luego asociarlo a estas categorias
+                            console.log("POST 'nose xd'");
+                            console.log(JSON.stringify(this.categoriasAAsociar, null, 4));
+                        }
                     },
                     checkIfAddItem() {
-                        var items = this.items_egreso.items;
+                        var items = this.egreso.items;
                         var lastItemIndex = items.length - 1;
                         var lastItem = items[lastItemIndex];
                         
-                        if (lastItem == undefined   ||
-                            lastItem.name != ""     ||
-                            lastItem.quantity != "" ||
-                            lastItem.price != ""
+                        if (lastItem == undefined         ||
+                            lastItem.nombreProducto != "" ||
+                            lastItem.cantidad != ""       ||
+                            lastItem.precio != ""
                         ) { 
                             return true;
                         }
@@ -452,11 +473,11 @@ Neque lobortis mus hendrerit penatibus gravida curae ac, sociis laoreet venenati
                     },
                     addItem() {
                         if(this.checkIfAddItem()) {
-                            this.items_egreso.items.push({ name: "", quantity: "", price: "" });
+                            this.egreso.items.push({ nombreProducto: "", cantidad: "", precio: "" });
                         }
                     },
                     deleteItem(index) {
-                        this.items_egreso.items.splice(index, 1);
+                        this.egreso.items.splice(index, 1);
                         this.addItem();
                     },
                     confirmarNuevoProveedor(data) {
@@ -468,15 +489,15 @@ Neque lobortis mus hendrerit penatibus gravida curae ac, sociis laoreet venenati
                     },
                     cancelarNuevoProveedor() {
                         this.$bvModal.hide('modal-agregar-proveedor');
-                        
-                        if (lastItem == undefined   ||
-                            lastItem.name != ""     ||
-                            lastItem.quantity != "" ||
-                            lastItem.price != ""
-                        ) { 
-                            return true;
-                        }
-                        return false;
+                    },
+                    confirmarAsociarCategorias(data) {
+                        this.$bvModal.hide('modal-asociar-categoria');
+                        console.log(data);
+
+                        this.categoriasAAsociar = data;
+                    },
+                    cancelarAsociarCategorias() {
+                        this.$bvModal.hide('modal-asociar-categoria');
                     }
                 },
                 components: {
@@ -485,9 +506,7 @@ Neque lobortis mus hendrerit penatibus gravida curae ac, sociis laoreet venenati
                 },
                 watch: {
                    'egreso.medioDePago.id': function(medioDePagoId) {
-                       switch (medioDePagoId) {
-                           
-                       }
+                       
                    } 
                 } 
             };
