@@ -29,7 +29,7 @@ public class DocumentoComercialController {
 		        tiposDocumento= this.repoTipo.buscarTodos();
 		        tipoRespuesta.code = 200;
 		        tipoRespuesta.message = "Tipos de documento cargados exitosamente";
-		        tipoRespuesta.tiposDocumento= tiposDocumento;
+		        tipoRespuesta.data= tiposDocumento;
 		        response.status(200);
 	        }
 	        catch (NullPointerException ex){
@@ -56,6 +56,6 @@ public class DocumentoComercialController {
 	public class TipoDocumentoRespuesta{
 		public int code;
 		public String message;
-		public List<TipoDocumento> tiposDocumento;
+		public List<TipoDocumento> data;
 	}
 }

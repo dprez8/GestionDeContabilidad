@@ -4,12 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.persistence.NoResultException;
+
 import com.google.gson.Gson;
 
+import Domain.Controllers.MedioDePagoController.MedioDePagoRespuesta;
 import Domain.Entities.ApiPaises.Ciudad;
 import Domain.Entities.ApiPaises.Pais;
 import Domain.Entities.ApiPaises.Provincia;
+import Domain.Entities.ClasesParciales.CiudadDato;
+import Domain.Entities.ClasesParciales.PaisDato;
+import Domain.Entities.ClasesParciales.ProveedorDato;
 import Domain.Entities.ClasesParciales.ProveedorNuevo;
+import Domain.Entities.DatosDeOperaciones.MedioDePago;
 import Domain.Entities.DatosDeOperaciones.Proveedor;
 import Domain.Repositories.Repositorio;
 import Domain.Repositories.Daos.DaoHibernate;
@@ -22,6 +29,59 @@ public class ProveedorController {
 	private Repositorio<Pais> repoPais;
 	private Repositorio<Provincia> repoProvincia;
 	private Repositorio<Ciudad> repoCiudad;
+	
+	
+	public String listadoProveedores(Request request, Response response){
+		
+		 	Gson gson = new Gson();
+	        List<Proveedor> proveedores =new ArrayList<>();
+	        ProveedorResponse proveedorRespuesta= new ProveedorResponse();
+	   	 	this.repoProveedor = new Repositorio<Proveedor>(new DaoHibernate<Proveedor>(Proveedor.class));
+	   	 
+	   	 	
+	        try {
+		        proveedores= this.repoProveedor.buscarTodos();
+		        
+		        List<ProveedorDato> proveedoresAEnviar = proveedores.stream().map(this::mapProveedor).collect(Collectors.toList());
+		        proveedorRespuesta.code = 200;
+		        proveedorRespuesta.message = "Proveedorescargados exitosamente";
+		        proveedorRespuesta.data= proveedoresAEnviar;
+		        response.status(200);
+	        }
+	        catch (NullPointerException ex){
+	        	proveedorRespuesta.code=404;
+	        	proveedorRespuesta.message="No se logró cargar los proveedores";
+	            response.status(404);
+	         }
+	        
+	        catch(NoResultException nf){
+	        	proveedorRespuesta.code=404;
+	        	proveedorRespuesta.message="Ningun proveedor registrado, por favor crearlo";
+	            response.status(404);
+	        }
+	       
+	       
+	        String jsonProveedores = gson.toJson(proveedorRespuesta);
+	       
+	        response.type("application/json");
+	        response.body(jsonProveedores);
+
+	        return response.body();
+	}
+
+	public class ProveedorResponse{
+		public int code;
+		public String message;
+		public List<ProveedorDato> data;
+	}
+	
+	public ProveedorDato mapProveedor(Proveedor proveedor) { 
+        ProveedorDato proveedorDato=new ProveedorDato();
+		proveedorDato.id = proveedor.getProveedorId();
+        proveedorDato.nombre = proveedor.getNombre();
+        
+       return proveedorDato;
+    }
 	
 	
 	public String crearProveedor(Request request,Response response){
@@ -59,9 +119,9 @@ public class ProveedorController {
 		this.repoProvincia = new Repositorio<Provincia>(new DaoHibernate<Provincia>(Provincia.class));
 		this.repoCiudad = new Repositorio<Ciudad>(new DaoHibernate<Ciudad>(Ciudad.class));
 		
-		Pais paisElegido = repoPais.buscar(proveedorNuevo.paisId);
-		Provincia provinciaElegida = repoProvincia.buscar(proveedorNuevo.provinciaId);
-		Ciudad ciudadElegida = repoCiudad.buscar(proveedorNuevo.ciudadId);
+		Pais paisElegido = repoPais.buscar(proveedorNuevo.pais);
+		Provincia provinciaElegida = repoProvincia.buscar(proveedorNuevo.provincia);
+		Ciudad ciudadElegida = repoCiudad.buscar(proveedorNuevo.ciudad);
 		
 
 		Proveedor proveedor= new Proveedor(proveedorNuevo.nombre,proveedorNuevo.documento);

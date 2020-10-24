@@ -57,7 +57,6 @@ public class OperacionesRestController {
     private Repositorio<Producto> repoProductos;
     private Repositorio<Pago> repoPagos;
     private Repositorio<MedioDePago> repoMedioDePagos;
-    private Repositorio<TipoPago> repoTipoPago;
     private Repositorio<Proveedor> repoProveedores;
     private Repositorio<DocumentoComercial> repoDocumentos;
     private Repositorio<TipoDocumento> repoTipoDocumento;
@@ -71,7 +70,6 @@ public class OperacionesRestController {
         this.repoProveedores     = new Repositorio<>(new DaoHibernate<>(Proveedor.class));
         this.repoDocumentos      = new Repositorio<>(new DaoHibernate<>(DocumentoComercial.class));
         this.repoTipoDocumento   = new Repositorio<>(new DaoHibernate<>(TipoDocumento.class));
-        this.repoTipoPago        = new Repositorio<>(new DaoHibernate<>(TipoPago.class));
     }
 
 
@@ -95,7 +93,7 @@ public class OperacionesRestController {
 
             Pago pago = new Pago();
             pago.setMedioDePago(medioDePago);
-            pago.setDato(egresoRequest.medioDePago.dato);
+            pago.setCodigoAsociado("asdfwqe3");
 
             DocumentoComercial documentoComercial = new DocumentoComercial();
             documentoComercial.setTipo(tipoDocumento);

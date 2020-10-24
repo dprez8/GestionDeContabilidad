@@ -31,7 +31,7 @@ public class MedioDePagoController {
 		        medios= this.repoMedio.buscarTodos();
 		        medioRespuesta.code = 200;
 		        medioRespuesta.message = "Medios de pago cargados exitosamente";
-		        medioRespuesta.mediosDePago= medios;
+		        medioRespuesta.data= medios;
 		        response.status(200);
 	        }
 	        catch (NullPointerException ex){
@@ -58,6 +58,6 @@ public class MedioDePagoController {
 	public class MedioDePagoRespuesta{
 		public int code;
 		public String message;
-		public List<MedioDePago> mediosDePago;
+		public List<MedioDePago> data;
 	}
 }

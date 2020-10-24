@@ -9,7 +9,7 @@ import javax.persistence.*;
 public class Pago extends EntidadPersistente {
 
 	@Column(name="codigo_asociado")
-	private int codigoAsociado;
+	private String codigoAsociado;
 	@ManyToOne
 	@JoinColumn(name = "medio_id", referencedColumnName = "id")
 	private MedioDePago medioDePago;
@@ -19,17 +19,17 @@ public class Pago extends EntidadPersistente {
 	}
 
 	
-	public Pago(int numeroAsociado, MedioDePago medioDePago) {
-		this.codigoAsociado = numeroAsociado;
+	public Pago(String codigoAsociado, MedioDePago medioDePago) {
+		this.codigoAsociado = codigoAsociado;
 		this.medioDePago = medioDePago;
 	}
 
-	public int getCodigoAsociado() {
+	public String getCodigoAsociado() {
 		return codigoAsociado;
 	}
 
-	public void setNumeroAsociado(int numeroAsociado) {
-		this.codigoAsociado = numeroAsociado;
+	public void setCodigoAsociado(String string) {
+		this.codigoAsociado = string;
 	}
 
 	public MedioDePago getMedioDePago() {

@@ -65,7 +65,7 @@ public class DireccionPostalController {
         try {
         List<PaisDato> paisesAEnviar = paises.stream().map(this::mapPais).collect(Collectors.toList());
        
-        vinculadorPais.paisesDato=paisesAEnviar;
+        vinculadorPais.data=paisesAEnviar;
         
         vinculadorPais.code = 200;
         vinculadorPais.message = "Paises cargados exitosamente";
@@ -102,7 +102,7 @@ public class DireccionPostalController {
 	      
              List<ProvinciaDato> provinciasAEnviar = provincias.stream().map(this::mapProvincia).collect(Collectors.toList());
             
-             vinculadorProvincia.provinciasDato=provinciasAEnviar;
+             vinculadorProvincia.data=provinciasAEnviar;
              
 
              vinculadorProvincia.code = 200;
@@ -141,7 +141,7 @@ public class DireccionPostalController {
 	      
              List<CiudadDato> ciudadesAEnviar = ciudades.stream().map(this::mapCiudad).collect(Collectors.toList());
             
-             vinculadorCiudad.ciudadesDato=ciudadesAEnviar;
+             vinculadorCiudad.data=ciudadesAEnviar;
              
 
              vinculadorCiudad.code = 200;
@@ -192,16 +192,16 @@ public class DireccionPostalController {
 	private class VinculadorPais{
 		int code;
 		String message;
-		List<PaisDato> paisesDato= new ArrayList<>();
+		List<PaisDato> data= new ArrayList<>();
 	}
 	private class VinculadorProvincia{
 		int code;
 		String message;
-		List<ProvinciaDato> provinciasDato= new ArrayList<>();
+		List<ProvinciaDato> data= new ArrayList<>();
 	}
 	private class VinculadorCiudad{
 		int code;
 		String message;
-		List<CiudadDato> ciudadesDato= new ArrayList<>();
+		List<CiudadDato> data= new ArrayList<>();
 	}
 }

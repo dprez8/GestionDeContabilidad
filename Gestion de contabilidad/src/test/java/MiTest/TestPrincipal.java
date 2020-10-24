@@ -57,7 +57,7 @@ public class TestPrincipal {
         TipoDocumento facturaA = new TipoDocumento("Factura A");
         this.factura = new DocumentoComercial(facturaA, 11111);
         this.rapiPago = new MedioDePago("rapipago");
-        this.pago = new Pago(1231231,rapiPago);
+        this.pago = new Pago("1231231",rapiPago);
         
         this.lautaroIturregui = new Proveedor("Lautaro Iturregui",2);
 
