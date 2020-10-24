@@ -38,8 +38,7 @@ public class SchedulerTest {
         TipoDocumento FacturaA = new TipoDocumento("Factura A");
 
         DocumentoComercial unDocumento = new DocumentoComercial(FacturaA, 11111);
-        
-        MedioDePago rapiPago = new MedioDePago("rapiPago");
+
         MedioDePago efectivo = new MedioDePago("efectivo");
         Pago unPago = new Pago("1231231",efectivo);
 

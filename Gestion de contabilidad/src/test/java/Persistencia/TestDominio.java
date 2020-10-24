@@ -131,10 +131,9 @@ public class TestDominio {
 
   
         MedioDePago efectivo = new MedioDePago("efectivo");
-        efectivo.setMedioDePago("efectivo");
         Pago unPago = new Pago();
         unPago.setMedioDePago(efectivo);
-        unPago.setCodigoAsociado("asfswewfw");
+        unPago.setNumeroAsociado("1231231");
         this.repoMedioDePagos.agregar(efectivo);
         this.repoPagos.agregar(unPago);
 
