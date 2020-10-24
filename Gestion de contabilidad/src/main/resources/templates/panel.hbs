@@ -305,52 +305,28 @@
                 template: `{{> bandeja.hbs}}`,
                 data() {
                     return {
-                        mensajes: {
-                            "1": {
+                        mensajes: [
+                            {
                                 id: 1,
                                 fecha: "2020-10-21",
                                 leido: false,
                                 cuerpo: "Habia una vez trus xdxdxd lorem ipsum dolor sit amet dadadadadada"
-                            },
-                            "2": {
-                                id: 2,
-                                fecha: "1999-4-3",
-                                leido: false,
-                                cuerpo: `Lorem ipsum dolor sit amet consectetur adipiscing elit lectus proin ridiculus, sapien volutpat cras nisi faucibus inceptos semper mauris ornare, porttitor tempus nunc dictum senectus gravida vitae velit duis. Placerat non vitae curae luctus himenaeos arcu aptent duis ligula sed nulla nascetur, a massa mi vulputate tellus at magnis sagittis montes convallis. Rutrum nulla nascetur natoque urna inceptos consequat arcu proin, iaculis at et facilisi mattis aliquam tempor, conubia fermentum nam per montes aliquet vivamus.
-
-Neque lobortis mus hendrerit penatibus gravida curae ac, sociis laoreet venenatis est nisl cursus urna blandit, maecenas mattis torquent ullamcorper dis interdum. Fringilla aenean laoreet ultrices convallis tortor commodo euismod turpis et himenaeos, eros lacinia in rutrum nunc risus diam fusce varius. Erat dui pulvinar volutpat ullamcorper est posuere senectus, curabitur lectus facilisi ultricies nam lobortis vehicula, platea mus turpis per praesent mi.`
-                            },
-                            "3": {
-                                id: 3,
-                                fecha: "1999-4-3",
-                                leido: true,
-                                cuerpo: `Lorem ipsum dolor sit amet consectetur adipiscing elit lectus proin ridiculus, sapien volutpat cras nisi faucibus inceptos semper mauris ornare, porttitor tempus nunc dictum senectus gravida vitae velit duis. Placerat non vitae curae luctus himenaeos arcu aptent duis ligula sed nulla nascetur, a massa mi vulputate tellus at magnis sagittis montes convallis. Rutrum nulla nascetur natoque urna inceptos consequat arcu proin, iaculis at et facilisi mattis aliquam tempor, conubia fermentum nam per montes aliquet vivamus.
-
-Neque lobortis mus hendrerit penatibus gravida curae ac, sociis laoreet venenatis est nisl cursus urna blandit, maecenas mattis torquent ullamcorper dis interdum. Fringilla aenean laoreet ultrices convallis tortor commodo euismod turpis et himenaeos, eros lacinia in rutrum nunc risus diam fusce varius. Erat dui pulvinar volutpat ullamcorper est posuere senectus, curabitur lectus facilisi ultricies nam lobortis vehicula, platea mus turpis per praesent mi.`
-                            },
-                            "4": {
-                                id: 4,
-                                fecha: "2019-9-12",
-                                leido: true,
-                                cuerpo: `avida curae ac, sociis laoreet venenatis est nisl cursus urna blandit, maecenas mattis torquent ullamcorper dis interdum. Fringilla aenean laoreet ultrices convallis tortor commodo euismod turpis et himenaeos, eros lacinia in rutrum nunc risus diam fusce varius. Erat dui pulvinar volutpat ullamcorper est posuere senectus, curabitur lectus facilisi ultricies nam lobortis vehicula, platea mus turpis per praesent mi.`
-                            },
-                            "5": {
-                                id: 5,
-                                fecha: "1999-4-3",
-                                leido: true,
-                                cuerpo: `Lorem ipsum dolor sit amet consectetur adipiscing elit lectus proin ridiculus, sapien volutpat cras nisi faucibus inceptos semper mauris ornare, porttitor tempus nunc dictum senectus gravida vitae velit duis. Placerat non vitae curae luctus himenaeos arcu aptent duis ligula sed nulla nascetur, a massa mi vulputate tellus at magnis sagittis montes convallis. Rutrum nulla nascetur natoque urna inceptos consequat arcu proin, iaculis at et facilisi mattis aliquam tempor, conubia fermentum nam per montes aliquet vivamus.
-
-Neque lobortis mus hendrerit penatibus gravida curae ac, sociis laoreet venenatis est nisl cursus urna blandit, maecenas mattis torquent ullamcorper dis interdum. Fringilla aenean laoreet ultrices convallis tortor commodo euismod turpis et himenaeos, eros lacinia in rutrum nunc risus diam fusce varius. Erat dui pulvinar volutpat ullamcorper est posuere senectus, curabitur lectus facilisi ultricies nam lobortis vehicula, platea mus turpis per praesent mi.`
                             }
-                        },
+                        ],
                         selected: null
                     }
                 },
                 methods: {
                     convertDate: convertDate,
-                    selectMessage() {
+                    seleccionarMensaje() {
                         var id = this.$route.params.id;
                         this.selected = id;
+                    },
+                    cargarMensajes() {
+                        
+                    },
+                    getMessageSelected() {
+                        var mensajeSeleccionado = null;
                     }
                 },
                 watch: {

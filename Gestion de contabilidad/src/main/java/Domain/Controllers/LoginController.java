@@ -13,6 +13,7 @@ public class LoginController {
 
         Map<String, String> parametros = new HashMap<>();
 
+        parametros.put("ip", "181.21.133.179");
         parametros.put("titulo", "Login");
 
         return new ModelAndView(parametros, "login.hbs");

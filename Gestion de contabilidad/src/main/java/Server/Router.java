@@ -25,8 +25,8 @@ public class Router {
     }
 
     private static void configure(){
-        rutasVista();
         rutasApi();
+        rutasVista();
     }
 
     private static void rutasVista() {
@@ -53,7 +53,7 @@ public class Router {
         Spark.get("/api/proveedores",proveedorController::listadoProveedores);
         Spark.get("/api/medios",medioController::listadoMediosDePago);
         //Spark.get("api/bandeja",bandejaDeMensajesRestController::mostrarMensajes);
-        Spark.get("api/bandeja/:usuarioId",bandejaDeMensajesRestController::mostrarMensajes);
-        Spark.post("api/operaciones/egreso",operacionesRestController::cargarNuevoEgreso);
+        Spark.get("/api/bandeja/:usuarioId",bandejaDeMensajesRestController::mostrarMensajes);
+        Spark.post("/api/operaciones/egreso",operacionesRestController::cargarNuevoEgreso);
     }
 }

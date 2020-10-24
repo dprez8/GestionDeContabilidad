@@ -4,9 +4,9 @@
         {{> head.hbs}}
     </head>
     <body class="text-center">
-        <link type="text/css" rel="stylesheet" href="css/login.css"/>
+        <link type="text/css" rel="stylesheet" href="http://{{ ip }}/css/login.css"/>
         <form class="form-signin" id="loginForm">
-            <img class="mb-4" src="img/gesoc_logo.png" alt="" width="150" height="150">
+            <img class="mb-4" src="http://{{ ip }}/img/gesoc_logo.png" alt="" width="150" height="150">
             <h1 class="h3 mb-3 font-weight-normal">Por favor inicia sesión</h1>
             <label for="inputUser" class="sr-only">Usuario</label>
             <input type="text" v-model="user" class="form-control" placeholder="Usuario" required="" autofocus="">
