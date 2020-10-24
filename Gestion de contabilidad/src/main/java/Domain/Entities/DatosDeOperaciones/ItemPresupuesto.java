@@ -1,30 +1,29 @@
 package Domain.Entities.DatosDeOperaciones;
 
+import Domain.Entities.EntidadPersistente.EntidadPersistente;
 import Domain.Entities.Operaciones.Presupuesto;
 import javax.persistence.*;
 
 @Entity
 @Table(name="item_presupuesto")
-public class ItemPresupuesto {
-	
-	@Id
-	@Column(name="item_presupuesto_id")
-	private int idItemPresupuesto;
+public class ItemPresupuesto extends EntidadPersistente {
+
 	@ManyToOne
-    @JoinColumn(name="producto_id", referencedColumnName = "producto_id")
+    @JoinColumn(name="producto_id", referencedColumnName = "id")
 	private Producto producto;
+
 	@Column
 	private int cantidad;
 	@Column
 	private double precio;
 	@ManyToOne
-    @JoinColumn(name="item_egreso_id", referencedColumnName = "item_egreso_id")
+    @JoinColumn(name="item_egreso_id", referencedColumnName = "id")
     private ItemEgreso itemEgresoAsociado;
 	@ManyToOne
-    @JoinColumn(name = "presupuesto_id", referencedColumnName = "presupuesto_id")
+    @JoinColumn(name = "presupuesto_id", referencedColumnName = "id")
     private Presupuesto presupuesto;
 
-    protected ItemPresupuesto(){
+    public ItemPresupuesto(){
     }
 
     public ItemPresupuesto(Producto unProducto,ItemEgreso unItem, int cantidad, double precio, Presupuesto presupuesto){
@@ -56,6 +55,30 @@ public class ItemPresupuesto {
 	}
     public ItemEgreso getItemEgresoAsociado() {
         return itemEgresoAsociado;
+    }
+
+    public void setProducto(Producto producto) {
+        this.producto = producto;
+    }
+
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public void setPrecio(double precio) {
+        this.precio = precio;
+    }
+
+    public void setItemEgresoAsociado(ItemEgreso itemEgresoAsociado) {
+        this.itemEgresoAsociado = itemEgresoAsociado;
+    }
+
+    public Presupuesto getPresupuesto() {
+        return presupuesto;
+    }
+
+    public void setPresupuesto(Presupuesto presupuesto) {
+        this.presupuesto = presupuesto;
     }
     /**********************/
 }

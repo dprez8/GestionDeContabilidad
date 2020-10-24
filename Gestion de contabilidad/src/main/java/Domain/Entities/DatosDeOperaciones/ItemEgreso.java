@@ -1,19 +1,18 @@
 package Domain.Entities.DatosDeOperaciones;
 
+import Domain.Entities.EntidadPersistente.EntidadPersistente;
 import Domain.Entities.Operaciones.Egreso.Egreso;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name="item_egreso")
-public class ItemEgreso {
-	@Id
-	@GeneratedValue
-	@Column(name="item_egreso_id")
-	private int idItemEgreso;
+public class ItemEgreso extends EntidadPersistente {
+
 	@ManyToOne
-	@JoinColumn(referencedColumnName = "producto_id", name="producto_id")
+	@JoinColumn(name = "producto_id", referencedColumnName="id")
 	private Producto producto;
+
 	@Column
 	private int cantidad;
 	@Column
@@ -22,7 +21,7 @@ public class ItemEgreso {
 	@JoinColumn(name= "egreso_id", referencedColumnName = "id")
 	private Egreso egresoAsociado;
 
-	protected ItemEgreso() {
+	public ItemEgreso() {
 	}
 
     public ItemEgreso(Producto producto, int cantidad, double precio) {
@@ -34,7 +33,28 @@ public class ItemEgreso {
         return this.cantidad * this.precio;
     }
 
-	/**Getters*/
+	public void setProducto(Producto producto) {
+		this.producto = producto;
+	}
+
+	public void setCantidad(int cantidad) {
+		this.cantidad = cantidad;
+	}
+
+	public void setPrecio(double precio) {
+		this.precio = precio;
+	}
+
+	public Egreso getEgresoAsociado() {
+		return egresoAsociado;
+	}
+
+	public void setEgresoAsociado(Egreso egresoAsociado) {
+		this.egresoAsociado = egresoAsociado;
+	}
+
+	/**Getters & Setters*/
+
 	public int getCantidad() {
 		return cantidad;
 	}

@@ -5,10 +5,13 @@ import java.util.Optional;
 import javax.persistence.*;
 
 @Entity
-@Table(name="provicia")
+@Table(name="provincia")
 public class Provincia {
 	@Id
+	@GeneratedValue
 	@Column(name="provincia_id")
+	private int clave;
+	@Column(name="provincia_code")
 	public String id;
 	@Column
 	public String name;
@@ -39,6 +42,31 @@ public class Provincia {
 		provincias.forEach(provincia->provincia.asignarId());
 	}
 	
+	
+	public int getClave() {
+		return clave;
+	}
+
+	public void setClave(int clave) {
+		this.clave = clave;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public void asignarId(){
 		contadorProvincias++;
 		this.idProvincia=contadorProvincias;

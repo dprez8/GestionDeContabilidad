@@ -1,10 +1,9 @@
 package Domain.Entities.BandejaDeMensajes;
 
 import Domain.Entities.Usuarios.Usuario;
+import Domain.Repositories.Daos.DaoHibernate;
+import Domain.Repositories.Repositorio;
 
-import javax.persistence.*;
-import java.io.Serializable;
-import java.lang.annotation.Target;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -14,18 +13,24 @@ public class BandejaDeMensajes{
 
     private List<Mensaje> mensajes = new ArrayList<Mensaje>();
     private Usuario usuario;
-	
-    
+	private Repositorio<Mensaje> repoMensajes;
+
+	public BandejaDeMensajes(){
+
+    }
+
     public BandejaDeMensajes(Usuario usuario){
 		this.usuario=usuario;
+		this.repoMensajes = new Repositorio<Mensaje>(new DaoHibernate<Mensaje>(Mensaje.class));
     }
 
     public void crearMensaje(String cuerpo){
         Mensaje msg = new Mensaje(cuerpo,this.usuario);
         mensajes.add(msg);
+        this.repoMensajes.agregar(msg);
     }
 
-    public void addMensajes(List<String> variosMensajes){
+    public void addMensajesString(List<String> variosMensajes){
         variosMensajes.forEach(unCuerpo->crearMensaje(unCuerpo));
     }
     public void ordenarPorFechaRecienteUltimo(){
@@ -40,6 +45,14 @@ public class BandejaDeMensajes{
     }*/
     public List<Mensaje> filtrarPorFecha(LocalDate fecha){
         return mensajes.stream().filter(a->a.getFecha().equals(fecha)).collect(Collectors.toList());
+    }
+
+    public void addMensajes(Mensaje ... mensajes) {
+        Collections.addAll(this.mensajes,mensajes);
+    }
+
+    public void setMensajes(List<Mensaje> mensajes) {
+        this.mensajes = mensajes;
     }
 
     public List<Mensaje> getMensajes() {

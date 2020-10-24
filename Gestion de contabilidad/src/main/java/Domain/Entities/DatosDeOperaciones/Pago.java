@@ -1,57 +1,35 @@
 package Domain.Entities.DatosDeOperaciones;
 
-import java.time.LocalDate;
+import Domain.Entities.EntidadPersistente.EntidadPersistente;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "pago")
-public class Pago {
+public class Pago extends EntidadPersistente {
 
-	@Id
-	@Column(name="pago_id")
-	private int pagoId;
-	@Column(name = "fecha_pago",columnDefinition = "DATE")
-	private LocalDate fechaPago;
-	@Column(name="numero_asociado")
-	private int numeroAsociado;
+	@Column(name="codigo_asociado")
+	private String codigoAsociado;
 	@ManyToOne
-	@JoinColumn(name = "medio_id", referencedColumnName = "medio_id")
+	@JoinColumn(name = "medio_id", referencedColumnName = "id")
 	private MedioDePago medioDePago;
 
 
-	protected Pago() {
+	public Pago() {
 	}
 
-	public Pago(int pagoId, LocalDate fechaPago, int numeroAsociado, MedioDePago medioDePago) {
-		this.pagoId = pagoId;
-		this.fechaPago = fechaPago;
-		this.numeroAsociado = numeroAsociado;
+	
+	public Pago(String codigoAsociado, MedioDePago medioDePago) {
+		this.codigoAsociado = codigoAsociado;
 		this.medioDePago = medioDePago;
 	}
 
-	public int getPagoId() {
-		return pagoId;
+	public String getCodigoAsociado() {
+		return codigoAsociado;
 	}
 
-	public void setPagoId(int pagoId) {
-		this.pagoId = pagoId;
-	}
-
-	public LocalDate getFechaPago() {
-		return fechaPago;
-	}
-
-	public void setFechaPago(LocalDate fechaPago) {
-		this.fechaPago = fechaPago;
-	}
-
-	public int getNumeroAsociado() {
-		return numeroAsociado;
-	}
-
-	public void setNumeroAsociado(int numeroAsociado) {
-		this.numeroAsociado = numeroAsociado;
+	public void setCodigoAsociado(String string) {
+		this.codigoAsociado = string;
 	}
 
 	public MedioDePago getMedioDePago() {

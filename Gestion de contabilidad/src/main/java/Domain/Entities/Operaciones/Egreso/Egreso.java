@@ -1,6 +1,5 @@
 package Domain.Entities.Operaciones.Egreso;
 
-import Domain.Exceptions.noAlcanzaIngreso;
 import Domain.Entities.Operaciones.CategoriaOperacion;
 import Domain.Entities.Operaciones.Ingreso;
 import Domain.Entities.Operaciones.Operacion;
@@ -24,21 +23,27 @@ import javax.persistence.*;
 @Table(name="egreso")
 public class Egreso extends Operacion {
 
-	@OneToOne
-	@JoinColumn(name="documento_comercial_id", referencedColumnName = "documento_comercial_id")
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name="documento_comercial_id", referencedColumnName = "id")
 	private DocumentoComercial documento;
-	@OneToMany(mappedBy = "egresoAsociado")
+
+	@OneToMany(mappedBy = "egresoAsociado",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private List<ItemEgreso> items;
-	@OneToOne
-	@JoinColumn(name= "pago_id", referencedColumnName = "pago_id")
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name= "pago_id",referencedColumnName = "id")
 	private Pago pago;
+
 	@ManyToOne
 	@JoinColumn(name = "proveedor_id", referencedColumnName = "proveedor_id")
 	private Proveedor proveedor;
-	@OneToMany(mappedBy = "egresoAsociado")
+
+	@OneToMany(mappedBy = "egresoAsociado",cascade = CascadeType.ALL)
 	private List<Presupuesto> presupuestos;
-	@Transient
+
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Estandar> revisores;
+
 	@ManyToOne
 	@JoinColumn(name = "ingreso_asociado", referencedColumnName = "id")
 	private Ingreso ingresoAsociado;

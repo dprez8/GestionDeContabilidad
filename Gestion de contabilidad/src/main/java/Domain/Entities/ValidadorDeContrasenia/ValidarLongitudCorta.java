@@ -11,8 +11,10 @@ public class ValidarLongitudCorta extends ValidacionDeContrasenia {
     }
 
     @Override
-    public void validarConstrasenia(Usuario usuario) throws contraseniaCorta {
+    public boolean validarConstrasenia(Usuario usuario) throws contraseniaCorta {
         if(usuario.getContrasenia().length() < this.longitudMinima)
             throw new contraseniaCorta("La contrasenia ingresada es corta");
+        
+        return true;
     }
 }

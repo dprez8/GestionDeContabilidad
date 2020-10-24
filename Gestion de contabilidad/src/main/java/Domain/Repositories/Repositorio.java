@@ -27,12 +27,12 @@ public class Repositorio<T> {
         return this.dao.buscar(id);
     }
 
-    public List<T> buscaTodos() {
+    public List<T> buscarTodos() {
         return this.dao.buscarTodos();
     }
 
     public void modificar(T object){
-        this.modificar(object);
+        this.dao.modificar(object);
     }
 
     public boolean existe(int id){

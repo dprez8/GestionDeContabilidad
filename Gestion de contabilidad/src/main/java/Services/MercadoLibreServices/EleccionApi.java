@@ -58,8 +58,6 @@ public static void BajarDatosApiMercadoLibreABaseDeDatos(Properties prop) throws
 		
 		ServicioGeoref servicioGeoref = ServicioGeoref.instancia(prop.getProperty("URLML"));		
 		List<Pais> paisesList = servicioGeoref.ListadoDePaises();
-		List<Provincia> provinciasList = new ArrayList<>();
-		List<Ciudad> ciudadesList= new ArrayList<>();
 		List<Moneda> monedasList = new ArrayList<>();
 		
 		ListadoDeProvincias provincias;
@@ -69,36 +67,41 @@ public static void BajarDatosApiMercadoLibreABaseDeDatos(Properties prop) throws
 		
 		for(Pais pais: paisesList){
 			
-			moneda = servicioGeoref.Moneda(pais);
-			pais.setMoneda(moneda);
+			Optional<Moneda> posibleMoneda = Moneda.buscarMoneda(monedasList,pais.currency_id);
 			
-			
-			if(moneda!=null) {
-				monedasList.add(moneda);
-				repoMoneda.agregar(moneda);	
+			if(posibleMoneda.isPresent()) {
+				moneda= posibleMoneda.get();
+				pais.setMoneda(moneda);
 			}
-			/*
+			else {
+				moneda = servicioGeoref.Moneda(pais);
+				if(moneda!=null) {
+					monedasList.add(moneda);
+					repoMoneda.agregar(moneda);
+				}
+				pais.setMoneda(moneda);
+			}	
+			
+			repoPais.agregar(pais);
+			
+			
 			provincias = servicioGeoref.ListadoDeProvincias(pais);
 			
 			if(provincias.states.size()!=0){
 				for(Provincia provincia: provincias.states){
-					provinciasList.add(provincia);
 					provincia.setPais(pais);
+					repoProvincia.agregar(provincia);
 					ciudades = servicioGeoref.ListadoDeCiudades(provincia);
 					
 					if(ciudades.cities.size()!=0) {
 						for(Ciudad ciudad:ciudades.cities){
-							ciudadesList.add(ciudad);
 							ciudad.setProvincia(provincia);
 							repoCiudad.agregar(ciudad);
 						}
 					}
 					System.out.println("Guardando datos de: "+provincia.name);
-					repoProvincia.agregar(provincia);
 				}
 			}
-		*/
-			repoPais.agregar(pais);
 		
 		}
 		

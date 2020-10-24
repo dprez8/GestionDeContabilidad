@@ -9,8 +9,13 @@ import java.util.Optional;
 @Entity
 @Table(name = "ciudad")
 public class Ciudad{
+	
 	@Id
+	@GeneratedValue
 	@Column(name="ciudad_id")
+	private int clave;
+	
+	@Column(name="ciudad_code")
 	public String id;
 
 	@Column
@@ -43,6 +48,22 @@ public class Ciudad{
 	}
 	
 	
+	public int getClave() {
+		return clave;
+	}
+
+	public void setClave(int clave) {
+		this.clave = clave;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public Provincia getProvincia() {
 		return provincia;
 	}

@@ -9,28 +9,29 @@ import java.util.stream.Collectors;
 import Domain.Entities.DatosDeOperaciones.DocumentoComercial;
 import Domain.Entities.DatosDeOperaciones.ItemPresupuesto;
 import Domain.Entities.DatosDeOperaciones.Proveedor;
+import Domain.Entities.EntidadPersistente.EntidadPersistente;
 import Domain.Entities.Operaciones.Egreso.Egreso;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name="presupuesto")
-public class Presupuesto {
+public class Presupuesto extends EntidadPersistente {
 
-    @Id
-    @GeneratedValue
-    @Column(name="presupuesto_id")
-    private int presupuestoId;
     @Column(name="operacion_numero")
     private int operacionNumero;
-    @OneToMany(mappedBy = "presupuesto")
+
+    @OneToMany(mappedBy = "presupuesto",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<ItemPresupuesto> items;
+
     @ManyToOne
     @JoinColumn(name="egreso_asociado", referencedColumnName = "id")
     private Egreso egresoAsociado;
-    @OneToOne
-    @JoinColumn(name="documento_comercial_id", referencedColumnName = "documento_comercial_id")
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="documento_comercial_id", referencedColumnName = "id")
     private DocumentoComercial documento;
+
     @Column(name="fecha_vigente", columnDefinition = "DATE")
     private LocalDate fechaVigente;
 
@@ -40,7 +41,7 @@ public class Presupuesto {
             inverseJoinColumns=
             @JoinColumn(name="categoria_id", referencedColumnName="categoria_id"),
             joinColumns=
-            @JoinColumn(name="presupuesto_id", referencedColumnName="presupuesto_id")
+            @JoinColumn(name="presupuesto_id", referencedColumnName="id")
     )
     private List<CategoriaOperacion> categorias;
     @ManyToOne
@@ -104,6 +105,22 @@ public class Presupuesto {
 
     public void setProveedor(Proveedor proveedor) {
         this.proveedor = proveedor;
+    }
+
+    public void setOperacionNumero(int operacionNumero) {
+        this.operacionNumero = operacionNumero;
+    }
+
+    public void setItems(List<ItemPresupuesto> items) {
+        this.items = items;
+    }
+
+    public void setEgresoAsociado(Egreso egresoAsociado) {
+        this.egresoAsociado = egresoAsociado;
+    }
+
+    public void setCategorias(List<CategoriaOperacion> categorias) {
+        this.categorias = categorias;
     }
 
     /********************************************/

@@ -4,12 +4,18 @@ import java.util.List;
 import java.util.Optional;
 import javax.persistence.*;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 @Entity
 @Table(name= "pais")
 public class Pais {
 	
 	@Id
+	@GeneratedValue
 	@Column(name="pais_id")
+	private int clave;
+	@Column(name="pais_code")
 	public String id;
 	@Column
 	public String name;
@@ -41,6 +47,38 @@ public class Pais {
 	}
 	
 	
+	public int getClave() {
+		return clave;
+	}
+
+	public void setClave(int clave) {
+		this.clave = clave;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getCurrency_id() {
+		return currency_id;
+	}
+
+	public void setCurrency_id(String currency_id) {
+		this.currency_id = currency_id;
+	}
+
 	public Moneda getMoneda() {
 		return moneda;
 	}

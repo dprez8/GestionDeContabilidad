@@ -1,6 +1,6 @@
 package MiTest;
 
-import Domain.CategorizadorDeEmpresas.CategorizadorDeEmpresas;
+import Domain.Entities.CategorizadorDeEmpresas.CategorizadorDeEmpresas;
 import Domain.Entities.CategorizadorDeEmpresas.*;
 import Domain.Entities.DatosDeOperaciones.*;
 import Domain.Exceptions.contraseniaCorta;
@@ -37,7 +37,7 @@ public class TestPrincipal {
     private EntidadJuridica pymeJuridica;
     private Estandar fernando;
     private Proveedor lautaroIturregui;
-    private MedioDePago efectivo;
+    private MedioDePago rapiPago; 
     private Pago pago;
     private DocumentoComercial factura;
     private Producto ram,placaDeVideo;
@@ -45,7 +45,7 @@ public class TestPrincipal {
     private ValidadorDeContrasenia validadorDeContrasenia;
 
     @Before
-    public void antesDeTestear(){
+    public void antesDeTestear() throws IOException, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, contraseniaCorta{
 
         /**Creacion de los datos de egreso*/
         this.ram  = new Producto("4GB DDR3");
@@ -56,8 +56,8 @@ public class TestPrincipal {
 
         TipoDocumento facturaA = new TipoDocumento("Factura A");
         this.factura = new DocumentoComercial(facturaA, 11111);
-        this.efectivo = new MedioDePago("Rapi Pago","Ticket","rapipago");
-        this.pago = new Pago(1,LocalDate.of(2020, Month.AUGUST,14),1231231,efectivo);
+        this.rapiPago = new MedioDePago("rapipago");
+        this.pago = new Pago("1231231",rapiPago);
         
         this.lautaroIturregui = new Proveedor("Lautaro Iturregui",2);
 
@@ -97,7 +97,7 @@ public class TestPrincipal {
 
         Assert.assertEquals(compra.getProveedor().getNombre(), "Lautaro Iturregui");
         Assert.assertEquals(compra.getFechaOperacion().toString(), "2020-08-14");
-        Assert.assertEquals(compra.getPago().getMedioDePago(), this.efectivo);
+        Assert.assertEquals(compra.getPago().getMedioDePago(), this.rapiPago);
         Assert.assertEquals(compra.getDocumento(), this.factura);
         Assert.assertEquals(compra.getOrganizacion(), this.pymeJuridica);
 
@@ -163,9 +163,9 @@ public class TestPrincipal {
         ValidarTop10k validarTop10k                         = new ValidarTop10k(prop.getProperty("dataFilePath"));
         ValidarIgualAMailOUsuario validarIgualAMailOUsuario = new ValidarIgualAMailOUsuario();
 
-        this.validadorDeContrasenia.addValidaciones(validarLongitudCorta,validarTop10k,validarIgualAMailOUsuario);
+        ValidadorDeContrasenia.addValidaciones(validarLongitudCorta,validarTop10k,validarIgualAMailOUsuario);
 
-        this.validadorDeContrasenia.validarContrasenia(this.fernando);
+        ValidadorDeContrasenia.validarContrasenia(this.fernando);
 
         /**Para capturar la excepcion, si se desea, comentar la linea de arriba y el expected en la anotacion @Test*/
         /*

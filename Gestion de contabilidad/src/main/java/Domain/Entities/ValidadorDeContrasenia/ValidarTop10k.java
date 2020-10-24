@@ -15,9 +15,11 @@ public class ValidarTop10k extends ValidacionDeContrasenia {
     }
 
     @Override
-    public void validarConstrasenia(Usuario usuario) throws contraseniaMuyComun, IOException {
+    public boolean validarConstrasenia(Usuario usuario) throws contraseniaMuyComun, IOException {
         if(estaEnElTopDiezK(usuario.getContrasenia()))
             throw new contraseniaMuyComun("La contrasenia es muy comun, dentro del top10k peores, pensar algo mas complejo");
+    
+    return true;
     }
 
     public boolean estaEnElTopDiezK(String miContrasenia) throws IOException {
@@ -27,8 +29,9 @@ public class ValidarTop10k extends ValidacionDeContrasenia {
         int verificador=0;
 
         while((unaContrasenia = entrada.readLine()) != null) { //Vamos leyendo una linea del archivo. Verificar como funciona readLine()
-            if(miContrasenia.equals(unaContrasenia))
+            if(miContrasenia.equals(unaContrasenia)) {
                 verificador=1;
+            break;}
         }
         entrada.close();
 
