@@ -10,10 +10,8 @@ import javax.persistence.*;
 @Table(name = "pago")
 public class Pago extends EntidadPersistente {
 
-	@Column(name = "fecha_pago",columnDefinition = "DATE")
-	private LocalDate fechaPago;
-	@Column(name="numero_asociado")
-	private int numeroAsociado;
+	@Column(name="codigo_asociado")
+	private int codigoAsociado;
 	@ManyToOne
 	@JoinColumn(name = "medio_id", referencedColumnName = "id")
 	private MedioDePago medioDePago;
@@ -23,25 +21,16 @@ public class Pago extends EntidadPersistente {
 	}
 
 	public Pago(LocalDate fechaPago, int numeroAsociado, MedioDePago medioDePago) {
-		this.fechaPago = fechaPago;
-		this.numeroAsociado = numeroAsociado;
+		this.codigoAsociado = numeroAsociado;
 		this.medioDePago = medioDePago;
 	}
 
-	public LocalDate getFechaPago() {
-		return fechaPago;
-	}
-
-	public void setFechaPago(LocalDate fechaPago) {
-		this.fechaPago = fechaPago;
-	}
-
-	public int getNumeroAsociado() {
-		return numeroAsociado;
+	public int getCodigoAsociado() {
+		return codigoAsociado;
 	}
 
 	public void setNumeroAsociado(int numeroAsociado) {
-		this.numeroAsociado = numeroAsociado;
+		this.codigoAsociado = numeroAsociado;
 	}
 
 	public MedioDePago getMedioDePago() {

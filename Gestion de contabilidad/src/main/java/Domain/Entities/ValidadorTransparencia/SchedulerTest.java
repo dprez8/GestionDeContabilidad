@@ -39,9 +39,8 @@ public class SchedulerTest {
 
         DocumentoComercial unDocumento = new DocumentoComercial(FacturaA, 11111);
         
-        TipoPago dineroEnCuenta= new TipoPago();
-        MedioDePago rapiPago = new MedioDePago("rapipago",dineroEnCuenta);
-        MedioDePago efectivo = new MedioDePago("Ticket",dineroEnCuenta);
+        MedioDePago rapiPago = new MedioDePago("rapiPago");
+        MedioDePago efectivo = new MedioDePago("efectivo");
         Pago unPago = new Pago(LocalDate.of(2020, Month.AUGUST,14),1231231,efectivo);
 
         Proveedor lautaroRobles = new Proveedor("Lautaro Robles", 41424242);

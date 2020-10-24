@@ -37,8 +37,7 @@ public class TestPrincipal {
     private EntidadJuridica pymeJuridica;
     private Estandar fernando;
     private Proveedor lautaroIturregui;
-    private MedioDePago rapiPago;
-    private TipoPago dineroEnCuenta;
+    private MedioDePago rapiPago; 
     private Pago pago;
     private DocumentoComercial factura;
     private Producto ram,placaDeVideo;
@@ -57,8 +56,7 @@ public class TestPrincipal {
 
         TipoDocumento facturaA = new TipoDocumento("Factura A");
         this.factura = new DocumentoComercial(facturaA, 11111);
-        this.dineroEnCuenta= new TipoPago();
-        this.rapiPago = new MedioDePago("rapipago",dineroEnCuenta);
+        this.rapiPago = new MedioDePago("rapipago");
         this.pago = new Pago(LocalDate.of(2020, Month.AUGUST,14),1231231,rapiPago);
         
         this.lautaroIturregui = new Proveedor("Lautaro Iturregui",2);
