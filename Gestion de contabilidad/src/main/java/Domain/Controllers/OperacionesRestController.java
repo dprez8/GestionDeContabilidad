@@ -97,7 +97,7 @@ public class OperacionesRestController {
 
             Pago pago = new Pago();
             pago.setMedioDePago(medioDePago);
-            pago.setNumeroAsociado(egresoRequest.medioDePago.dato);
+            pago.setCodigoAsociado(egresoRequest.medioDePago.dato);
 
             DocumentoComercial documentoComercial = new DocumentoComercial();
             documentoComercial.setTipo(tipoDocumento);
