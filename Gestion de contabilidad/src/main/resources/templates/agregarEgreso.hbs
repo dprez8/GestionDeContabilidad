@@ -1,318 +1,199 @@
-<div class="py-3">
-    <!-- template para nuevo egreso -->
-    <div class="pt-3 border">
-        <div class="row mb-4 mx-2">
-            <div class="col-4 text-right py-2">
-                <span class="mr-2"><strong>Organización</strong></span>
-            </div>
-            <div class="col bg-light p-2">
-                <span class="ml-2">NombreOrganización</span>
-            </div>
+<!-- template para nuevo egreso -->
+<div class="pt-3">
+    <div class="row mb-4 mx-2">
+        <div class="col py-2 text-center">
+            <h2>Cargar nuevo egreso</h2>
         </div>
+    </div>
+    <div class="row mb-4 mx-2">
+        <div class="col-4 text-right py-2">
+            <span class="mr-2"><strong>Organización</strong></span>
+        </div>
+        <div class="col bg-light p-2">
+            <span class="ml-2">NombreOrganización</span>
+        </div>
+    </div>
 
-        <div class="row mb-4 mx-2">
-            <div class="col-4 text-right py-2">
-                <span class="mr-2"><strong>Fecha Operación</strong></span>
-            </div>
-            <div class="col">
-                <b-form-datepicker id="operacion-datepicker" class="mb-2"></b-form-datepicker>
-            </div>
+    <div class="row mb-4 mx-2">
+        <div class="col-sm-4 text-sm-right text-center py-2">
+            <span class="mr-2"><strong>Fecha Operación</strong></span>
         </div>
-        <div class="row mb-4 mx-2 justify-content-between">
-            <div class="col-4 text-right py-2">
-                <span class="mr-2"><strong>Proveedor</strong></span>
-            </div>
-            <div class="col">
-                <b-dropdown id="dropdown-1" text="Seleccionar proveedor">
-                    <b-dropdown-item>First Action</b-dropdown-item>
-                    <b-dropdown-item>Second Action</b-dropdown-item>
-                    <b-dropdown-item>Third Action</b-dropdown-item>
-                    <b-dropdown-divider></b-dropdown-divider>
-                    <b-dropdown-item active>Active action</b-dropdown-item>
-                    <b-dropdown-item disabled>Disabled action</b-dropdown-item>
-                </b-dropdown>
-            </div>
-            <div class="col">
-                <b-button variant="outline-primary">Agregar uno nuevo</b-button>
-            </div>
+        <div class="col">
+            <b-form-datepicker id="operacion-datepicker" class="mb-2"></b-form-datepicker>
         </div>
-        <div class="row mb-4 mx-2 justify-content-between">
-            <div class="col-4 text-right py-2">
-                <span class="mr-2"><strong>Medio de Pago</strong></span>
-            </div>
-            <div class="col">
-                <b-dropdown id="dropdown-1" text="Seleccionar medio">
-                    <b-dropdown-item>First Action</b-dropdown-item>
-                    <b-dropdown-item>Second Action</b-dropdown-item>
-                    <b-dropdown-item>Third Action</b-dropdown-item>
-                    <b-dropdown-divider></b-dropdown-divider>
-                    <b-dropdown-item active>Active action</b-dropdown-item>
-                    <b-dropdown-item disabled>Disabled action</b-dropdown-item>
-                </b-dropdown>
-            </div>
-            <div class="col">
-                <b-button variant="outline-primary">Agregar uno nuevo</b-button>
-            </div>
+    </div>
+    <div class="row mb-4 mx-2 justify-content-between">
+        <div class="col-sm-4 text-sm-right text-center py-2">
+            <span class="mr-2"><strong>Proveedor</strong></span>
         </div>
-        <div class="row mb-4 mx-2">
-            <div class="col-4 text-right py-2">
-                <span class="mr-2"><strong>Documento comercial</strong></span>
-            </div>
-            <div class="col">
-                <div class="py-2 container-fluid border border-secondary rounded">
-                    <div class="row my-3 mx-2">
-                        <div class="col-4 text-right py-2">
-                            <span class="mr-2"><strong>Tipo</strong></span>
-                        </div>
-                        <div class="col">
-                            <b-dropdown id="dropdown-1" text="Seleccionar tipo">
-                                <b-dropdown-item>First Action</b-dropdown-item>
-                                <b-dropdown-item>Second Action</b-dropdown-item>
-                                <b-dropdown-item>Third Action</b-dropdown-item>
-                                <b-dropdown-divider></b-dropdown-divider>
-                                <b-dropdown-item active>Active action</b-dropdown-item>
-                                <b-dropdown-item disabled>Disabled action</b-dropdown-item>
-                            </b-dropdown>
-                        </div>
+        <div class="col">
+            <b-form-select v-model="egreso.proveedor" :options="proveedoresSelect">
+                <template #first>
+                    <b-form-select-option :value="null" disabled>-- Selecciona un proveedor --</b-form-select-option>
+                </template>
+                <template>
+                    <b-form-select-option v-if="(proveedorAAgregar != null)" value="nuevoProveedor">\{{ proveedorAAgregar.nombre }}</b-form-select-option>
+                </template>
+            </b-form-select>
+        </div>
+        <div class="col">
+            <b-button block variant="outline-primary" v-b-modal.modal-agregar-proveedor>Agregar uno nuevo</b-button>
+        </div>
+    </div>
+    <div class="row mb-4 mx-2 justify-content-between">
+        <div class="col-sm-4 text-sm-right text-center py-2">
+            <b-form-select v-model="egreso.medioDePago.id" :options="mediosDePagoSelect">
+                <template #first>
+                    <b-form-select-option :value="null" disabled>-- Seleccionar un medio de pago --</b-form-select-option>
+                </template>
+            </b-form-select>
+        </div>
+        <div class="col">
+            <b-dropdown block id="dropdown-1" text="Seleccionar medio">
+                <b-dropdown-item>First Action</b-dropdown-item>
+                <b-dropdown-item>Second Action</b-dropdown-item>
+                <b-dropdown-item>Third Action</b-dropdown-item>
+                <b-dropdown-divider></b-dropdown-divider>
+                <b-dropdown-item active>Active action</b-dropdown-item>
+                <b-dropdown-item disabled>Disabled action</b-dropdown-item>
+            </b-dropdown>
+        </div>
+        <div class="col">
+            <b-form-input placeholder="Ingrese número de pago"></b-form-input>
+        </div>
+    </div>
+    <div class="row mb-4 mx-2">
+        <div class="col-sm-4 text-sm-right text-center py-2">
+            <span class="mr-2"><strong>Documento comercial</strong></span>
+        </div>
+        <div class="col">
+            <div class="p-2 container-fluid border border rounded">
+                <div class="row mb-2">
+                    <div class="col-sm-4 text-sm-right text-center py-2">
+                        <span class="mr-2"><strong>Tipo</strong></span>
                     </div>
-                    <div class="row mb-3 mx-2">
-                        <div class="col-4 text-right py-2">
-                            <span class="mr-2"><strong>Número documento</strong></span>
-                        </div>
-                        <div class="col">
-                            <b-form-input placeholder="Ingrese número de documento"></b-form-input>
-                        </div>
+                    <div class="col">
+                        <b-dropdown block id="dropdown-1" text="Seleccionar tipo">
+                            <b-dropdown-item>First Action</b-dropdown-item>
+                            <b-dropdown-item>Second Action</b-dropdown-item>
+                            <b-dropdown-item>Third Action</b-dropdown-item>
+                            <b-dropdown-divider></b-dropdown-divider>
+                            <b-dropdown-item active>Active action</b-dropdown-item>
+                            <b-dropdown-item disabled>Disabled action</b-dropdown-item>
+                        </b-dropdown>
                     </div>
-                    <div class="row mb-3 mx-2">
-                        <div class="col-4 text-right py-2">
-                            <span class="mr-2"><strong>Fecha de Pedido</strong></span>
-                        </div>
-                        <div class="col">
-                            <b-form-datepicker id="doc-comercial-pedido-datepicker" class="mb-2"></b-form-datepicker>
-                        </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-4 text-sm-right text-center py-2">
+                        <span class="mr-2"><strong>Número documento</strong></span>
                     </div>
-                    <div class="row mb-3 mx-2">
-                        <div class="col-4 text-right py-2">
-                            <span class="mr-2"><strong>Fecha de Entrega</strong></span>
-                        </div>
-                        <div class="col">
-                            <b-form-datepicker id="doc-comercial-entrega-datepicker" class="mb-2"></b-form-datepicker>
-                        </div>
+                    <div class="col">
+                        <b-form-input placeholder="Ingrese número de documento"></b-form-input>
                     </div>
-                    <div class="row mb-3 mx-2">
-                        <div class="col-4 text-right py-2">
-                            <span class="mr-2"><strong>Descripción</strong></span>
-                        </div>
-                        <div class="col">
-                            <b-col sm="10" class="px-0 mx-0">
-                                <b-form-textarea id="doc-comercial-descripcion" size="sm"
-                                    placeholder="Breve descripción"></b-form-textarea>
-                            </b-col>
-                        </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-4 text-sm-right text-center py-2">
+                        <span class="mr-2"><strong>Fecha de Pedido</strong></span>
                     </div>
-                    <div class="row mb-4 mx-2">
-                        <div class="col-4 text-right py-2">
-                            <span class="mr-2"><strong>Imagen</strong></span>
-                        </div>
-                        <div class="col bg-light p-2">
-                            <span class="ml-2">We'll see...</span>
-                        </div>
+                    <div class="col">
+                        <b-form-datepicker id="doc-comercial-pedido-datepicker" class="mb-2"></b-form-datepicker>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-4 text-sm-right text-center py-2">
+                        <span class="mr-2"><strong>Fecha de Entrega</strong></span>
+                    </div>
+                    <div class="col">
+                        <b-form-datepicker id="doc-comercial-entrega-datepicker" class="mb-2"></b-form-datepicker>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-4 text-sm-right text-center py-2">
+                        <span class="mr-2"><strong>Descripción</strong></span>
+                    </div>
+                    <div class="col">
+                        <b-col class="px-0 mx-0">
+                            <b-form-textarea id="doc-comercial-descripcion" size="sm"
+                                placeholder="Breve descripción"></b-form-textarea>
+                        </b-col>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-4 text-sm-right text-center py-2">
+                        <span class="mr-2"><strong>Imagen</strong></span>
+                    </div>
+                    <div class="col bg-light p-2">
+                        <span class="ml-2">We'll see...</span>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row mb-4 mx-2">
-            <div class="col-4 text-right py-2">
-                <span class="mr-2"><strong>Items</strong></span>
-            </div>
-            <div class="col">
-                <b-table small responsive striped class="mb-0" :fields="campos_itemsegreso" :items="items_itemsegreso"
-                    head-variant="dark" foot-variant="light" foot-clone>
-                    <template #cell(verified)="data">
-                        <b-badge v-if="data.verified" variant="warning">Sin validar</b-badge>
-                        <b-badge v-else variant="success">Validado</b-badge>
-                    </template>
+    </div>
+    <div class="row mb-4 mx-2">
+        <div class="col-sm-4 text-sm-right text-center py-2">
+            <span class="mr-2"><strong>Items</strong></span>
+        </div>
+        <div class="col">
+            <b-table small responsive striped class="mb-0 border rounded" :fields="campos_items" :items="egreso.items"
+                head-variant="dark" foot-variant="light" foot-clone>
+                <template #head(nombreProducto)="head">
+                    <div class="px-2">\{{ head.label }}</div>
+                </template>
+                <template #head(precio)="head">
+                    <div class="px-2">\{{ head.label }}</div>
+                </template>
+                <template #head(cantidad)="head">
+                    <div class="px-2">\{{ head.label }}</div>
+                </template>
 
-                    <template #foot(name)="data">
-                        <span class="text-danger">Nuevo Producto</span>
-                    </template>
-                    <template #foot(price)="data">
-                        <span class="text-danger">1234</span>
-                    </template>
-                    <template #foot(quantity)="data">
-                        <span class="text-danger">1234</span>
-                    </template>
-                </b-table>
-            </div>
+                <template #cell(nombreProducto)="row">
+                    <b-form-input class="border-0 px-2 bg-transparent" v-model="row.item.nombreProducto" @input="addItem"></b-form-input>
+                </template>
+                <template #cell(precio)="row">
+                    <b-form-input class="border-0 px-2 bg-transparent text-center" v-model="row.item.precio" @input="addItem"></b-form-input>
+                </template>
+                <template #cell(cantidad)="row">
+                    <b-form-input class="border-0 px-2 bg-transparent text-center" v-model="row.item.cantidad" @input="addItem"></b-form-input>
+                </template>
+                <template #cell(delete)="row">
+                    <b-button variant="outline" class="px-2 m-0 rounded-circle border-0 text-danger" @click="deleteItem(row.index)">
+                        <b-icon-x></b-icon-x>
+                    </b-button>
+                </template>
+            </b-table>
         </div>
-        <div class="row mb-4 mx-2">
-            <div class="col-4">
+    </div>
+    <div class="row mb-4 mx-2">
+        <div class="col-4">
 
-            </div>
-            <div class="col">
-                <b-button v-b-modal.modal-asociar-categoria>Asociar a categorías</b-button>
-            </div>
         </div>
-        
-        <b-modal id="modal-asociar-categoria" scrollable centered title="Asociar a categoría">
-            <asociar-categoria></asociar-categoria>
-        </b-modal>
-    </div>
-    <!-- template para proveedor -->
-    <div class="container-fluid border">
-        <div class="row mb-4 mx-2">
-            <div class="col-4 text-right py-2">
-                <span class="mr-2"><strong>Nombre</strong></span>
-            </div>
-            <div class="col bg-light p-2">
-                <b-form-input placeholder="Ingrese nombre del proveedor"></b-form-input>
-            </div>
-        </div>
-        <div class="row mb-4 mx-2">
-            <div class="col-4 text-right py-2">
-                <span class="mr-2"><strong>Documento</strong></span>
-            </div>
-            <div class="col bg-light p-2">
-                <b-form-input placeholder="Ingrese documento del proveedor"></b-form-input>
-            </div>
-        </div>
-        <div class="row mb-4 mx-2">
-            <div class="col-4 text-right py-2">
-                <span class="mr-2"><strong>Dirección Postal</strong></span>
-            </div>
-            <div class="col">
-                <div class="py-2 container-fluid border border-secondary rounded">
-                    <div class="row my-3 mx-2">
-                        <div class="col-4 text-right py-2">
-                            <span class="mr-2"><strong>Pais</strong></span>
-                        </div>
-                        <div class="col">
-                            <b-dropdown id="dropdown-1" text="Seleccionar pais">
-                                <b-dropdown-item>First Action</b-dropdown-item>
-                                <b-dropdown-item>Second Action</b-dropdown-item>
-                                <b-dropdown-item>Third Action</b-dropdown-item>
-                                <b-dropdown-divider></b-dropdown-divider>
-                                <b-dropdown-item active>Active action</b-dropdown-item>
-                                <b-dropdown-item disabled>Disabled action</b-dropdown-item>
-                            </b-dropdown>
-                        </div>
-                    </div>
-                    <div class="row my-3 mx-2">
-                        <div class="col-4 text-right py-2">
-                            <span class="mr-2"><strong>Documento</strong></span>
-                        </div>
-                        <div class="col">
-                            <b-dropdown id="dropdown-1" text="Seleccionar provincia">
-                                <b-dropdown-item>First Action</b-dropdown-item>
-                                <b-dropdown-item>Second Action</b-dropdown-item>
-                                <b-dropdown-item>Third Action</b-dropdown-item>
-                                <b-dropdown-divider></b-dropdown-divider>
-                                <b-dropdown-item active>Active action</b-dropdown-item>
-                                <b-dropdown-item disabled>Disabled action</b-dropdown-item>
-                            </b-dropdown>
-                        </div>
-                    </div>
-                    <div class="row my-3 mx-2">
-                        <div class="col-4 text-right py-2">
-                            <span class="mr-2"><strong>Ciudad</strong></span>
-                        </div>
-                        <div class="col">
-                            <b-dropdown id="dropdown-1" text="Seleccionar ciudad">
-                                <b-dropdown-item>First Action</b-dropdown-item>
-                                <b-dropdown-item>Second Action</b-dropdown-item>
-                                <b-dropdown-item>Third Action</b-dropdown-item>
-                                <b-dropdown-divider></b-dropdown-divider>
-                                <b-dropdown-item active>Active action</b-dropdown-item>
-                                <b-dropdown-item disabled>Disabled action</b-dropdown-item>
-                            </b-dropdown>
-                        </div>
-                    </div>
-                    <div class="row mb-3 mx-2">
-                        <div class="col-4 text-right py-2">
-                            <span class="mr-2"><strong>Calle</strong></span>
-                        </div>
-                        <div class="col">
-                            <b-form-input placeholder="Ingrese calle"></b-form-input>
-                        </div>
-                    </div>
-                    <div class="row mb-3 mx-2">
-                        <div class="col-4 text-right py-2">
-                            <span class="mr-2"><strong>Altura</strong></span>
-                        </div>
-                        <div class="col">
-                            <b-form-input placeholder="Ingrese altura"></b-form-input>
-                        </div>
-                    </div>
-                    <div class="row mb-3 mx-2">
-                        <div class="col-4 text-right py-2">
-                            <span class="mr-2"><strong>Piso</strong></span>
-                        </div>
-                        <div class="col">
-                            <b-form-input placeholder="Ingrese piso"></b-form-input>
-                        </div>
-                    </div>
-                    <div class="row mb-3 mx-2">
-                        <div class="col-4 text-right py-2">
-                            <span class="mr-2"><strong>Codigo Postal</strong></span>
-                        </div>
-                        <div class="col">
-                            <b-form-input placeholder="Ingrese codigo postal"></b-form-input>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row mb-4 mx-2">
-            <div class="col-4 py-2"></div>
-            <div class="col">
-                <b-button>Cancelar</b-button>
-            </div>
-            <div class="col">
-                <b-button>Agregar proveedor</b-button>
-            </div>
+        <div class="col">
+            <b-button-group>
+                <b-button>Asociar Ingreso</b-button>
+                <b-button v-b-modal.modal-asociar-categoria>Asociar a Categorías</b-button>
+                <b-button variant="outline-danger">Suscribirse a este egreso</b-button>
+            </b-button-group>
         </div>
     </div>
-    <!-- Template para medio de pago -->
-    <div class="container-fluid border">
-        <div class="row mb-4 mx-2">
-            <div class="col-4 text-right py-2">
-                <span class="mr-2"><strong>Medio de Pago</strong></span>
-            </div>
-            <div class="col bg-light p-2">
-                <b-dropdown id="dropdown-1" text="Seleccionar medio de pago">
-                    <b-dropdown-item>First Action</b-dropdown-item>
-                    <b-dropdown-item>Second Action</b-dropdown-item>
-                    <b-dropdown-item>Third Action</b-dropdown-item>
-                    <b-dropdown-divider></b-dropdown-divider>
-                    <b-dropdown-item active>Active action</b-dropdown-item>
-                    <b-dropdown-item disabled>Disabled action</b-dropdown-item>
-                </b-dropdown>
-            </div>
+
+    <div class="row mb-4 mx-2">
+        <div class="col-4">
+
         </div>
-        <div class="row mb-4 mx-2">
-            <div class="col-4 text-right py-2">
-                <span class="mr-2"><strong>Número asociado</strong></span>
-            </div>
-            <div class="col bg-light p-2">
-                <b-form-input placeholder="Ingrese número asociado"></b-form-input>
-            </div>
-        </div>
-        <div class="row mb-4 mx-2">
-            <div class="col-4 text-right py-2">
-                <span class="mr-2"><strong>Fecha de Pago</strong></span>
-            </div>
-            <div class="col">
-                <b-form-datepicker id="operacion-datepicker" class="mb-2"></b-form-datepicker>
-            </div>
-        </div>
-        <div class="row mb-4 mx-2">
-            <div class="col-4 py-2"></div>
-            <div class="col">
-                <b-button>Cancelar</b-button>
-            </div>
-            <div class="col">
-                <b-button>Agregar medio de pago</b-button>
-            </div>
+        <div class="col d-flex justify-content-between">
+            <b-button variant="primary" @click="confirmar">Confirmar</b-button>
+            <b-button variant="outline" to="/operaciones/egreso">Cancelar</b-button>
         </div>
     </div>
+    
+    <b-modal id="modal-asociar-categoria" scrollable centered title="Asociar a categoría">
+        <asociar-categoria></asociar-categoria>
+    </b-modal>
+
+    <b-modal id="modal-agregar-proveedor" size="xl" hide-footer scrollable centered title="Crear nuevo Proveedor">
+        <agregar-proveedor 
+            v-bind:confirmarAccion="confirmarNuevoProveedor"
+            v-bind:cancelarAccion="cancelarNuevoProveedor"
+        ></agregar-proveedor>
+    </b-modal>
 </div>

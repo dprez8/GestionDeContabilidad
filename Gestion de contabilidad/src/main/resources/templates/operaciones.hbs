@@ -23,16 +23,17 @@
     </b-nav>
     <div class="border">
         <b-table small responsive striped class="mb-0" :fields="campos_egreso" :items="items_egreso" head-variant="dark">
-            <template #cell(verified)="data">
-                <b-badge v-if="data.verified" variant="warning">Sin validar</b-badge>
-                <b-badge v-else variant="success">Validado</b-badge>
+            <template #cell(validado)="data">
+                <b-badge v-if="!data.validado" variant="success">Validado</b-badge>
+                <b-badge v-else variant="warning">Sin Validar</b-badge>
             </template>
 
             <template #cell(total)="data">
-                \{{ data.total }}
+                <span>\{{ "$" + data.item.total }}</span>
             </template>
+
             <template #cell(show_details)="data">
-                <b-button size="sm" v-on:click="data.toggleDetails" variant="outline-primary" style="min-width:110px">
+                <b-button size="sm" v-on:click="data.toggleDetails" v-b-toggle="" variant="outline-primary" style="min-width:110px">
                     \{{ data.detailsShowing ? "Ocultar" : "Mostrar"}} detalle
                 </b-button>
             </template>

@@ -9,7 +9,7 @@
     <b-tbody>
         <b-tr>
             <b-td colspan="1">
-                <b-table small responsive striped class="mb-0" :fields="campos_proveedor" :items="items_proveedor"
+                <b-table small responsive striped class="mb-0" :fields="campos_proveedor" :items="data.item.detalle.items_proveedor"
                     head-variant="light">
                     <template #cell(see_more)="data">
                         <b-button size="sm" v-on:click="data.see_more" variant="outline-primary">Ver detalle
@@ -18,7 +18,7 @@
                 </b-table>
             </b-td>
             <b-td colspan="1">
-                <b-table small responsive striped class="mb-0" :fields="campos_mediodepago" :items="items_mediodepago"
+                <b-table small responsive striped class="mb-0" :fields="campos_mediodepago" :items="data.item.detalle.items_mediodepago"
                     head-variant="light">
                     <template #cell(see_more)="data">
                         <b-button size="sm" v-on:click="data.see_more" variant="outline-primary">Ver detalle
@@ -28,7 +28,7 @@
             </b-td>
             <b-td colspan="1">
                 <b-table small responsive striped class="mb-0" :fields="campos_documentocomercial"
-                    :items="items_documentocomercial" head-variant="light">
+                    :items="data.item.detalle.items_documentocomercial" head-variant="light">
                     <template #cell(see_more)="data">
                         <b-button size="sm" v-on:click="data.see_more" variant="outline-primary">Ver documento
                         </b-button>
@@ -47,14 +47,17 @@
     <b-tbody>
     </b-tbody>
 </b-table-simple>
-<b-table small responsive striped class="mb-0" :fields="campos_itemsegreso" :items="items_itemsegreso"
+<b-table small responsive striped class="mb-0" :fields="campos_itemsegreso" :items="data.item.detalle.items_itemsegreso"
     head-variant="light" foot-clone>
     <!-- A custom formatted footer cell for field 'name' -->
+    <template #cell(price)="data">
+        <span>\{{ "$" + data.item.price }}</span>
+    </template>
     <template #foot(name)="data">
         <span class="text-danger">Total</span>
     </template>
-    <template #foot(price)="data">
-        <span class="text-danger">1234567</span>
+    <template #foot(price)="row">
+        <span class="text-danger">\{{ "$" + data.item.total }}</span>
     </template>
     <template #foot(quantity)="data"><i></i>
     </template>
