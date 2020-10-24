@@ -215,43 +215,68 @@
                 data() {
                     return {
                         campos_egreso: [
-                            { key: 'egreso_name', label: 'Egreso' },
-                            { key: 'verified', label: 'Estado' },
+                            { key: 'name', label: 'Egreso' },
+                            { key: 'validado', label: 'Estado validación' },
                             { key: 'total', label: 'Total' },
                             { key: 'emitido', label: 'Emitido' },
                             'show_details'
                         ],
                         items_egreso: [
-                            { egreso_name: 'Egreso 1234', status: true, total: 42234, emitido: "12/12/2020", detalle: { undato: false, dato: 123456 } },
+                            { 
+                                name: 'Egreso 1234', 
+                                validado: true, 
+                                total: 42234, 
+                                emitido: "12/12/2020", 
+                                detalle: { 
+                                    items_proveedor: [
+                                        {   
+                                            name: 'Un proveedor', 
+                                            documento: "12345678", 
+                                            id: "1234", 
+                                            detalle: {
+                                            }
+                                        }
+                                    ],
+                                    items_mediodepago: [
+                                        {   
+                                            name: 'Efectivo', 
+                                            total: '12345',
+                                            id: "1234",
+                                            detalle: {
+
+                                            }
+                                        },
+                                    ],
+                                    items_itemsegreso: [
+                                        {   name: 'Un producto', 
+                                            quantity: 3, 
+                                            price: 1234 
+                                        },
+                                    ],
+                                    items_documentocomercial: [
+                                        {   
+                                            id: '1234' 
+                                        },
+                                    ]
+                                } 
+                            },
                         ],
                         campos_proveedor: [
                             { key: 'name', label: 'Razón Social' },
-                            { key: 'dni', label: 'DNI' },
+                            { key: 'documento', label: 'Documento' },
                             { key: 'see_more', label: 'Ver detalle' },
-                        ],
-                        items_proveedor: [
-                            { name: 'Un proveedor', dni: "12345678", detalle: "verDetalleProveedor(1234)" },
                         ],
                         campos_mediodepago: [
                             { key: 'name', label: 'Medio' },
                             { key: 'total', label: 'Total' },
                         ],
-                        items_mediodepago: [
-                            { name: 'Efectivo', total: '12345' },
-                        ],
                         campos_documentocomercial: [
                             { key: 'see_more', label: 'Ver Documento' },
-                        ],
-                        items_documentocomercial: [
-                            { see_more: 'VerDetalleDocumentoComercial(1234)' },
                         ],
                         campos_itemsegreso: [
                             { key: 'name', label: 'Producto' },
                             { key: 'quantity', label: 'Cantidad' },
                             { key: 'price', label: 'Precio' },
-                        ],
-                        items_itemsegreso: [
-                            { name: 'Un producto', quantity: 3, price: 1234 },
                         ]
                     }
                 },
@@ -324,23 +349,147 @@ Neque lobortis mus hendrerit penatibus gravida curae ac, sociis laoreet venenati
             const configuracion = {
                 template: `{{> configuracion.hbs}}`
             };
+            const agregarProveedor = {
+                template: `{{> agregarProveedor.hbs}}`,
+                props: {
+                    confirmarAccion: Function,
+                    cancelarAccion: Function
+                },
+                data() {
+                    return {
+                        proveedor: {
+                            nombre: "",
+                            documento: "",
+                            direccionPostal: {
+                                pais: null,
+                                provincia: null,
+                                ciudad: null,
+                                calle: "",
+                                altura: "",
+                                piso: "",
+                                codigoPostal: ""
+                            }
+                        },
+                        paises: [
+                            {value: 1, text: "Argentina"}
+                        ],
+                        provincias: [],
+                        ciudades: []
+                    }
+                },
+                watch: {
+                    proveedor() {
+                        console.log("changed");
+                    }
+                }
+            };
             const agregarEgreso = {
                 template: `{{> agregarEgreso.hbs}}`,
                 data() {
                     return {
-                        campos_itemsegreso: [
-                                { key: 'name', label: 'Producto' },
-                                { key: 'quantity', label: 'Cantidad' },
-                                { key: 'price', label: 'Precio' },
+                        egreso: {
+                            fecha: null,
+                            proveedor: null,
+                            medioDePago: {
+                                id: null,
+                                dato: null
+                            },
+                            documentoComercial: {
+                                tipo: null,
+                                numeroDocumento: null,
+                                fechaDePedido: null,
+                                fechaDeEntrega: null,
+                                descripcion: null,
+                                imagenDelDocumento: null
+                            },
+                            items: [
+                                { nombreProducto: 'Cocacola', cantidad: 3, precio: 1234 },
+                                { nombreProducto: 'Pepsi', cantidad: 2, precio: 2222 },
+                                { nombreProducto: 'Un producto', cantidad: 3, precio: 1234 },
+                                { nombreProducto: "", cantidad: "", precio: "" }
+                            ]
+                        },
+                        campos_items: [
+                            { key: 'nombreProducto', label: 'Producto', tdClass: ['w-75'] },
+                            { key: 'cantidad', label: 'Cantidad', tdClass: [], thClass: ['text-center'] },
+                            { key: 'precio', label: 'Precio', tdClass: ['w-25'], thClass: ['text-center'] },
+                            { key: 'delete', label: '', tdClass: [], thClass: ['text-center'] }
                         ],
-                        items_itemsegreso: [
-                            { name: 'Un producto', quantity: 3, price: 1234 },
-                        ]
+                        proveedoresSelect: [
+                            { value: 1, text: "Roberto Samuel"}
+                        ],
+                        proveedorAAgregar: null,
+                        mediosDePagoSelect: [
+                            { value: 1, text: "Tarjeta de Débito"},
+                            { value: 2, text: "Tarjeta de Crédito"},
+                            { value: 3, text: "Cheque"},
+                            { value: 4, text: "Efectivo"},
+                        ],
+                        mediosDePagoType: {
+                            credit_card: []
+                        }
+                    }
+                },
+                methods: {
+                    confirmar() {
+                        console.log(this.items_egreso.items);
+
+                        this.addItem();
+                    },
+                    checkIfAddItem() {
+                        var items = this.items_egreso.items;
+                        var lastItemIndex = items.length - 1;
+                        var lastItem = items[lastItemIndex];
+                        
+                        if (lastItem == undefined   ||
+                            lastItem.name != ""     ||
+                            lastItem.quantity != "" ||
+                            lastItem.price != ""
+                        ) { 
+                            return true;
+                        }
+                        return false;
+                    },
+                    addItem() {
+                        if(this.checkIfAddItem()) {
+                            this.items_egreso.items.push({ name: "", quantity: "", price: "" });
+                        }
+                    },
+                    deleteItem(index) {
+                        this.items_egreso.items.splice(index, 1);
+                        this.addItem();
+                    },
+                    confirmarNuevoProveedor(data) {
+                        this.$bvModal.hide('modal-agregar-proveedor');
+                        console.log(data);
+
+                        this.proveedorAAgregar = data;
+                        this.egreso.proveedor = "nuevoProveedor";
+                    },
+                    cancelarNuevoProveedor() {
+                        this.$bvModal.hide('modal-agregar-proveedor');
+                        
+                        if (lastItem == undefined   ||
+                            lastItem.name != ""     ||
+                            lastItem.quantity != "" ||
+                            lastItem.price != ""
+                        ) { 
+                            return true;
+                        }
+                        return false;
                     }
                 },
                 components: {
-                    'asociar-categoria': asociarCategoria
-                }    
+                    'asociar-categoria': asociarCategoria,
+                    'agregar-proveedor': agregarProveedor
+                },
+                watch: {
+                   'egreso.medioDePago.id': function(medioDePagoId) {
+                       switch (medioDePagoId) {
+                           
+                       }
+                   } 
+                } 
             };
 
             const router = new VueRouter({
