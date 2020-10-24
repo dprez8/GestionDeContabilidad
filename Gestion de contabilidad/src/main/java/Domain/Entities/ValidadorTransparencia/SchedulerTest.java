@@ -96,7 +96,7 @@ public class SchedulerTest {
         unaCompra.addPresupuestos(primerPresupuesto,segundoPresupuesto);
 
         /**Inicio scheduler para validar el egreso*/
-        Scheduler.setPeriodo(10000);
+        Scheduler.setPeriodo(1);
         Scheduler.arrancarTarea(unaEntidad,validador);
 
         /**Solo es necesario un revisor para ver los mensajes*/

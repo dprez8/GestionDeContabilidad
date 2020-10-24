@@ -1,11 +1,7 @@
 
 package Server;
 
-import Domain.Controllers.DireccionPostalController;
-import Domain.Controllers.BandejaDeMensajesRestController;
-import Domain.Controllers.LoginRestController;
-import Domain.Controllers.MedioDePagoController;
-import Domain.Controllers.ProveedorController;
+import Domain.Controllers.*;
 import Spark.utils.BooleanHelper;
 import Spark.utils.HandlebarsTemplateEngineBuilder;
 import spark.Spark;
@@ -33,7 +29,8 @@ public class Router {
         ProveedorController proveedorController = new ProveedorController();
         MedioDePagoController medioController = new MedioDePagoController();
         BandejaDeMensajesRestController bandejaDeMensajesRestController= new BandejaDeMensajesRestController();
-        
+        OperacionesRestController operacionesRestController = new OperacionesRestController();
+
         Spark.post("/api/login",loginRestController::login);
         Spark.get("/api/pais",direccionController::listadoDePaises);
         Spark.get("/api/pais/:clavePais/provincia",direccionController::listadoDeProvincias);
@@ -42,5 +39,6 @@ public class Router {
         Spark.get("/api/medios",medioController::listadoMediosDePago);
         //Spark.get("api/bandeja",bandejaDeMensajesRestController::mostrarMensajes);
         Spark.get("api/bandeja/:usuarioId",bandejaDeMensajesRestController::mostrarMensajes);
+        Spark.post("api/operaciones/egreso",operacionesRestController::cargarNuevoEgreso);
     }
 }
