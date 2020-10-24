@@ -17,10 +17,7 @@ public class Pago extends EntidadPersistente {
 	private MedioDePago medioDePago;
 
 
-	public Pago() {
-	}
-
-	public Pago(LocalDate fechaPago, int numeroAsociado, MedioDePago medioDePago) {
+	public Pago(int numeroAsociado, MedioDePago medioDePago) {
 		this.codigoAsociado = numeroAsociado;
 		this.medioDePago = medioDePago;
 	}
