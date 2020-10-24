@@ -41,7 +41,7 @@ public class SchedulerTest {
         
         MedioDePago rapiPago = new MedioDePago("rapiPago");
         MedioDePago efectivo = new MedioDePago("efectivo");
-        Pago unPago = new Pago(LocalDate.of(2020, Month.AUGUST,14),1231231,efectivo);
+        Pago unPago = new Pago(1231231,efectivo);
 
         Proveedor lautaroRobles = new Proveedor("Lautaro Robles", 41424242);
         Proveedor lautaroIturregui = new Proveedor("Lautaro Iturregui", 2224222);

@@ -2,8 +2,6 @@ package Domain.Entities.DatosDeOperaciones;
 
 import Domain.Entities.EntidadPersistente.EntidadPersistente;
 
-import java.time.LocalDate;
-
 import javax.persistence.*;
 
 @Entity
@@ -17,6 +15,10 @@ public class Pago extends EntidadPersistente {
 	private MedioDePago medioDePago;
 
 
+	public Pago() {
+	}
+
+	
 	public Pago(int numeroAsociado, MedioDePago medioDePago) {
 		this.codigoAsociado = numeroAsociado;
 		this.medioDePago = medioDePago;
