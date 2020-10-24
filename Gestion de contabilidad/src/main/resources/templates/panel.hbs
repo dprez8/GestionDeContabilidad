@@ -305,14 +305,7 @@
                 template: `{{> bandeja.hbs}}`,
                 data() {
                     return {
-                        mensajes: [
-                            {
-                                id: 1,
-                                fecha: "2020-10-21",
-                                leido: false,
-                                cuerpo: "Habia una vez trus xdxdxd lorem ipsum dolor sit amet dadadadadada"
-                            }
-                        ],
+                        mensajes: [],
                         selected: null
                     }
                 },
@@ -322,20 +315,47 @@
                         var id = this.$route.params.id;
                         this.selected = id;
                     },
-                    cargarMensajes() {
-                        
+                    cargarMensajesAPI(bandeja) {
+                        $.ajax({
+                            url: "http://{{ ip }}/api/bandeja",
+                            type: "GET",
+                            success(data) {
+                                if(data.code == 200) {
+                                    
+                                    bandeja.mensajes = data.mensajes;
+                                }
+                                else {
+                                    console.log("error");
+                                    console.log(data)
+                                }
+                            },
+                            error(data) {
+                                console.log("oof");
+                                console.log(data);
+                            },
+                            complete(data) {
+                                console.log(this);
+                            }
+                        });
                     },
                     getMessageSelected() {
                         var mensajeSeleccionado = null;
+                        for(var i = 0; i < this.mensajes.length; i++) {
+                            if(this.mensajes[i].id == this.selected) {
+                                mensajeSeleccionado = this.mensajes[i];
+                            }
+                        }
+                        return mensajeSeleccionado;
                     }
                 },
                 watch: {
                     $route(to, from) {
-                        this.selectMessage()
+                        this.seleccionarMensaje()
                     }
                 },
                 mounted() {
-                    this.selectMessage();
+                    this.cargarMensajesAPI(this);
+                    this.seleccionarMensaje();
                 }
             };
             const configuracion = {
