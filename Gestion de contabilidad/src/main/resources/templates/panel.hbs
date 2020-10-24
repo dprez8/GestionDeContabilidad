@@ -215,6 +215,18 @@
                     'criterio': criterio
                 }
             };
+            const asociarIngreso = {
+                template: `{{> asociarIngreso.hbs}}`,
+                props: {
+                    confirmarAccion: Function,
+                    cancelarAccion: Function
+                },
+                data() {
+                    return {
+
+                    }
+                }
+            }
             const operaciones = {
                 data() {
                     return {
@@ -502,6 +514,7 @@ Neque lobortis mus hendrerit penatibus gravida curae ac, sociis laoreet venenati
                 },
                 components: {
                     'asociar-categoria': asociarCategoria,
+                    'asociar-ingreso': asociarIngreso,
                     'agregar-proveedor': agregarProveedor
                 },
                 watch: {

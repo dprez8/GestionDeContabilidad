@@ -138,7 +138,7 @@
                 </template>
 
                 <template #cell(nombreProducto)="row">
-                    <b-form-input class="border-0 px-2 bg-transparent text-center" v-model="row.item.nombreProducto" @input="addItem"></b-form-input>
+                    <b-form-input class="border-0 px-2 bg-transparent" v-model="row.item.nombreProducto" @input="addItem"></b-form-input>
                 </template>
                 <template #cell(precio)="row">
                     <b-form-input class="border-0 px-2 bg-transparent text-center" v-model="row.item.precio" @input="addItem"></b-form-input>
@@ -160,7 +160,8 @@
         </div>
         <div class="col">
             <b-button-group class="w-100">
-                <b-button>Asociar Ingreso</b-button>
+                <b-button>Cargar Presupuestos</b-button>
+                <b-button v-b-modal.modal-asociar-ingreso>Asociar a Ingreso</b-button>
                 <b-button v-b-modal.modal-asociar-categoria>Asociar a Categorías</b-button>
             </b-button-group>
             <div class="pt-2" v-if="categoriasAAsociar.length">
@@ -195,11 +196,18 @@
         </div>
     </div>
     
-    <b-modal id="modal-asociar-categoria" hide-footer scrollable centered title="Asociar a categoría">
+    <b-modal id="modal-asociar-categoria" hide-footer scrollable centered title="Asociar a Categoría">
         <asociar-categoria
             v-bind:confirmarAccion="confirmarAsociarCategorias"
             v-bind:cancelarAccion="cancelarAsociarCategorias"
         ></asociar-categoria>
+    </b-modal>
+    
+    <b-modal id="modal-asociar-ingreso" hide-footer scrollable centered title="Asociar a Ingreso">
+        <asociar-ingreso
+            v-bind:confirmarAccion="confirmarAsociarCategorias"
+            v-bind:cancelarAccion="cancelarAsociarCategorias"
+        ></asociar-ingreso>
     </b-modal>
 
     <b-modal id="modal-agregar-proveedor" size="xl" hide-footer scrollable centered title="Crear nuevo Proveedor">
