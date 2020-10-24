@@ -1,29 +1,29 @@
 <!-- template para proveedor -->
 <div>
     <div class="row mb-4 mx-2">
-        <div class="col-sm-4 text-sm-right text-center py-2">
+        <div class="col-sm-4 text-sm-right py-2">
             <span class="mr-2"><strong>Nombre</strong></span>
         </div>
-        <div class="col bg-light p-2">
+        <div class="col px-2">
             <b-form-input placeholder="Ingrese nombre del proveedor" v-model="proveedor.nombre"></b-form-input>
         </div>
     </div>
     <div class="row mb-4 mx-2">
-        <div class="col-sm-4 text-sm-right text-center py-2">
+        <div class="col-sm-4 text-sm-right py-2">
             <span class="mr-2"><strong>Documento</strong></span>
         </div>
-        <div class="col bg-light p-2">
+        <div class="col px-2">
             <b-form-input placeholder="Ingrese documento del proveedor" v-model="proveedor.documento"></b-form-input>
         </div>
     </div>
     <div class="row mb-4 mx-2">
-        <div class="col-sm-4 text-sm-right text-center py-2">
+        <div class="col-sm-4 text-sm-right py-2">
             <span class="mr-2"><strong>Dirección Postal</strong></span>
         </div>
         <div class="col p-2">
             <div class="p-2 container-fluid border border rounded">
                 <div class="row mb-2">
-                    <div class="col-sm-4 text-sm-right text-center py-2">
+                    <div class="col-sm-4 text-sm-right py-2">
                         <span class="mr-2"><strong>Pais</strong></span>
                     </div>
                     <div class="col">
@@ -35,7 +35,7 @@
                     </div>
                 </div>
                 <div class="row mb-2">
-                    <div class="col-sm-4 text-sm-right text-center py-2">
+                    <div class="col-sm-4 text-sm-right py-2">
                         <span class="mr-2"><strong>Documento</strong></span>
                     </div>
                     <div class="col">
@@ -47,7 +47,7 @@
                     </div>
                 </div>
                 <div class="row mb-2">
-                    <div class="col-sm-4 text-sm-right text-center py-2">
+                    <div class="col-sm-4 text-sm-right py-2">
                         <span class="mr-2"><strong>Ciudad</strong></span>
                     </div>
                     <div class="col">
@@ -59,7 +59,7 @@
                     </div>
                 </div>
                 <div class="row mb-2">
-                    <div class="col-sm-4 text-sm-right text-center py-2">
+                    <div class="col-sm-4 text-sm-right py-2">
                         <span class="mr-2"><strong>Calle</strong></span>
                     </div>
                     <div class="col">
@@ -67,7 +67,7 @@
                     </div>
                 </div>
                 <div class="row mb-2">
-                    <div class="col-sm-4 text-sm-right text-center py-2">
+                    <div class="col-sm-4 text-sm-right py-2">
                         <span class="mr-2"><strong>Altura</strong></span>
                     </div>
                     <div class="col">
@@ -75,7 +75,7 @@
                     </div>
                 </div>
                 <div class="row mb-2">
-                    <div class="col-sm-4 text-sm-right text-center py-2">
+                    <div class="col-sm-4 text-sm-right py-2">
                         <span class="mr-2"><strong>Piso</strong></span>
                     </div>
                     <div class="col">
@@ -83,7 +83,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-4 text-sm-right text-center py-2">
+                    <div class="col-sm-4 text-sm-right py-2">
                         <span class="mr-2"><strong>Codigo Postal</strong></span>
                     </div>
                     <div class="col">
@@ -98,8 +98,10 @@
 
         </div>
         <div class="col d-flex justify-content-between">
-            <b-button variant="primary" @click="confirmarAccion(proveedor)">Confirmar</b-button>
-            <b-button variant="outline" @click="cancelarAccion">Cancelar</b-button>
+            <b-button-group>
+                <b-button variant="primary" @click="confirmarAccion(proveedor)">Confirmar</b-button>
+                <b-button variant="outline-dark" @click="cancelarAccion">Cancelar</b-button>
+            </b-button-group>
         </div>
     </div>
 </div>

@@ -16,4 +16,12 @@
             <b-badge class="mr-1">\{{ categoria }}</b-badge>
         </template>
     </div>
+    <div class="row pt-4">
+        <div class="col d-flex justify-content-between">
+            <b-button-group>
+                <b-button variant="primary" @click="confirmarAccion(categoriasSeleccionadas)">Confirmar</b-button>
+                <b-button variant="outline-dark" @click="cancelarAccion">Cancelar</b-button>
+            </b-button-group>
+        </div>
+    </div>
 </div>
