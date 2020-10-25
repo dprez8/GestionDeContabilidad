@@ -11,7 +11,7 @@ import spark.Response;
 
 public class PermisosRestController {
     private static Repositorio<Usuario> repoUsuarios = new Repositorio<>(new DaoHibernate<Usuario>(Usuario.class));
-    private static Respuesta respuesta;
+    private static Respuesta respuesta = new Respuesta();
 
 
     public static Usuario verificarSesion(Request request, Response response) {
