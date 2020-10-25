@@ -67,13 +67,14 @@ public class OperacionesRestController {
 
         Egreso egreso = asignarEgresoDesde(egresoRequest, entidadJuridica);
 
-        this.respuesta.setCode(200);
         if(egreso == null) {
+            this.respuesta.setCode(400);
             this.respuesta.setMessage("Problema al cargar el egreso");
             jsonResponse = gson.toJson(this.respuesta);
             response.body(jsonResponse);
             return response.body();
         }
+        this.respuesta.setCode(200);
         this.respuesta.setMessage("Egreso cargado exitosamente");
 
         CargaEgresoResponse cargaEgresoResponse = new CargaEgresoResponse();
