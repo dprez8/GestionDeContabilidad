@@ -1,0 +1,34 @@
+const agregarProveedor = {
+    template: `{{> agregarProveedor/agregarProveedorHTML.hbs}}`,
+    props: {
+        confirmarAccion: Function,
+        cancelarAccion: Function
+    },
+    data() {
+        return {
+            proveedor: {
+                nombre: "",
+                documento: "",
+                direccionPostal: {
+                    pais: null,
+                    provincia: null,
+                    ciudad: null,
+                    calle: "",
+                    altura: "",
+                    piso: "",
+                    codigoPostal: ""
+                }
+            },
+            paises: [
+                {value: 1, text: "Argentina"}
+            ],
+            provincias: [],
+            ciudades: []
+        }
+    },
+    watch: {
+        proveedor() {
+            console.log("changed");
+        }
+    }
+};

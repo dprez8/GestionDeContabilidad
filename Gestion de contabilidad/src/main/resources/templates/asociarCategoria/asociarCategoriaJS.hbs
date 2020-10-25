@@ -1,0 +1,95 @@
+const criterio = {
+    name: 'criterio',
+    template: `{{> asociarCategoria/criterioHTML.hbs}}`,
+    props: {
+        criterio: Object,
+        seleccionoCategoria: Function
+    },
+    data() {
+        return {
+            isOpen: false
+        }
+    }
+};
+const asociarCategoria = {
+    template: `{{> asociarCategoria/asociarCategoriaHTML.hbs}}`,
+    props: {
+        confirmarAccion: Function,
+        cancelarAccion: Function
+    },
+    data() {
+        return {
+            criterios: [{
+                    id: "1",
+                    name: "Alcance del proyecto",
+                    criterios: [{
+                        id: "2",
+                        name: "Tamaño del proyecto",
+                        criterios: [],
+                        categorias: [{
+                                name: "Grande"
+                            },
+                            {
+                                name: "Chico"
+                            }
+                        ]
+                    }],
+                    categorias: [{
+                            name: "Nacional"
+                        },
+                        {
+                            name: "Internacional"
+                        }
+                    ]
+                },
+                {
+                    id: "3",
+                    name: "Clientes",
+                    criterios: [{
+                            id: "4",
+                            name: "Mayoristas",
+                            criterios: [],
+                            categorias: [{
+                                    name: "Carrefour"
+                                },
+                                {
+                                    name: "Coto"
+                                },
+                                {
+                                    name: "La Serenisima"
+                                }
+                            ]
+                        },
+                        {
+                            id: "5",
+                            name: "Minoristas",
+                            criterios: [],
+                            categorias: [{
+                                    name: "Pollos Hermanos"
+                                },
+                                {
+                                    name: "Banco comafi"
+                                }
+                            ]
+                        }
+                    ],
+                    categorias: []
+                }
+            ],
+            categoriasSeleccionadas: []
+        }
+    },
+    methods: {
+        seleccionoCategoria(criterio, selected) {
+            if (selected)
+                this.categoriasSeleccionadas.push(criterio);
+            else {
+                var index = this.categoriasSeleccionadas.indexOf(criterio);
+                this.categoriasSeleccionadas.splice(index, 1);
+            }
+        }
+    },
+    components: {
+        'criterio': criterio
+    }
+};

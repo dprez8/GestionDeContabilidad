@@ -1,0 +1,74 @@
+const operaciones = {
+    template: `{{> operaciones/operacionesHTML.hbs}}`,
+    data() {
+        return {
+            campos_egreso: [
+                { key: 'name', label: 'Egreso' },
+                { key: 'validado', label: 'Estado validación' },
+                { key: 'total', label: 'Total' },
+                { key: 'emitido', label: 'Emitido' },
+                'show_details'
+            ],
+            items_egreso: [
+                { 
+                    name: 'Egreso 1234', 
+                    validado: true, 
+                    total: 42234, 
+                    emitido: "12/12/2020", 
+                    detalle: { 
+                        items_proveedor: [
+                            {   
+                                name: 'Un proveedor', 
+                                documento: "12345678", 
+                                id: "1234", 
+                                detalle: {
+                                }
+                            }
+                        ],
+                        items_mediodepago: [
+                            {   
+                                name: 'Efectivo', 
+                                total: '12345',
+                                id: "1234",
+                                detalle: {
+
+                                }
+                            },
+                        ],
+                        items_itemsegreso: [
+                            {   name: 'Un producto', 
+                                quantity: 3, 
+                                price: 1234 
+                            },
+                        ],
+                        items_documentocomercial: [
+                            {   
+                                id: '1234' 
+                            },
+                        ]
+                    } 
+                },
+            ],
+            campos_proveedor: [
+                { key: 'name', label: 'Razón Social' },
+                { key: 'documento', label: 'Documento' },
+                { key: 'see_more', label: 'Ver detalle' },
+            ],
+            campos_mediodepago: [
+                { key: 'name', label: 'Medio' },
+                { key: 'total', label: 'Total' },
+            ],
+            campos_documentocomercial: [
+                { key: 'see_more', label: 'Ver Documento' },
+            ],
+            campos_itemsegreso: [
+                { key: 'name', label: 'Producto' },
+                { key: 'quantity', label: 'Cantidad' },
+                { key: 'price', label: 'Precio' },
+            ]
+        }
+    },
+    components: {
+        'asociar-categoria': asociarCategoria
+    }
+};

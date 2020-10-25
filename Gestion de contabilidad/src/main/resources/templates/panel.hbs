@@ -11,6 +11,34 @@
         <link type="text/css" rel="stylesheet" href="http://{{ ip }}/css/criterio.css"/>
         <!-- Panel -->
         <div id="panel">
+            <b-overlay variant="warning" opacity="0.2" :show="loggedOut" no-wrap>
+                <template #overlay>
+                    <b-card
+                        class="shadow"
+                        title="Se ha cerrado la sesión"
+                        style="width: 25rem"
+                    >
+                        <b-overlay spinner-variant="light" variant="primary" rounded="sm" :show="login.loginLoading" no-wrap></b-overlay>
+                        <div class="pt-2">
+                            <p>Por favor inicia sesión nuevamente</p>
+                            <b-collapse :visible="login.userState == false">
+                                <p class="text-danger text-left m-0"><span>Completa el campo usuario</span></p>
+                            </b-collapse>
+                            <b-form-input class="mb-2" v-model="login.user" :state="login.userState" type="text" placeholder="Usuario"></b-form-input>
+
+                            <b-collapse :visible="login.passState == false">
+                                <p class="text-danger text-left m-0"><span>Completa el campo contraseña</span></p>
+                            </b-collapse>
+                            <b-form-input v-model="login.pass" :state="login.passState" type="password" placeholder="Contraseña"></b-form-input>
+
+                            <b-collapse :visible="login.loginState == false" class="mt-2">
+                                <p class="text-danger text-left m-0"><span>Usuario y/o contraseña no coinciden</span></p>
+                            </b-collapse>
+                            <b-button variant="primary" type="submit" class="mt-4" @click.prevent="loginAttempt">Iniciar Sesión</b-button>
+                        </div>
+                    </b-card>
+                </template>
+            </b-overlay>
             <!-- Navbar -->
             <nav class="navbar navbar-expand-md navbar-light bg-light border-bottom d-flex flex-nowrap">
                 <button class="navbar-toggler border-0 p-1 mr-2" data-toggle="collapse" v-on:click="sidebarShow = !sidebarShow">
@@ -91,9 +119,9 @@
                     <!-- /$breadcrum-wrapper -->
 
                     <!-- Page Content -->
-                    <div class="container-fluid overflow-auto" style="height: calc(100vh - 106px)">
+                    <div class="overflow-auto" style="height: calc(100vh - 106px)">
                         <transition name="fade" mode="out-in">
-                            <router-view></router-view>
+                            <router-view :key="routerViewKey"></router-view>
                         </transition>
                     </div>
                     <!-- /#page-content-wrapper -->
@@ -112,567 +140,17 @@
             const inicio = {
                 template: `{{> inicio.hbs}}`
             };
-            const criterio = {
-                name: 'criterio',
-                template: `{{> criterio.hbs}}`,
-                props: {
-                    criterio: Object,
-                    seleccionoCategoria: Function
-                },
-                data() {
-                    return {
-                        isOpen: false
-                    }
-                }
-            };
-            const asociarCategoria = {
-                template: `{{> asociarCategoria.hbs}}`,
-                props: {
-                    confirmarAccion: Function,
-                    cancelarAccion: Function
-                },
-                data() {
-                    return {
-                        criterios: [
-                            {
-                                id: "1",
-                                name: "Alcance del proyecto",
-                                criterios: [
-                                    {
-                                        id: "2",
-                                        name: "Tamaño del proyecto",
-                                        criterios: [],
-                                        categorias: [
-                                            {
-                                                name: "Grande"
-                                            },
-                                            {
-                                                name: "Chico"
-                                            }
-                                        ]
-                                    }
-                                ],
-                                categorias: [
-                                    {
-                                        name: "Nacional"
-                                    },
-                                    {
-                                        name: "Internacional"
-                                    }
-                                ]
-                            },
-                            {
-                                id: "3",
-                                name: "Clientes",
-                                criterios: [
-                                    {
-                                        id: "4",
-                                        name: "Mayoristas",
-                                        criterios: [],
-                                        categorias: [
-                                            {
-                                                name: "Carrefour"
-                                            },
-                                            {
-                                                name: "Coto"
-                                            },
-                                            {
-                                                name: "La Serenisima"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        id: "5",
-                                        name: "Minoristas",
-                                        criterios: [],
-                                        categorias: [
-                                            {
-                                                name: "Pollos Hermanos"
-                                            },
-                                            {
-                                                name: "Banco comafi"
-                                            }
-                                        ]
-                                    }
-                                ],
-                                categorias: []
-                            }
-                        ],
-                        categoriasSeleccionadas: []
-                    }
-                },
-                methods: {
-                    seleccionoCategoria(criterio, selected) {
-                        if(selected)
-                            this.categoriasSeleccionadas.push(criterio);
-                        else {
-                            var index = this.categoriasSeleccionadas.indexOf(criterio);
-                            this.categoriasSeleccionadas.splice(index, 1);
-                        }
-                    }
-                },
-                components: {
-                    'criterio': criterio
-                }
-            };
-            const asociarIngreso = {
-                template: `{{> asociarIngreso.hbs}}`,
-                props: {
-                    confirmarAccion: Function,
-                    cancelarAccion: Function
-                },
-                data() {
-                    return {
+            {{> tablaItems/itemsJS.hbs}}
+            {{> asociarCategoria/asociarCategoriaJS.hbs}}
+            {{> asociarIngreso/asociarIngresoJS.hbs}}
+            {{> operaciones/operacionesJS.hbs}}
+            {{> bandeja/bandejaJS.hbs}}
+            {{> configuracion/configuracionJS.hbs}}
+            {{> agregarProveedor/agregarProveedorJS.hbs}}
+            {{> agregarPresupuesto/agregarPresupuestoJS.hbs}}
+            {{> agregarEgreso/agregarEgresoJS.hbs}}
 
-                    }
-                }
-            }
-            const operaciones = {
-                data() {
-                    return {
-                        campos_egreso: [
-                            { key: 'name', label: 'Egreso' },
-                            { key: 'validado', label: 'Estado validación' },
-                            { key: 'total', label: 'Total' },
-                            { key: 'emitido', label: 'Emitido' },
-                            'show_details'
-                        ],
-                        items_egreso: [
-                            { 
-                                name: 'Egreso 1234', 
-                                validado: true, 
-                                total: 42234, 
-                                emitido: "12/12/2020", 
-                                detalle: { 
-                                    items_proveedor: [
-                                        {   
-                                            name: 'Un proveedor', 
-                                            documento: "12345678", 
-                                            id: "1234", 
-                                            detalle: {
-                                            }
-                                        }
-                                    ],
-                                    items_mediodepago: [
-                                        {   
-                                            name: 'Efectivo', 
-                                            total: '12345',
-                                            id: "1234",
-                                            detalle: {
-
-                                            }
-                                        },
-                                    ],
-                                    items_itemsegreso: [
-                                        {   name: 'Un producto', 
-                                            quantity: 3, 
-                                            price: 1234 
-                                        },
-                                    ],
-                                    items_documentocomercial: [
-                                        {   
-                                            id: '1234' 
-                                        },
-                                    ]
-                                } 
-                            },
-                        ],
-                        campos_proveedor: [
-                            { key: 'name', label: 'Razón Social' },
-                            { key: 'documento', label: 'Documento' },
-                            { key: 'see_more', label: 'Ver detalle' },
-                        ],
-                        campos_mediodepago: [
-                            { key: 'name', label: 'Medio' },
-                            { key: 'total', label: 'Total' },
-                        ],
-                        campos_documentocomercial: [
-                            { key: 'see_more', label: 'Ver Documento' },
-                        ],
-                        campos_itemsegreso: [
-                            { key: 'name', label: 'Producto' },
-                            { key: 'quantity', label: 'Cantidad' },
-                            { key: 'price', label: 'Precio' },
-                        ]
-                    }
-                },
-                components: {
-                    'asociar-categoria': asociarCategoria
-                },
-                template: `{{> operaciones.hbs}}`
-            };
-            const bandeja = {
-                template: `{{> bandeja.hbs}}`,
-                data() {
-                    return {
-                        mensajes: [],
-                        selected: null
-                    }
-                },
-                methods: {
-                    convertDate: convertDate,
-                    seleccionarMensaje() {
-                        var id = this.$route.params.id;
-                        this.selected = id;
-                    },
-                    cargarMensajesAPI(bandeja) {
-                        $.ajax({
-                            url: "http://{{ ip }}/api/bandeja",
-                            type: "GET",
-                            success(data) {
-                                if(data.code == 200) {
-                                    
-                                    bandeja.mensajes = data.mensajes;
-                                }
-                                else {
-                                    console.log("error");
-                                    console.log(data)
-                                }
-                            },
-                            error(data) {
-                                console.log("oof");
-                                console.log(data);
-                            },
-                            complete(data) {
-                                console.log(this);
-                            }
-                        });
-                    },
-                    getMessageSelected() {
-                        var mensajeSeleccionado = null;
-                        for(var i = 0; i < this.mensajes.length; i++) {
-                            if(this.mensajes[i].id == this.selected) {
-                                mensajeSeleccionado = this.mensajes[i];
-                            }
-                        }
-                        return mensajeSeleccionado;
-                    }
-                },
-                watch: {
-                    $route(to, from) {
-                        this.seleccionarMensaje()
-                    }
-                },
-                mounted() {
-                    this.cargarMensajesAPI(this);
-                    this.seleccionarMensaje();
-                }
-            };
-            const configuracion = {
-                template: `{{> configuracion.hbs}}`
-            };
-            const agregarProveedor = {
-                template: `{{> agregarProveedor.hbs}}`,
-                props: {
-                    confirmarAccion: Function,
-                    cancelarAccion: Function
-                },
-                data() {
-                    return {
-                        proveedor: {
-                            nombre: "",
-                            documento: "",
-                            direccionPostal: {
-                                pais: null,
-                                provincia: null,
-                                ciudad: null,
-                                calle: "",
-                                altura: "",
-                                piso: "",
-                                codigoPostal: ""
-                            }
-                        },
-                        paises: [
-                            {value: 1, text: "Argentina"}
-                        ],
-                        provincias: [],
-                        ciudades: []
-                    }
-                },
-                watch: {
-                    proveedor() {
-                        console.log("changed");
-                    }
-                }
-            };
-            const agregarEgreso = {
-                template: `{{> agregarEgreso.hbs}}`,
-                data() {
-                    return {
-                        egreso: {
-                            fecha: null,
-                            proveedor: null,
-                            medioDePago: {
-                                id: null,
-                                dato: null
-                            },
-                            documentoComercial: {
-                                tipo: null,
-                                numeroDocumento: null,
-                                fechaDePedido: null,
-                                fechaDeEntrega: null,
-                                descripcion: null,
-                                imagenDelDocumento: null
-                            },
-                            items: [
-                                { nombreProducto: 'Cocacola', cantidad: 3, precio: 1234 },
-                                { nombreProducto: 'Pepsi', cantidad: 2, precio: 2222 },
-                                { nombreProducto: 'Un producto', cantidad: 3, precio: 1234 },
-                                { nombreProducto: "", cantidad: "", precio: "" }
-                            ]
-                        },
-                        campos_items: [
-                            { key: 'nombreProducto', label: 'Producto', tdClass: ['w-75'] },
-                            { key: 'cantidad', label: 'Cantidad', tdClass: [], thClass: ['text-center'] },
-                            { key: 'precio', label: 'Precio', tdClass: ['w-25'], thClass: ['text-center'] },
-                            { key: 'delete', label: '', tdClass: [], thClass: ['text-center'] }
-                        ],
-                        proveedoresSelect: [
-                            { value: 1, text: "Roberto Samuel"}
-                        ],
-                        mediosDePagoSelect: [
-                            { value: 1, text: "Tarjeta de Débito", type: "credit_card"},
-                            { value: 2, text: "Tarjeta de Crédito", type: "debit_card"},
-                            { value: 3, text: "Cheque", type: "cheque"},
-                            { value: 4, text: "Efectivo", type: "cash"}
-                        ],
-                        mediosDePagoType: {
-                            credit_card: []
-                        },
-                        tipoDocumentoSelect: [
-                            { value: 1, text: "Factura A"},
-                            { value: 2, text: "Factura B"},
-                            { value: 3, text: "Factura C"}
-                        ],
-                        proveedorAAgregar: null,
-                        categoriasAAsociar: [],
-                    }
-                },
-                methods: {
-                    confirmar() {
-                        if(this.proveedorAAgregar != null) {
-                            // Hay que agregar un proveedor antes de agregar el egreso
-                            console.log("POST '/api/proveedor'");
-                            console.log(JSON.stringify(this.proveedorAAgregar, null, 4));
-                        }
-
-                        console.log("POST '/api/operaciones/egreso'");
-                        console.log(JSON.stringify(this.egreso, null, 4));
-
-                        if(this.categoriasAAsociar.length) {
-                            // Hay que crear el egreso y luego asociarlo a estas categorias
-                            console.log("POST 'nose xd'");
-                            console.log(JSON.stringify(this.categoriasAAsociar, null, 4));
-                        }
-                    },
-                    checkIfAddItem() {
-                        var items = this.egreso.items;
-                        var lastItemIndex = items.length - 1;
-                        var lastItem = items[lastItemIndex];
-                        
-                        if (lastItem == undefined         ||
-                            lastItem.nombreProducto != "" ||
-                            lastItem.cantidad != ""       ||
-                            lastItem.precio != ""
-                        ) { 
-                            return true;
-                        }
-                        return false;
-                    },
-                    addItem() {
-                        if(this.checkIfAddItem()) {
-                            this.egreso.items.push({ nombreProducto: "", cantidad: "", precio: "" });
-                        }
-                    },
-                    deleteItem(index) {
-                        this.egreso.items.splice(index, 1);
-                        this.addItem();
-                    },
-                    confirmarNuevoProveedor(data) {
-                        this.$bvModal.hide('modal-agregar-proveedor');
-                        console.log(data);
-
-                        this.proveedorAAgregar = data;
-                        this.egreso.proveedor = "nuevoProveedor";
-                    },
-                    cancelarNuevoProveedor() {
-                        this.$bvModal.hide('modal-agregar-proveedor');
-                    },
-                    confirmarAsociarCategorias(data) {
-                        this.$bvModal.hide('modal-asociar-categoria');
-                        console.log(data);
-
-                        this.categoriasAAsociar = data;
-                    },
-                    cancelarAsociarCategorias() {
-                        this.$bvModal.hide('modal-asociar-categoria');
-                    }
-                },
-                components: {
-                    'asociar-categoria': asociarCategoria,
-                    'asociar-ingreso': asociarIngreso,
-                    'agregar-proveedor': agregarProveedor
-                },
-                watch: {
-                   'egreso.medioDePago.id': function(medioDePagoId) {
-                       
-                   } 
-                } 
-            };
-
-            const router = new VueRouter({
-                routes: [
-                    {
-                        name: 'inicio',
-                        path: '/',
-                        component: inicio,
-                        meta: {
-                            breadcrumb: []
-                        }
-                    },
-                    {
-                        name: 'operaciones',
-                        path: '/operaciones',
-                        component: operaciones,
-                        meta: {
-                            breadcrumb: [
-                                {
-                                    label: "Operaciones",
-                                    type: "fixed",
-                                    path: "/operaciones",
-                                    active: true
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        name: 'egresos',
-                        path: '/operaciones/egreso',
-                        component: operaciones,
-                        meta: {
-                            breadcrumb: [
-                                {
-                                    label: "Operaciones",
-                                    type: "fixed",
-                                    path: "/operaciones"
-                                },
-                                {
-                                    label: "Egresos",
-                                    type: "fixed",
-                                    path: "/operaciones/egreso",
-                                    active: true
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        name: 'agregarEgreso',
-                        path: '/operaciones/egreso/agregar',
-                        component: agregarEgreso,
-                        meta: {
-                            breadcrumb: [
-                                {
-                                    label: "Operaciones",
-                                    type: "fixed",
-                                    path: "/operaciones"
-                                },
-                                {
-                                    label: "Egresos",
-                                    type: "fixed",
-                                    path: "/operaciones/egreso"
-                                },
-                                {
-                                    label: "Agregar",
-                                    type: "fixed",
-                                    path: "/operaciones/egreso/agregar",
-                                    active: true
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        name: 'egreso',
-                        path: '/operaciones/egreso/:id',
-                        component: operaciones,
-                        meta: {
-                            breadcrumb: [
-                                {
-                                    label: "Operaciones",
-                                    type: "fixed",
-                                    path: "/operaciones"
-                                },
-                                {
-                                    label: "Egreso",
-                                    type: "fixed",
-                                    path: "/operaciones/egreso"
-                                },
-                                {
-                                    label: "id",
-                                    type: "dynamic",
-                                    path: "/operaciones/egreso/id",
-                                    active: true
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        name: 'bandeja',
-                        path: '/bandeja',
-                        component: bandeja,
-                        meta: {
-                            breadcrumb: [
-                                {
-                                    label: "Bandeja de mensajes",
-                                    type: "fixed",
-                                    path: "/bandeja",
-                                    active: true
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        name: 'mensaje',
-                        path: '/bandeja/:id',
-                        component: bandeja,
-                        meta: {
-                            breadcrumb: [
-                                {
-                                    label: "Bandeja de mensajes",
-                                    type: "fixed",
-                                    path: "/bandeja"
-                                },
-                                {
-                                    label: "id",
-                                    type: "dynamic",
-                                    path: "/bandeja/id",
-                                    active: true
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        name: 'configuracion',
-                        path: '/configuracion',
-                        component: configuracion,
-                        meta: {
-                            breadcrumb: [
-                                {
-                                    label: "Configuracion",
-                                    type: "fixed",
-                                    path: "/configuracion",
-                                    active: true
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        name: 'error404',
-                        path: '/*',
-                        component: error404
-                    }
-                ],
-                mode: 'history'
-            });
+            {{> router/routerJS.hbs}}
 
             var app = new Vue({
                 el: "#panel",
@@ -687,10 +165,20 @@
                             path: '/bandeja'
                         }
                     ],
+                    login: {
+                        user: "",
+                        pass: "",
+                        loginState: null,
+                        userState: null,
+                        passState: null,
+                        loginLoading: false
+                    },
                     sidebarShow: true,
                     breadcrumb: [],
                     query: '',
-                    searchSelected: false
+                    searchSelected: false,
+                    loggedOut: false,
+                    routerViewKey: 0
                 },
                 methods: {
                     updateBreadcrumb() {
@@ -717,6 +205,57 @@
                     },
                     search() {
                         console.log(this.query);
+                    },
+                    showSessionEndedAlert() {
+                        this.loggedOut = true;
+                    },
+                    loginAttempt() {
+                        this.login.loginState = null;
+                        this.login.userState = null;
+                        this.login.passState = null;
+
+                        console.log(`Usuario: ${this.login.user}`);
+                        console.log(`Contraseña: ${this.login.pass}`);
+
+                        if(this.login.user == "") {
+                            this.login.userState = false;
+                        } 
+                        if(this.login.pass == "") {
+                            this.login.passState = false;
+                        }
+
+                        if(this.login.user != "" && this.login.pass != "") {
+                            this.login.loginLoading = true;
+                            $.ajax({
+                                url: "http://{{ ip }}/api/login",
+                                type: "POST",
+                                dataType: "json",
+                                context: this,
+                                data: JSON.stringify({
+                                    username: this.login.user,
+                                    password: this.login.pass
+                                }),
+                                success: function(data) {
+                                    if(data.code == 200) {
+                                        this.loginSuccess();
+                                    }
+                                    else {
+                                        this.login.loginState = false;
+                                    }
+                                },
+                                error: function(data) {
+                                    console.log(data);
+                                },
+                                complete: function() {
+                                    this.login.loginLoading = false;
+                                }
+
+                            });
+                        }
+                    },
+                    loginSuccess() {
+                        this.loggedOut = false;
+                        this.routerViewKey ? this.routerViewKey++ : this.routerViewKey--;
                     }
                 },
                 router: router,

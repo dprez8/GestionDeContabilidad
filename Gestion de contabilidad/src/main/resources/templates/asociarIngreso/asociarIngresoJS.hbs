@@ -1,0 +1,17 @@
+const asociarIngreso = {
+    template: `{{> asociarIngreso/asociarIngresoHTML.hbs}}`,
+    props: {
+        confirmarAccion: Function,
+        cancelarAccion: Function
+    },
+    data() {
+        return {
+            ingresosSelect: [
+                {value: 1, text: "Ingreso 1"},
+                {value: 2, text: "Ingreso 2"},
+                {value: 3, text: "Ingreso 3"},
+            ],
+            ingresoSelected: null
+        }
+    }
+}

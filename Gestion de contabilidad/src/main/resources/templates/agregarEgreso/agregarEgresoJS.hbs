@@ -1,0 +1,240 @@
+const agregarEgreso = {
+    template: `{{> agregarEgreso/agregarEgresoHTML.hbs}}`,
+    data() {
+        return {
+            egreso: {
+                fecha: null,
+                proveedor: null,
+                medioDePago: {
+                    id: null,
+                    dato: null
+                },
+                documentoComercial: {
+                    tipo: null,
+                    numeroDocumento: null,
+                    fechaDePedido: null,
+                    fechaDeEntrega: null,
+                    descripcion: null,
+                    imagenDelDocumento: null
+                },
+                items: []
+            },
+            proveedoresSelect: [{
+                value: 1,
+                text: "Roberto Samuel"
+            }],
+            mediosDePagoSelect: [{
+                    value: 1,
+                    text: "Tarjeta de Débito",
+                    type: "credit_card"
+                },
+                {
+                    value: 2,
+                    text: "Tarjeta de Crédito",
+                    type: "debit_card"
+                },
+                {
+                    value: 3,
+                    text: "Cheque",
+                    type: "cheque"
+                },
+                {
+                    value: 4,
+                    text: "Efectivo",
+                    type: "cash"
+                }
+            ],
+            mediosDePagoType: {
+                credit_card: []
+            },
+            tipoDocumentoSelect: [{
+                    value: 1,
+                    text: "Factura A"
+                },
+                {
+                    value: 2,
+                    text: "Factura B"
+                },
+                {
+                    value: 3,
+                    text: "Factura C"
+                }
+            ],
+            proveedoresLoading: false,
+            mediosDePagoLoading: false,
+
+            suscribirse: false,
+            proveedorAAgregar: null,
+            categoriasAAsociar: [],
+            presupuestosAAgregar: [],
+            presupuestosAAgregarCampos: [
+                {
+                    key: 'fechaVigente',
+                    tdClass: ['w-50'],
+                    thClass: ['w-50']
+                },
+                {
+                    key: 'numeroOperacion',
+                    tdClass: ['w-50'],
+                    thClass: ['w-50']
+                },
+                {
+                    key: 'items',
+                    tdClass: ['text-center'],
+                    thClass: ['text-center']
+                },
+                {
+                    key: 'delete',
+                    label: '',
+                    tdClass: [],
+                    thClass: ['text-center']
+                }
+            ]
+        }
+    },
+    methods: {
+        convertDate: convertDate,
+        confirmar() {
+
+            if (this.proveedorAAgregar != null) {
+                // Hay que agregar un proveedor antes de agregar el egreso
+                console.log("POST '/api/proveedor'");
+                console.log(JSON.stringify(this.proveedorAAgregar, null, 4));
+            }
+
+            // Creo el egreso
+            this.egreso.items.pop();
+            console.log("POST '/api/operaciones/egreso'");
+            console.log(JSON.stringify(this.egreso, null, 4));
+
+            // Obtengo la id del egreso que se creó
+
+            if (this.categoriasAAsociar.length) {
+                // Hay que crear el egreso y luego asociarlo a estas categorias
+                console.log("POST 'nose xd'");
+                console.log(JSON.stringify(this.categoriasAAsociar, null, 4));
+            }
+
+            if (this.presupuestosAAgregar.length) {
+                // Si se mandaron presupuestos hay que crearlos asociandolos a este presupuesto
+                this.presupuestosAAgregar.forEach(presupuesto => {
+                    console.log("POST '/api/presupuesto'");
+                    console.log(JSON.stringify(presupuesto, null, 4));
+                });
+            }
+        },
+        cargarProveedoresAPI() {
+            this.proveedoresLoading = true;
+            var request = {
+                url: "http://{{ ip }}/api/proveedores",
+                type: "GET",
+                context: this,
+                success(response) {
+                    if(response.code == 200) {
+                        this.proveedoresSelect = response.data.map(this.proveedoresAPIConverter);
+                    }
+                    else {
+                        console.log("error");
+                        console.log(response)
+                    }
+                },
+                error(response) {
+                    console.log("oof");
+                    console.log(response);
+                },
+                complete() {
+                    this.proveedoresLoading = false;
+                }
+            };
+            $.ajax(request);
+        },
+        proveedoresAPIConverter(proveedor) {
+            return {
+                value: proveedor.id,
+                text: proveedor.nombre
+            }
+        },
+        cargarMediosDePagoAPI() {
+            this.mediosDePagoLoading = true;
+            var request = {
+                url: "http://{{ ip }}/api/medios",
+                type: "GET",
+                context: this,
+                success(response) {
+                    if(response.code == 200) {
+                        this.mediosDePagoSelect = response.data.map(this.mediosDePagoAPIConverter);
+                    }
+                    else {
+                        console.log("error");
+                        console.log(response)
+                    }
+                },
+                error(response) {
+                    console.log("oof");
+                    console.log(response);
+                },
+                complete() {
+                    this.mediosDePagoLoading = false;
+                }
+            };
+            $.ajax(request);
+        },
+        mediosDePagoAPIConverter(medioDePago) {
+            return {
+                value: medioDePago.id,
+                text: medioDePago.medioDePago.charAt(0).toUpperCase() + medioDePago.medioDePago.slice(1), // Le pongo mayuscula la primer letra
+                type: medioDePago.medioDePago
+            }
+        },
+        actualizarItems(items) {
+            this.egreso.items = items;
+        },
+        confirmarNuevoProveedor(data) {
+            this.$bvModal.hide('modal-agregar-proveedor');
+            console.log(data);
+
+            this.proveedorAAgregar = data;
+            this.egreso.proveedor = "nuevoProveedor";
+        },
+        cancelarNuevoProveedor() {
+            this.$bvModal.hide('modal-agregar-proveedor');
+        },
+        confirmarAsociarCategorias(data) {
+            this.$bvModal.hide('modal-asociar-categoria');
+            console.log(data);
+
+            this.categoriasAAsociar = data;
+        },
+        cancelarAsociarCategorias() {
+            this.$bvModal.hide('modal-asociar-categoria');
+        },
+        confirmarNuevoPresupuesto(data) {
+            this.$bvModal.hide('modal-agregar-presupuesto');
+            console.log(data);
+
+            this.presupuestosAAgregar.push(data);
+        },
+        cancelarNuevoPresupuesto() {
+            this.$bvModal.hide('modal-agregar-presupuesto');
+        },
+        removerPresupuesto(index) {
+            this.presupuestosAAgregar.splice(index, 1);
+        } 
+    },
+    mounted() {
+        this.cargarProveedoresAPI();
+        this.cargarMediosDePagoAPI();
+    },
+    components: {
+        'tabla-items': tablaItems,
+        'asociar-categoria': asociarCategoria,
+        'asociar-ingreso': asociarIngreso,
+        'agregar-proveedor': agregarProveedor,
+        'agregar-presupuesto': agregarPresupuesto
+    },
+    watch: {
+        'egreso.medioDePago.id': function (medioDePagoId) {
+
+        }
+    }
+};

@@ -1,0 +1,61 @@
+const bandeja = {
+    template: `{{> bandeja/bandejaHTML.hbs}}`,
+    data() {
+        return {
+            mensajes: [],
+            selected: null,
+            loading: true
+        }
+    },
+    methods: {
+        convertDate: convertDate,
+        seleccionarMensaje() {
+            var id = this.$route.params.id;
+            this.selected = id;
+        },
+        cargarMensajesAPI() {
+            this.loading = true;
+            var request = {
+                url: "http://{{ ip }}/api/bandeja",
+                type: "GET",
+                context: this,
+                success(data) {
+                    if(data.code == 200) {
+                        this.mensajes = data.mensajes;
+                    }
+                    else {
+                        console.log("error");
+                        app.showSessionEndedAlert();
+                        console.log(data);
+                    }
+                },
+                error(data) {
+                    console.log("oof");
+                    console.log(data);
+                },
+                complete(data) {
+                    this.loading = false;
+                }
+            };
+            $.ajax(request);
+        },
+        getMessageSelected() {
+            var mensajeSeleccionado = null;
+            for(var i = 0; i < this.mensajes.length; i++) {
+                if(this.mensajes[i].id == this.selected) {
+                    mensajeSeleccionado = this.mensajes[i];
+                }
+            }
+            return mensajeSeleccionado;
+        }
+    },
+    watch: {
+        $route(to, from) {
+            this.seleccionarMensaje()
+        }
+    },
+    mounted() {
+        this.cargarMensajesAPI();
+        this.seleccionarMensaje();
+    }
+};

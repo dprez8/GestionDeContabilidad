@@ -1,0 +1,19 @@
+<div>
+    <p>Seleccione el Ingreso para asociar a este Egreso</p>
+    <b-input-group class="mt-2" style="flex-wrap: nowrap">
+        <b-input-group-prepend>
+            <b-button variant="outline" class="border-secondary" 
+            ><b-icon-search></b-icon-search></b-button>
+        </b-input-group-prepend>
+        <b-form-input class="border-secondary" placeholder="Buscar Ingreso"></b-form-input>
+    </b-input-group>
+    <b-form-select class="border-secondary mt-2" :options="ingresosSelect" v-model="ingresoSelected">
+        <template #first>
+            <b-form-select-option :value="null" disabled>-- Selecciona un Ingreso --</b-form-select-option>
+        </template>
+    </b-form-select>
+    <b-button-group class="mt-4">
+        <b-button variant="primary" @click="confirmarAccion">Confirmar</b-button>
+        <b-button variant="outline-dark" @click="cancelarAccion">Cancelar</b-button>
+    </b-button-group>
+</div>

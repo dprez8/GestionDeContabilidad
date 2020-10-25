@@ -1,0 +1,153 @@
+const router = new VueRouter({
+    routes: [
+        {
+            name: 'inicio',
+            path: '/',
+            component: inicio,
+            meta: {
+                breadcrumb: []
+            }
+        },
+        {
+            name: 'operaciones',
+            path: '/operaciones',
+            component: operaciones,
+            meta: {
+                breadcrumb: [
+                    {
+                        label: "Operaciones",
+                        type: "fixed",
+                        path: "/operaciones",
+                        active: true
+                    }
+                ]
+            }
+        },
+        {
+            name: 'egresos',
+            path: '/operaciones/egreso',
+            component: operaciones,
+            meta: {
+                breadcrumb: [
+                    {
+                        label: "Operaciones",
+                        type: "fixed",
+                        path: "/operaciones"
+                    },
+                    {
+                        label: "Egresos",
+                        type: "fixed",
+                        path: "/operaciones/egreso",
+                        active: true
+                    }
+                ]
+            }
+        },
+        {
+            name: 'agregarEgreso',
+            path: '/operaciones/egreso/agregar',
+            component: agregarEgreso,
+            meta: {
+                breadcrumb: [
+                    {
+                        label: "Operaciones",
+                        type: "fixed",
+                        path: "/operaciones"
+                    },
+                    {
+                        label: "Egresos",
+                        type: "fixed",
+                        path: "/operaciones/egreso"
+                    },
+                    {
+                        label: "Agregar",
+                        type: "fixed",
+                        path: "/operaciones/egreso/agregar",
+                        active: true
+                    }
+                ]
+            }
+        },
+        {
+            name: 'egreso',
+            path: '/operaciones/egreso/:id',
+            component: operaciones,
+            meta: {
+                breadcrumb: [
+                    {
+                        label: "Operaciones",
+                        type: "fixed",
+                        path: "/operaciones"
+                    },
+                    {
+                        label: "Egreso",
+                        type: "fixed",
+                        path: "/operaciones/egreso"
+                    },
+                    {
+                        label: "id",
+                        type: "dynamic",
+                        path: "/operaciones/egreso/id",
+                        active: true
+                    }
+                ]
+            }
+        },
+        {
+            name: 'bandeja',
+            path: '/bandeja',
+            component: bandeja,
+            meta: {
+                breadcrumb: [
+                    {
+                        label: "Bandeja de mensajes",
+                        type: "fixed",
+                        path: "/bandeja",
+                        active: true
+                    }
+                ]
+            }
+        },
+        {
+            name: 'mensaje',
+            path: '/bandeja/:id',
+            component: bandeja,
+            meta: {
+                breadcrumb: [
+                    {
+                        label: "Bandeja de mensajes",
+                        type: "fixed",
+                        path: "/bandeja"
+                    },
+                    {
+                        label: "id",
+                        type: "dynamic",
+                        path: "/bandeja/id",
+                        active: true
+                    }
+                ]
+            }
+        },
+        {
+            name: 'configuracion',
+            path: '/configuracion',
+            component: configuracion,
+            meta: {
+                breadcrumb: [
+                    {
+                        label: "Configuracion",
+                        type: "fixed",
+                        path: "/configuracion",
+                        active: true
+                    }
+                ]
+            }
+        },
+        {
+            name: 'error404',
+            path: '/*',
+            component: error404
+        }
+    ],
+    mode: 'history'
+});
