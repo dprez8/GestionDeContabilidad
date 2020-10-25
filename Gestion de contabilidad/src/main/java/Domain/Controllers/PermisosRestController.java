@@ -21,7 +21,7 @@ public class PermisosRestController {
             return usuario;
         }
         catch (FueraDeSesion ex) {
-            respuesta.setCode(200);
+            respuesta.setCode(403);
             respuesta.setMessage(ex.getMessage());
             String jsonResponseError = json.toJson(respuesta);
             response.body(jsonResponseError);
