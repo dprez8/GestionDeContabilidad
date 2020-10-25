@@ -89,9 +89,6 @@ public class Egreso extends Operacion {
 	public Proveedor getProveedor() {
 		return proveedor;
 	}
-	public int getOperacionNumero() {
-		return this.operacionNumero;
-	}
 	public Organizacion getOrganizacion() {
 		return organizacion;
 	}
@@ -132,7 +129,6 @@ public class Egreso extends Operacion {
 	}
 	public void addItems (ItemEgreso ... unosItems) {
 		Collections.addAll(this.items, unosItems);
-		this.valorTotal = calcularValorTotal();
 	}
 	public void addPresupuestos (Presupuesto ... presupuesto) {
 		Collections.addAll(this.presupuestos, presupuesto);
@@ -140,9 +136,12 @@ public class Egreso extends Operacion {
 	public void addRevisores(Estandar ... revisor) {
 		Collections.addAll(this.revisores, revisor);
 	}
+	public void setValorTotal(double valorTotal) {
+		this.valorTotal = valorTotal;
+	}
 
 	/************************************************/
-	private double calcularValorTotal () {
+	public double calcularValorTotal () {
 		return  this.items.stream().collect(Collectors.summingDouble(unItem->unItem.valorTotal()));
 		// Retorna la sumatoria del precio de cada item del egreso
 	}

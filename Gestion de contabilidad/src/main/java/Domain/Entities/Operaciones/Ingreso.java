@@ -5,6 +5,7 @@ import Domain.Entities.Operaciones.Egreso.Egreso;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,7 +37,7 @@ public class Ingreso extends Operacion {
     public double montoEnUso(){
         return egresos.stream().collect(Collectors.summingDouble(unEgreso -> unEgreso.getValorTotal()));
     }
-
+    /*********Setters & Getters*************/
     public void desasociarEgreso(Egreso egreso){
         egresos.remove(egreso);
     }
@@ -47,5 +48,21 @@ public class Ingreso extends Operacion {
         else{
         	System.out.println("No puede asociarse este egreso porque supera el valor del ingreso");
         }
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public void setMontoTotal(double montoTotal) {
+        this.montoTotal = montoTotal;
+    }
+
+    public void setEgresos(List<Egreso> egresos) {
+        this.egresos = egresos;
+    }
+
+    public void setEgresos(Egreso ... egresos) {
+        Collections.addAll(this.egresos,egresos);
     }
 }

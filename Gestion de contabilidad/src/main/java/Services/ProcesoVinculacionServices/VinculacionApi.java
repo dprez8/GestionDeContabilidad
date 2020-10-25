@@ -23,17 +23,18 @@ public class VinculacionApi {
 
         vincularResponse.egresos.forEach(egresoARecibir -> {
             Ingreso ingreso = ingresos.stream()
-                    .filter(unIngreso -> egresoARecibir.ingresoAsociado.equals(unIngreso.getOperacionNumero()))
+                    .filter(unIngreso -> egresoARecibir.ingresoAsociado.equals(unIngreso.getId()))
                     .findAny()
                     .orElse(null);
 
             Egreso egreso = egresos.stream()
-                    .filter(unEgreso -> egresoARecibir.numeroEgreso.equals(unEgreso.getOperacionNumero()))
+                    .filter(unEgreso -> egresoARecibir.numeroEgreso.equals(unEgreso.getId()))
                     .findAny()
                     .orElse(null);
 
             if(ingreso != null) {
                 egreso.setIngresoAsociado(ingreso);
+                //ingreso.setEgresos(egreso);
             }
         });
     }
@@ -56,14 +57,14 @@ public class VinculacionApi {
 
     private IngresoAEnviar mapIngresos(Ingreso ingreso) {
         IngresoAEnviar ingresoAEnviar = new IngresoAEnviar();
-        ingresoAEnviar.numeroIngreso = ingreso.getOperacionNumero();
+        ingresoAEnviar.numeroIngreso = ingreso.getId();
         ingresoAEnviar.monto = ingreso.montoSobrante();
         ingresoAEnviar.fecha = ingreso.getFechaOperacion().toString();
         return ingresoAEnviar;
     }
     private EgresoAEnviar mapEgresos(Egreso egreso) {
         EgresoAEnviar egresoAEnviar = new EgresoAEnviar();
-        egresoAEnviar.numeroEgreso = egreso.getOperacionNumero();
+        egresoAEnviar.numeroEgreso = egreso.getId();
         egresoAEnviar.monto = egreso.getValorTotal();
         egresoAEnviar.fecha = egreso.getFechaOperacion().toString();
         return egresoAEnviar;

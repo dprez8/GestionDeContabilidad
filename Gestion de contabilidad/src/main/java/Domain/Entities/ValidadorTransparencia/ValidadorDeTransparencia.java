@@ -29,7 +29,7 @@ public class ValidadorDeTransparencia {
 	}
 
 	private String validarYConcatenarResultado(Egreso egreso, ValidacionDeTransparencia unaValidacion){
-		return unaValidacion.validarEgreso(egreso) + " Número de egreso: " + egreso.getOperacionNumero();
+		return unaValidacion.validarEgreso(egreso) + " Número de egreso: " + egreso.getId();
 	}
 	public List<ValidacionDeTransparencia> getValidaciones() {
 		return validaciones;
