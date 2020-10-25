@@ -3,57 +3,25 @@ package Domain.Controllers;
 import Domain.Controllers.AdaptersJson.LocalDateAdapter;
 import Domain.Controllers.DTO.EgresoRequest;
 import Domain.Controllers.DTO.ItemRequest;
+import Domain.Controllers.DTO.Respuesta;
 import Domain.Entities.DatosDeOperaciones.*;
 import Domain.Entities.Operaciones.Egreso.BuilderEgresoConcreto;
 import Domain.Entities.Operaciones.Egreso.Egreso;
-import Domain.Entities.Operaciones.Presupuesto;
-import Domain.Entities.Usuarios.Usuario;
+import Domain.Entities.Organizacion.EntidadJuridica;
+import Domain.Entities.Usuarios.Estandar;
 import Domain.Repositories.Daos.DaoHibernate;
 import Domain.Repositories.Repositorio;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import db.EntityManagerHelper;
 import spark.Request;
 import spark.Response;
 
+import javax.persistence.NoResultException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
-/*********************************************/
-/**POST
-        /api/operaciones/egreso
-        Request
-        {
-        "fecha": "2010-01-01",
-        "proveedor": 2,
-        "medioDePago": {
-            "id": 1,
-            "dato": "2095034a"
-        },
-        "documentoComercial": {
-        "tipo": 2,
-        "numeroDocumento": 202020,
-        "fechaDePedido": "2010-01-01",
-        "fechaDeEntrega": "2010-01-01",
-        "descripcion": "Lorem ipsum dolor sit amet",
-        "imagenDelDocumento": ""
-        },
-        "items": [
-        {
-        "nombreProducto": "Coca cola",
-        "precio": 2500.0,
-        "cantidad": 57
-        }
-        ]
-        }
-        Response
-        {
-        "code": 200,
-        "message": "asd",
-        "data": {
-        "id": 4
-        }
-    }
+
 /*****************************************************************/
 public class OperacionesRestController {
     private Repositorio<Egreso> repoEgresos;
@@ -64,6 +32,8 @@ public class OperacionesRestController {
     private Repositorio<Proveedor> repoProveedores;
     private Repositorio<DocumentoComercial> repoDocumentos;
     private Repositorio<TipoDocumento> repoTipoDocumento;
+    private Repositorio<EntidadJuridica> repoEntidadJuridica;
+    private Respuesta respuesta;
 
     public OperacionesRestController(){
         this.repoEgresos         = new Repositorio<>(new DaoHibernate<>(Egreso.class));
@@ -74,6 +44,8 @@ public class OperacionesRestController {
         this.repoProveedores     = new Repositorio<>(new DaoHibernate<>(Proveedor.class));
         this.repoDocumentos      = new Repositorio<>(new DaoHibernate<>(DocumentoComercial.class));
         this.repoTipoDocumento   = new Repositorio<>(new DaoHibernate<>(TipoDocumento.class));
+        this.repoEntidadJuridica = new Repositorio<>(new DaoHibernate<>(EntidadJuridica.class));
+        this.respuesta           = new Respuesta();
     }
 
 
@@ -82,91 +54,128 @@ public class OperacionesRestController {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())
                 .create();
-        EgresoRequest egresoRequest = gson.fromJson(request.body(),EgresoRequest.class);
-        Egreso egreso = asignarEgresoDesde(egresoRequest);
-        return "";
+        response.type("application/json");
+        String jsonResponse;
+
+        Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
+        if(usuario == null) {
+            return response.body();
+        }
+        EgresoRequest egresoRequest    = gson.fromJson(request.body(),EgresoRequest.class);
+
+        EntidadJuridica entidadJuridica= this.repoEntidadJuridica.buscar(usuario.getMiOrganizacion().getId());
+
+        Egreso egreso = asignarEgresoDesde(egresoRequest, entidadJuridica);
+
+        this.respuesta.setCode(200);
+        if(egreso == null) {
+            this.respuesta.setMessage("Problema al cargar el egreso");
+            jsonResponse = gson.toJson(this.respuesta);
+            response.body(jsonResponse);
+            return response.body();
+        }
+        this.respuesta.setMessage("Egreso cargado exitosamente");
+
+        CargaEgresoResponse cargaEgresoResponse = new CargaEgresoResponse();
+
+        cargaEgresoResponse.code    = this.respuesta.getCode();
+        cargaEgresoResponse.message = this.respuesta.getMessage();
+        cargaEgresoResponse.id = egreso.getId();
+        jsonResponse = gson.toJson(cargaEgresoResponse);
+        response.body(jsonResponse);
+        return response.body();
     }
 
-    private Egreso asignarEgresoDesde (EgresoRequest egresoRequest) {
+    private Egreso asignarEgresoDesde (EgresoRequest egresoRequest, EntidadJuridica entidadJuridica) {
+        Proveedor proveedor;
+        MedioDePago medioDePago;
+        TipoDocumento tipoDocumento;
         try {
+             proveedor     = this.repoProveedores.buscar(egresoRequest.proveedor);
+             medioDePago   = this.repoMedioDePagos.buscar(egresoRequest.medioDePago.id);
+             tipoDocumento = this.repoTipoDocumento.buscar(egresoRequest.documentoComercial.tipo);
+             if(proveedor == null || medioDePago == null || tipoDocumento == null) {
+                return null;
+             }
+        }
+        catch (NoResultException ex){
+            return null;
+        }
+        Pago pago = new Pago();
+        pago.setMedioDePago(medioDePago);
+        pago.setCodigoAsociado(egresoRequest.medioDePago.dato);
 
-            Proveedor proveedor         = this.repoProveedores.buscar(egresoRequest.proveedor);
-            MedioDePago medioDePago     = this.repoMedioDePagos.buscar(egresoRequest.medioDePago.id);
-            TipoDocumento tipoDocumento = this.repoTipoDocumento.buscar(egresoRequest.documentoComercial.tipo);
+        DocumentoComercial documentoComercial = new DocumentoComercial();
+        documentoComercial.setTipo(tipoDocumento);
+        documentoComercial.setNumDocumento(egresoRequest.documentoComercial.numeroDocumento);
+        documentoComercial.setFechaDePedido(egresoRequest.documentoComercial.fechaDePedido);
+        documentoComercial.setFechaDeEntrega(egresoRequest.documentoComercial.fechaDeEntrega);
+        documentoComercial.setDescripcion(egresoRequest.documentoComercial.descripcion);
 
+        this.repoPagos.agregar(pago);
+        this.repoDocumentos.agregar(documentoComercial);
 
-            Pago pago = new Pago();
-            pago.setMedioDePago(medioDePago);
-            pago.setCodigoAsociado(egresoRequest.medioDePago.dato);
-
-            DocumentoComercial documentoComercial = new DocumentoComercial();
-            documentoComercial.setTipo(tipoDocumento);
-            documentoComercial.setNumDocumento(egresoRequest.documentoComercial.numeroDocumento);
-            documentoComercial.setFechaDePedido(egresoRequest.documentoComercial.fechaDePedido);
-            documentoComercial.setFechaDeEntrega(egresoRequest.documentoComercial.fechaDeEntrega);
-            documentoComercial.setDescripcion(egresoRequest.documentoComercial.descripcion);
-
-            List<Producto> productos = buscarProductosDisponibles();
-            List<ItemEgreso> items = egresoRequest.items
+        List<ItemEgreso> items = egresoRequest.items
                                             .stream()
-                                            .map(item->mapearItem(item,productos))
+                                            .map(item->mapearItem(item))
                                             .collect(Collectors.toList());
 
-            Egreso egreso = new BuilderEgresoConcreto()
+        Egreso egreso = new BuilderEgresoConcreto()
                     .agregarFechaOperacion(egresoRequest.fecha)
+                    .agregarDatosOrganizacion(entidadJuridica)
                     .agregarProveedor(proveedor)
                     .agregarPago(pago)
                     .agregarDocumentoComercial(documentoComercial)
+                    .agregarItems(items)
                     .build();
 
-            //Modificar items con el egreso
-            return egreso;
-        }
-        catch (NullPointerException ex){
-            return null;
-        }
+        this.repoEgresos.agregar(egreso);
+            //Modificar items con el egreso, o sea linkearlos
+        relacionarItemsConEgreso(items,egreso);
+        return egreso;
     }
-    private ItemEgreso mapearItem(ItemRequest itemRequest, List<Producto> productos) {
+    private ItemEgreso mapearItem(ItemRequest itemRequest) {
         ItemEgreso itemEgreso = new ItemEgreso();
         itemEgreso.setPrecio(itemRequest.precio);
         itemEgreso.setCantidad(itemRequest.cantidad);
 
-        if(!productos.isEmpty()) {
-            Optional<Producto> producto = productos
-                                            .stream()
-                                            .filter(unProducto ->
-                                                    unProducto.getNombreProducto().equals(itemRequest.nombreProducto)).findFirst();
-            if(producto.isPresent()) {
-                itemEgreso.setProducto(producto.get());
-            }
-            else {
-                Producto productoNuevo = new Producto();
-                productoNuevo.setNombreProducto(itemRequest.nombreProducto);
-
-                this.repoProductos.agregar(productoNuevo);
-
-                itemEgreso.setProducto(productoNuevo);
-            }
-        }
-        else {
-            Producto producto = new Producto();
+        Producto producto = buscarProducto(itemRequest.nombreProducto.toLowerCase());
+        if (producto == null) {
+            producto = new Producto();
             producto.setNombreProducto(itemRequest.nombreProducto);
 
             this.repoProductos.agregar(producto);
-
-            itemEgreso.setProducto(producto);
         }
+        itemEgreso.setProducto(producto);
+
+        this.repoItems.agregar(itemEgreso);
+
         return  itemEgreso;
     }
 
-    private List<Producto> buscarProductosDisponibles() {
+    private Producto buscarProducto(String nombreProducto) {
         try {
-            List<Producto> productos = this.repoProductos.buscarTodos();
-            return productos;
+            Producto producto= (Producto) EntityManagerHelper
+                        .createQuery("from Producto where nombre_producto = :nombre")
+                        .setParameter("nombre",nombreProducto)
+                        .getSingleResult();
+            return producto;
         }
-        catch (NullPointerException ex) {
+        catch (NoResultException ex) {
             return null;
         }
     }
 
+    private void relacionarItemsConEgreso(List<ItemEgreso> items, Egreso egreso) {
+        items.forEach(unItem -> {
+                unItem.setEgresoAsociado(egreso);
+                this.repoItems.modificar(unItem);
+        });
+    }
+
+    private class CargaEgresoResponse {
+        public int code;
+        public String message;
+        public int id;
+    }
 }

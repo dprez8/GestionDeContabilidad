@@ -1,4 +1,4 @@
-package Domain.Controllers;
+package Domain.Controllers.DTO;
 
 public class Respuesta {
 	 private int code;
