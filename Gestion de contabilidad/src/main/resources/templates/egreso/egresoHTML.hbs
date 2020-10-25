@@ -1,0 +1,51 @@
+<div class="p-2">
+    <div class="row m-0">
+        <div class="col p-0 pr-1">
+            <b-list-group>
+                <b-list-group-item class="p-1 text-center"><strong>Proveedor</strong></b-list-group-item>
+                <b-list-group-item class="p-1"><strong>Nombre: </strong>\{{ egreso.proveedor.nombre }}</b-list-group-item>
+                <b-list-group-item class="p-1"><strong>Documento: </strong>\{{ egreso.proveedor.documento }}</b-list-group-item>
+                <b-list-group-item class="p-1">Ver mas...</b-list-group-item>
+            </b-list-group>
+        </div>
+        <div class="col p-0 pl-1">
+            <b-list-group>
+                <b-list-group-item class="p-1 text-center"><strong>Documento comercial</strong></b-list-group-item>
+                <b-list-group-item class="p-1"><strong>Tipo: </strong>\{{ egreso.documentoComercial.tipo }}</b-list-group-item>
+                <b-list-group-item class="p-1"><strong>Nro: </strong>\{{ egreso.documentoComercial.numeroDocumento }}</b-list-group-item>
+                <b-list-group-item class="p-1">Ver mas...</b-list-group-item>
+            </b-list-group>
+        </div>
+    </div>
+    <div class="row m-0">
+        <div class="col p-0 pt-2">
+            <b-list-group horizontal class="w-100">
+                <b-list-group-item class="p-1 w-100"><strong>Medio de pago: </strong>\{{ egreso.medioDePago.medio }}</b-list-group-item>
+                <b-list-group-item class="p-1 w-100"><strong>Dato: </strong>\{{ egreso.medioDePago.dato }}</b-list-group-item>
+            </b-list-group>
+        </div>
+    </div>
+    <div class="row m-0 pt-2">
+        <div class="col p-0 rounded overflow-hidden border">
+            <b-table borderless small class="m-0 border-0"
+                :fields="campos_items" 
+                :items="egreso.items"
+            >
+                <template #cell(precio)="data">
+                    <span>\{{ "$" + data.item.precio }}</span>
+                </template>
+            </b-table>
+        </div>
+    </div>
+    <div class="row m-0">
+        <div class="col p-0 pt-2">
+            <b-button-toolbar aria-label="Toolbar with button groups and dropdown menu">
+                <b-button-group size="sm">
+                    <b-button>Ver Ingreso asociado</b-button>
+                    <b-button>Ver Presupuestos asociados</b-button>
+                    <b-button variant="danger">Suscribirse</b-button>
+                </b-button-group>
+            </b-button-toolbar>
+        </div>
+    </div>
+</div>

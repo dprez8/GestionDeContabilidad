@@ -9,6 +9,7 @@
         <link type="text/css" rel="stylesheet" href="http://{{ ip }}/css/dropdown.css"/>
         <link type="text/css" rel="stylesheet" href="http://{{ ip }}/css/transitions.css"/>
         <link type="text/css" rel="stylesheet" href="http://{{ ip }}/css/criterio.css"/>
+        <link type="text/css" rel="stylesheet" href="http://{{ ip }}/css/tables.css"/>
         <!-- Panel -->
         <div id="panel">
             <b-overlay variant="warning" opacity="0.2" :show="loggedOut" no-wrap>
@@ -71,7 +72,7 @@
                     <b-avatar variant="primary" text="J" src="http://{{ ip }}/img/usuarios/user.png"></b-avatar>
                 </div>
                 <!-- Panel de opciones de usuario -->
-                <b-collapse class="shadow-lg" id="user-content" class="p-2">
+                <b-collapse class="shadow-lg" id="user-content">
                     <b-list-group>
                         <b-list-group-item>Javier</b-list-group-item>
                         <b-list-group-item to="/configuracion" v-b-toggle.user-content>
@@ -143,12 +144,14 @@
             {{> tablaItems/itemsJS.hbs}}
             {{> asociarCategoria/asociarCategoriaJS.hbs}}
             {{> asociarIngreso/asociarIngresoJS.hbs}}
+            {{> egreso/egresoJS.hbs}}
             {{> operaciones/operacionesJS.hbs}}
             {{> bandeja/bandejaJS.hbs}}
             {{> configuracion/configuracionJS.hbs}}
             {{> agregarProveedor/agregarProveedorJS.hbs}}
             {{> agregarPresupuesto/agregarPresupuestoJS.hbs}}
             {{> agregarEgreso/agregarEgresoJS.hbs}}
+            
 
             {{> router/routerJS.hbs}}
 
@@ -178,6 +181,7 @@
                     query: '',
                     searchSelected: false,
                     loggedOut: false,
+                    reloadPage: false,
                     routerViewKey: 0
                 },
                 methods: {
@@ -206,7 +210,11 @@
                     search() {
                         console.log(this.query);
                     },
-                    showSessionEndedAlert() {
+                    showSessionEndedAlert(reloadPage) {
+                        if(reloadPage == undefined)
+                            this.reloadPage = true;
+                        else
+                            this.reloadPage = reloadPage;
                         this.loggedOut = true;
                     },
                     loginAttempt() {
@@ -255,7 +263,10 @@
                     },
                     loginSuccess() {
                         this.loggedOut = false;
-                        this.routerViewKey ? this.routerViewKey++ : this.routerViewKey--;
+
+                        if(this.reloadPage) {
+                            this.routerViewKey ? this.routerViewKey++ : this.routerViewKey--;
+                        }
                     }
                 },
                 router: router,

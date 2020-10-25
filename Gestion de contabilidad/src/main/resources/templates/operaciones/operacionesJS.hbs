@@ -2,73 +2,75 @@ const operaciones = {
     template: `{{> operaciones/operacionesHTML.hbs}}`,
     data() {
         return {
-            campos_egreso: [
-                { key: 'name', label: 'Egreso' },
-                { key: 'validado', label: 'Estado validación' },
-                { key: 'total', label: 'Total' },
-                { key: 'emitido', label: 'Emitido' },
-                'show_details'
-            ],
-            items_egreso: [
-                { 
+            egresos: [
+                {
+                    id: 1,
                     name: 'Egreso 1234', 
                     validado: true, 
                     total: 42234, 
-                    emitido: "12/12/2020", 
-                    detalle: { 
-                        items_proveedor: [
-                            {   
-                                name: 'Un proveedor', 
-                                documento: "12345678", 
-                                id: "1234", 
-                                detalle: {
-                                }
-                            }
-                        ],
-                        items_mediodepago: [
-                            {   
-                                name: 'Efectivo', 
-                                total: '12345',
-                                id: "1234",
-                                detalle: {
-
-                                }
-                            },
-                        ],
-                        items_itemsegreso: [
-                            {   name: 'Un producto', 
-                                quantity: 3, 
-                                price: 1234 
-                            },
-                        ],
-                        items_documentocomercial: [
-                            {   
-                                id: '1234' 
-                            },
-                        ]
-                    } 
+                    emitido: "12/12/2020",
+                    _showDetails: true,
+                    showEgreso: false
                 },
+                {
+                    id: 2,
+                    name: 'Egreso 4322', 
+                    validado: false, 
+                    total: 456453, 
+                    emitido: "22/04/2020",
+                    _showDetails: true,
+                    showEgreso: false
+                }
             ],
-            campos_proveedor: [
-                { key: 'name', label: 'Razón Social' },
-                { key: 'documento', label: 'Documento' },
-                { key: 'see_more', label: 'Ver detalle' },
+            egresoSelected: null,
+            campos_egresos: [
+                { key: 'name', label: 'Egreso', thClass:['w-100'], tdClass:[] },
+                { key: 'validado', label: 'Estado', thClass:['text-center'], tdClass:['text-center'] },
+                { key: 'total', label: 'Total', thClass:['text-center'], tdClass:['text-center'] },
+                { key: 'emitido', label: 'Emitido', thClass:['text-center'], tdClass:['text-center'] }
             ],
-            campos_mediodepago: [
-                { key: 'name', label: 'Medio' },
-                { key: 'total', label: 'Total' },
-            ],
-            campos_documentocomercial: [
-                { key: 'see_more', label: 'Ver Documento' },
-            ],
-            campos_itemsegreso: [
-                { key: 'name', label: 'Producto' },
-                { key: 'quantity', label: 'Cantidad' },
-                { key: 'price', label: 'Precio' },
-            ]
+            transProps: {
+              name: "fade"
+            }
+        }
+    },
+    methods: {
+        toggleEgreso(row) {
+            console.log(row);
+
+            if(!row.showEgreso) {
+                this.$router.push('/operaciones/egreso/'+ row.id);
+            } else {
+                this.$router.push('/operaciones/egreso');
+            }
+        },
+        seleccionarEgreso() {
+            var id = this.$route.params.id;
+
+            this.egresos.forEach(egreso => {
+                if(egreso.id != id)
+                    egreso.showEgreso = false;
+                else
+                    egreso.showEgreso = true;
+            });
+        },
+        rowStyle(item, type) {
+            if(type == 'row') {
+                if(item.showEgreso) {
+                    return ['bg-dark', 'text-light'];
+                }
+            }
         }
     },
     components: {
-        'asociar-categoria': asociarCategoria
+        'egreso': egreso
+    },
+    watch: {
+        $route(to, from) {
+            this.seleccionarEgreso();
+        }
+    },
+    mounted() {
+        this.seleccionarEgreso();
     }
 };

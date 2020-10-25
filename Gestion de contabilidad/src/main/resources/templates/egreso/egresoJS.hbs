@@ -1,0 +1,75 @@
+const egreso = {
+    template: `{{> egreso/egresoHTML.hbs}}`,
+    data() {
+        return {
+            egreso: {
+                proveedor: {
+                    nombre: "Lautaro Robles",
+                    documento: "123123",
+                    direccionPostal: {
+                        pais: "Argentina",
+                        provincia: "Buenos Aires",
+                        ciudad: "Springfield",
+                        calle: "Avenida Siempre Viva",
+                        altura: "742",
+                        piso: "-",
+                        codigoPostal: "1234"
+                    }
+                },
+                documentoComercial: {
+                    tipo: "Factura B",
+                    numeroDocumento: "987654321",
+                    fechaPedido: "2020-10-25",
+                    fechaEntrega: "2020-11-25",
+                    descripcion: "Lorem ipsum dolor sit amet"
+                },
+                medioDePago: {
+                    medio: "efectivo",
+                    dato: "1112322"
+                },
+                items: [
+                    {
+                        producto: "Cocacola",
+                        cantidad: 2,
+                        precio: 2550
+                    },
+                    {
+                        producto: "Cocacola",
+                        cantidad: 2,
+                        precio: 2550
+                    },
+                    {
+                        producto: "Cocacola",
+                        cantidad: 2,
+                        precio: 2550
+                    }
+                ]
+            },
+            campos_items: [
+                {
+                    key: 'producto',
+                    label: 'Producto',
+                    tdClass: ['w-100'],
+                    thClass: []
+                },
+                {
+                    key: 'cantidad',
+                    label: 'Cantidad',
+                    tdClass: ['text-center'],
+                    thClass: ['text-center']
+                },
+                {
+                    key: 'precio',
+                    label: 'Precio',
+                    tdClass: ['text-center'],
+                    thClass: ['text-center']
+                }
+            ]
+        }
+    },
+    methods: {
+        cargarEgresoAPI() {
+            
+        }
+    }
+}

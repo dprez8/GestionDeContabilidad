@@ -19,26 +19,27 @@
     </div>
     <b-nav tabs fill class="mt-2">
         <b-nav-item active>Egresos</b-nav-item>
-        <b-nav-item>Ingreso</b-nav-item>
+        <b-nav-item>Ingresos</b-nav-item>
     </b-nav>
     <div class="border">
-        <b-table small responsive striped class="mb-0" :fields="campos_egreso" :items="items_egreso" head-variant="dark">
+        <b-table :tbody-tr-class="rowStyle" class="mb-0 border-0 border-bottom" head-variant="dark"
+            :fields="campos_egresos" 
+            :items="egresos"
+            :tbody-transition-props="transProps"
+            @row-clicked="toggleEgreso"
+        >
             <template #cell(validado)="data">
-                <b-badge v-if="!data.validado" variant="success">Validado</b-badge>
+                <b-badge v-if="data.item.validado" variant="success">Validado</b-badge>
                 <b-badge v-else variant="warning">Sin Validar</b-badge>
             </template>
 
             <template #cell(total)="data">
                 <span>\{{ "$" + data.item.total }}</span>
             </template>
-
-            <template #cell(show_details)="data">
-                <b-button size="sm" v-on:click="data.toggleDetails" v-b-toggle="" variant="outline-primary" style="min-width:110px">
-                    \{{ data.detailsShowing ? "Ocultar" : "Mostrar"}} detalle
-                </b-button>
-            </template>
             <template #row-details="data">
-                {{> egreso.hbs}}
+                <b-collapse :visible="data.item.showEgreso" class="bg-light">
+                    <egreso></egreso>
+                </b-collapse>
             </template>
         </b-table>
         <b-button class="m-2" variant="outline-primary" to="/operaciones/egreso/agregar">
@@ -46,10 +47,4 @@
             Agregar Egreso
         </b-button>
     </div>
-    
-    <b-modal id="modal-asociar-categoria" scrollable centered title="Asociar a categoría">
-        <asociar-categoria></asociar-categoria>
-    </b-modal>
-
-    <b-button class="mt-2" v-b-modal.modal-asociar-categoria>Asociar a categoría</b-button>
 </div>
