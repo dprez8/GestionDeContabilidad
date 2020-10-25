@@ -12,6 +12,7 @@ import javax.persistence.*;
 public abstract class Operacion {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.TABLE)
 	@Column(name="id")
 	private int id;
 

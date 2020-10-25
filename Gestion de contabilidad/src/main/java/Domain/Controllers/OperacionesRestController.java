@@ -17,6 +17,7 @@ import db.EntityManagerHelper;
 import spark.Request;
 import spark.Response;
 
+import javax.persistence.NoResultException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,6 +55,7 @@ public class OperacionesRestController {
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())
                 .create();
         response.type("application/json");
+        String jsonResponse;
 
         Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
         if(usuario == null) {
@@ -68,47 +70,57 @@ public class OperacionesRestController {
         this.respuesta.setCode(200);
         if(egreso == null) {
             this.respuesta.setMessage("Problema al cargar el egreso");
+            jsonResponse = gson.toJson(this.respuesta);
+            response.body(jsonResponse);
+            return response.body();
         }
-        else {
-            this.respuesta.setMessage("Egreso cargado exitosamente");
-        }
+        this.respuesta.setMessage("Egreso cargado exitosamente");
+
         CargaEgresoResponse cargaEgresoResponse = new CargaEgresoResponse();
 
-        cargaEgresoResponse.respuesta.setCode(this.respuesta.getCode());
-        cargaEgresoResponse.respuesta.setMessage(this.respuesta.getMessage());
+        cargaEgresoResponse.code    = this.respuesta.getCode();
+        cargaEgresoResponse.message = this.respuesta.getMessage();
         cargaEgresoResponse.id = egreso.getId();
-        String jsonResponse = gson.toJson(cargaEgresoResponse);
+        jsonResponse = gson.toJson(cargaEgresoResponse);
         response.body(jsonResponse);
         return response.body();
     }
 
     private Egreso asignarEgresoDesde (EgresoRequest egresoRequest, EntidadJuridica entidadJuridica) {
+        Proveedor proveedor;
+        MedioDePago medioDePago;
+        TipoDocumento tipoDocumento;
         try {
+             proveedor     = this.repoProveedores.buscar(egresoRequest.proveedor);
+             medioDePago   = this.repoMedioDePagos.buscar(egresoRequest.medioDePago.id);
+             tipoDocumento = this.repoTipoDocumento.buscar(egresoRequest.documentoComercial.tipo);
+             if(proveedor == null || medioDePago == null || tipoDocumento == null) {
+                return null;
+             }
+        }
+        catch (NoResultException ex){
+            return null;
+        }
+        Pago pago = new Pago();
+        pago.setMedioDePago(medioDePago);
+        pago.setCodigoAsociado(egresoRequest.medioDePago.dato);
 
-            Proveedor proveedor         = this.repoProveedores.buscar(egresoRequest.proveedor);
-            MedioDePago medioDePago     = this.repoMedioDePagos.buscar(egresoRequest.medioDePago.id);
-            TipoDocumento tipoDocumento = this.repoTipoDocumento.buscar(egresoRequest.documentoComercial.tipo);
+        DocumentoComercial documentoComercial = new DocumentoComercial();
+        documentoComercial.setTipo(tipoDocumento);
+        documentoComercial.setNumDocumento(egresoRequest.documentoComercial.numeroDocumento);
+        documentoComercial.setFechaDePedido(egresoRequest.documentoComercial.fechaDePedido);
+        documentoComercial.setFechaDeEntrega(egresoRequest.documentoComercial.fechaDeEntrega);
+        documentoComercial.setDescripcion(egresoRequest.documentoComercial.descripcion);
 
-            Pago pago = new Pago();
-            pago.setMedioDePago(medioDePago);
-            pago.setCodigoAsociado(egresoRequest.medioDePago.dato);
+        this.repoPagos.agregar(pago);
+        this.repoDocumentos.agregar(documentoComercial);
 
-            DocumentoComercial documentoComercial = new DocumentoComercial();
-            documentoComercial.setTipo(tipoDocumento);
-            documentoComercial.setNumDocumento(egresoRequest.documentoComercial.numeroDocumento);
-            documentoComercial.setFechaDePedido(egresoRequest.documentoComercial.fechaDePedido);
-            documentoComercial.setFechaDeEntrega(egresoRequest.documentoComercial.fechaDeEntrega);
-            documentoComercial.setDescripcion(egresoRequest.documentoComercial.descripcion);
-
-            this.repoPagos.agregar(pago);
-            this.repoDocumentos.agregar(documentoComercial);
-
-            List<ItemEgreso> items = egresoRequest.items
+        List<ItemEgreso> items = egresoRequest.items
                                             .stream()
                                             .map(item->mapearItem(item))
                                             .collect(Collectors.toList());
 
-            Egreso egreso = new BuilderEgresoConcreto()
+        Egreso egreso = new BuilderEgresoConcreto()
                     .agregarFechaOperacion(egresoRequest.fecha)
                     .agregarDatosOrganizacion(entidadJuridica)
                     .agregarProveedor(proveedor)
@@ -117,14 +129,10 @@ public class OperacionesRestController {
                     .agregarItems(items)
                     .build();
 
-            this.repoEgresos.agregar(egreso);
+        this.repoEgresos.agregar(egreso);
             //Modificar items con el egreso, o sea linkearlos
-            relacionarItemsConEgreso(items,egreso);
-            return egreso;
-        }
-        catch (NullPointerException ex){
-            return null;
-        }
+        relacionarItemsConEgreso(items,egreso);
+        return egreso;
     }
     private ItemEgreso mapearItem(ItemRequest itemRequest) {
         ItemEgreso itemEgreso = new ItemEgreso();
@@ -153,7 +161,7 @@ public class OperacionesRestController {
                         .getSingleResult();
             return producto;
         }
-        catch (NullPointerException ex) {
+        catch (NoResultException ex) {
             return null;
         }
     }
@@ -166,7 +174,8 @@ public class OperacionesRestController {
     }
 
     private class CargaEgresoResponse {
-        public Respuesta respuesta;
+        public int code;
+        public String message;
         public int id;
     }
 }

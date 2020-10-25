@@ -6,7 +6,6 @@ import Domain.Controllers.DTO.Respuesta;
 import Domain.Entities.BandejaDeMensajes.Mensaje;
 import Domain.Entities.Usuarios.Estandar;
 import Domain.Entities.Usuarios.Usuario;
-import Domain.Exceptions.FueraDeSesion;
 import Domain.Repositories.Daos.DaoHibernate;
 import Domain.Repositories.Repositorio;
 import com.google.gson.Gson;

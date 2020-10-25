@@ -32,7 +32,7 @@ public class LoginRestController {
              usuario = (Usuario) EntityManagerHelper
                     .createQuery("from Usuario where nombre = :username and contrasenia = :password")
                     .setParameter("username",usuarioRequest.username)
-                    .setParameter("password",usuarioRequest.password)
+                    .setParameter("password",passwordHash)
                     .getSingleResult();
 
              if(usuario != null) {

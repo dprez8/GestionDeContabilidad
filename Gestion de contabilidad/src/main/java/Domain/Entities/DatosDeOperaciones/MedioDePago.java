@@ -13,6 +13,8 @@ public class MedioDePago extends EntidadPersistente {
 	
 	@Column(name="medio_de_pago")
 	private String medioDePago;
+
+	public MedioDePago(){}
  
 	public MedioDePago(String medio) {
 		this.medioDePago= medio;
