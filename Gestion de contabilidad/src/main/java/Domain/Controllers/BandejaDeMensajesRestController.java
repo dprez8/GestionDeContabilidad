@@ -2,9 +2,11 @@ package Domain.Controllers;
 
 
 import Domain.Controllers.AdaptersJson.LocalDateAdapter;
+import Domain.Controllers.DTO.Respuesta;
 import Domain.Entities.BandejaDeMensajes.Mensaje;
 import Domain.Entities.Usuarios.Estandar;
 import Domain.Entities.Usuarios.Usuario;
+import Domain.Exceptions.FueraDeSesion;
 import Domain.Repositories.Daos.DaoHibernate;
 import Domain.Repositories.Repositorio;
 import com.google.gson.Gson;
@@ -36,39 +38,22 @@ public class BandejaDeMensajesRestController {
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())
                 .create();
 
-        BandejaResponse bandejaResponse;
-
-        Estandar usuario = (Estandar) asignarUsuarioSiEstaLogueado(request);
-
-        //Estandar usuario = (Estandar) asignarUsuarioPorRequestParams(request);
-
         response.type("application/json");
 
+        Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
         if(usuario == null) {
-            this.codeResponse.setCode(200);
-            this.codeResponse.setMessage("Usuario fuera de sesion");
-
-            String JsonResponse = gson.toJson(this.codeResponse);
-
-            return JsonResponse;
+            return response.body();
         }
+        BandejaResponse bandejaResponse;
+        //Estandar usuario = (Estandar) asignarUsuarioPorRequestParams(request);
 
         filtrarMensajesDeUsuario(usuario);
         bandejaResponse  = asignarDatosABandejaResponse(usuario);
-        //Supongo que no es tan directa la relacion para mapear estos datos, aun debo resolver esto
         String jsonBandeja = gson.toJson(bandejaResponse);
 
         response.body(jsonBandeja);
 
         return response.body();
-    }
-
-    private Usuario asignarUsuarioSiEstaLogueado(Request request){
-        if(!request.session().isNew() && request.session().attribute("id") != null) {
-            Usuario usuario =  repoUsuarios.buscar(request.session().attribute("id"));
-            return usuario;
-        }
-        return null;
     }
 
     private void filtrarMensajesDeUsuario(Estandar usuario) {
@@ -91,7 +76,7 @@ public class BandejaDeMensajesRestController {
     private BandejaResponse asignarDatosABandejaResponse(Estandar estandar) {
         BandejaResponse bandejaResponse = new BandejaResponse();
         bandejaResponse.code        = codeResponse.getCode();
-        bandejaResponse.msg         = codeResponse.getMessage();
+        bandejaResponse.message     = codeResponse.getMessage();
         bandejaResponse.usuarioId   = estandar.getId();
         bandejaResponse.mensajes    = estandar.getBandejaDeMensajes().getMensajes();
         return bandejaResponse;
@@ -111,7 +96,7 @@ public class BandejaDeMensajesRestController {
         @Expose
         public int code;
         @Expose
-        public String msg;
+        public String message;
         @Expose
         public int usuarioId;
         @Expose

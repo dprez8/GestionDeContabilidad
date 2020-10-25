@@ -3,15 +3,8 @@ package Persistencia;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
-
 import org.junit.Test;
 
-import com.google.gson.Gson;
-
-import Domain.Controllers.Respuesta;
 import Domain.Entities.ApiPaises.Ciudad;
 import Domain.Entities.ApiPaises.Pais;
 import Domain.Entities.ApiPaises.Provincia;

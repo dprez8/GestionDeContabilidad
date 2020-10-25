@@ -3,15 +3,19 @@ package Domain.Controllers;
 import Domain.Controllers.AdaptersJson.LocalDateAdapter;
 import Domain.Controllers.DTO.EgresoRequest;
 import Domain.Controllers.DTO.ItemRequest;
+import Domain.Controllers.DTO.Respuesta;
 import Domain.Entities.DatosDeOperaciones.*;
 import Domain.Entities.Operaciones.Egreso.BuilderEgresoConcreto;
 import Domain.Entities.Operaciones.Egreso.Egreso;
 import Domain.Entities.Operaciones.Presupuesto;
+import Domain.Entities.Usuarios.Estandar;
 import Domain.Entities.Usuarios.Usuario;
+import Domain.Exceptions.FueraDeSesion;
 import Domain.Repositories.Daos.DaoHibernate;
 import Domain.Repositories.Repositorio;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import db.EntityManagerHelper;
 import spark.Request;
 import spark.Response;
 
@@ -65,6 +69,8 @@ public class OperacionesRestController {
     private Repositorio<DocumentoComercial> repoDocumentos;
     private Repositorio<TipoDocumento> repoTipoDocumento;
 
+    private Respuesta respuesta;
+
     public OperacionesRestController(){
         this.repoEgresos         = new Repositorio<>(new DaoHibernate<>(Egreso.class));
         this.repoItems           = new Repositorio<>(new DaoHibernate<>(ItemEgreso.class));
@@ -74,6 +80,7 @@ public class OperacionesRestController {
         this.repoProveedores     = new Repositorio<>(new DaoHibernate<>(Proveedor.class));
         this.repoDocumentos      = new Repositorio<>(new DaoHibernate<>(DocumentoComercial.class));
         this.repoTipoDocumento   = new Repositorio<>(new DaoHibernate<>(TipoDocumento.class));
+
     }
 
 
@@ -82,6 +89,10 @@ public class OperacionesRestController {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())
                 .create();
+        Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
+        if(usuario == null) {
+            return response.body();
+        }
         EgresoRequest egresoRequest = gson.fromJson(request.body(),EgresoRequest.class);
         Egreso egreso = asignarEgresoDesde(egresoRequest);
         return "";
@@ -106,10 +117,9 @@ public class OperacionesRestController {
             documentoComercial.setFechaDeEntrega(egresoRequest.documentoComercial.fechaDeEntrega);
             documentoComercial.setDescripcion(egresoRequest.documentoComercial.descripcion);
 
-            List<Producto> productos = buscarProductosDisponibles();
             List<ItemEgreso> items = egresoRequest.items
                                             .stream()
-                                            .map(item->mapearItem(item,productos))
+                                            .map(item->mapearItem(item))
                                             .collect(Collectors.toList());
 
             Egreso egreso = new BuilderEgresoConcreto()
@@ -126,30 +136,17 @@ public class OperacionesRestController {
             return null;
         }
     }
-    private ItemEgreso mapearItem(ItemRequest itemRequest, List<Producto> productos) {
+    private ItemEgreso mapearItem(ItemRequest itemRequest) {
         ItemEgreso itemEgreso = new ItemEgreso();
         itemEgreso.setPrecio(itemRequest.precio);
         itemEgreso.setCantidad(itemRequest.cantidad);
 
-        if(!productos.isEmpty()) {
-            Optional<Producto> producto = productos
-                                            .stream()
-                                            .filter(unProducto ->
-                                                    unProducto.getNombreProducto().equals(itemRequest.nombreProducto)).findFirst();
-            if(producto.isPresent()) {
-                itemEgreso.setProducto(producto.get());
-            }
-            else {
-                Producto productoNuevo = new Producto();
-                productoNuevo.setNombreProducto(itemRequest.nombreProducto);
-
-                this.repoProductos.agregar(productoNuevo);
-
-                itemEgreso.setProducto(productoNuevo);
-            }
+        Producto producto = buscarProducto(itemRequest.nombreProducto.toLowerCase());
+        if(producto != null) {
+            itemEgreso.setProducto(producto);
         }
         else {
-            Producto producto = new Producto();
+            producto = new Producto();
             producto.setNombreProducto(itemRequest.nombreProducto);
 
             this.repoProductos.agregar(producto);
@@ -159,10 +156,13 @@ public class OperacionesRestController {
         return  itemEgreso;
     }
 
-    private List<Producto> buscarProductosDisponibles() {
+    private Producto buscarProducto(String nombreProducto) {
         try {
-            List<Producto> productos = this.repoProductos.buscarTodos();
-            return productos;
+            Producto producto= (Producto) EntityManagerHelper
+                        .createQuery("from Producto where nombre_producto = :nombre")
+                        .setParameter("nombre",nombreProducto)
+                        .getSingleResult();
+            return producto;
         }
         catch (NullPointerException ex) {
             return null;

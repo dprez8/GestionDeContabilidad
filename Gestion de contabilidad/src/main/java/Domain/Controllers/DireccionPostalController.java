@@ -1,43 +1,19 @@
 package Domain.Controllers;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
-import javax.persistence.EntityGraph;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.FlushModeType;
-import javax.persistence.LockModeType;
-import javax.persistence.NoResultException;
-import javax.persistence.Query;
-import javax.persistence.StoredProcedureQuery;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaDelete;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.CriteriaUpdate;
-import javax.persistence.metamodel.Metamodel;
-
-import com.google.common.hash.Hashing;
+import Domain.Controllers.DTO.Respuesta;
 import com.google.gson.Gson;
 
 import Domain.Entities.ApiPaises.Ciudad;
 import Domain.Entities.ApiPaises.Pais;
 import Domain.Entities.ApiPaises.Provincia;
-import Domain.Entities.ApiVinculador.EgresoAEnviar;
-import Domain.Entities.ApiVinculador.IngresoAEnviar;
 import Domain.Entities.ClasesParciales.CiudadDato;
 import Domain.Entities.ClasesParciales.PaisDato;
 import Domain.Entities.ClasesParciales.ProvinciaDato;
-import Domain.Entities.Organizacion.EntidadJuridica;
-import Domain.Entities.Usuarios.Estandar;
-import Domain.Entities.Usuarios.Usuario;
 import Domain.Exceptions.contraseniaCorta;
 import Domain.Exceptions.contraseniaMuyComun;
 import Domain.Exceptions.repiteContraseniaEnMailOUsuario;
