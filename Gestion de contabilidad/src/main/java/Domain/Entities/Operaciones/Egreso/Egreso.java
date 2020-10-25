@@ -83,15 +83,12 @@ public class Egreso extends Operacion {
 	public DocumentoComercial getDocumento() {
 		return documento;
 	}
-
 	public List<ItemEgreso> getItems() {
 		return items;
 	}
-
 	public Proveedor getProveedor() {
 		return proveedor;
 	}
-
 	public int getOperacionNumero() {
 		return this.operacionNumero;
 	}
@@ -102,24 +99,21 @@ public class Egreso extends Operacion {
 		return valorTotal;
 	}
 	public List<Estandar> getRevisores(){ return this.revisores;}
+	public Ingreso getIngresoAsociado() { return this.ingresoAsociado; }
 
 	/**Setters*/
 	public void setDocumento(DocumentoComercial documento) {
 		this.documento = documento;
 	}
-
 	public void setPago(Pago pago) {
 		this.pago = pago;
 	}
-
 	public void setValidado(boolean validado) {
 		this.validado = validado;
 	}
-
 	public void setProveedor(Proveedor proveedor) {
 		this.proveedor = proveedor;
 	}
-
 	public void addCategorias(CategoriaOperacion ... categorias) {
 		Collections.addAll(this.categorias, categorias);
 	}
@@ -127,17 +121,22 @@ public class Egreso extends Operacion {
 		this.organizacion = organizacion;
 	}
 	public void setIngresoAsociado(Ingreso ingreso) { this.ingresoAsociado = ingreso; }
-	public Ingreso getIngresoAsociado() { return this.ingresoAsociado; }
-
+	public void setItems(List<ItemEgreso> items) {
+		this.items = items;
+	}
+	public void setPresupuestos(List<Presupuesto> presupuestos) {
+		this.presupuestos = presupuestos;
+	}
+	public void setCategorias(List<CategoriaOperacion> categorias) {
+		this.categorias = categorias;
+	}
 	public void addItems (ItemEgreso ... unosItems) {
 		Collections.addAll(this.items, unosItems);
 		this.valorTotal = calcularValorTotal();
 	}
-
 	public void addPresupuestos (Presupuesto ... presupuesto) {
 		Collections.addAll(this.presupuestos, presupuesto);
 	}
-
 	public void addRevisores(Estandar ... revisor) {
 		Collections.addAll(this.revisores, revisor);
 	}

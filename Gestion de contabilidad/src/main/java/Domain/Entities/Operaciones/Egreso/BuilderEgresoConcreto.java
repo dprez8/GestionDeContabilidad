@@ -7,6 +7,7 @@ import Domain.Entities.DatosDeOperaciones.Proveedor;
 import Domain.Entities.Organizacion.Organizacion;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class BuilderEgresoConcreto implements IBuilderEgreso {
 
@@ -49,6 +50,12 @@ public class BuilderEgresoConcreto implements IBuilderEgreso {
     @Override
     public IBuilderEgreso agregarItems(ItemEgreso ... unosItems) {
         this.egreso.addItems(unosItems);
+        return this;
+    }
+
+    @Override
+    public IBuilderEgreso agregarItems(List<ItemEgreso> items) {
+        this.egreso.setItems(items);
         return this;
     }
     

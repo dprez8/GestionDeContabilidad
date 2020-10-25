@@ -7,10 +7,8 @@ import Domain.Controllers.DTO.Respuesta;
 import Domain.Entities.DatosDeOperaciones.*;
 import Domain.Entities.Operaciones.Egreso.BuilderEgresoConcreto;
 import Domain.Entities.Operaciones.Egreso.Egreso;
-import Domain.Entities.Operaciones.Presupuesto;
+import Domain.Entities.Organizacion.EntidadJuridica;
 import Domain.Entities.Usuarios.Estandar;
-import Domain.Entities.Usuarios.Usuario;
-import Domain.Exceptions.FueraDeSesion;
 import Domain.Repositories.Daos.DaoHibernate;
 import Domain.Repositories.Repositorio;
 import com.google.gson.Gson;
@@ -21,43 +19,8 @@ import spark.Response;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
-/*********************************************/
-/**POST
-        /api/operaciones/egreso
-        Request
-        {
-        "fecha": "2010-01-01",
-        "proveedor": 2,
-        "medioDePago": {
-            "id": 1,
-            "dato": "2095034a"
-        },
-        "documentoComercial": {
-        "tipo": 2,
-        "numeroDocumento": 202020,
-        "fechaDePedido": "2010-01-01",
-        "fechaDeEntrega": "2010-01-01",
-        "descripcion": "Lorem ipsum dolor sit amet",
-        "imagenDelDocumento": ""
-        },
-        "items": [
-        {
-        "nombreProducto": "Coca cola",
-        "precio": 2500.0,
-        "cantidad": 57
-        }
-        ]
-        }
-        Response
-        {
-        "code": 200,
-        "message": "asd",
-        "data": {
-        "id": 4
-        }
-    }
+
 /*****************************************************************/
 public class OperacionesRestController {
     private Repositorio<Egreso> repoEgresos;
@@ -68,7 +31,7 @@ public class OperacionesRestController {
     private Repositorio<Proveedor> repoProveedores;
     private Repositorio<DocumentoComercial> repoDocumentos;
     private Repositorio<TipoDocumento> repoTipoDocumento;
-
+    private Repositorio<EntidadJuridica> repoEntidadJuridica;
     private Respuesta respuesta;
 
     public OperacionesRestController(){
@@ -80,7 +43,8 @@ public class OperacionesRestController {
         this.repoProveedores     = new Repositorio<>(new DaoHibernate<>(Proveedor.class));
         this.repoDocumentos      = new Repositorio<>(new DaoHibernate<>(DocumentoComercial.class));
         this.repoTipoDocumento   = new Repositorio<>(new DaoHibernate<>(TipoDocumento.class));
-
+        this.repoEntidadJuridica = new Repositorio<>(new DaoHibernate<>(EntidadJuridica.class));
+        this.respuesta           = new Respuesta();
     }
 
 
@@ -89,22 +53,41 @@ public class OperacionesRestController {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())
                 .create();
+        response.type("application/json");
+
         Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
         if(usuario == null) {
             return response.body();
         }
-        EgresoRequest egresoRequest = gson.fromJson(request.body(),EgresoRequest.class);
-        Egreso egreso = asignarEgresoDesde(egresoRequest);
-        return "";
+        EgresoRequest egresoRequest    = gson.fromJson(request.body(),EgresoRequest.class);
+
+        EntidadJuridica entidadJuridica= this.repoEntidadJuridica.buscar(usuario.getMiOrganizacion().getId());
+
+        Egreso egreso = asignarEgresoDesde(egresoRequest, entidadJuridica);
+
+        this.respuesta.setCode(200);
+        if(egreso == null) {
+            this.respuesta.setMessage("Problema al cargar el egreso");
+        }
+        else {
+            this.respuesta.setMessage("Egreso cargado exitosamente");
+        }
+        CargaEgresoResponse cargaEgresoResponse = new CargaEgresoResponse();
+
+        cargaEgresoResponse.respuesta.setCode(this.respuesta.getCode());
+        cargaEgresoResponse.respuesta.setMessage(this.respuesta.getMessage());
+        cargaEgresoResponse.id = egreso.getId();
+        String jsonResponse = gson.toJson(cargaEgresoResponse);
+        response.body(jsonResponse);
+        return response.body();
     }
 
-    private Egreso asignarEgresoDesde (EgresoRequest egresoRequest) {
+    private Egreso asignarEgresoDesde (EgresoRequest egresoRequest, EntidadJuridica entidadJuridica) {
         try {
 
             Proveedor proveedor         = this.repoProveedores.buscar(egresoRequest.proveedor);
             MedioDePago medioDePago     = this.repoMedioDePagos.buscar(egresoRequest.medioDePago.id);
             TipoDocumento tipoDocumento = this.repoTipoDocumento.buscar(egresoRequest.documentoComercial.tipo);
-
 
             Pago pago = new Pago();
             pago.setMedioDePago(medioDePago);
@@ -117,6 +100,9 @@ public class OperacionesRestController {
             documentoComercial.setFechaDeEntrega(egresoRequest.documentoComercial.fechaDeEntrega);
             documentoComercial.setDescripcion(egresoRequest.documentoComercial.descripcion);
 
+            this.repoPagos.agregar(pago);
+            this.repoDocumentos.agregar(documentoComercial);
+
             List<ItemEgreso> items = egresoRequest.items
                                             .stream()
                                             .map(item->mapearItem(item))
@@ -124,12 +110,16 @@ public class OperacionesRestController {
 
             Egreso egreso = new BuilderEgresoConcreto()
                     .agregarFechaOperacion(egresoRequest.fecha)
+                    .agregarDatosOrganizacion(entidadJuridica)
                     .agregarProveedor(proveedor)
                     .agregarPago(pago)
                     .agregarDocumentoComercial(documentoComercial)
+                    .agregarItems(items)
                     .build();
 
-            //Modificar items con el egreso
+            this.repoEgresos.agregar(egreso);
+            //Modificar items con el egreso, o sea linkearlos
+            relacionarItemsConEgreso(items,egreso);
             return egreso;
         }
         catch (NullPointerException ex){
@@ -142,17 +132,16 @@ public class OperacionesRestController {
         itemEgreso.setCantidad(itemRequest.cantidad);
 
         Producto producto = buscarProducto(itemRequest.nombreProducto.toLowerCase());
-        if(producto != null) {
-            itemEgreso.setProducto(producto);
-        }
-        else {
+        if (producto == null) {
             producto = new Producto();
             producto.setNombreProducto(itemRequest.nombreProducto);
 
             this.repoProductos.agregar(producto);
-
-            itemEgreso.setProducto(producto);
         }
+        itemEgreso.setProducto(producto);
+
+        this.repoItems.agregar(itemEgreso);
+
         return  itemEgreso;
     }
 
@@ -169,4 +158,15 @@ public class OperacionesRestController {
         }
     }
 
+    private void relacionarItemsConEgreso(List<ItemEgreso> items, Egreso egreso) {
+        items.forEach(unItem -> {
+                unItem.setEgresoAsociado(egreso);
+                this.repoItems.modificar(unItem);
+        });
+    }
+
+    private class CargaEgresoResponse {
+        public Respuesta respuesta;
+        public int id;
+    }
 }

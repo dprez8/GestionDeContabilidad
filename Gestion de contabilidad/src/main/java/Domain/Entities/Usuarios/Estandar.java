@@ -56,5 +56,17 @@ public class Estandar extends Usuario {
 		if(ValidadorDeContrasenia.validarContrasenia(this)){
 			this.HashearPassword(contrasenia);}
 	}
+
+	public Organizacion getMiOrganizacion() {
+		return miOrganizacion;
+	}
+
+	public void setMiOrganizacion(Organizacion miOrganizacion) {
+		this.miOrganizacion = miOrganizacion;
+	}
+
+	public void setBandejaDeMensajes(BandejaDeMensajes bandejaDeMensajes) {
+		this.bandejaDeMensajes = bandejaDeMensajes;
+	}
 }
 
