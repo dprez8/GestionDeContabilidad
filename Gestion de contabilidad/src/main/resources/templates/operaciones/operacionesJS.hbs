@@ -2,35 +2,17 @@ const operaciones = {
     template: `{{> operaciones/operacionesHTML.hbs}}`,
     data() {
         return {
-            egresos: [
-                {
-                    id: 1,
-                    name: 'Egreso 1234', 
-                    validado: true, 
-                    total: 42234, 
-                    emitido: "12/12/2020",
-                    _showDetails: true,
-                    showEgreso: false
-                },
-                {
-                    id: 2,
-                    name: 'Egreso 4322', 
-                    validado: false, 
-                    total: 456453, 
-                    emitido: "22/04/2020",
-                    _showDetails: true,
-                    showEgreso: false
-                }
-            ],
+            egresos: [],
             ingresos: [
                 {}
             ],
+            egresosLoading: false,
             egresoSelected: null,
             campos_egresos: [
                 { key: 'name', label: 'Egreso', thClass:['w-100'], tdClass:[] },
                 { key: 'validado', label: 'Estado', thClass:['text-center'], tdClass:['text-center'] },
-                { key: 'total', label: 'Total', thClass:['text-center'], tdClass:['text-center'] },
-                { key: 'emitido', label: 'Emitido', thClass:['text-center'], tdClass:['text-center'] }
+                { key: 'valorTotal', label: 'Total', thClass:['text-center'], tdClass:['text-center'] },
+                { key: 'fechaOperacion', label: 'Emitido', thClass:['text-center'], tdClass:['text-center'] }
             ],
             campos_ingresos: [
                 { key: 'name', label: 'Ingreso', thClass:['w-100'], tdClass:[] },
@@ -44,6 +26,39 @@ const operaciones = {
         }
     },
     methods: {
+        convertDate: convertDate,
+        cargarEgresosAPI(){
+            this.egresosLoading = true;
+            $.ajax({
+                url: "http://{{ ip }}/api/operaciones/egresos",
+                type: "GET",
+                dataType: "json",
+                context: this,
+                success(response) {
+                    if(response.code == 403) {
+                        app.showSessionEndedAlert(true);
+                    } else if(response.code == 200) {
+                        console.log(response);
+                        this.egresos = response.egresos.map(this.egresosAPIConverter);
+                    }
+                    console.log(response);
+                },
+                complete() {
+                    this.egresosLoading = false;
+                }
+            });
+        },
+        egresosAPIConverter(egresoAPI) {
+            return {
+                id: egresoAPI.id,
+                name: 'Egreso ' + egresoAPI.id,
+                validado: egresoAPI.validado,
+                valorTotal: egresoAPI.valorTotal,
+                fechaOperacion: convertDate(egresoAPI.fecha),
+                _showDetails: true,
+                showEgreso: false
+            }
+        },
         toggleEgreso(row) {
             console.log(row);
 
@@ -77,9 +92,15 @@ const operaciones = {
     watch: {
         $route(to, from) {
             this.seleccionarEgreso();
+        },
+        egresosLoading(to, from) {
+            if(to == false) {
+                this.seleccionarEgreso();
+            }
         }
     },
     mounted() {
+        this.cargarEgresosAPI();
         this.seleccionarEgreso();
     }
 };

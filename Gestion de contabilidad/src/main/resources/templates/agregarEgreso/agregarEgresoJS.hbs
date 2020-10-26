@@ -20,31 +20,8 @@ const agregarEgreso = {
                 items: []
             },
             falloCargarEgreso: false,
-            proveedoresSelect: [{
-                value: 1,
-                text: "Roberto Samuel"
-            }],
-            mediosDePagoSelect: [{
-                    value: 1,
-                    text: "Tarjeta de Débito",
-                    type: "credit_card"
-                },
-                {
-                    value: 2,
-                    text: "Tarjeta de Crédito",
-                    type: "debit_card"
-                },
-                {
-                    value: 3,
-                    text: "Cheque",
-                    type: "cheque"
-                },
-                {
-                    value: 4,
-                    text: "Efectivo",
-                    type: "cash"
-                }
-            ],
+            proveedoresSelect: [],
+            mediosDePagoSelect: [],
             mediosDePagoType: {
                 credit_card: []
             },
@@ -103,7 +80,6 @@ const agregarEgreso = {
         convertDate: convertDate,
         softReloadPage: softReloadPage,
         confirmar() {
-
             if (this.proveedorAAgregar != null) {
                 // Hay que agregar un proveedor antes de agregar el egreso
                 console.log("POST '/api/proveedor'");
@@ -177,9 +153,12 @@ const agregarEgreso = {
             var request = {
                 url: "http://{{ ip }}/api/proveedores",
                 type: "GET",
+                dataType: "json",
                 context: this,
                 success(response) {
-                    if(response.code == 200) {
+                    if(response.code == 403) {
+                        app.showSessionEndedAlert(true);
+                    } else if(response.code == 200) {
                         this.proveedoresSelect = response.data.map(this.proveedoresAPIConverter);
                     }
                     else {
@@ -208,9 +187,12 @@ const agregarEgreso = {
             var request = {
                 url: "http://{{ ip }}/api/medios",
                 type: "GET",
+                dataType: "json",
                 context: this,
                 success(response) {
-                    if(response.code == 200) {
+                    if(response.code == 403) {
+                        app.showSessionEndedAlert(true);
+                    } else if(response.code == 200) {
                         this.mediosDePagoSelect = response.data.map(this.mediosDePagoAPIConverter);
                     }
                     else {
