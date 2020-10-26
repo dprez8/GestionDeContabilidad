@@ -18,46 +18,51 @@
         <b-badge pill class="mr-1">Categoria 3</b-badge>
     </div>
     <b-nav tabs fill class="mt-2">
-        <b-nav-item active>Egresos</b-nav-item>
-        <b-nav-item>Ingresos</b-nav-item>
+        <b-nav-item :active="egresoOpened()" to="/operaciones/egreso">Egresos</b-nav-item>
+        <b-nav-item :active="ingresoOpened()" to="/operaciones/ingreso">Ingresos</b-nav-item>
     </b-nav>
-    <div class="border">
-        <b-overlay variant="primary" spinner-variant="light" :show="egresosLoading" rounded="sm" class="border-bottom">
-            <b-table :tbody-tr-class="rowStyle" class="mb-0 border-0 border-bottom" head-variant="dark"
-                :fields="campos_egresos" 
-                :items="egresos"
-                :tbody-transition-props="transProps"
-                @row-clicked="toggleEgreso"
-            >
-                <template #cell(validado)="data">
-                    <b-badge v-if="data.item.validado" variant="success">Validado</b-badge>
-                    <b-badge v-else variant="warning">Sin Validar</b-badge>
-                </template>
+    <transition name="fade" mode="out-in">
+        <div class="border" v-if="egresoOpened()" key="egresos">
+            <b-overlay variant="primary" spinner-variant="light" :show="egresosLoading" rounded="sm" class="border-bottom">
+                <b-table :tbody-tr-class="rowStyle" class="mb-0 border-0 border-bottom" head-variant="dark"
+                    :fields="campos_egresos" 
+                    :items="egresos"
+                    :tbody-transition-props="transProps"
+                    @row-clicked="toggleEgreso"
+                >
+                    <template #cell(validado)="data">
+                        <b-badge v-if="data.item.validado" variant="success">Validado</b-badge>
+                        <b-badge v-else variant="warning">Sin Validar</b-badge>
+                    </template>
 
-                <template #cell(total)="data">
-                    <span>\{{ "$" + data.item.valorTotal }}</span>
-                </template>
-                <template #row-details="data">
-                    <b-collapse :visible="data.item.showEgreso" class="bg-light">
-                        <egreso></egreso>
-                    </b-collapse>
+                    <template #cell(total)="data">
+                        <span>\{{ "$" + data.item.valorTotal }}</span>
+                    </template>
+                    <template #row-details="data">
+                        <b-collapse :visible="data.item.showEgreso && !egresoLoading" class="bg-light">
+                            <transition name="fade">
+                                <egreso v-if="data.item.showEgreso" :egresoLoaded="egresoLoaded"></egreso>
+                            </transition>
+                        </b-collapse>
+                    </template>
+                </b-table>
+            </b-overlay>
+            <b-button class="m-2" variant="outline-primary" to="/operaciones/egreso/agregar">
+                <b-icon-plus></b-icon-plus>
+                Agregar Egreso
+            </b-button>
+        </div>
+        <div class="border" v-if="ingresoOpened()" key="ingresos">
+            <b-table :tbody-tr-class="rowStyle" class="mb-0 border-0 border-bottom" head-variant="dark" :fields="campos_ingresos"
+                :items="ingresos" :tbody-transition-props="transProps">
+                <template #cell(monto_total)="data">
+                    <span>\{{ "$" + data.item.monto_total }}</span>
                 </template>
             </b-table>
-        </b-overlay>
-        <!--
-        <b-table :tbody-tr-class="rowStyle" class="mb-0 border-0 border-bottom" head-variant="dark"
-            :fields="campos_ingresos" 
-            :items="ingresos"
-            :tbody-transition-props="transProps"
-        >
-            <template #cell(monto_total)="data">
-                <span>\{{ "$" + data.item.total }}</span>
-            </template>
-        </b-table>
-        -->
-        <b-button class="m-2" variant="outline-primary" to="/operaciones/egreso/agregar">
-            <b-icon-plus></b-icon-plus>
-            Agregar Egreso
-        </b-button>
-    </div>
+            <b-button class="m-2" variant="outline-primary" to="/operaciones/ingreso/agregar">
+                <b-icon-plus></b-icon-plus>
+                Agregar Ingreso
+            </b-button>
+        </div>
+    </transition>
 </div>

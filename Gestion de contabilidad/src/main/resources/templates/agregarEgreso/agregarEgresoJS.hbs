@@ -98,11 +98,9 @@ const agregarEgreso = {
                 this.egreso.documentoComercial.fechaDeEntrega   &&
                 this.egreso.items.length > 1
 
-            if(!todosLosCamposRellenos) {
-                this.falloCargarEgreso = true;
+            this.falloCargarEgreso = !todosLosCamposRellenos;
+            if(this.falloCargarEgreso) {
                 return;
-            } else {
-                this.falloCargarEgreso = false;
             }
 
             var egresoToSend = JSON.parse(JSON.stringify(this.egreso));

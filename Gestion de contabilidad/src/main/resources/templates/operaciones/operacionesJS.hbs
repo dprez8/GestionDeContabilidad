@@ -4,8 +4,11 @@ const operaciones = {
         return {
             egresos: [],
             ingresos: [
-                {}
+                {
+                    name: "Ingreso 1"
+                }
             ],
+            egresoLoading: false,
             egresosLoading: false,
             egresoSelected: null,
             campos_egresos: [
@@ -22,7 +25,8 @@ const operaciones = {
             ],
             transProps: {
               name: "fade"
-            }
+            },
+            operaciones: 'egresos'
         }
     },
     methods: {
@@ -41,6 +45,9 @@ const operaciones = {
                         console.log(response);
                         this.egresos = response.egresos.map(this.egresosAPIConverter);
                     }
+                },
+                error(response) {
+                    console.log("error");
                     console.log(response);
                 },
                 complete() {
@@ -54,14 +61,12 @@ const operaciones = {
                 name: 'Egreso ' + egresoAPI.id,
                 validado: egresoAPI.validado,
                 valorTotal: egresoAPI.valorTotal,
-                fechaOperacion: convertDate(egresoAPI.fecha),
+                fechaOperacion: convertDate(egresoAPI.fechaOperacion),
                 _showDetails: true,
                 showEgreso: false
             }
         },
         toggleEgreso(row) {
-            console.log(row);
-
             if(!row.showEgreso) {
                 this.$router.push('/operaciones/egreso/'+ row.id);
             } else {
@@ -70,6 +75,7 @@ const operaciones = {
         },
         seleccionarEgreso() {
             var id = this.$route.params.id;
+            this.egresoLoading = true;
 
             this.egresos.forEach(egreso => {
                 if(egreso.id != id)
@@ -78,12 +84,21 @@ const operaciones = {
                     egreso.showEgreso = true;
             });
         },
+        egresoLoaded(){
+            this.egresoLoading = false;
+        },
         rowStyle(item, type) {
             if(type == 'row') {
                 if(item.showEgreso) {
                     return ['bg-secondary', 'text-light'];
                 }
             }
+        },
+        ingresoOpened() {
+            return (this.$route.name == 'ingresos' || this.$route.name == 'ingreso');
+        },
+        egresoOpened() {
+            return (this.$route.name == 'egresos' || this.$route.name == 'egreso');
         }
     },
     components: {

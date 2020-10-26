@@ -24,16 +24,14 @@ const agregarIngreso = {
             // Creo el ingreso
             var todosLosCamposRellenos = 
                 this.ingreso.fecha                               &&
-                this.ingreso.montoTotal                          &&
-                this.ingreso.items.length > 1
+                this.ingreso.montoTotal                          
 
             this.falloCargarIngreso = !todosLosCamposRellenos;
             if(this.falloCargarIngreso) {
                 return;
             }
-
+            
             var ingresoToSend = JSON.parse(JSON.stringify(this.ingreso));
-            ingresoToSend.items.pop();
 
             console.log("POST '/api/operaciones/ingreso'");
             console.log(JSON.stringify(ingresoToSend, null, 4));
