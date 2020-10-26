@@ -1,7 +1,6 @@
 package Domain.Entities.Operaciones;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 import Domain.Entities.Organizacion.*;
 import com.google.gson.annotations.Expose;
@@ -14,7 +13,8 @@ public abstract class Operacion {
 
 	@Expose
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "ConfirmationCodeGenerator")
+	@TableGenerator(table = "SEQUENCES", name = "ConfirmationCodeGenerator")
 	@Column(name="id")
 	private int id;
 
