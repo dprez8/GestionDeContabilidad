@@ -6,9 +6,9 @@ import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,11 +27,11 @@ public class Ingreso extends Operacion {
 
     public Ingreso(){
         this.egresos = new ArrayList<>();
-        this.fechaCarga= LocalDate.now();
+        this.fechaCarga= LocalDateTime.now();
     }
 
     public Ingreso(String descripcion, double montoTotal){
-    	this.fechaCarga= LocalDate.now();
+    	this.fechaCarga= LocalDateTime.now();
     	this.descripcion = descripcion;
         this.montoTotal = montoTotal;
         this.egresos = new ArrayList<>();
