@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EgresoRequest {
-    public LocalDate fecha;
+    public LocalDate fechaOperacion;
     public int proveedor;
     public MedioDePagoRequest medioDePago;
     public DocumentoRequest documentoComercial;
