@@ -6,26 +6,26 @@
         </div>
     </div>
     <div class="row mb-4 mx-2">
-        <div class="col-4 col-lg-2 text-right py-2">
+        <div class="col-sm-4 col-lg-3 text-sm-right py-2">
             <span class="mr-2"><strong>Organización</strong></span>
         </div>
         <div class="col bg-light p-2">
             <span class="ml-2">NombreOrganización</span>
         </div>
+        <div class="col-lg-1 col-xl-3"></div>
     </div>
-    <div class="row mb-2">
-        <div class="col-sm-4 text-sm-right py-2">
+    <div class="row mb-4 mx-2">
+        <div class="col-sm-4 col-lg-3 text-sm-right py-2">
             <span class="mr-2"><strong>Descripción</strong></span>
         </div>
         <div class="col">
-            <b-col class="px-0 mx-0">
-                <b-form-textarea rows="3" max-rows="6" placeholder="Breve descripción"
-                    v-model="ingreso.descripcion"></b-form-textarea>
-            </b-col>
+            <b-form-textarea rows="3" max-rows="6" placeholder="Breve descripción"
+                v-model="ingreso.descripcion"></b-form-textarea>
         </div>
+        <div class="col-lg-1 col-xl-3"></div>
     </div>
     <div class="row mb-4 mx-2">
-        <div class="col-sm-4 text-sm-right py-2">
+        <div class="col-sm-4 col-lg-3 text-sm-right py-2">
             <span class="mr-2"><strong>Fecha Operación</strong></span>
         </div>
         <div class="col">
@@ -35,10 +35,11 @@
             <b-form-datepicker placeholder="Seleccione fecha de la Operación" class="mb-2"
                 :state="(!ingreso.fecha && falloCargarIngreso) ? false : null" v-model="ingreso.fecha"></b-form-datepicker>
         </div>
-    </div> 
+        <div class="col-lg-1 col-xl-3"></div>
+    </div>
     <div class="row mb-4 mx-2">
-        <div class="col-sm-4 text-sm-right py-2">
-            <span class="mr-2"><strong>Fecha Operación</strong></span>
+        <div class="col-sm-4 col-lg-3 text-sm-right py-2">
+            <span class="mr-2"><strong>Monto Total</strong></span>
         </div>
         <div class="col">
             <b-collapse :visible="(!ingreso.montoTotal && falloCargarIngreso)">
@@ -48,6 +49,7 @@
                 :state="(!ingreso.montoTotal && falloCargarIngreso) ? false : null"
                 v-model="ingreso.montoTotal"></b-form-input>
         </div>
+        <div class="col-lg-1 col-xl-3"></div>
     </div>
 
     <div class="row mb-4 mx-2">

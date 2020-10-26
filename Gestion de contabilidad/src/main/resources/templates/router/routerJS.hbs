@@ -1,6 +1,5 @@
 const router = new VueRouter({
-    routes: [
-        {
+    routes: [{
             name: 'inicio',
             path: '/',
             component: inicio,
@@ -13,11 +12,76 @@ const router = new VueRouter({
             path: '/operaciones',
             component: operaciones,
             meta: {
-                breadcrumb: [
-                    {
+                breadcrumb: [{
+                    label: "Operaciones",
+                    type: "fixed",
+                    path: "/operaciones",
+                    active: true
+                }]
+            }
+        },
+        {
+            name: 'ingresos',
+            path: '/operaciones/ingreso',
+            component: operaciones,
+            meta: {
+                breadcrumb: [{
                         label: "Operaciones",
                         type: "fixed",
-                        path: "/operaciones",
+                        path: "/operaciones"
+                    },
+                    {
+                        label: "Ingresos",
+                        type: "fixed",
+                        path: "/operaciones/ingreso",
+                        active: true
+                    }
+                ]
+            }
+        },
+        {
+            name: 'agregarIngreso',
+            path: '/operaciones/ingreso/agregar',
+            component: agregarIngreso,
+            meta: {
+                breadcrumb: [{
+                        label: "Operaciones",
+                        type: "fixed",
+                        path: "/operaciones"
+                    },
+                    {
+                        label: "Ingresos",
+                        type: "fixed",
+                        path: "/operaciones/ingreso"
+                    },
+                    {
+                        label: "Agregar",
+                        type: "fixed",
+                        path: "/operaciones/ingreso/agregar",
+                        active: true
+                    }
+                ]
+            }
+        },
+        {
+            name: 'ingreso',
+            path: '/operaciones/ingreso/:id',
+            component: operaciones,
+            meta: {
+                breadcrumb: [{
+                        label: "Operaciones",
+                        type: "fixed",
+                        path: "/operaciones"
+                    },
+                    {
+                        label: "Ingresos",
+                        type: "fixed",
+                        path: "/operaciones/ingreso"
+                    },
+                    {
+                        label: "id",
+                        type: "dynamic",
+                        path: "/operaciones/ingreso/id",
                         active: true
                     }
                 ]
@@ -28,8 +92,7 @@ const router = new VueRouter({
             path: '/operaciones/egreso',
             component: operaciones,
             meta: {
-                breadcrumb: [
-                    {
+                breadcrumb: [{
                         label: "Operaciones",
                         type: "fixed",
                         path: "/operaciones"
@@ -48,8 +111,7 @@ const router = new VueRouter({
             path: '/operaciones/egreso/agregar',
             component: agregarEgreso,
             meta: {
-                breadcrumb: [
-                    {
+                breadcrumb: [{
                         label: "Operaciones",
                         type: "fixed",
                         path: "/operaciones"
@@ -73,8 +135,7 @@ const router = new VueRouter({
             path: '/operaciones/egreso/:id',
             component: operaciones,
             meta: {
-                breadcrumb: [
-                    {
+                breadcrumb: [{
                         label: "Operaciones",
                         type: "fixed",
                         path: "/operaciones"
@@ -98,14 +159,12 @@ const router = new VueRouter({
             path: '/bandeja',
             component: bandeja,
             meta: {
-                breadcrumb: [
-                    {
-                        label: "Bandeja de mensajes",
-                        type: "fixed",
-                        path: "/bandeja",
-                        active: true
-                    }
-                ]
+                breadcrumb: [{
+                    label: "Bandeja de mensajes",
+                    type: "fixed",
+                    path: "/bandeja",
+                    active: true
+                }]
             }
         },
         {
@@ -113,8 +172,7 @@ const router = new VueRouter({
             path: '/bandeja/:id',
             component: bandeja,
             meta: {
-                breadcrumb: [
-                    {
+                breadcrumb: [{
                         label: "Bandeja de mensajes",
                         type: "fixed",
                         path: "/bandeja"
@@ -133,14 +191,12 @@ const router = new VueRouter({
             path: '/configuracion',
             component: configuracion,
             meta: {
-                breadcrumb: [
-                    {
-                        label: "Configuracion",
-                        type: "fixed",
-                        path: "/configuracion",
-                        active: true
-                    }
-                ]
+                breadcrumb: [{
+                    label: "Configuracion",
+                    type: "fixed",
+                    path: "/configuracion",
+                    active: true
+                }]
             }
         },
         {
