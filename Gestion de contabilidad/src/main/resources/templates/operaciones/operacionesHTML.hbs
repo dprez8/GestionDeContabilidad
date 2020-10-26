@@ -22,26 +22,29 @@
         <b-nav-item>Ingresos</b-nav-item>
     </b-nav>
     <div class="border">
-        <b-table :tbody-tr-class="rowStyle" class="mb-0 border-0 border-bottom" head-variant="dark"
-            :fields="campos_egresos" 
-            :items="egresos"
-            :tbody-transition-props="transProps"
-            @row-clicked="toggleEgreso"
-        >
-            <template #cell(validado)="data">
-                <b-badge v-if="data.item.validado" variant="success">Validado</b-badge>
-                <b-badge v-else variant="warning">Sin Validar</b-badge>
-            </template>
+        <b-overlay variant="primary" spinner-variant="light" :show="egresosLoading" rounded="sm" class="border-bottom">
+            <b-table :tbody-tr-class="rowStyle" class="mb-0 border-0 border-bottom" head-variant="dark"
+                :fields="campos_egresos" 
+                :items="egresos"
+                :tbody-transition-props="transProps"
+                @row-clicked="toggleEgreso"
+            >
+                <template #cell(validado)="data">
+                    <b-badge v-if="data.item.validado" variant="success">Validado</b-badge>
+                    <b-badge v-else variant="warning">Sin Validar</b-badge>
+                </template>
 
-            <template #cell(total)="data">
-                <span>\{{ "$" + data.item.total }}</span>
-            </template>
-            <template #row-details="data">
-                <b-collapse :visible="data.item.showEgreso" class="bg-light">
-                    <egreso></egreso>
-                </b-collapse>
-            </template>
-        </b-table>
+                <template #cell(total)="data">
+                    <span>\{{ "$" + data.item.valorTotal }}</span>
+                </template>
+                <template #row-details="data">
+                    <b-collapse :visible="data.item.showEgreso" class="bg-light">
+                        <egreso></egreso>
+                    </b-collapse>
+                </template>
+            </b-table>
+        </b-overlay>
+        <!--
         <b-table :tbody-tr-class="rowStyle" class="mb-0 border-0 border-bottom" head-variant="dark"
             :fields="campos_ingresos" 
             :items="ingresos"
@@ -51,6 +54,7 @@
                 <span>\{{ "$" + data.item.total }}</span>
             </template>
         </b-table>
+        -->
         <b-button class="m-2" variant="outline-primary" to="/operaciones/egreso/agregar">
             <b-icon-plus></b-icon-plus>
             Agregar Egreso
