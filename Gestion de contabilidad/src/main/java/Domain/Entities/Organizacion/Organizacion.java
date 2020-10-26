@@ -51,6 +51,15 @@ public abstract class Organizacion extends EntidadPersistente {
 				.collect(Collectors.toList());
 	}
 
+	/**Obtengo la lista de ingresos que son subtipos de operaciones */
+	public List<Ingreso> getIngresos() {
+		return operaciones.stream()
+				.filter(Ingreso.class::isInstance)
+				.map(Ingreso.class::cast)
+				.collect(Collectors.toList());
+	}
+
+
 	public List<Estandar> getUsuarios() {
 		return usuarios;
 	}
