@@ -33,7 +33,7 @@ public class ProveedorController {
 	
 	
 	public String listadoProveedores(Request request, Response response){
-		
+			response.type("application/json");
 		 	Gson gson = new Gson();
 	        List<Proveedor> proveedores =new ArrayList<>();
 	        ProveedorResponse proveedorRespuesta= new ProveedorResponse();
@@ -68,8 +68,7 @@ public class ProveedorController {
 	       
 	       
 	        String jsonProveedores = gson.toJson(proveedorRespuesta);
-	       
-	        response.type("application/json");
+
 	        response.body(jsonProveedores);
 
 	        return response.body();
@@ -93,6 +92,7 @@ public class ProveedorController {
 	public String crearProveedor(Request request,Response response){
 		
 		Gson gson2 = new Gson();
+		response.type("application/json");
 		//Proveedor proveedor= new Proveedor();
 		Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
 		if(usuario == null) {
@@ -108,19 +108,15 @@ public class ProveedorController {
              proveedorCreado.code = 200;
              proveedorCreado.message = "Proveedor Agregado";
              proveedorCreado.id=proveedor.getProveedorId();
-             response.status(200);
 		}
         catch (NullPointerException ex){
-        	 proveedorCreado.code = 404;
+        	 proveedorCreado.code =  400;
         	 proveedorCreado.message =  "No se logro crear el proveedor: "+proveedor.getProveedorId();
-            response.status(404);
         }
 		
 
         String jsonProveedor = gson2.toJson(proveedorCreado);
-       
-        response.type("application/json");
-        response.body(jsonProveedor);
+		response.body(jsonProveedor);
 
         return response.body();
 	}
