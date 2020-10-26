@@ -41,15 +41,15 @@ public class VinculacionMain {
                 .agregarFechaOperacion(LocalDate.of(2020, Month.SEPTEMBER,23))
                 .agregarItems(monitores)
                 .build();
-        compra1.setOperacionNumero(1);
-        compra2.setOperacionNumero(2);
-        compra3.setOperacionNumero(3);
+        compra1.setId(1);
+        compra2.setId(2);
+        compra3.setId(3);
 
         Ingreso donacion = new Ingreso(5, "Donacion", 5000.0);
-                donacion.setOperacionNumero(5);
+                donacion.setId(5);
                 donacion.setFechaOperacion(LocalDate.of(2020, 9, 26));
         Ingreso venta = new Ingreso(7, "Venta de computadora", 10000.0);
-                venta.setOperacionNumero(7);
+                venta.setId(7);
                 venta.setFechaOperacion(LocalDate.of(2020, 9, 25));
 
         List<Ingreso> ingresos = new ArrayList<>();
@@ -76,12 +76,12 @@ public class VinculacionMain {
 
     private static void printTest(List<Ingreso> ingresos, List<Egreso> egresos) {
         egresos.forEach(unEgreso -> {
-            Integer numeroEgreso = unEgreso.getOperacionNumero();
+            Integer numeroEgreso = unEgreso.getId();
             String fechaEgreso = unEgreso.getFechaOperacion().toString();
             Double valorEgreso = unEgreso.getValorTotal();
 
             if(unEgreso.getIngresoAsociado() != null) {
-                Integer numeroIngreso = unEgreso.getIngresoAsociado().getOperacionNumero();
+                Integer numeroIngreso = unEgreso.getIngresoAsociado().getId();
                 String fechaIngreso = unEgreso.getIngresoAsociado().getFechaOperacion().toString();
                 Double valorIngreso = unEgreso.getIngresoAsociado().montoSobrante() +
                         unEgreso.getIngresoAsociado().montoEnUso();

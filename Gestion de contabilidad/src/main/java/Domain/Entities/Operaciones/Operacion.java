@@ -26,17 +26,7 @@ public abstract class Operacion {
 	@JoinColumn(name = "organizacion_id", referencedColumnName = "id")
 	protected Organizacion organizacion;
 
-	@Column(name="operacion_numero")
-	protected int operacionNumero;
-
 	/**Setters & Getters*/
-	public void setOperacionNumero(int operacionNumero) {
-		this.operacionNumero = operacionNumero;
-	}
-
-	public int getOperacionNumero() {
-		return this.operacionNumero;
-	}
 
 	public void setFechaOperacion(LocalDate fecha) {
 		this.fechaOperacion = fecha;
@@ -48,5 +38,9 @@ public abstract class Operacion {
 
 	public int getId() {
 		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

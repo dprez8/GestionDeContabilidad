@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import Domain.Controllers.DTO.Respuesta;
+import Domain.Entities.Usuarios.Estandar;
 import com.google.gson.Gson;
 
 import Domain.Entities.ApiPaises.Ciudad;
@@ -31,7 +32,12 @@ public class DireccionPostalController {
 	public String listadoDePaises(Request request, Response response) throws IOException, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, contraseniaCorta {
         Gson gson = new Gson();
         Respuesta respuesta=new Respuesta();
-        List<Pais> paises=new ArrayList<>();
+        List<Pais> paises;
+
+        Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
+        if(usuario == null) {
+            return response.body();
+        }
 
    	 	this.repoPais = new Repositorio<Pais>(new DaoHibernate<Pais>(Pais.class));
         paises= this.repoPais.buscarTodos();

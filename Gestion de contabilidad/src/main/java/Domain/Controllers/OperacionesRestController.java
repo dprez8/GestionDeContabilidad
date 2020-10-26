@@ -2,6 +2,7 @@ package Domain.Controllers;
 
 import Domain.Controllers.AdaptersJson.LocalDateAdapter;
 import Domain.Controllers.DTO.EgresoRequest;
+import Domain.Controllers.DTO.EgresoResponse;
 import Domain.Controllers.DTO.ItemRequest;
 import Domain.Controllers.DTO.Respuesta;
 import Domain.Entities.DatosDeOperaciones.*;
@@ -34,6 +35,7 @@ public class OperacionesRestController {
     private Repositorio<TipoDocumento> repoTipoDocumento;
     private Repositorio<EntidadJuridica> repoEntidadJuridica;
     private Respuesta respuesta;
+    private Gson gson;
 
     public OperacionesRestController(){
         this.repoEgresos         = new Repositorio<>(new DaoHibernate<>(Egreso.class));
@@ -46,14 +48,14 @@ public class OperacionesRestController {
         this.repoTipoDocumento   = new Repositorio<>(new DaoHibernate<>(TipoDocumento.class));
         this.repoEntidadJuridica = new Repositorio<>(new DaoHibernate<>(EntidadJuridica.class));
         this.respuesta           = new Respuesta();
+        this.gson                = new GsonBuilder()
+                                        .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())
+                                        .create();
     }
 
 
     public String cargarNuevoEgreso(Request request, Response response) {
 
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())
-                .create();
         response.type("application/json");
         String jsonResponse;
 
@@ -61,7 +63,7 @@ public class OperacionesRestController {
         if(usuario == null) {
             return response.body();
         }
-        EgresoRequest egresoRequest    = gson.fromJson(request.body(),EgresoRequest.class);
+        EgresoRequest egresoRequest    = this.gson.fromJson(request.body(),EgresoRequest.class);
 
         EntidadJuridica entidadJuridica= this.repoEntidadJuridica.buscar(usuario.getMiOrganizacion().getId());
 
@@ -70,7 +72,7 @@ public class OperacionesRestController {
         if(egreso == null) {
             this.respuesta.setCode(400);
             this.respuesta.setMessage("Problema al cargar el egreso");
-            jsonResponse = gson.toJson(this.respuesta);
+            jsonResponse = this.gson.toJson(this.respuesta);
             response.body(jsonResponse);
             return response.body();
         }
@@ -82,8 +84,45 @@ public class OperacionesRestController {
         cargaEgresoResponse.code    = this.respuesta.getCode();
         cargaEgresoResponse.message = this.respuesta.getMessage();
         cargaEgresoResponse.id = egreso.getId();
-        jsonResponse = gson.toJson(cargaEgresoResponse);
+        jsonResponse = this.gson.toJson(cargaEgresoResponse);
         response.body(jsonResponse);
+        return response.body();
+    }
+
+    public String listadoDeEgresos(Request request, Response response) {
+        response.type("application/json");
+        Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
+        if(usuario == null) {
+            return response.body();
+        }
+
+        EntidadJuridica entidadJuridica= this.repoEntidadJuridica.buscar(usuario.getMiOrganizacion().getId());
+        List<EgresoResponse> egresosAEnviar;
+        String jsonResponse;
+
+        egresosAEnviar = entidadJuridica.getEgresos()
+                    .stream()
+                    .map(this::mapearEgreso)
+                    .collect(Collectors.toList());
+
+        if (egresosAEnviar.isEmpty()) {
+            this.respuesta.setCode(404);
+            this.respuesta.setMessage("No hay egresos cargados");
+            jsonResponse = this.gson.toJson(this.respuesta);
+            response.body(jsonResponse);
+            return response.body();
+        }
+        this.respuesta.setCode(200);
+        this.respuesta.setMessage("Ok");
+
+        ListadoEgresos listadoEgresos = new ListadoEgresos();
+        listadoEgresos.code    = this.respuesta.getCode();
+        listadoEgresos.message = this.respuesta.getMessage();
+        listadoEgresos.egresos = egresosAEnviar;
+
+        jsonResponse = this.gson.toJson(listadoEgresos);
+        response.body(jsonResponse);
+
         return response.body();
     }
 
@@ -174,9 +213,25 @@ public class OperacionesRestController {
         });
     }
 
+    private EgresoResponse mapearEgreso(Egreso egreso) {
+        EgresoResponse egresoResponse = new EgresoResponse();
+        egresoResponse.id             = egreso.getId();
+        egresoResponse.validado       = egreso.isValidado();
+        egresoResponse.valorTotal     = egreso.getValorTotal();
+        egresoResponse.fecha          = egreso.getFechaOperacion();
+        return egresoResponse;
+    }
+
     private class CargaEgresoResponse {
         public int code;
         public String message;
         public int id;
     }
+
+    private class ListadoEgresos {
+        public int code;
+        public String message;
+        public List<EgresoResponse> egresos;
+    }
+
 }

@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import javax.persistence.NoResultException;
 
+import Domain.Entities.Usuarios.Estandar;
 import com.google.gson.Gson;
 
 import Domain.Entities.ApiPaises.Pais;
@@ -25,6 +26,10 @@ public class MedioDePagoController {
 		 	Gson gson = new Gson();
 	        List<MedioDePago> medios=new ArrayList<>();
 	        MedioDePagoRespuesta medioRespuesta= new MedioDePagoRespuesta();
+			Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
+			if(usuario == null) {
+				return response.body();
+			}
 	   	 	this.repoMedio = new Repositorio<MedioDePago>(new DaoHibernate<MedioDePago>(MedioDePago.class));
 	      
 	        try {

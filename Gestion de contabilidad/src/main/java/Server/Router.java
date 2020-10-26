@@ -55,5 +55,6 @@ public class Router {
         Spark.get("api/bandeja",bandejaDeMensajesRestController::mostrarMensajes);
         //Spark.get("/api/bandeja/:usuarioId",bandejaDeMensajesRestController::mostrarMensajes);
         Spark.post("/api/operaciones/egreso",operacionesRestController::cargarNuevoEgreso);
+        Spark.get("/api/operaciones/egresos",operacionesRestController::listadoDeEgresos);
     }
 }
