@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.Date;
 
 import Domain.Entities.Organizacion.*;
+import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
 
@@ -11,6 +12,7 @@ import javax.persistence.*;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Operacion {
 
+	@Expose
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	@Column(name="id")

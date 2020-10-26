@@ -45,7 +45,7 @@ public class ObtenerPaises {
 	             for(Provincia provincia: provincias) {
 	            	 System.out.println("Provincia: "+provincia.name);
 	             } 
-		}*/
+		}
 		@SuppressWarnings("unchecked")
 		@Test
 		public void listadoDeCiudades(){
@@ -60,5 +60,11 @@ public class ObtenerPaises {
 				for(Ciudad ciudad: ciudades) {
 	            	 System.out.println("Provincia: "+ciudad.name);
 	             } 
+		}*/
+		@Test
+		public void moneda(){
+			 this.repoPais = new Repositorio<Pais>(new DaoHibernate<Pais>(Pais.class));
+			 Pais venezuela=repoPais.buscar(23);
+			 System.out.println("Moneda Descripcion: "+venezuela.moneda.description);
 		}
 }

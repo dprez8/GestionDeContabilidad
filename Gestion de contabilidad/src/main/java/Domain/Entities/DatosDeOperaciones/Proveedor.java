@@ -5,33 +5,53 @@ import javax.persistence.*;
 import Domain.Entities.ApiPaises.Ciudad;
 import Domain.Entities.ApiPaises.Pais;
 import Domain.Entities.ApiPaises.Provincia;
+import com.google.gson.annotations.Expose;
+
 @Entity
 @Table(name="proveedor")
 public class Proveedor {
+	@Expose
 	@Id
 	@GeneratedValue
 	@Column(name="proveedor_id")
 	private int proveedorId;
 
+	@Expose
 	@Column(name="documento_proveedor")
 	private int documento;
+
+	@Expose
 	@Column
 	private String nombre;
+
+	@Expose
 	@ManyToOne
 	@JoinColumn(name="pais_id", referencedColumnName = "pais_id")
 	private Pais pais;
+
+	@Expose
 	@ManyToOne
 	@JoinColumn(name="provincia_id", referencedColumnName = "provincia_id")
 	private Provincia provincia;
+
+	@Expose
 	@ManyToOne
 	@JoinColumn(name="ciudad_id", referencedColumnName = "ciudad_id")
 	private Ciudad ciudad;
+
+	@Expose
 	@Column
 	private String calle;
+
+	@Expose
 	@Column
 	private int altura;
+
+	@Expose
 	@Column
 	private String piso;
+
+	@Expose
 	@Column
 	private int zipcode;
 

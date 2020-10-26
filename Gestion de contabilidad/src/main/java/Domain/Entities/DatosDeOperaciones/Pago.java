@@ -1,6 +1,7 @@
 package Domain.Entities.DatosDeOperaciones;
 
 import Domain.Entities.EntidadPersistente.EntidadPersistente;
+import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
 
@@ -8,8 +9,11 @@ import javax.persistence.*;
 @Table(name = "pago")
 public class Pago extends EntidadPersistente {
 
+	@Expose
 	@Column(name="codigo_asociado")
 	private String codigoAsociado;
+
+	@Expose
 	@ManyToOne
 	@JoinColumn(name = "medio_id", referencedColumnName = "id")
 	private MedioDePago medioDePago;

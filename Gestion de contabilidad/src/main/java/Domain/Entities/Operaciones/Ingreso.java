@@ -2,6 +2,7 @@ package Domain.Entities.Operaciones;
 
 
 import Domain.Entities.Operaciones.Egreso.Egreso;
+import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -13,10 +14,13 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name="ingreso")
 public class Ingreso extends Operacion {
+
     @Column
     private String descripcion;
+
     @Column
     private double montoTotal;
+
     @OneToMany(mappedBy = "ingresoAsociado",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Egreso> egresos;
 

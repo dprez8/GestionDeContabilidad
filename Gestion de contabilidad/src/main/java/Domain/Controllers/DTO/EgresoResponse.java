@@ -6,5 +6,5 @@ public class EgresoResponse {
     public int id;
     public boolean validado;
     public Double valorTotal;
-    public LocalDate fecha;
+    public LocalDate fechaOperacion;
 }
