@@ -37,13 +37,6 @@ public class Presupuesto extends EntidadPersistente {
     private LocalDate fechaVigente;
 
     @ManyToMany
-    @JoinTable(
-            name="categoria_x_egreso_x_presupuesto",
-            inverseJoinColumns=
-            @JoinColumn(name="categoria_id", referencedColumnName="categoria_id"),
-            joinColumns=
-            @JoinColumn(name="presupuesto_id", referencedColumnName="id")
-    )
     private List<CategoriaOperacion> categorias;
 
     @ManyToOne

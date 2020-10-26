@@ -57,13 +57,6 @@ public class Egreso extends Operacion {
 	private Ingreso ingresoAsociado;
 
 	@ManyToMany
-	@JoinTable(
-			name="categoria_x_egreso_x_presupuesto",
-			inverseJoinColumns=
-			@JoinColumn(name="categoria_id", referencedColumnName="categoria_id"),
-			joinColumns=
-			@JoinColumn(name="egreso_id", referencedColumnName="id")
-	)
 	private List<CategoriaOperacion> categorias;
 
 	@Expose
