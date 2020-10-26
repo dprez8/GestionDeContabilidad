@@ -20,7 +20,15 @@ public class CategoriaOperacion {
 
     }
 
-    public String getDescripcion() {
+    public int getCategoriaId() {
+		return categoriaId;
+	}
+
+	public void setCategoriaId(int categoriaId) {
+		this.categoriaId = categoriaId;
+	}
+
+	public String getDescripcion() {
         return descripcion;
     }
 
