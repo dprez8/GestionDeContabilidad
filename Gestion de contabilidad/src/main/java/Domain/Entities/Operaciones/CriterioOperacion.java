@@ -31,7 +31,27 @@ public class CriterioOperacion {
         criteriosHijo = new ArrayList<>();
     }
 
-    public void setCriterioHijo(CriterioOperacion critOperacion){
+    public int getCriterioId() {
+		return criterioId;
+	}
+
+	public void setCriterioId(int criterioId) {
+		this.criterioId = criterioId;
+	}
+
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
+	public CriterioOperacion getCriterioPadre() {
+		return criterioPadre;
+	}
+
+	public void setCriterioHijo(CriterioOperacion critOperacion){
         criteriosHijo.add(critOperacion);
     }
 
