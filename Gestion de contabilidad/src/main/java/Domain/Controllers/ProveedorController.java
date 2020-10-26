@@ -94,6 +94,10 @@ public class ProveedorController {
 		
 		Gson gson2 = new Gson();
 		//Proveedor proveedor= new Proveedor();
+		Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
+		if(usuario == null) {
+			return response.body();
+		}
 		this.repoProveedor = new Repositorio<Proveedor>(new DaoHibernate<Proveedor>(Proveedor.class));
 		ProveedorNuevo proveedorNuevo = gson2.fromJson(request.body(),ProveedorNuevo.class);
 		Proveedor proveedor=mapProveedor(proveedorNuevo);
