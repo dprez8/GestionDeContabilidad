@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import javax.persistence.NoResultException;
 
+import Domain.Entities.Usuarios.Estandar;
 import com.google.gson.Gson;
 
 import Domain.Controllers.MedioDePagoController.MedioDePagoRespuesta;
@@ -36,6 +37,11 @@ public class ProveedorController {
 		 	Gson gson = new Gson();
 	        List<Proveedor> proveedores =new ArrayList<>();
 	        ProveedorResponse proveedorRespuesta= new ProveedorResponse();
+
+			Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
+			if(usuario == null) {
+				return response.body();
+			}
 	   	 	this.repoProveedor = new Repositorio<Proveedor>(new DaoHibernate<Proveedor>(Proveedor.class));
 	   	 
 	   	 	
@@ -88,6 +94,10 @@ public class ProveedorController {
 		
 		Gson gson2 = new Gson();
 		//Proveedor proveedor= new Proveedor();
+		Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
+		if(usuario == null) {
+			return response.body();
+		}
 		this.repoProveedor = new Repositorio<Proveedor>(new DaoHibernate<Proveedor>(Proveedor.class));
 		ProveedorNuevo proveedorNuevo = gson2.fromJson(request.body(),ProveedorNuevo.class);
 		Proveedor proveedor=mapProveedor(proveedorNuevo);

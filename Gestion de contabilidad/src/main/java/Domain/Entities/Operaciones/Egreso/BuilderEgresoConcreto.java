@@ -61,6 +61,8 @@ public class BuilderEgresoConcreto implements IBuilderEgreso {
     
     @Override
     public Egreso build() {
+        Double valorTotal = this.egreso.calcularValorTotal();
+        this.egreso.setValorTotal(valorTotal);
         return this.egreso;
     }
 

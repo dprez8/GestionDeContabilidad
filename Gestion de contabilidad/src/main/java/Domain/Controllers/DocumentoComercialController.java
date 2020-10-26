@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.NoResultException;
 
+import Domain.Entities.Usuarios.Estandar;
 import com.google.gson.Gson;
 
 import Domain.Controllers.MedioDePagoController.MedioDePagoRespuesta;
@@ -23,6 +24,10 @@ public class DocumentoComercialController {
 		 	Gson gson = new Gson();
 	        List<TipoDocumento> tiposDocumento=new ArrayList<>();
 	        TipoDocumentoRespuesta tipoRespuesta = new TipoDocumentoRespuesta();
+			Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
+			if(usuario == null) {
+				return response.body();
+			}
 	   	 	this.repoTipo = new Repositorio<TipoDocumento>(new DaoHibernate<TipoDocumento>(TipoDocumento.class));
 	      
 	        try {

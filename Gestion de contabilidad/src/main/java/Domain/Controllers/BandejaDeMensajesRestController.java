@@ -59,8 +59,8 @@ public class BandejaDeMensajesRestController {
         List<Mensaje> mensajes;
         mensajes = this.repoMensajes.buscarTodos();
         if(mensajes.isEmpty()){
-            this.codeResponse.setCode(204);
-            this.codeResponse.setMessage("No Content");
+            this.codeResponse.setCode(404);
+            this.codeResponse.setMessage("Recurso no existente");
             return;
         }
         List<Mensaje> mensajesUsuario = mensajes.stream()
