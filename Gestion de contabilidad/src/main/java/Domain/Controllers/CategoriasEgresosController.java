@@ -78,6 +78,9 @@ public class CategoriasEgresosController {
 		criterioDato.id=criterio.getCriterioId();
 		criterioDato.name= criterio.getDescripcion();
 		
+		if(criterio.getCriterioPadre()!=null)
+			criterioDato.idCriterioPadre=criterio.getCriterioPadre().getCriterioId();
+		
 	if(!categorias.isEmpty()) {
 		List<CategoriaDato> categoriasAEnviar = categorias.stream().map(this::mapCategoria).collect(Collectors.toList());
 		criterioDato.categorias=categoriasAEnviar;
