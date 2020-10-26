@@ -203,7 +203,7 @@ public class EgresosRestController {
                                             .collect(Collectors.toList());
 
         Egreso egreso = new BuilderEgresoConcreto()
-                    .agregarFechaOperacion(egresoRequest.fecha)
+                    .agregarFechaOperacion(egresoRequest.fechaOperacion)
                     .agregarDatosOrganizacion(entidadJuridica)
                     .agregarProveedor(proveedor)
                     .agregarPago(pago)
@@ -260,7 +260,7 @@ public class EgresosRestController {
         EgresoResponse egresoResponse = new EgresoResponse();
         egresoResponse.id             = egreso.getId();
         egresoResponse.validado       = egreso.isValidado();
-        egresoResponse.valorTotal     = egreso.getValorTotal();
+        egresoResponse.montoTotal = egreso.getValorTotal();
         egresoResponse.fechaOperacion = egreso.getFechaOperacion();
         return egresoResponse;
     }
