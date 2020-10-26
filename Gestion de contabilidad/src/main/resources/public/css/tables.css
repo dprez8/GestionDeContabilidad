@@ -1,3 +1,12 @@
 .b-table-details > td {
     padding: 0 !important;
 }
+.mw-0{
+    max-width: 0;
+}
+table.table-row-pointer > tbody > tr{
+    cursor: pointer;
+}
+table.table-row-pointer > tbody > tr.b-table-details{
+    cursor: initial;
+}

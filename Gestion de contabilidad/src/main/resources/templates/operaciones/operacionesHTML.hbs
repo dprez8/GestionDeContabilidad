@@ -1,4 +1,4 @@
-<div class="px-3 py-4">
+<div class="px-1 px-md-3 py-4">
     <div>
         <p>Buscar egresos e ingresos por categoría</p>
         <b-dropdown id="dropdown-criterios" text="Criterio 1">
@@ -22,9 +22,9 @@
         <b-nav-item :active="ingresoOpened()" to="/operaciones/ingreso">Ingresos</b-nav-item>
     </b-nav>
     <transition name="fade" mode="out-in">
-        <div class="border" v-if="egresoOpened()" key="egresos">
+        <div class="border border-top-0" v-if="egresoOpened()" key="egresos">
             <b-overlay variant="primary" spinner-variant="light" :show="egresosLoading" rounded="sm" class="border-bottom">
-                <b-table :tbody-tr-class="rowStyle" class="mb-0 border-0 border-bottom" head-variant="dark"
+                <b-table :tbody-tr-class="rowStyle" class="mb-0 border-0 border-bottom table-row-pointer" head-variant="dark"
                     :fields="campos_egresos" 
                     :items="egresos"
                     :tbody-transition-props="transProps"
@@ -39,6 +39,11 @@
                         <span>\{{ "$" + data.item.valorTotal }}</span>
                     </template>
                     <template #row-details="data">
+                        <b-collapse :visible="data.item.showEgreso && egresoLoading" class="bg-light">
+                            <div class="text-center p-4">
+                                <b-spinner variant="primary" label="Spinning"></b-spinner>
+                            </div>
+                        </b-collapse>
                         <b-collapse :visible="data.item.showEgreso && !egresoLoading" class="bg-light">
                             <transition name="fade">
                                 <egreso v-if="data.item.showEgreso" :egresoLoaded="egresoLoaded"></egreso>
@@ -52,17 +57,33 @@
                 Agregar Egreso
             </b-button>
         </div>
-        <div class="border" v-if="ingresoOpened()" key="ingresos">
-            <b-table :tbody-tr-class="rowStyle" class="mb-0 border-0 border-bottom" head-variant="dark" :fields="campos_ingresos"
-                :items="ingresos" :tbody-transition-props="transProps">
-                <template #cell(monto_total)="data">
-                    <span>\{{ "$" + data.item.monto_total }}</span>
-                </template>
-            </b-table>
-            <b-button class="m-2" variant="outline-primary" to="/operaciones/ingreso/agregar">
-                <b-icon-plus></b-icon-plus>
-                Agregar Ingreso
-            </b-button>
+        <div class="border border-top-0" v-else-if="ingresoOpened()" key="ingresos">
+            <b-overlay variant="primary" spinner-variant="light" :show="ingresosLoading" rounded="sm" class="border-bottom">
+                <b-table :tbody-tr-class="rowStyle" class="mb-0 border-0 border-bottom" head-variant="dark" :fields="campos_ingresos"
+                    :items="ingresos" :tbody-transition-props="transProps">
+                    <template #cell(descripcion)="data">
+                        <b-collapse :id="'ingreso-descripcion'+data.index" :visible="true">
+                            <div class="text-nowrap text-truncate" v-b-toggle="'ingreso-descripcion'+data.index">\{{data.item.descripcion}}</div>
+                        </b-collapse>
+                        <b-collapse :id="'ingreso-descripcion'+data.index">
+                            <div style="overflow-wrap: break-word" v-b-toggle="'ingreso-descripcion'+data.index">\{{data.item.descripcion}}</div>
+                        </b-collapse>
+                    </template>
+                    <template #cell(montoTotal)="data">
+                        <span>\{{ "$" + data.item.montoTotal }}</span>
+                    </template>
+                </b-table>
+                <b-button class="m-2" variant="outline-primary" to="/operaciones/ingreso/agregar">
+                    <b-icon-plus></b-icon-plus>
+                    Agregar Ingreso
+                </b-button>
+            </b-overlay>
+        </div>
+        <div class="border border-top-0 d-flex justify-content-center align-items-center p-2" v-else key="vacio" style="height: 300px;">
+            <div class="text-center text-secondary">
+                <b-img src="http://{{ ip }}/img/thinking.svg" fluid alt="Responsive image" class="pb-2" style="width: 15%; opacity: 0.7"></b-img>
+                <p class="pb-4">Seleccione alguna opción para comenzar</p>
+            </div>
         </div>
     </transition>
 </div>

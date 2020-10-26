@@ -255,8 +255,8 @@ public class TestDominio {
     public void persistirUnIngreso() {
         EntidadJuridica pepsi = this.repoEntidadJuridica.buscar(1);
         Ingreso ingreso = new Ingreso();
-        ingreso.setDescripcion("sarasa");
-        ingreso.setMontoTotal(20000.0);
+        ingreso.setDescripcion("PEPEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+        ingreso.setMontoTotal(200.0);
         ingreso.setOrganizacion(pepsi);
         ingreso.setFechaOperacion(LocalDate.now());
         this.repoIngresos.agregar(ingreso);
