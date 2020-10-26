@@ -1,9 +1,9 @@
 package Domain.Controllers;
 
 import Domain.Controllers.AdaptersJson.LocalDateAdapter;
+import Domain.Controllers.DTO.IngresoRequest;
 import Domain.Controllers.DTO.IngresoResponse;
 import Domain.Controllers.DTO.Respuesta;
-import Domain.Entities.ApiVinculador.IngresoAEnviar;
 import Domain.Entities.Operaciones.Ingreso;
 import Domain.Entities.Organizacion.EntidadJuridica;
 import Domain.Entities.Usuarios.Estandar;
@@ -66,10 +66,45 @@ public class IngresosRestController {
         return response.body();
     }
 
+    public String cargarNuevoIngreso(Request request, Response response) {
+        response.type("application/json");
+        Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
+        if(usuario == null) {
+            return response.body();
+        }
+        this.gson  = new GsonBuilder()
+                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())
+                .create();
+        String jsonResponse;
+
+        IngresoRequest ingresoRequest    = this.gson.fromJson(request.body(),IngresoRequest.class);
+
+        EntidadJuridica entidadJuridica= this.repoEntidadJuridica.buscar(usuario.getMiOrganizacion().getId());
+
+        Ingreso ingreso = asignarIngresoDesde(ingresoRequest, entidadJuridica);
+
+        if(ingreso == null) {
+            this.respuesta.setCode(400);
+            this.respuesta.setMessage("Problema al cargar el ingreso");
+            jsonResponse = this.gson.toJson(this.respuesta);
+            response.body(jsonResponse);
+            return response.body();
+        }
+        CargaIngresoResponse cargaIngresoResponse = new CargaIngresoResponse();
+        cargaIngresoResponse.code                 = 200;
+        cargaIngresoResponse.message              = "Ok";
+        cargaIngresoResponse.id                   = ingreso.getId();
+
+        jsonResponse = this.gson.toJson(cargaIngresoResponse);
+        response.body(jsonResponse);
+        return response.body();
+    }
+
     private IngresoResponse mapearIngresos(Ingreso ingreso) {
         IngresoResponse ingresoAEnviar = new IngresoResponse();
         ingresoAEnviar.id              = ingreso.getId();
         ingresoAEnviar.fechaOperacion  = ingreso.getFechaOperacion();
+        ingresoAEnviar.fechaCarga      = ingreso.getFechaCarga();
         ingresoAEnviar.descripcion     = ingreso.getDescripcion();
         ingresoAEnviar.montoTotal      = ingreso.montoSobrante();
         ingresoAEnviar.egresos         = ingreso.getEgresos()
@@ -79,9 +114,27 @@ public class IngresosRestController {
         return ingresoAEnviar;
     }
 
+    private Ingreso asignarIngresoDesde(IngresoRequest ingresoRequest, EntidadJuridica entidadJuridica) {
+        Ingreso ingreso = new Ingreso();
+        ingreso.setDescripcion(ingresoRequest.descripcion);
+        ingreso.setFechaOperacion(ingresoRequest.fechaOperacion);
+        ingreso.setOrganizacion(entidadJuridica);
+        ingreso.setMontoTotal(ingresoRequest.montoTotal);
+
+        this.repoIngresos.agregar(ingreso);
+
+        return ingreso;
+    }
+
     private class ListadoIngresos {
         public int code;
         public String message;
         public List<IngresoResponse> ingresos;
+    }
+
+    private class CargaIngresoResponse {
+        public int code;
+        public String message;
+        public int id;
     }
 }
