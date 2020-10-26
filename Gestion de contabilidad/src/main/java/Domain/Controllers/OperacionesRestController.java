@@ -159,9 +159,10 @@ public class OperacionesRestController {
         }
 
         EgresoDetalladoResponse egresoDetallado = new EgresoDetalladoResponse();
-        egresoDetallado.code    = 200;
-        egresoDetallado.message = "Ok";
-        egresoDetallado.egreso  = egreso;
+        egresoDetallado.code         = 200;
+        egresoDetallado.message      = "Ok";
+        egresoDetallado.egreso       = egreso;
+        egresoDetallado.estaSuscrito = verificarSuscripcion(usuario,egreso);
 
         jsonResponse = this.gson.toJson(egresoDetallado);
         response.body(jsonResponse);
@@ -217,6 +218,7 @@ public class OperacionesRestController {
         relacionarItemsConEgreso(items,egreso);
         return egreso;
     }
+
     private ItemEgreso mapearItem(ItemRequest itemRequest) {
         ItemEgreso itemEgreso = new ItemEgreso();
         itemEgreso.setPrecio(itemRequest.precio);
@@ -263,6 +265,12 @@ public class OperacionesRestController {
         egresoResponse.valorTotal     = egreso.getValorTotal();
         egresoResponse.fechaOperacion = egreso.getFechaOperacion();
         return egresoResponse;
+    }
+
+    private boolean verificarSuscripcion(Estandar estandar, Egreso egreso) {
+        return egreso.getRevisores()
+                        .stream()
+                        .anyMatch(unRevisor->unRevisor.getId() == estandar.getId());
     }
 
     private class CargaEgresoResponse {
