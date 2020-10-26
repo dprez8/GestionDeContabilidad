@@ -5,6 +5,6 @@ import java.time.LocalDate;
 public class EgresoResponse {
     public int id;
     public boolean validado;
-    public Double valorTotal;
+    public Double montoTotal;
     public LocalDate fechaOperacion;
 }
