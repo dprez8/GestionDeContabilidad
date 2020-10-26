@@ -74,7 +74,6 @@ public class Egreso extends Operacion {
 	private double valorTotal;
 
 	public Egreso() {
-		this.fechaCarga= LocalDate.now();
 		this.items = new ArrayList<>();
 		this.presupuestos = new ArrayList<>();
 		this.revisores = new ArrayList<>();

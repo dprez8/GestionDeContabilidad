@@ -1,6 +1,7 @@
 package Domain.Controllers;
 
 import Domain.Controllers.AdaptersJson.LocalDateAdapter;
+import Domain.Controllers.AdaptersJson.LocalDateTimeAdapter;
 import Domain.Controllers.DTO.IngresoRequest;
 import Domain.Controllers.DTO.IngresoResponse;
 import Domain.Controllers.DTO.Respuesta;
@@ -15,6 +16,7 @@ import spark.Request;
 import spark.Response;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,6 +40,7 @@ public class IngresosRestController {
         }
         this.gson  = new GsonBuilder()
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter().nullSafe())
                 .create();
         EntidadJuridica entidadJuridica= this.repoEntidadJuridica.buscar(usuario.getMiOrganizacion().getId());
         List<IngresoResponse> ingresosAEnviar;
@@ -115,6 +118,9 @@ public class IngresosRestController {
     }
 
     private Ingreso asignarIngresoDesde(IngresoRequest ingresoRequest, EntidadJuridica entidadJuridica) {
+        if(ingresoRequest.descripcion == null || ingresoRequest.fechaOperacion == null || ingresoRequest.montoTotal == null){
+            return null;
+        }
         Ingreso ingreso = new Ingreso();
         ingreso.setDescripcion(ingresoRequest.descripcion);
         ingreso.setFechaOperacion(ingresoRequest.fechaOperacion);

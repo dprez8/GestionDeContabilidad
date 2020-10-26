@@ -55,6 +55,14 @@ public class BandejaDeMensajesRestController {
         return response.body();
     }
 
+    public String configurar(Request request, Response response) {
+        return response.body();
+    }
+
+    public String mostrarConfiguracion(Request request, Response response) {
+        return response.body();
+    }
+
     private void filtrarMensajesDeUsuario(Estandar usuario) {
         List<Mensaje> mensajes;
         mensajes = this.repoMensajes.buscarTodos();
