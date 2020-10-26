@@ -241,11 +241,12 @@ public class TestDominio {
 
         ValidadorDeTransparencia validador = new ValidadorDeTransparencia(validacionMinima,validacionPresupuesto,validacionMenorValor);
 
-        //Scheduler.setPeriodo(0);
-        //Scheduler.arrancarTarea(pepsi,validador);
 
-        List<Egreso> egresos = pepsi.getEgresos().stream().filter(a -> a.isValidado() == false).collect(Collectors.toList()); //Lo egresos que no han sido validados o no pasaron las pruebas anteriormente
-        egresos.forEach(egreso -> validador.validarEgreso(egreso));
+        Scheduler scheduler = new Scheduler(pepsi.getUsuarios().get(0));
+        scheduler.arrancarTarea(pepsi,validador);
+
+        //List<Egreso> egresos = pepsi.getEgresos().stream().filter(a -> a.isValidado() == false).collect(Collectors.toList()); //Lo egresos que no han sido validados o no pasaron las pruebas anteriormente
+        //egresos.forEach(egreso -> validador.validarEgreso(egreso));
 
         Assert.assertEquals(true,pepsi.getEgresos().get(0).isValidado());
     }
