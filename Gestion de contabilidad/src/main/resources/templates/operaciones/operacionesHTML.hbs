@@ -42,6 +42,15 @@
                 </b-collapse>
             </template>
         </b-table>
+        <b-table :tbody-tr-class="rowStyle" class="mb-0 border-0 border-bottom" head-variant="dark"
+            :fields="campos_ingresos" 
+            :items="ingresos"
+            :tbody-transition-props="transProps"
+        >
+            <template #cell(monto_total)="data">
+                <span>\{{ "$" + data.item.total }}</span>
+            </template>
+        </b-table>
         <b-button class="m-2" variant="outline-primary" to="/operaciones/egreso/agregar">
             <b-icon-plus></b-icon-plus>
             Agregar Egreso
