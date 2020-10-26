@@ -1,6 +1,7 @@
 package Domain.Entities.Operaciones;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import Domain.Entities.Organizacion.*;
 import com.google.gson.annotations.Expose;
@@ -21,8 +22,8 @@ public abstract class Operacion {
 	@Column(name="fecha_operacion", columnDefinition = "DATE")
 	protected LocalDate fechaOperacion;
 
-	@Column(name="fecha_carga", columnDefinition = "DATE")
-	protected LocalDate fechaCarga;
+	@Column(name="fecha_carga", columnDefinition = "TIMESTAMP")
+	protected LocalDateTime fechaCarga;
 
 	@ManyToOne
 	@JoinColumn(name = "organizacion_id", referencedColumnName = "id")
@@ -46,12 +47,12 @@ public abstract class Operacion {
 		this.id = id;
 	}
 
-	public LocalDate getFechaCarga() {
+	public LocalDateTime getFechaCarga() {
 		return fechaCarga;
 	}
 
-	public void setFechaCarga(LocalDate fechaCarga) {
-		this.fechaCarga = fechaCarga;
+	public void setFechaCarga() {
+		this.fechaCarga = LocalDateTime.now();
 	}
 
 	public Organizacion getOrganizacion() {
