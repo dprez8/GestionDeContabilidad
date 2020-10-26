@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /*****************************************************************/
-public class OperacionesRestController {
+public class EgresosRestController {
     private Repositorio<Egreso> repoEgresos;
     private Repositorio<ItemEgreso> repoItems;
     private Repositorio<Producto> repoProductos;
@@ -38,7 +38,7 @@ public class OperacionesRestController {
     private Respuesta respuesta;
     private Gson gson;
 
-    public OperacionesRestController(){
+    public EgresosRestController(){
         this.repoEgresos         = new Repositorio<>(new DaoHibernate<>(Egreso.class));
         this.repoItems           = new Repositorio<>(new DaoHibernate<>(ItemEgreso.class));
         this.repoProductos       = new Repositorio<>(new DaoHibernate<>(Producto.class));
@@ -118,12 +118,10 @@ public class OperacionesRestController {
             response.body(jsonResponse);
             return response.body();
         }
-        this.respuesta.setCode(200);
-        this.respuesta.setMessage("Ok");
 
         ListadoEgresos listadoEgresos = new ListadoEgresos();
-        listadoEgresos.code    = this.respuesta.getCode();
-        listadoEgresos.message = this.respuesta.getMessage();
+        listadoEgresos.code    = 200;
+        listadoEgresos.message = "Ok";
         listadoEgresos.egresos = egresosAEnviar;
 
         jsonResponse = this.gson.toJson(listadoEgresos);

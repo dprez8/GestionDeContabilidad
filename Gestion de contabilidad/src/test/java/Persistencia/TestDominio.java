@@ -3,6 +3,7 @@ package Persistencia;
 import Domain.Entities.DatosDeOperaciones.*;
 import Domain.Entities.Operaciones.Egreso.BuilderEgresoConcreto;
 import Domain.Entities.Operaciones.Egreso.Egreso;
+import Domain.Entities.Operaciones.Ingreso;
 import Domain.Entities.Operaciones.Presupuesto;
 import Domain.Entities.Organizacion.Empresa;
 import Domain.Entities.Organizacion.EntidadBase;
@@ -40,6 +41,7 @@ public class TestDominio {
     private Repositorio<DocumentoComercial> repoDocumentos;
     private Repositorio<TipoDocumento> repoTipoDocumento;
     private Repositorio<Presupuesto> repoPresupuestos;
+    private Repositorio<Ingreso> repoIngresos;
 
     @Before
     public void antesDePersistir() {
@@ -55,6 +57,7 @@ public class TestDominio {
         this.repoDocumentos      = new Repositorio<>(new DaoHibernate<>(DocumentoComercial.class));
         this.repoTipoDocumento   = new Repositorio<>(new DaoHibernate<>(TipoDocumento.class));
         this.repoPresupuestos    = new Repositorio<>(new DaoHibernate<>(Presupuesto.class));
+        this.repoIngresos        = new Repositorio<>(new DaoHibernate<>(Ingreso.class));
     }
 
     @Test
@@ -247,4 +250,14 @@ public class TestDominio {
         Assert.assertEquals(true,pepsi.getEgresos().get(0).isValidado());
     }
 
+    @Test
+    public void persistirUnIngreso() {
+        EntidadJuridica pepsi = this.repoEntidadJuridica.buscar(1);
+        Ingreso ingreso = new Ingreso();
+        ingreso.setDescripcion("sarasa");
+        ingreso.setMontoTotal(20000.0);
+        ingreso.setOrganizacion(pepsi);
+        ingreso.setFechaOperacion(LocalDate.now());
+        this.repoIngresos.agregar(ingreso);
+    }
 }

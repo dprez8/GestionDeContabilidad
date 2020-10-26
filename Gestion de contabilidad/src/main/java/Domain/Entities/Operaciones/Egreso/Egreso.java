@@ -6,6 +6,7 @@ import Domain.Entities.Operaciones.Operacion;
 import Domain.Entities.Operaciones.Presupuesto;
 import Domain.Entities.Usuarios.Estandar;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import java.util.Collections;
@@ -74,7 +75,7 @@ public class Egreso extends Operacion {
 	private double valorTotal;
 
 	public Egreso() {
-		this.fechaCarga= new Date();
+		this.fechaCarga= LocalDate.now();
 		this.items = new ArrayList<>();
 		this.presupuestos = new ArrayList<>();
 		this.revisores = new ArrayList<>();

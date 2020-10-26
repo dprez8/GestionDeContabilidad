@@ -45,10 +45,10 @@ public class VinculacionMain {
         compra2.setId(2);
         compra3.setId(3);
 
-        Ingreso donacion = new Ingreso(5, "Donacion", 5000.0);
+        Ingreso donacion = new Ingreso("Donacion", 5000.0);
                 donacion.setId(5);
                 donacion.setFechaOperacion(LocalDate.of(2020, 9, 26));
-        Ingreso venta = new Ingreso(7, "Venta de computadora", 10000.0);
+        Ingreso venta = new Ingreso("Venta de computadora", 10000.0);
                 venta.setId(7);
                 venta.setFechaOperacion(LocalDate.of(2020, 9, 25));
 
