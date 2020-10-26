@@ -19,6 +19,7 @@ const agregarEgreso = {
                 },
                 items: []
             },
+            falloCargarEgreso: false,
             proveedoresSelect: [{
                 value: 1,
                 text: "Roberto Samuel"
@@ -92,8 +93,15 @@ const agregarEgreso = {
             ]
         }
     },
+    computed: {
+        state(data) {
+            console.log(data);
+            return false;
+        }
+    },
     methods: {
         convertDate: convertDate,
+        softReloadPage: softReloadPage,
         confirmar() {
 
             if (this.proveedorAAgregar != null) {
@@ -103,9 +111,50 @@ const agregarEgreso = {
             }
 
             // Creo el egreso
-            this.egreso.items.pop();
+            var todosLosCamposRellenos = 
+                this.egreso.fecha                               &&
+                this.egreso.proveedor                           &&
+                this.egreso.medioDePago.id                      &&
+                this.egreso.medioDePago.dato                    &&
+                this.egreso.documentoComercial.tipo             &&
+                this.egreso.documentoComercial.numeroDocumento  &&
+                this.egreso.documentoComercial.fechaDePedido    &&
+                this.egreso.documentoComercial.fechaDeEntrega   &&
+                this.egreso.items.length > 1
+
+            if(!todosLosCamposRellenos) {
+                this.falloCargarEgreso = true;
+                return;
+            } else {
+                this.falloCargarEgreso = false;
+            }
+
+            var egresoToSend = JSON.parse(JSON.stringify(this.egreso));
+            egresoToSend.items.pop();
+
             console.log("POST '/api/operaciones/egreso'");
-            console.log(JSON.stringify(this.egreso, null, 4));
+            console.log(JSON.stringify(egresoToSend, null, 4));
+
+            $.ajax({
+                url: "http://{{ ip }}/api/operaciones/egreso",
+                type: "POST",
+                dataType: "json",
+                context: this,
+                data: JSON.stringify(egresoToSend),
+                success(response) {
+                    if(response.code == 403) {
+                        app.showSessionEndedAlert(false);
+                    } else if(response.code == 400) {
+                        this.falloCargarEgreso = true;
+                    } else if(response.code == 200) {
+                        this.$router.push('/operaciones/egreso');
+                    }
+                    console.log(response);
+                },
+                complete() {
+                    console.log("termino");
+                }
+            });
 
             // Obtengo la id del egreso que se creó
 

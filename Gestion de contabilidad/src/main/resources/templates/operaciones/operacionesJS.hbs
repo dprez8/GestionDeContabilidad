@@ -22,12 +22,21 @@ const operaciones = {
                     showEgreso: false
                 }
             ],
+            ingresos: [
+                {}
+            ],
             egresoSelected: null,
             campos_egresos: [
                 { key: 'name', label: 'Egreso', thClass:['w-100'], tdClass:[] },
                 { key: 'validado', label: 'Estado', thClass:['text-center'], tdClass:['text-center'] },
                 { key: 'total', label: 'Total', thClass:['text-center'], tdClass:['text-center'] },
                 { key: 'emitido', label: 'Emitido', thClass:['text-center'], tdClass:['text-center'] }
+            ],
+            campos_ingresos: [
+                { key: 'name', label: 'Ingreso', thClass:['w-100'], tdClass:[] },
+                { key: 'monto_total', label: 'Total', thClass:['text-center'], tdClass:['text-center'] },
+                { key: 'descripcion', label: 'Descripcion', thClass:['text-center'], tdClass:['text-center'] },
+                { key: 'fecha_operacion', label: 'Fecha Operación', thClass: ['text-center'], tdClass: ['text-center'] },
             ],
             transProps: {
               name: "fade"
@@ -57,7 +66,7 @@ const operaciones = {
         rowStyle(item, type) {
             if(type == 'row') {
                 if(item.showEgreso) {
-                    return ['bg-dark', 'text-light'];
+                    return ['bg-secondary', 'text-light'];
                 }
             }
         }

@@ -21,11 +21,14 @@ const bandeja = {
                 context: this,
                 success(data) {
                     if(data.code == 200) {
-                        this.mensajes = data.mensajes;
+                        if(data.mensajes != undefined)
+                            this.mensajes = data.mensajes;
+                    }
+                    else if(data.code == 403) {
+                        app.showSessionEndedAlert(true);
                     }
                     else {
                         console.log("error");
-                        app.showSessionEndedAlert(true);
                         console.log(data);
                     }
                 },
