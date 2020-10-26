@@ -6,7 +6,6 @@ import Spark.utils.BooleanHelper;
 import Spark.utils.HandlebarsTemplateEngineBuilder;
 import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
-import Spark.utils.HandlebarsTemplateEngineBuilder;
 
 public class Router {
     private static HandlebarsTemplateEngine engine;
@@ -43,8 +42,9 @@ public class Router {
         ProveedorController proveedorController = new ProveedorController();
         MedioDePagoController medioController = new MedioDePagoController();
         BandejaDeMensajesRestController bandejaDeMensajesRestController= new BandejaDeMensajesRestController();
-        OperacionesRestController operacionesRestController = new OperacionesRestController();
+        EgresosRestController egresosRestController = new EgresosRestController();
         CategoriasEgresosController categoriasController = new CategoriasEgresosController();
+        IngresosRestController ingresosRestController = new IngresosRestController();
         
         Spark.post("/api/login",loginRestController::login);
         Spark.get("/api/pais",direccionController::listadoDePaises);
@@ -56,8 +56,9 @@ public class Router {
         Spark.get("api/bandeja",bandejaDeMensajesRestController::mostrarMensajes);
         //Spark.get("/api/bandeja/:usuarioId",bandejaDeMensajesRestController::mostrarMensajes);
         Spark.get("/api/categorias",categoriasController::listadoCriterios);
-        Spark.post("/api/operaciones/egreso",operacionesRestController::cargarNuevoEgreso);
-        Spark.get("/api/operaciones/egresos",operacionesRestController::listadoDeEgresos);
-        Spark.get("/api/operaciones/egreso/:egresoId", operacionesRestController::mostrarEgreso);
+        Spark.post("/api/operaciones/egreso", egresosRestController::cargarNuevoEgreso);
+        Spark.get("/api/operaciones/egresos", egresosRestController::listadoDeEgresos);
+        Spark.get("/api/operaciones/egreso/:egresoId", egresosRestController::mostrarEgreso);
+        Spark.get("/api/operaciones/ingresos",ingresosRestController::listadoDeIngresos);
     }
 }

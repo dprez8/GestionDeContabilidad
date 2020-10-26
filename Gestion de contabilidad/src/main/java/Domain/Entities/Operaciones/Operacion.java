@@ -22,7 +22,7 @@ public abstract class Operacion {
 	protected LocalDate fechaOperacion;
 
 	@Column(name="fecha_carga", columnDefinition = "DATE")
-	protected Date fechaCarga;
+	protected LocalDate fechaCarga;
 
 	@ManyToOne
 	@JoinColumn(name = "organizacion_id", referencedColumnName = "id")
@@ -44,5 +44,21 @@ public abstract class Operacion {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public LocalDate getFechaCarga() {
+		return fechaCarga;
+	}
+
+	public void setFechaCarga(LocalDate fechaCarga) {
+		this.fechaCarga = fechaCarga;
+	}
+
+	public Organizacion getOrganizacion() {
+		return organizacion;
+	}
+
+	public void setOrganizacion(Organizacion organizacion) {
+		this.organizacion = organizacion;
 	}
 }

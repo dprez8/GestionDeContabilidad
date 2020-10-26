@@ -5,6 +5,7 @@ import Domain.Entities.Operaciones.Egreso.Egreso;
 import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -24,11 +25,13 @@ public class Ingreso extends Operacion {
     @OneToMany(mappedBy = "ingresoAsociado",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Egreso> egresos;
 
-    protected Ingreso(){
+    public Ingreso(){
+        this.egresos = new ArrayList<>();
+        this.fechaCarga= LocalDate.now();
     }
 
-    public Ingreso(int operacionNumero, String descripcion, double montoTotal){
-    	this.fechaCarga= new Date();
+    public Ingreso(String descripcion, double montoTotal){
+    	this.fechaCarga= LocalDate.now();
     	this.descripcion = descripcion;
         this.montoTotal = montoTotal;
         this.egresos = new ArrayList<>();
@@ -68,5 +71,17 @@ public class Ingreso extends Operacion {
 
     public void setEgresos(Egreso ... egresos) {
         Collections.addAll(this.egresos,egresos);
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public double getMontoTotal() {
+        return montoTotal;
+    }
+
+    public List<Egreso> getEgresos() {
+        return egresos;
     }
 }
