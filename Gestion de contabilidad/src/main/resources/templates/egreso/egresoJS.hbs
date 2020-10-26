@@ -54,7 +54,6 @@ const egreso = {
                     console.log(response);
                 },
                 complete() {
-                    console.log(this.egresoLoaded);
                     this.egresoLoaded();
                 }
             });
@@ -68,7 +67,6 @@ const egreso = {
         }
     },
     mounted() {
-        console.log(this.egresoLoaded);
         this.cargarEgresoAPI();
     }
 }

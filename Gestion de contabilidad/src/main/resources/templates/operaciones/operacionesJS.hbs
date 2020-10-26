@@ -3,14 +3,12 @@ const operaciones = {
     data() {
         return {
             egresos: [],
-            ingresos: [
-                {
-                    name: "Ingreso 1"
-                }
-            ],
-            egresoLoading: false,
+            ingresos: [],
+            egresoLoading: true,
             egresosLoading: false,
             egresoSelected: null,
+
+            ingresosLoading: false,
             campos_egresos: [
                 { key: 'name', label: 'Egreso', thClass:['w-100'], tdClass:[] },
                 { key: 'validado', label: 'Estado', thClass:['text-center'], tdClass:['text-center'] },
@@ -18,20 +16,22 @@ const operaciones = {
                 { key: 'fechaOperacion', label: 'Emitido', thClass:['text-center'], tdClass:['text-center'] }
             ],
             campos_ingresos: [
-                { key: 'name', label: 'Ingreso', thClass:['w-100'], tdClass:[] },
-                { key: 'monto_total', label: 'Total', thClass:['text-center'], tdClass:['text-center'] },
-                { key: 'descripcion', label: 'Descripcion', thClass:['text-center'], tdClass:['text-center'] },
-                { key: 'fecha_operacion', label: 'Fecha Operación', thClass: ['text-center'], tdClass: ['text-center'] },
+                { key: 'name', label: 'Ingreso', thClass:['w-25'], tdClass:[] },
+                { key: 'descripcion', label: 'Descripcion', thClass:['w-50'], tdClass:['mw-0'] },
+                { key: 'montoTotal', label: 'Total', thClass:['text-center'], tdClass:['text-center'] },
+                { key: 'fechaOperacion', label: 'Fecha Operación', thClass: ['text-center', 'w-25'], tdClass: ['text-center'] },
             ],
             transProps: {
               name: "fade"
-            },
-            operaciones: 'egresos'
+            }
         }
     },
     methods: {
         convertDate: convertDate,
         cargarEgresosAPI(){
+            if(!this.egresoOpened()) 
+                return;
+
             this.egresosLoading = true;
             $.ajax({
                 url: "http://{{ ip }}/api/operaciones/egresos",
@@ -87,18 +87,57 @@ const operaciones = {
         egresoLoaded(){
             this.egresoLoading = false;
         },
+        egresoOpened() {
+            return (this.$route.name == 'egresos' || this.$route.name == 'egreso');
+        },
+
+        cargarIngresosAPI(){
+            if(!this.ingresoOpened()) 
+                return;
+            
+            this.ingresosLoading = true;
+            $.ajax({
+                url: "http://{{ ip }}/api/operaciones/ingresos",
+                type: "GET",
+                dataType: "json",
+                context: this,
+                success(response) {
+                    if(response.code == 403) {
+                        app.showSessionEndedAlert(true);
+                    } else if(response.code == 200) {
+                        console.log(response);
+                        this.ingresos = response.ingresos.map(this.ingresosAPIConverter);
+                    }
+                },
+                error(response) {
+                    console.log("error");
+                    console.log(response);
+                },
+                complete() {
+                    this.ingresosLoading = false;
+                }
+            });
+        },
+        ingresosAPIConverter(ingresoAPI) {
+            return {
+                id: ingresoAPI.id,
+                name: 'Ingreso ' + ingresoAPI.id,
+                descripcion: ingresoAPI.descripcion,
+                montoTotal: ingresoAPI.montoTotal,
+                fechaOperacion: convertDate(ingresoAPI.fechaOperacion),
+                _showDetails: true,
+                showEgreso: false
+            }
+        },
+        ingresoOpened() {
+            return (this.$route.name == 'ingresos');
+        },
         rowStyle(item, type) {
             if(type == 'row') {
                 if(item.showEgreso) {
                     return ['bg-secondary', 'text-light'];
                 }
             }
-        },
-        ingresoOpened() {
-            return (this.$route.name == 'ingresos' || this.$route.name == 'ingreso');
-        },
-        egresoOpened() {
-            return (this.$route.name == 'egresos' || this.$route.name == 'egreso');
         }
     },
     components: {
@@ -106,6 +145,9 @@ const operaciones = {
     },
     watch: {
         $route(to, from) {
+            if(this.$route.name == 'egresos')
+                this.cargarEgresosAPI();
+            this.cargarIngresosAPI();
             this.seleccionarEgreso();
         },
         egresosLoading(to, from) {
@@ -116,6 +158,7 @@ const operaciones = {
     },
     mounted() {
         this.cargarEgresosAPI();
+        this.cargarIngresosAPI();
         this.seleccionarEgreso();
     }
 };
