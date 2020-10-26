@@ -14,6 +14,7 @@ import Domain.Repositories.Daos.DaoHibernate;
 import Domain.Repositories.Repositorio;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.Expose;
 import db.EntityManagerHelper;
 import spark.Request;
 import spark.Response;
@@ -48,9 +49,6 @@ public class OperacionesRestController {
         this.repoTipoDocumento   = new Repositorio<>(new DaoHibernate<>(TipoDocumento.class));
         this.repoEntidadJuridica = new Repositorio<>(new DaoHibernate<>(EntidadJuridica.class));
         this.respuesta           = new Respuesta();
-        this.gson                = new GsonBuilder()
-                                        .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())
-                                        .create();
     }
 
 
@@ -63,6 +61,11 @@ public class OperacionesRestController {
         if(usuario == null) {
             return response.body();
         }
+
+        this.gson  = new GsonBuilder()
+                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())
+                .create();
+
         EgresoRequest egresoRequest    = this.gson.fromJson(request.body(),EgresoRequest.class);
 
         EntidadJuridica entidadJuridica= this.repoEntidadJuridica.buscar(usuario.getMiOrganizacion().getId());
@@ -95,6 +98,9 @@ public class OperacionesRestController {
         if(usuario == null) {
             return response.body();
         }
+        this.gson  = new GsonBuilder()
+                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())
+                .create();
 
         EntidadJuridica entidadJuridica= this.repoEntidadJuridica.buscar(usuario.getMiOrganizacion().getId());
         List<EgresoResponse> egresosAEnviar;
@@ -121,6 +127,43 @@ public class OperacionesRestController {
         listadoEgresos.egresos = egresosAEnviar;
 
         jsonResponse = this.gson.toJson(listadoEgresos);
+        response.body(jsonResponse);
+
+        return response.body();
+    }
+
+    public String mostrarEgreso(Request request, Response response) {
+        response.type("application/json");
+        Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
+        if(usuario == null) {
+            return response.body();
+        }
+
+        String jsonResponse;
+        Egreso egreso;
+
+        this.gson = new GsonBuilder()
+                .excludeFieldsWithoutExposeAnnotation()
+                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())
+                .serializeNulls()
+                .create();
+
+        egreso = this.repoEgresos.buscar(new Integer(request.params("egresoId")));
+
+        if(egreso == null) {
+            this.respuesta.setCode(404);
+            this.respuesta.setMessage("El egreso no existe");
+            jsonResponse = this.gson.toJson(this.respuesta);
+            response.body(jsonResponse);
+            return response.body();
+        }
+
+        EgresoDetalladoResponse egresoDetallado = new EgresoDetalladoResponse();
+        egresoDetallado.code    = 200;
+        egresoDetallado.message = "Ok";
+        egresoDetallado.egreso  = egreso;
+
+        jsonResponse = this.gson.toJson(egresoDetallado);
         response.body(jsonResponse);
 
         return response.body();
@@ -218,7 +261,7 @@ public class OperacionesRestController {
         egresoResponse.id             = egreso.getId();
         egresoResponse.validado       = egreso.isValidado();
         egresoResponse.valorTotal     = egreso.getValorTotal();
-        egresoResponse.fecha          = egreso.getFechaOperacion();
+        egresoResponse.fechaOperacion = egreso.getFechaOperacion();
         return egresoResponse;
     }
 
@@ -234,4 +277,14 @@ public class OperacionesRestController {
         public List<EgresoResponse> egresos;
     }
 
+    private class EgresoDetalladoResponse {
+        @Expose
+        public int code;
+        @Expose
+        public String message;
+        @Expose
+        public Egreso egreso;
+        @Expose
+        public boolean estaSuscrito;
+    }
 }

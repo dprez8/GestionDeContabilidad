@@ -11,6 +11,7 @@ import Domain.Entities.DatosDeOperaciones.ItemPresupuesto;
 import Domain.Entities.DatosDeOperaciones.Proveedor;
 import Domain.Entities.EntidadPersistente.EntidadPersistente;
 import Domain.Entities.Operaciones.Egreso.Egreso;
+import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
 
@@ -44,9 +45,11 @@ public class Presupuesto extends EntidadPersistente {
             @JoinColumn(name="presupuesto_id", referencedColumnName="id")
     )
     private List<CategoriaOperacion> categorias;
+
     @ManyToOne
     @JoinColumn(name="proveedor_id", referencedColumnName = "proveedor_id")
     private Proveedor proveedor;
+
     @Column(name="valor_total")
     private Double valorTotal;
 

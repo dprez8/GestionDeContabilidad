@@ -5,12 +5,13 @@ import Domain.Entities.EntidadPersistente.EntidadPersistente;
 import javax.persistence.*;
 
 import Domain.Entities.EntidadPersistente.EntidadPersistente;
+import com.google.gson.annotations.Expose;
 
 @Entity
 @Table(name="medio_de_pago")
 public class MedioDePago extends EntidadPersistente {
 
-	
+	@Expose
 	@Column(name="medio_de_pago")
 	private String medioDePago;
 

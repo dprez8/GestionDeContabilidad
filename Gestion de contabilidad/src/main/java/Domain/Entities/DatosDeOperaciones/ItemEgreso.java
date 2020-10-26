@@ -2,6 +2,7 @@ package Domain.Entities.DatosDeOperaciones;
 
 import Domain.Entities.EntidadPersistente.EntidadPersistente;
 import Domain.Entities.Operaciones.Egreso.Egreso;
+import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
 
@@ -9,14 +10,19 @@ import javax.persistence.*;
 @Table(name="item_egreso")
 public class ItemEgreso extends EntidadPersistente {
 
+	@Expose
 	@ManyToOne
 	@JoinColumn(name = "producto_id", referencedColumnName="id")
 	private Producto producto;
 
+	@Expose
 	@Column
 	private int cantidad;
+
+	@Expose
 	@Column
 	private double precio;
+
 	@ManyToOne
 	@JoinColumn(name= "egreso_id", referencedColumnName = "id")
 	private Egreso egresoAsociado;

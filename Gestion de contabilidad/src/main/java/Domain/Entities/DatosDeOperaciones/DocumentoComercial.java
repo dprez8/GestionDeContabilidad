@@ -1,6 +1,7 @@
 package Domain.Entities.DatosDeOperaciones;
 
 import Domain.Entities.EntidadPersistente.EntidadPersistente;
+import com.google.gson.annotations.Expose;
 
 import java.time.LocalDate;
 
@@ -9,19 +10,24 @@ import javax.persistence.*;
 @Table(name="documento_comercial")
 public class DocumentoComercial extends EntidadPersistente {
 
+	@Expose
 	@Column(name="numero_documento")
 	private int numDocumento;
 
+	@Expose
 	@ManyToOne
 	@JoinColumn(name = "tipo_documento_id", referencedColumnName = "id")
 	private TipoDocumento tipo;
 
+	@Expose
 	@Column(name = "fecha_pedido", columnDefinition = "DATE")
     private LocalDate fechaDePedido;
 
+	@Expose
     @Column(name = "fecha_entrega", columnDefinition = "DATE")
 	private LocalDate fechaDeEntrega;
 
+	@Expose
     @Column
     private String descripcion;
 

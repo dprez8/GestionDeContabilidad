@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 import Domain.Entities.DatosDeOperaciones.*;
 import Domain.Entities.Organizacion.*;
+import com.google.gson.annotations.Expose;
 
 
 import javax.persistence.*;
@@ -23,27 +24,33 @@ import javax.persistence.*;
 @Table(name="egreso")
 public class Egreso extends Operacion {
 
+	@Expose
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="documento_comercial_id", referencedColumnName = "id")
 	private DocumentoComercial documento;
 
+	@Expose
 	@OneToMany(mappedBy = "egresoAsociado",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private List<ItemEgreso> items;
 
+	@Expose
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name= "pago_id",referencedColumnName = "id")
 	private Pago pago;
 
+	@Expose
 	@ManyToOne
 	@JoinColumn(name = "proveedor_id", referencedColumnName = "proveedor_id")
 	private Proveedor proveedor;
 
+	@Expose
 	@OneToMany(mappedBy = "egresoAsociado",cascade = CascadeType.ALL)
 	private List<Presupuesto> presupuestos;
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Estandar> revisores;
 
+	@Expose
 	@ManyToOne
 	@JoinColumn(name = "ingreso_asociado", referencedColumnName = "id")
 	private Ingreso ingresoAsociado;
@@ -57,8 +64,12 @@ public class Egreso extends Operacion {
 			@JoinColumn(name="egreso_id", referencedColumnName="id")
 	)
 	private List<CategoriaOperacion> categorias;
+
+	@Expose
 	@Column
 	private boolean validado;
+
+	@Expose
 	@Column
 	private double valorTotal;
 

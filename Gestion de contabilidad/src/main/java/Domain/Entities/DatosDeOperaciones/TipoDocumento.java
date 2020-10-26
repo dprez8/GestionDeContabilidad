@@ -1,6 +1,7 @@
 package Domain.Entities.DatosDeOperaciones;
 
 import Domain.Entities.EntidadPersistente.EntidadPersistente;
+import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
 
@@ -8,6 +9,7 @@ import javax.persistence.*;
 @Table(name="tipo_de_documento")
 public class TipoDocumento extends EntidadPersistente {
 
+	@Expose
 	@Column (name="nombre_tipo")
 	private String nombreTipoDeDocumento;
 
