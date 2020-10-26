@@ -151,6 +151,7 @@
             {{> agregarProveedor/agregarProveedorJS.hbs}}
             {{> agregarPresupuesto/agregarPresupuestoJS.hbs}}
             {{> agregarEgreso/agregarEgresoJS.hbs}}
+            {{> agregarIngreso/agregarIngresoJS.hbs }}
             
 
             {{> router/routerJS.hbs}}
@@ -265,8 +266,11 @@
                         this.loggedOut = false;
 
                         if(this.reloadPage) {
-                            this.routerViewKey ? this.routerViewKey++ : this.routerViewKey--;
+                            this.softReloadPage();
                         }
+                    },
+                    softReloadPage() {
+                        this.routerViewKey ? this.routerViewKey++ : this.routerViewKey--;
                     }
                 },
                 router: router,
@@ -285,6 +289,10 @@
                 return ('0' + dateParsed.getDate()).slice(-2) + '/'
                     + ('0' + (dateParsed.getMonth()+1)).slice(-2) + '/'
                     + dateParsed.getFullYear();
+            }
+
+            function softReloadPage() {
+                app.softReloadPage();
             }
         </script>
     </body>

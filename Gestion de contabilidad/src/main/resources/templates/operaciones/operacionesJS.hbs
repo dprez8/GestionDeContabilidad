@@ -2,42 +2,71 @@ const operaciones = {
     template: `{{> operaciones/operacionesHTML.hbs}}`,
     data() {
         return {
-            egresos: [
+            egresos: [],
+            ingresos: [
                 {
-                    id: 1,
-                    name: 'Egreso 1234', 
-                    validado: true, 
-                    total: 42234, 
-                    emitido: "12/12/2020",
-                    _showDetails: true,
-                    showEgreso: false
-                },
-                {
-                    id: 2,
-                    name: 'Egreso 4322', 
-                    validado: false, 
-                    total: 456453, 
-                    emitido: "22/04/2020",
-                    _showDetails: true,
-                    showEgreso: false
+                    name: "Ingreso 1"
                 }
             ],
+            egresoLoading: false,
+            egresosLoading: false,
             egresoSelected: null,
             campos_egresos: [
                 { key: 'name', label: 'Egreso', thClass:['w-100'], tdClass:[] },
                 { key: 'validado', label: 'Estado', thClass:['text-center'], tdClass:['text-center'] },
-                { key: 'total', label: 'Total', thClass:['text-center'], tdClass:['text-center'] },
-                { key: 'emitido', label: 'Emitido', thClass:['text-center'], tdClass:['text-center'] }
+                { key: 'valorTotal', label: 'Total', thClass:['text-center'], tdClass:['text-center'] },
+                { key: 'fechaOperacion', label: 'Emitido', thClass:['text-center'], tdClass:['text-center'] }
+            ],
+            campos_ingresos: [
+                { key: 'name', label: 'Ingreso', thClass:['w-100'], tdClass:[] },
+                { key: 'monto_total', label: 'Total', thClass:['text-center'], tdClass:['text-center'] },
+                { key: 'descripcion', label: 'Descripcion', thClass:['text-center'], tdClass:['text-center'] },
+                { key: 'fecha_operacion', label: 'Fecha Operación', thClass: ['text-center'], tdClass: ['text-center'] },
             ],
             transProps: {
               name: "fade"
-            }
+            },
+            operaciones: 'egresos'
         }
     },
     methods: {
+        convertDate: convertDate,
+        cargarEgresosAPI(){
+            this.egresosLoading = true;
+            $.ajax({
+                url: "http://{{ ip }}/api/operaciones/egresos",
+                type: "GET",
+                dataType: "json",
+                context: this,
+                success(response) {
+                    if(response.code == 403) {
+                        app.showSessionEndedAlert(true);
+                    } else if(response.code == 200) {
+                        console.log(response);
+                        this.egresos = response.egresos.map(this.egresosAPIConverter);
+                    }
+                },
+                error(response) {
+                    console.log("error");
+                    console.log(response);
+                },
+                complete() {
+                    this.egresosLoading = false;
+                }
+            });
+        },
+        egresosAPIConverter(egresoAPI) {
+            return {
+                id: egresoAPI.id,
+                name: 'Egreso ' + egresoAPI.id,
+                validado: egresoAPI.validado,
+                valorTotal: egresoAPI.valorTotal,
+                fechaOperacion: convertDate(egresoAPI.fechaOperacion),
+                _showDetails: true,
+                showEgreso: false
+            }
+        },
         toggleEgreso(row) {
-            console.log(row);
-
             if(!row.showEgreso) {
                 this.$router.push('/operaciones/egreso/'+ row.id);
             } else {
@@ -46,6 +75,7 @@ const operaciones = {
         },
         seleccionarEgreso() {
             var id = this.$route.params.id;
+            this.egresoLoading = true;
 
             this.egresos.forEach(egreso => {
                 if(egreso.id != id)
@@ -54,12 +84,21 @@ const operaciones = {
                     egreso.showEgreso = true;
             });
         },
+        egresoLoaded(){
+            this.egresoLoading = false;
+        },
         rowStyle(item, type) {
             if(type == 'row') {
                 if(item.showEgreso) {
-                    return ['bg-dark', 'text-light'];
+                    return ['bg-secondary', 'text-light'];
                 }
             }
+        },
+        ingresoOpened() {
+            return (this.$route.name == 'ingresos' || this.$route.name == 'ingreso');
+        },
+        egresoOpened() {
+            return (this.$route.name == 'egresos' || this.$route.name == 'egreso');
         }
     },
     components: {
@@ -68,9 +107,15 @@ const operaciones = {
     watch: {
         $route(to, from) {
             this.seleccionarEgreso();
+        },
+        egresosLoading(to, from) {
+            if(to == false) {
+                this.seleccionarEgreso();
+            }
         }
     },
     mounted() {
+        this.cargarEgresosAPI();
         this.seleccionarEgreso();
     }
 };

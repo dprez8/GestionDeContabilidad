@@ -19,31 +19,9 @@ const agregarEgreso = {
                 },
                 items: []
             },
-            proveedoresSelect: [{
-                value: 1,
-                text: "Roberto Samuel"
-            }],
-            mediosDePagoSelect: [{
-                    value: 1,
-                    text: "Tarjeta de Débito",
-                    type: "credit_card"
-                },
-                {
-                    value: 2,
-                    text: "Tarjeta de Crédito",
-                    type: "debit_card"
-                },
-                {
-                    value: 3,
-                    text: "Cheque",
-                    type: "cheque"
-                },
-                {
-                    value: 4,
-                    text: "Efectivo",
-                    type: "cash"
-                }
-            ],
+            falloCargarEgreso: false,
+            proveedoresSelect: [],
+            mediosDePagoSelect: [],
             mediosDePagoType: {
                 credit_card: []
             },
@@ -92,10 +70,16 @@ const agregarEgreso = {
             ]
         }
     },
+    computed: {
+        state(data) {
+            console.log(data);
+            return false;
+        }
+    },
     methods: {
         convertDate: convertDate,
+        softReloadPage: softReloadPage,
         confirmar() {
-
             if (this.proveedorAAgregar != null) {
                 // Hay que agregar un proveedor antes de agregar el egreso
                 console.log("POST '/api/proveedor'");
@@ -103,9 +87,48 @@ const agregarEgreso = {
             }
 
             // Creo el egreso
-            this.egreso.items.pop();
+            var todosLosCamposRellenos = 
+                this.egreso.fecha                               &&
+                this.egreso.proveedor                           &&
+                this.egreso.medioDePago.id                      &&
+                this.egreso.medioDePago.dato                    &&
+                this.egreso.documentoComercial.tipo             &&
+                this.egreso.documentoComercial.numeroDocumento  &&
+                this.egreso.documentoComercial.fechaDePedido    &&
+                this.egreso.documentoComercial.fechaDeEntrega   &&
+                this.egreso.items.length > 1
+
+            this.falloCargarEgreso = !todosLosCamposRellenos;
+            if(this.falloCargarEgreso) {
+                return;
+            }
+
+            var egresoToSend = JSON.parse(JSON.stringify(this.egreso));
+            egresoToSend.items.pop();
+
             console.log("POST '/api/operaciones/egreso'");
-            console.log(JSON.stringify(this.egreso, null, 4));
+            console.log(JSON.stringify(egresoToSend, null, 4));
+
+            $.ajax({
+                url: "http://{{ ip }}/api/operaciones/egreso",
+                type: "POST",
+                dataType: "json",
+                context: this,
+                data: JSON.stringify(egresoToSend),
+                success(response) {
+                    if(response.code == 403) {
+                        app.showSessionEndedAlert(false);
+                    } else if(response.code == 400) {
+                        this.falloCargarEgreso = true;
+                    } else if(response.code == 200) {
+                        this.$router.push('/operaciones/egreso');
+                    }
+                    console.log(response);
+                },
+                complete() {
+                    console.log("termino");
+                }
+            });
 
             // Obtengo la id del egreso que se creó
 
@@ -128,9 +151,12 @@ const agregarEgreso = {
             var request = {
                 url: "http://{{ ip }}/api/proveedores",
                 type: "GET",
+                dataType: "json",
                 context: this,
                 success(response) {
-                    if(response.code == 200) {
+                    if(response.code == 403) {
+                        app.showSessionEndedAlert(true);
+                    } else if(response.code == 200) {
                         this.proveedoresSelect = response.data.map(this.proveedoresAPIConverter);
                     }
                     else {
@@ -159,9 +185,12 @@ const agregarEgreso = {
             var request = {
                 url: "http://{{ ip }}/api/medios",
                 type: "GET",
+                dataType: "json",
                 context: this,
                 success(response) {
-                    if(response.code == 200) {
+                    if(response.code == 403) {
+                        app.showSessionEndedAlert(true);
+                    } else if(response.code == 200) {
                         this.mediosDePagoSelect = response.data.map(this.mediosDePagoAPIConverter);
                     }
                     else {

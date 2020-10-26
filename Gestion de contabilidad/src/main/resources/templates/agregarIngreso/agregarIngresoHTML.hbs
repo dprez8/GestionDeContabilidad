@@ -1,0 +1,69 @@
+<!-- template para nuevo ingreso -->
+<div class="pt-3">
+    <div class="row mb-4 mx-2">
+        <div class="col py-2 text-center">
+            <h2>Cargar nuevo ingreso</h2>
+        </div>
+    </div>
+    <div class="row mb-4 mx-2">
+        <div class="col-sm-4 col-lg-3 text-sm-right py-2">
+            <span class="mr-2"><strong>Organización</strong></span>
+        </div>
+        <div class="col bg-light p-2">
+            <span class="ml-2">NombreOrganización</span>
+        </div>
+        <div class="col-lg-1 col-xl-3"></div>
+    </div>
+    <div class="row mb-4 mx-2">
+        <div class="col-sm-4 col-lg-3 text-sm-right py-2">
+            <span class="mr-2"><strong>Descripción</strong></span>
+        </div>
+        <div class="col">
+            <b-form-textarea rows="3" max-rows="6" placeholder="Breve descripción"
+                v-model="ingreso.descripcion"></b-form-textarea>
+        </div>
+        <div class="col-lg-1 col-xl-3"></div>
+    </div>
+    <div class="row mb-4 mx-2">
+        <div class="col-sm-4 col-lg-3 text-sm-right py-2">
+            <span class="mr-2"><strong>Fecha Operación</strong></span>
+        </div>
+        <div class="col">
+            <b-collapse :visible="(!ingreso.fecha && falloCargarIngreso)">
+                <b-badge variant="danger">Ingrese la fecha de la operacion</b-badge>
+            </b-collapse>
+            <b-form-datepicker placeholder="Seleccione fecha de la Operación" class="mb-2"
+                :state="(!ingreso.fecha && falloCargarIngreso) ? false : null" v-model="ingreso.fecha"></b-form-datepicker>
+        </div>
+        <div class="col-lg-1 col-xl-3"></div>
+    </div>
+    <div class="row mb-4 mx-2">
+        <div class="col-sm-4 col-lg-3 text-sm-right py-2">
+            <span class="mr-2"><strong>Monto Total</strong></span>
+        </div>
+        <div class="col">
+            <b-collapse :visible="(!ingreso.montoTotal && falloCargarIngreso)">
+                <b-badge variant="danger">Ingrese el monto total</b-badge>
+            </b-collapse>
+            <b-form-input placeholder="Ingrese monto total"
+                :state="(!ingreso.montoTotal && falloCargarIngreso) ? false : null"
+                v-model="ingreso.montoTotal"></b-form-input>
+        </div>
+        <div class="col-lg-1 col-xl-3"></div>
+    </div>
+
+    <div class="row mb-4 mx-2">
+        <div class="col-sm-4">
+
+        </div>
+        <div class="col">
+            <b-collapse :visible="(falloCargarIngreso)">
+                <b-badge variant="danger">Hay campos que faltan completar</b-badge>
+            </b-collapse>
+            <b-button-group>
+                <b-button variant="primary" @click="confirmar">Confirmar</b-button>
+                <b-button variant="outline-dark" to="/operaciones/ingreso">Cancelar</b-button>
+            </b-button-group>
+        </div>
+    </div>
+</div>
