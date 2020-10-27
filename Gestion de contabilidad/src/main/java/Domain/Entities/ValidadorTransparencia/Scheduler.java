@@ -2,38 +2,36 @@ package Domain.Entities.ValidadorTransparencia;
 
 import Domain.Entities.EntidadPersistente.EntidadPersistente;
 import Domain.Entities.Organizacion.Organizacion;
-import Domain.Entities.Usuarios.Usuario;
-import org.eclipse.jetty.util.annotation.Name;
+import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
 import java.time.*;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collector;
 
 @Entity
 @Table(name = "scheduler")
 public class Scheduler extends EntidadPersistente {
 
+	@Expose
 	@Column(name = "hora_inicio")
 	private int horaInicio;
 
+	@Expose
 	@Column(name = "minuto_inicio")
 	private int minutoInicio;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="usuario_id", referencedColumnName = "id")
-	private Usuario usuario;
-
+	@Expose
 	@ElementCollection
 	private List<Integer> dias;
 
-	protected Scheduler() {
-		this.dias = new ArrayList<>();
-	}
+	@JoinColumn(name = "organizacion_id")
+	@OneToOne(fetch = FetchType.LAZY)
+	private Organizacion organizacion;
 
-	public Scheduler(Usuario usuario) {
-		this.usuario = usuario;
+	@Transient
+	private ValidadorDeTransparencia validadorDeTransparencia;
+
+	public Scheduler() {
 		this.horaInicio = 20;
 		this.minutoInicio = 00;
 		this.dias = new ArrayList<>();
@@ -49,10 +47,9 @@ public class Scheduler extends EntidadPersistente {
 		return calendar;
 	}
 
-	public void arrancarTarea(Organizacion unaOrganizacion, ValidadorDeTransparencia validador){
-		Inicializador hilo = new Inicializador(unaOrganizacion,validador);
+	public void arrancarTarea(){
+		Inicializador hilo = new Inicializador(this.organizacion,this.validadorDeTransparencia);
 		Timer timer    = new Timer();
-		System.out.println("AAAAAAAAAAAAAAAH" +retornarDia(dias));
 		timer.schedule(hilo,delay().getTime());
 	}
 
@@ -98,19 +95,27 @@ public class Scheduler extends EntidadPersistente {
 		this.minutoInicio = Math.max(0, Math.min(60, minutoInicio));
 	}
 
-	public Usuario getUsuario() {
-		return usuario;
-	}
-
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
-	}
-
 	public List<Integer> getDias() {
 		return dias;
 	}
 
 	public void setDias(List<Integer> dias) {
 		this.dias = dias;
+	}
+
+	public Organizacion getOrganizacion() {
+		return organizacion;
+	}
+
+	public void setOrganizacion(Organizacion organizacion) {
+		this.organizacion = organizacion;
+	}
+
+	public ValidadorDeTransparencia getValidadorDeTransparencia() {
+		return validadorDeTransparencia;
+	}
+
+	public void setValidadorDeTransparencia(ValidadorDeTransparencia validadorDeTransparencia) {
+		this.validadorDeTransparencia = validadorDeTransparencia;
 	}
 }

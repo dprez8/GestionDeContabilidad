@@ -91,12 +91,13 @@ public class SchedulerTest {
         unaCompra.addPresupuestos(primerPresupuesto, segundoPresupuesto);
 
         /**Creacion del Scheduler*/
-        Scheduler scheduler = new Scheduler(unUsuario); //esta en ms, serian 10 seg
+        Scheduler scheduler = new Scheduler();
 
         /**Inicio scheduler para validar el egreso*/
         scheduler.setHoraInicio(12);
         scheduler.setMinutoInicio(00);
-        scheduler.arrancarTarea(unaEntidad,validador);
+        scheduler.setValidadorDeTransparencia(validador);
+        scheduler.arrancarTarea();
 
         /**Solo es necesario un revisor para ver los mensajes*/
         List<Mensaje> mensajes = new ArrayList<>();
