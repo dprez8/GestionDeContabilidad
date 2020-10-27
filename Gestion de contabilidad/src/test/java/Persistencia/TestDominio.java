@@ -6,7 +6,6 @@ import Domain.Entities.Operaciones.Egreso.Egreso;
 import Domain.Entities.Operaciones.Ingreso;
 import Domain.Entities.Operaciones.Presupuesto;
 import Domain.Entities.Organizacion.Empresa;
-import Domain.Entities.Organizacion.EntidadBase;
 import Domain.Entities.Organizacion.EntidadJuridica;
 import Domain.Entities.Usuarios.Estandar;
 import Domain.Entities.Usuarios.Usuario;
@@ -19,14 +18,15 @@ import Domain.Repositories.Repositorio;
 import db.EntityManagerHelper;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.List;
-import java.util.stream.Collectors;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestDominio {
 
     private Repositorio<EntidadJuridica> repoEntidadJuridica;
@@ -61,87 +61,92 @@ public class TestDominio {
     }
 
     @Test
-    public void persistirUnaEntidadJuridica (){
+    public void T1persistirUnaEntidadJuridica (){
 
         Empresa pyme = new Empresa();
         pyme.setCantidadDePersonal(3);
         pyme.setVentasAnuales(5000000.3);
         pyme.setActividad("Construcciones");
 
-        EntidadJuridica pepsi = new EntidadJuridica();
-        pepsi.setCuit(1234);
-        pepsi.setAltura(1234);
-        pepsi.setRazonSocial("razonSocial");
-        pepsi.setTipoEntidadJuridica(pyme);
-        pepsi.setNombreFicticio("Pepsi");
+        EntidadJuridica entidadJuridica = new EntidadJuridica();
+        entidadJuridica.setCuit(1234);
+        entidadJuridica.setAltura(1234);
+        entidadJuridica.setRazonSocial("Entidad Juridica");
+        entidadJuridica.setTipoEntidadJuridica(pyme);
+        entidadJuridica.setNombreFicticio("Organizacion");
 
-        this.repoEntidadJuridica.agregar(pepsi);
+        this.repoEntidadJuridica.agregar(entidadJuridica);
         Scheduler scheduler = new Scheduler();
-        scheduler.setOrganizacion(pepsi);
-        pepsi.setScheduler(scheduler);
-        this.repoEntidadJuridica.modificar(pepsi);
-        System.out.println("Numero "+ pepsi.getId());
+        scheduler.setOrganizacion(entidadJuridica);
+        entidadJuridica.setScheduler(scheduler);
+        this.repoEntidadJuridica.modificar(entidadJuridica);
+        System.out.println("Numero "+ entidadJuridica.getId());
     }
 
+
     @Test
-    public void obtenerAPepsi () {
+    public void T2obtenerAPepsi () {
         EntidadJuridica pymeJuridica = this.repoEntidadJuridica.buscar(1);
 
-        Assert.assertEquals("razonSocial",pymeJuridica.getRazonSocial());
+        Assert.assertEquals("Entidad Juridica",pymeJuridica.getRazonSocial());
 
         Empresa pyme = (Empresa) pymeJuridica.getTipoEntidadJuridica();
         Assert.assertEquals("Construcciones",pyme.getActividad());
     }
 
     @Test
-    public void persistirAElPepe () throws contraseniaCorta, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, IOException {
-        EntidadJuridica pepsi = repoEntidadJuridica.buscar(1);
-        Estandar elPepe = new Estandar(pepsi, "elPepe", "456pepe", "elPepe@gmail.com");
-        repoUsuarios.agregar(elPepe);
+    public void T3persistirAUnUsuario () throws contraseniaCorta, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, IOException {
+        EntidadJuridica entidadJuridica = repoEntidadJuridica.buscar(1);
+        Estandar usuario = new Estandar(entidadJuridica, "usuario", "una_contrasenia_segura", "usuario@gmail.com");
+        repoUsuarios.agregar(usuario);
     }
 
     @Test
-    public void recuperarAElPepe () {
+    public void T4recuperarAUnUsuario () {
         Usuario elPepe = repoUsuarios.buscar(1);
         Assert.assertEquals(Estandar.class,elPepe.getClass());
         System.out.println("tipo_usuario: " + elPepe.getClass());
     }
 
     @Test
-    public void persistirUnEgresoYDosPresupuestos () {
-        /**Creacion de los datos de egreso y sus presupuestos, ejemplo*/
-        Producto RAM = new Producto("Memoria RAM 4 gb DDR3");
-        ItemEgreso RAMs = new ItemEgreso();
-        RAMs.setCantidad(1);
-        RAMs.setPrecio(3000);
-        RAMs.setProducto(RAM);
+    public void T5persistir2Productos() {
+        Producto RAM = new Producto("Memoria RAM 4GB DDR3");
 
-        Producto placaDeVideo = new Producto("4GB DDR5");
-        ItemEgreso placasDeVideo = new ItemEgreso();
-        placasDeVideo.setCantidad(2);
-        placasDeVideo.setPrecio(5000);
-        placasDeVideo.setProducto(placaDeVideo);
+        Producto placaDeVideo = new Producto("Placa de video 4GB DDR5");
 
         this.repoProductos.agregar(RAM);
         this.repoProductos.agregar(placaDeVideo);
+    }
+
+    @Test
+    public void T6persistirUnEgresoYDosPresupuestos () {
+        Producto producto1 = this.repoProductos.buscar(1);
+        ItemEgreso placasDeVideo = new ItemEgreso();
+        placasDeVideo.setCantidad(2);
+        placasDeVideo.setPrecio(5000);
+        placasDeVideo.setProducto(producto1);
+
+        Producto producto2 = this.repoProductos.buscar(2);
+        ItemEgreso RAMs = new ItemEgreso();
+        RAMs.setCantidad(1);
+        RAMs.setPrecio(3000);
+        RAMs.setProducto(producto2);
 
         this.repoItems.agregar(RAMs);
         this.repoItems.agregar(placasDeVideo);
 
-        TipoDocumento FacturaA = new TipoDocumento("Factura A");
+        TipoDocumento tipoDocumento = this.repoTipoDocumento.buscar(1);
         DocumentoComercial unDocumento = new DocumentoComercial();
         unDocumento.setNumDocumento(111);
-        unDocumento.setTipo(FacturaA);
+        unDocumento.setTipo(tipoDocumento);
 
-        this.repoTipoDocumento.agregar(FacturaA);
         this.repoDocumentos.agregar(unDocumento);
 
-  
-        MedioDePago efectivo = new MedioDePago("efectivo");
+        MedioDePago medioDePago = this.repoMedioDePagos.buscar(1);
         Pago unPago = new Pago();
-        unPago.setMedioDePago(efectivo);
+        unPago.setMedioDePago(medioDePago);
         unPago.setCodigoAsociado("1231231");
-        this.repoMedioDePagos.agregar(efectivo);
+
         this.repoPagos.agregar(unPago);
 
         Proveedor lautaroRobles = new Proveedor("Lautaro Robles", 41424242);
@@ -150,11 +155,11 @@ public class TestDominio {
         this.repoProveedores.agregar(lautaroRobles);
         this.repoProveedores.agregar(lautaroIturregui);
 
-        ItemPresupuesto RAMpresupuesto = new ItemPresupuesto(RAM, RAMs, 1, 3000);
-        ItemPresupuesto placaVideoPresupuesto = new ItemPresupuesto(placaDeVideo, placasDeVideo, 2, 5000);
+        ItemPresupuesto RAMpresupuesto = new ItemPresupuesto(producto1, RAMs, 1, 3000);
+        ItemPresupuesto placaVideoPresupuesto = new ItemPresupuesto(producto2, placasDeVideo, 2, 5000);
 
-        ItemPresupuesto RAM2presupuesto = new ItemPresupuesto(RAM, RAMs, 1, 3500);
-        ItemPresupuesto placaVide2Presupuesto = new ItemPresupuesto(placaDeVideo, placasDeVideo, 2, 6000);
+        ItemPresupuesto RAM2presupuesto = new ItemPresupuesto(producto1, RAMs, 1, 3500);
+        ItemPresupuesto placaVide2Presupuesto = new ItemPresupuesto(producto2, placasDeVideo, 2, 6000);
 
         this.repoItemPresupuesto.agregar(RAMpresupuesto);
         this.repoItemPresupuesto.agregar(placaVideoPresupuesto);
@@ -213,9 +218,9 @@ public class TestDominio {
     }
 
     @Test
-    public void obtenerEgresoYSusPresupuestos() {
+    public void T7obtenerEgresoYSusPresupuestos() {
 
-        Egreso  unaCompra            = this.repoEgresos.buscar(0);
+        Egreso  unaCompra            = this.repoEgresos.buscar(1);
         Presupuesto primerPresupuesto = this.repoPresupuestos.buscar(1);
         Presupuesto segundoPresupuesto= this.repoPresupuestos.buscar(2);
 
@@ -235,7 +240,7 @@ public class TestDominio {
     }
 
     @Test
-    public void persistirUnMensajeAPepe (){
+    public void T8persistirUnMensajeAPepe (){
         EntidadJuridica pepsi = this.repoEntidadJuridica.buscar(1);
 
         /**Creacion de los validadores*/
@@ -247,6 +252,7 @@ public class TestDominio {
 
 
         Scheduler scheduler = pepsi.getScheduler();
+
         scheduler.setValidadorDeTransparencia(validador);
         scheduler.arrancarTarea();
 
@@ -257,7 +263,7 @@ public class TestDominio {
     }
 
     @Test
-    public void persistirUnIngreso() {
+    public void T9persistirUnIngreso() {
         EntidadJuridica pepsi = this.repoEntidadJuridica.buscar(1);
         Ingreso ingreso = new Ingreso();
         ingreso.setDescripcion("PEPEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
