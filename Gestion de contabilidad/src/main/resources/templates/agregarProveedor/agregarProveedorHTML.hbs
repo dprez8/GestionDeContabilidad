@@ -5,7 +5,13 @@
             <span class="mr-2"><strong>Nombre</strong></span>
         </div>
         <div class="col px-2">
-            <b-form-input placeholder="Ingrese nombre del proveedor" v-model="proveedor.nombre"></b-form-input>
+            <b-collapse :visible="(!proveedor.nombre && falloInput)">
+                <b-badge variant="danger">Ingrese el nombre del proveedor</b-badge>
+            </b-collapse>
+            <b-form-input placeholder="Ingrese nombre del proveedor" 
+                v-model="proveedor.nombre"
+                :state="(!proveedor.nombre && falloInput) ? false : null"
+            ></b-form-input>
         </div>
     </div>
     <div class="row mb-4 mx-2">
@@ -13,7 +19,13 @@
             <span class="mr-2"><strong>Documento</strong></span>
         </div>
         <div class="col px-2">
-            <b-form-input placeholder="Ingrese documento del proveedor" v-model="proveedor.documento"></b-form-input>
+            <b-collapse :visible="(!proveedor.documento && falloInput)">
+                <b-badge variant="danger">Ingrese documento del proveedor</b-badge>
+            </b-collapse>
+            <b-form-input placeholder="Ingrese documento del proveedor" 
+                v-model="proveedor.documento"
+                :state="(!proveedor.documento && falloInput) ? false : null"
+            ></b-form-input>
         </div>
     </div>
     <div class="row mb-4 mx-2">
@@ -27,11 +39,18 @@
                         <span class="mr-2"><strong>Pais</strong></span>
                     </div>
                     <div class="col">
-                        <b-form-select v-model="proveedor.pais" :options="paises">
-                            <template #first>
-                                <b-form-select-option :value="null" disabled>-- Selecciona un país --</b-form-select-option>
-                            </template>
-                        </b-form-select>
+                        <b-collapse :visible="(!proveedor.pais && falloInput)">
+                            <b-badge variant="danger">Seleccione un país</b-badge>
+                        </b-collapse>
+                        <b-overlay spinner-variant="primary" :show="paisesLoading" rounded="sm">
+                            <b-form-select 
+                                :state="(!proveedor.pais && falloInput) ? false : null"
+                                v-model="proveedor.pais" :options="paises" @change="cargarProvinciasAPI">
+                                <template #first>
+                                    <b-form-select-option :value="null" disabled>-- Selecciona un país --</b-form-select-option>
+                                </template>
+                            </b-form-select>
+                        </b-overlay>
                     </div>
                 </div>
                 <div class="row mb-2">
@@ -39,11 +58,18 @@
                         <span class="mr-2"><strong>Provincia</strong></span>
                     </div>
                     <div class="col">
-                        <b-form-select v-model="proveedor.provincia" :options="provincias">
-                            <template #first>
-                                <b-form-select-option :value="null" disabled>-- Selecciona una provincia --</b-form-select-option>
-                            </template>
-                        </b-form-select>
+                        <b-collapse :visible="(!proveedor.provincia && falloInput)">
+                            <b-badge variant="danger">Seleccione una provincia</b-badge>
+                        </b-collapse>
+                        <b-overlay spinner-variant="primary" :show="provinciasLoading" rounded="sm">
+                            <b-form-select 
+                                :state="(!proveedor.provincia && falloInput) ? false : null"
+                                v-model="proveedor.provincia" :options="provincias" @change="cargarCiudadesAPI">
+                                <template #first>
+                                    <b-form-select-option :value="null" disabled>-- Selecciona una provincia --</b-form-select-option>
+                                </template>
+                            </b-form-select>
+                        </b-overlay>
                     </div>
                 </div>
                 <div class="row mb-2">
@@ -51,11 +77,18 @@
                         <span class="mr-2"><strong>Ciudad</strong></span>
                     </div>
                     <div class="col">
-                        <b-form-select v-model="proveedor.ciudad" :options="ciudades">
-                            <template #first>
-                                <b-form-select-option :value="null" disabled>-- Selecciona una ciudad --</b-form-select-option>
-                            </template>
-                        </b-form-select>
+                        <b-collapse :visible="(!proveedor.ciudad && falloInput)">
+                            <b-badge variant="danger">Seleccione una ciudad</b-badge>
+                        </b-collapse>
+                        <b-overlay spinner-variant="primary" :show="ciudadesLoading" rounded="sm">
+                            <b-form-select 
+                                :state="(!proveedor.ciudad && falloInput) ? false : null"
+                                v-model="proveedor.ciudad" :options="ciudades">
+                                <template #first>
+                                    <b-form-select-option :value="null" disabled>-- Selecciona una ciudad --</b-form-select-option>
+                                </template>
+                            </b-form-select>
+                        </b-overlay>
                     </div>
                 </div>
                 <div class="row mb-2">
@@ -63,7 +96,12 @@
                         <span class="mr-2"><strong>Calle</strong></span>
                     </div>
                     <div class="col">
-                        <b-form-input placeholder="Ingrese calle" v-model="proveedor.calle"></b-form-input>
+                        <b-collapse :visible="(!proveedor.calle && falloInput)">
+                            <b-badge variant="danger">Ingrese calle</b-badge>
+                        </b-collapse>
+                        <b-form-input placeholder="Ingrese calle" 
+                            :state="(!proveedor.calle && falloInput) ? false : null"
+                            v-model="proveedor.calle"></b-form-input>
                     </div>
                 </div>
                 <div class="row mb-2">
@@ -71,7 +109,12 @@
                         <span class="mr-2"><strong>Altura</strong></span>
                     </div>
                     <div class="col">
-                        <b-form-input placeholder="Ingrese altura" v-model="proveedor.altura"></b-form-input>
+                        <b-collapse :visible="(!proveedor.altura && falloInput)">
+                            <b-badge variant="danger">Ingrese altura</b-badge>
+                        </b-collapse>
+                        <b-form-input placeholder="Ingrese altura" 
+                            :state="(!proveedor.altura && falloInput) ? false : null"
+                            v-model="proveedor.altura"></b-form-input>
                     </div>
                 </div>
                 <div class="row mb-2">
@@ -79,7 +122,12 @@
                         <span class="mr-2"><strong>Piso</strong></span>
                     </div>
                     <div class="col">
-                        <b-form-input placeholder="Ingrese piso" v-model="proveedor.piso"></b-form-input>
+                        <b-collapse :visible="(!proveedor.piso && falloInput)">
+                            <b-badge variant="danger">Ingrese piso</b-badge>
+                        </b-collapse>
+                        <b-form-input placeholder="Ingrese piso" 
+                            :state="(!proveedor.piso && falloInput) ? false : null"
+                            v-model="proveedor.piso"></b-form-input>
                     </div>
                 </div>
                 <div class="row">
@@ -87,7 +135,12 @@
                         <span class="mr-2"><strong>Codigo Postal</strong></span>
                     </div>
                     <div class="col">
-                        <b-form-input placeholder="Ingrese codigo postal" v-model="proveedor.codigoPostal"></b-form-input>
+                        <b-collapse :visible="(!proveedor.codigoPostal && falloInput)">
+                            <b-badge variant="danger">Ingrese codigo postal</b-badge>
+                        </b-collapse>
+                        <b-form-input placeholder="Ingrese codigo postal" 
+                            :state="(!proveedor.codigoPostal && falloInput) ? false : null"
+                            v-model="proveedor.codigoPostal"></b-form-input>
                     </div>
                 </div>
             </div>
@@ -97,9 +150,12 @@
         <div class="col-4">
 
         </div>
-        <div class="col d-flex justify-content-between px-2">
+        <div class="col px-2">
+            <b-collapse :visible="(falloInput)">
+                <b-badge variant="danger">Hay problemas en los campos</b-badge>
+            </b-collapse>
             <b-button-group>
-                <b-button variant="primary" @click="confirmarAccion(proveedor)">Confirmar</b-button>
+                <b-button variant="primary" @click="confirmar()">Confirmar</b-button>
                 <b-button variant="outline-dark" @click="cancelarAccion">Cancelar</b-button>
             </b-button-group>
         </div>

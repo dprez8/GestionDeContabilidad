@@ -7,8 +7,8 @@ const agregarProveedor = {
     data() {
         return {
             proveedor: {
-                nombre: "",
-                documento: "",
+                nombre: null,
+                documento: null,
                 pais: null,
                 provincia: null,
                 ciudad: null,
@@ -25,12 +25,146 @@ const agregarProveedor = {
             ],
             ciudades: [
                 {value: 1, text: "C.A.B.A."}
-            ]
+            ],
+            paisesLoading: false,
+            provinciasLoading: false,
+            ciudadesLoading: false,
+            falloInput: false
+        }
+    },
+    methods: {
+        confirmar() {
+            var todosLosCamposRellenos = 
+                this.proveedor.nombre           &&
+                this.proveedor.documento        &&
+                this.proveedor.pais             &&
+                this.proveedor.provincia        &&
+                this.proveedor.ciudad           &&
+                this.proveedor.calle            &&
+                this.proveedor.altura           &&
+                this.proveedor.piso             &&
+                this.proveedor.codigoPostal;
+
+            this.falloInput = !todosLosCamposRellenos;
+            if(this.falloInput) {
+                return;
+            }
+
+            if(this.confirmarAccion) {
+                this.confirmarAccion(this.proveedor);
+            }
+        },
+        cargarPaisesAPI() {
+            this.loadingPaises = true;
+            this.proveedor.pais = null;
+            this.proveedor.provincia = null;
+            this.proveedor.ciudad = null;
+
+            $.ajax({
+                url: "http://{{ ip }}/api/pais",
+                type: "GET",
+                dataType: "json",
+                context: this,
+                success(response) {
+                    if(response.code == 403) {
+                        app.showSessionEndedAlert(false);
+                    } else if(response.code == 200) {
+                        // Se cargaron los paises
+                        this.paises = response.data.map(function(unPais){
+                            return {
+                                value: unPais.clave,
+                                text: unPais.name
+                            }
+                        });
+                    } else {
+                        // Fallo la carga de proveedor (default)
+                        console.log(response)
+                    }
+                },
+                complete() {
+                    this.loadingPaises = false;
+                }
+            });
+        },
+        cargarProvinciasAPI() {
+            this.provinciasLoading = true;
+            this.proveedor.provincia = null;
+            this.proveedor.ciudad = null;
+
+            var paisID = this.proveedor.pais;
+            if(paisID == null)
+                return;
+
+            $.ajax({
+                url: "http://{{ ip }}/api/pais/"+paisID+"/provincia",
+                type: "GET",
+                dataType: "json",
+                context: this,
+                success(response) {
+                    if(response.code == 403) {
+                        app.showSessionEndedAlert(false);
+                    } else if(response.code == 200) {
+                        // Se cargaron las provincias
+                        this.provincias = response.data.map(function(unaProvincia){
+                            return {
+                                value: unaProvincia.clave,
+                                text: unaProvincia.name
+                            }
+                        });
+                    } else {
+                        // Fallo la carga de proveedor (default)
+                        console.log(response)
+                    }
+                },
+                complete() {
+                    this.provinciasLoading = false;
+                }
+            });
+        },
+        cargarCiudadesAPI() {
+            this.proveedor.ciudad = null;
+            this.ciudadesLoading = true;
+
+            var paisID = this.proveedor.pais;
+            var provinciaID = this.proveedor.provincia;
+
+            if(paisID == null || provinciaID == null)
+                return;
+
+            
+            $.ajax({
+                url: "http://{{ ip }}/api/pais/"+paisID+"/provincia/"+provinciaID+"/ciudad",
+                type: "GET",
+                dataType: "json",
+                context: this,
+                success(response) {
+                    if(response.code == 403) {
+                        app.showSessionEndedAlert(false);
+                    } else if(response.code == 200) {
+                        // Se cargaron las ciudades
+                        this.ciudades = response.data.map(function(unaCiudad){
+                            return {
+                                value: unaCiudad.clave,
+                                text: unaCiudad.name
+                            }
+                        });
+                    } else {
+                        // Fallo la carga de proveedor (default)
+                        console.log(response)
+                    }
+                },
+                complete() {
+                    this.ciudadesLoading = false;
+                }
+            });
         }
     },
     watch: {
         proveedor() {
             console.log("changed");
         }
+    },
+    mounted() {
+        this.cargarPaisesAPI();
     }
 };
