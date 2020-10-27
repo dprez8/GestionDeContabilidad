@@ -41,7 +41,7 @@ public class AsociacionOperacionesRestController {
              egreso   = this.repoEgresos.buscar(asociacionRequest.egresoId);
              ingreso  = this.repoIngresos.buscar(asociacionRequest.ingresoId);
         }
-        catch (NoResultException ex) {
+        catch (NullPointerException ex) {
             this.respuesta.setCode(404);
             this.respuesta.setMessage("Uno de los recursos no existe");
             this.jsonRespose = gson.toJson(this.respuesta);

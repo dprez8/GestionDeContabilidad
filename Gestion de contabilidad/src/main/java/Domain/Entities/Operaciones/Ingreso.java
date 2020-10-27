@@ -42,7 +42,7 @@ public class Ingreso extends Operacion {
     }
 
     public double montoEnUso(){
-        return egresos.stream().collect(Collectors.summingDouble(unEgreso -> unEgreso.getValorTotal()));
+        return egresos.stream().mapToDouble(Egreso::getValorTotal).sum();
     }
     /*********Setters & Getters*************/
     public void desasociarEgreso(Egreso egreso){
