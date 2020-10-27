@@ -1,5 +1,7 @@
 package Services.MercadoLibreServices;
 
+import retrofit2.http.GET;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;

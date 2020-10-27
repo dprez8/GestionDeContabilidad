@@ -1,3 +1,124 @@
 const configuracion = {
-    template: `{{> configuracion/configuracionHTML.hbs}}`
+    template: `{{> configuracion/configuracionHTML.hbs}}`,
+    data() {
+        return {
+            scheduler: {
+                horaInicio: 2,
+                minutoInicio: 2,
+                dias: [
+                    1,
+                    2
+                ]
+            },
+            diasOptions: [
+                {value: 1, text: "Lu"},
+                {value: 2, text: "Ma"},
+                {value: 3, text: "Mi"},
+                {value: 4, text: "Ju"},
+                {value: 5, text: "Vi"},
+                {value: 6, text: "Sa"},
+                {value: 7, text: "Do"}
+            ]
+        }
+    },
+    methods: {
+        cargarConfiguracionAPI() {
+            var request = {
+                url: "http://{{ ip }}/api/bandeja/configuracion",
+                type: "GET",
+                context: this,
+                cache: false,
+                success(data) {
+                    if(data.code == 200) {
+                        console.log(data);
+                        this.scheduler = data.scheduler;
+                    }
+                    else if(data.code == 403) {
+                        app.showSessionEndedAlert(true);
+                    }
+                    else {
+                        console.log("error");
+                        console.log(data);
+                    }
+                },
+                error(data) {
+                    console.log("oof");
+                    console.log(data);
+                },
+                complete() {
+
+                }
+            };
+            $.ajax(request);
+        },
+        guardarConfiguracionAPI() {
+            var request = {
+                url: "http://{{ ip }}/api/bandeja/configurar",
+                type: "POST",
+                context: this,
+                cache: false,
+                data: JSON.stringify(this.scheduler),
+                success(data) {
+                    if(data.code == 200) {
+                        console.log(data);
+                    }
+                    else if(data.code == 403) {
+                        app.showSessionEndedAlert(true);
+                    }
+                    else {
+                        console.log("error");
+                        console.log(data);
+                    }
+                },
+                error(data) {
+                    console.log("oof");
+                    console.log(data);
+                },
+                complete() {
+
+                }
+            };
+            $.ajax(request);
+        },
+        toggleDia(dia) {
+            if(this.diaIsSelected(dia)) {
+                this.scheduler.dias.splice(this.getDiaIndex(dia), 1);
+            } else {
+                this.scheduler.dias.push(dia);
+            }
+        },
+        diaIsSelected(dia) {
+            return this.getDiaIndex(dia) != - 1;
+        },
+        getDiaIndex(dia) {
+            return this.scheduler.dias.indexOf(dia);
+        },
+        getHora() {
+            return ('0' + this.scheduler.horaInicio).slice(-2);;
+        },
+        getMinuto() {
+            return ('0' + this.scheduler.minutoInicio).slice(-2);;
+        }
+    },
+    mounted() {
+        this.cargarConfiguracionAPI()
+    },
+    watch: {
+        'scheduler.horaInicio'(hora) {
+            if(hora > 23) {
+                this.scheduler.horaInicio = 0
+            } else if(hora < 0) {
+                this.scheduler.horaInicio = 23
+            }
+        },
+        'scheduler.minutoInicio'(minuto) {
+            if(minuto > 59) {
+                this.scheduler.minutoInicio = 0;
+                this.scheduler.horaInicio++;
+            } else if(minuto < 0) {
+                this.scheduler.minutoInicio = 59;
+                this.scheduler.horaInicio--;
+            }
+        }
+    }
 };

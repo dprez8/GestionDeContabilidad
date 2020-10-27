@@ -11,6 +11,7 @@ import Domain.Repositories.Daos.DaoHibernate;
 import Domain.Repositories.Repositorio;
 import Spark.utils.BooleanHelper;
 import Spark.utils.HandlebarsTemplateEngineBuilder;
+import org.hibernate.Hibernate;
 import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
@@ -41,7 +42,7 @@ public class Router {
     private static void configure(){
         rutasApi();
         rutasVista();
-        //verificarTareasProgramadas();
+        verificarTareasProgramadas();
     }
 
     private static void rutasVista() {
@@ -69,10 +70,10 @@ public class Router {
         Spark.post("/api/proveedor",proveedorController::crearProveedor);
         Spark.get("/api/proveedores",proveedorController::listadoProveedores);
         Spark.get("/api/medios",medioController::listadoMediosDePago);
-        Spark.get("api/bandeja",bandejaDeMensajesRestController::mostrarMensajes);
-        Spark.get("api/bandeja/configuracion",bandejaDeMensajesRestController::mostrarConfiguracion);
-        Spark.post("api/bandeja/configurar", bandejaDeMensajesRestController::configurar);
-        Spark.post("api/bandeja/visto", bandejaDeMensajesRestController::mensajeVisto);
+        Spark.get("/api/bandeja",bandejaDeMensajesRestController::mostrarMensajes);
+        Spark.get("/api/bandeja/configuracion",bandejaDeMensajesRestController::mostrarConfiguracion);
+        Spark.post("/api/bandeja/configurar", bandejaDeMensajesRestController::configurar);
+        Spark.post("/api/bandeja/visto", bandejaDeMensajesRestController::mensajeVisto);
         //Spark.get("/api/bandeja/:usuarioId",bandejaDeMensajesRestController::mostrarMensajes);
         Spark.get("/api/categorias",categoriasController::listadoCriterios);
         Spark.post("/api/operaciones/egreso", egresosRestController::cargarNuevoEgreso);
@@ -85,8 +86,8 @@ public class Router {
     private static void verificarTareasProgramadas() {
         List<Organizacion> organizaciones = repoOrganizaciones.buscarTodos();
         organizaciones.forEach(unaOrg->{
-                                unaOrg.getScheduler().setValidadorDeTransparencia(validador);
-                                unaOrg.getScheduler().arrancarTarea();
-                        });
+                unaOrg.getScheduler().setValidadorDeTransparencia(validador);
+                unaOrg.getScheduler().arrancarTarea();
+        });
     }
 }
