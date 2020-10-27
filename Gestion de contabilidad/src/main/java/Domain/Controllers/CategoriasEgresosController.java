@@ -125,31 +125,31 @@ public CategoriaDato mapCategoria(CategoriaOperacion categoria){
         CategoriaRequest categoriaRequest;
         categoriaRequest = gson.fromJson(request.body(),CategoriaRequest.class);
    	 	this.repoCategoria = new Repositorio<>(new DaoHibernate<>(CategoriaOperacion.class));
+		this.repoEgreso = new Repositorio<>(new DaoHibernate<>(Egreso.class));
 
    	 	try {
 	       Egreso egreso= this.repoEgreso.buscar(categoriaRequest.id);
-	       
+
 	       if(!categoriaRequest.categorias.isEmpty()) {
-		       for(Integer categoriaId: categoriaRequest.categorias){
-		    	  CategoriaOperacion categoria = this.repoCategoria.buscar(categoriaId);
-		    	  egreso.addCategorias(categoria);
-		       }
+
+	       		categoriaRequest.categorias.forEach(categoriaId -> {
+					CategoriaOperacion categoria = this.repoCategoria.buscar(categoriaId);
+					egreso.addCategorias(categoria);
+				});
+		       this.repoEgreso.modificar(egreso);
+			   respuesta.setCode(200);
+			   respuesta.setMessage("Categorias asociadas exitosamente");
 	       }
-	       
-	        respuesta.setCode(200);
-	        respuesta.setMessage("Categorias asociadas exitosamente");
-	        response.status(200);
+
         }
         catch (NullPointerException ex){
         	respuesta.setCode(200);
-	        respuesta.setMessage("Categorias no pudiron cargarse");
-            response.status(404);
+	        respuesta.setMessage("Categorias no pudieron cargarse");
          }
         
         catch(NoResultException nf){
-        	respuesta.setCode(200);
-	        respuesta.setMessage("Categorias no pudiron cargarse");
-            response.status(404);
+        	respuesta.setCode(400);
+	        respuesta.setMessage("Categorias no pudieron cargarse");
         }
        
        

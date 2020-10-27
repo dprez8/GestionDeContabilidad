@@ -1,6 +1,7 @@
 package Domain.Entities.Operaciones;
 
 import Domain.Entities.EntidadPersistente.EntidadPersistente;
+import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -9,6 +10,7 @@ import java.io.Serializable;
 @Table(name="categoria_operacion")
 public class CategoriaOperacion extends EntidadPersistente {
 
+    @Expose
     @Column
     private String descripcion;
     @ManyToOne

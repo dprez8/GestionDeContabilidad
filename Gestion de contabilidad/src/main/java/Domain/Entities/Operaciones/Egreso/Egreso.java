@@ -55,6 +55,7 @@ public class Egreso extends Operacion {
 	@JoinColumn(name = "ingreso_asociado", referencedColumnName = "id")
 	private Ingreso ingresoAsociado;
 
+	@Expose
 	@ManyToMany
 	private List<CategoriaOperacion> categorias;
 

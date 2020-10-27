@@ -14,9 +14,8 @@ public class ValidarMenorValor extends ValidacionDeTransparencia {
 		Presupuesto presupuestoObtenido = egreso.getPresupuestos().stream()
 											.filter(unPresupuesto->
 												validarPresupuesto(egreso,unPresupuesto))
-													.collect(Collectors.toList())
-														.get(0);
-																		
+											.findAny()
+											.orElse(null);
 
 		Presupuesto menor = egreso.getPresupuestos().stream().min(Comparator.comparing(Presupuesto::getValorTotal)).get();
 

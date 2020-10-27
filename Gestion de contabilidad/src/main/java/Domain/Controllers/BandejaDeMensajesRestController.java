@@ -5,8 +5,6 @@ import Domain.Controllers.AdaptersJson.LocalDateAdapter;
 import Domain.Controllers.DTO.ConfigSchedulerRequest;
 import Domain.Controllers.DTO.Respuesta;
 import Domain.Entities.BandejaDeMensajes.Mensaje;
-import Domain.Entities.Organizacion.EntidadJuridica;
-import Domain.Entities.Organizacion.Organizacion;
 import Domain.Entities.Usuarios.Estandar;
 import Domain.Entities.Usuarios.Usuario;
 import Domain.Entities.ValidadorTransparencia.Scheduler;
@@ -30,7 +28,6 @@ public class BandejaDeMensajesRestController {
     private Repositorio<Usuario> repoUsuarios;
     private Repositorio<Mensaje> repoMensajes;
     private Repositorio<Scheduler> repoScheduler;
-    private Repositorio<Organizacion> repoOrganizacion;
     private Respuesta codeResponse;
     private String jsonResponse;
 
@@ -104,11 +101,7 @@ public class BandejaDeMensajesRestController {
                 .excludeFieldsWithoutExposeAnnotation()
                 .create();
 
-        this.repoOrganizacion = new Repositorio<>(new DaoHibernate<>(Organizacion.class));
-
-        Organizacion organizacion = this.repoOrganizacion.buscar(usuario.getMiOrganizacion().getId());
-
-        Scheduler scheduler = organizacion.getScheduler();
+        Scheduler scheduler = usuario.getMiOrganizacion().getScheduler();
 
         ConfigResponse configResponse = new ConfigResponse();
         configResponse.code           = 200;
