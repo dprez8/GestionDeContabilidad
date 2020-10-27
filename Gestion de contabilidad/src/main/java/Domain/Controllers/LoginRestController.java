@@ -65,12 +65,36 @@ public class LoginRestController {
         usuarioResponse.organizacion    = null;
         if(estandar != null){
             usuarioResponse.organizacion    = estandar.getMiOrganizacion();
+            usuarioResponse.nombre          = estandar.getNombre();
         }
         String jsonLogin = gson2.toJson(usuarioResponse);
 
         response.type("application/json");
         response.body(jsonLogin);
 
+        return response.body();
+    }
+
+    public String sessionStatus(Request request, Response response) {
+        response.type("application/json");
+        Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
+        if(usuario == null) {
+            return response.body();
+        }
+
+        Gson gson = new GsonBuilder()
+                .excludeFieldsWithoutExposeAnnotation()
+                .serializeNulls()
+                .create();
+
+        UsuarioResponse usuarioResponse = new UsuarioResponse();
+        usuarioResponse.code            = 200;
+        usuarioResponse.message         = "Ok";
+        usuarioResponse.organizacion    = usuario.getMiOrganizacion();
+        usuarioResponse.nombre          = usuario.getNombre();
+        String jsonLogin = gson.toJson(usuarioResponse);
+
+        response.body(jsonLogin);
         return response.body();
     }
 
@@ -86,5 +110,7 @@ public class LoginRestController {
         public String message;
         @Expose
         public Organizacion organizacion;
+        @Expose
+        public String nombre;
     }
 }
