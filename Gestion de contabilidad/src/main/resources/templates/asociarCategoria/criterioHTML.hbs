@@ -6,7 +6,7 @@
     <b-collapse v-bind:id="criterio.id">
         <template v-for="(categoria, index) in criterio.categorias">
             <b-form-checkbox class="py-2 ml-2"
-                @input="seleccionoCategoria(categoria.name, $event)"
+                @input="seleccionoCategoria({id: categoria.id, name: categoria.name}, $event)"
             >\{{ categoria.name }}</b-form-checkbox>
         </template>
         <ul class="list-group p-2" v-if="criterio.criterios.length">
