@@ -66,6 +66,17 @@ const tablaItems = {
         deleteItem(index) {
             this.items.splice(index, 1);
             this.addItem();
+        },
+        precioTotal() {
+            var precio = 0;
+            this.items.forEach(item => {
+                var itemPrecio = parseFloat(item.precio);
+                var itemCantidad = parseInt(item.cantidad);
+
+                if(!isNaN(itemPrecio) && !isNaN(itemCantidad))
+                    precio += itemPrecio * itemCantidad;
+            });
+            return precio;
         }
     }
 };

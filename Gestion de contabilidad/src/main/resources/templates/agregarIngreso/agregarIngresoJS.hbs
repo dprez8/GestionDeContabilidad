@@ -3,11 +3,11 @@ const agregarIngreso = {
     data() {
         return {
             ingreso: {
-                fecha: null,
-                proveedor: null,
+                fechaOperacion: null,
                 descripcion: null,
                 montoTotal: null
             },
+            falloInput: false,
             falloCargarIngreso: false,
         }
     },
@@ -23,11 +23,11 @@ const agregarIngreso = {
         confirmar() {
             // Creo el ingreso
             var todosLosCamposRellenos = 
-                this.ingreso.fecha                               &&
+                this.ingreso.fechaOperacion                               &&
                 this.ingreso.montoTotal                          
 
-            this.falloCargarIngreso = !todosLosCamposRellenos;
-            if(this.falloCargarIngreso) {
+            this.falloInput = !todosLosCamposRellenos;
+            if(this.falloInput) {
                 return;
             }
             
@@ -48,7 +48,7 @@ const agregarIngreso = {
                     } else if(response.code == 400) {
                         this.falloCargarIngreso = true;
                     } else if(response.code == 200) {
-                        this.$router.go('/operaciones/ingreso');
+                        this.$router.push('/operaciones/ingreso');
                     }
                     console.log(response);
                 },

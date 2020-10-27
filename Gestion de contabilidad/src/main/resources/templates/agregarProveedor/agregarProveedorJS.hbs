@@ -9,21 +9,23 @@ const agregarProveedor = {
             proveedor: {
                 nombre: "",
                 documento: "",
-                direccionPostal: {
-                    pais: null,
-                    provincia: null,
-                    ciudad: null,
-                    calle: "",
-                    altura: "",
-                    piso: "",
-                    codigoPostal: ""
-                }
+                pais: null,
+                provincia: null,
+                ciudad: null,
+                calle: "",
+                altura: "",
+                piso: "",
+                codigoPostal: ""
             },
             paises: [
                 {value: 1, text: "Argentina"}
             ],
-            provincias: [],
-            ciudades: []
+            provincias: [
+                {value: 1, text: "Buenos Aires"}
+            ],
+            ciudades: [
+                {value: 1, text: "C.A.B.A."}
+            ]
         }
     },
     watch: {

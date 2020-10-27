@@ -31,15 +31,17 @@ const egreso = {
     methods: {
         cargarEgresoAPI() {
             var id = this.$route.params.id;
-            console.log(id);
             if(id == undefined)
                 return;
+
+            console.log(id);
 
             $.ajax({
                 url: "http://{{ ip }}/api/operaciones/egreso/"+id,
                 type: "GET",
                 dataType: "json",
                 context: this,
+                cache: false,
                 success(response) {
                     if(response.code == 403) {
                         app.showSessionEndedAlert(true);
