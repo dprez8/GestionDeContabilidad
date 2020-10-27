@@ -44,6 +44,7 @@ public class Scheduler extends EntidadPersistente {
 		calendar.set(Calendar.DAY_OF_WEEK,retornarDia(dias));
 		calendar.set(Calendar.HOUR_OF_DAY, this.horaInicio);
 		calendar.set(Calendar.MINUTE, this.minutoInicio);
+		calendar.set(Calendar.SECOND, 0);
 		return calendar;
 	}
 

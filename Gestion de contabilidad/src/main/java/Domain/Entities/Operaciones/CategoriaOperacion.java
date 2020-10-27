@@ -1,16 +1,16 @@
 package Domain.Entities.Operaciones;
 
+import Domain.Entities.EntidadPersistente.EntidadPersistente;
+import com.google.gson.annotations.Expose;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
 @Table(name="categoria_operacion")
-public class CategoriaOperacion {
+public class CategoriaOperacion extends EntidadPersistente {
 
-    @Id
-    @GeneratedValue
-    @Column(name="categoria_id")
-    private int categoriaId;
+    @Expose
     @Column
     private String descripcion;
     @ManyToOne
@@ -20,14 +20,6 @@ public class CategoriaOperacion {
     public CategoriaOperacion() {
 
     }
-
-    public int getCategoriaId() {
-		return categoriaId;
-	}
-
-	public void setCategoriaId(int categoriaId) {
-		this.categoriaId = categoriaId;
-	}
 
 	public String getDescripcion() {
         return descripcion;

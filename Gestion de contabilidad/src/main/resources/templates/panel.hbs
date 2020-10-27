@@ -48,9 +48,10 @@
                 <!-- Nombre de organizacion -->
                 <div id="navbar-organizacion" class="navbar-brand mr-2" v-bind:class="{'hide-organizacion': searchSelected}">
                     <img src="http://{{ ip }}/img/utn_logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
-                    <span class="p-2">Organización</span>
+                    <span class="p-2">\{{userData.organizacion}}</span>
                 </div>
                 <!-- Busqueda -->
+                <!--
                 <form id="search-wrapper" v-bind:class="{'show-search': searchSelected}" v-on:submit.prevent="search()">
                     <b-input-group class="mr-2" style="flex-wrap: nowrap">
                         <b-input-group-prepend>
@@ -69,16 +70,16 @@
                 </form>
                 <!-- Avatar -->
                 <div class="ml-auto" v-b-toggle.user-content>
-                    <b-avatar variant="primary" text="J" src="http://{{ ip }}/img/usuarios/user.png"></b-avatar>
+                    <b-avatar variant="primary" :text="userData.nombre.substring(0,1)"></b-avatar>
                 </div>
                 <!-- Panel de opciones de usuario -->
                 <b-collapse class="shadow-lg" id="user-content">
                     <b-list-group>
-                        <b-list-group-item>Javier</b-list-group-item>
+                        <b-list-group-item>\{{userData.nombre}}</b-list-group-item>
                         <b-list-group-item to="/configuracion" v-b-toggle.user-content>
                                 <b-icon-gear-fill class="mr-2"></b-icon-gear-fill> Configuración
                         </b-list-group-item>
-                        <b-list-group-item v-b-toggle.user-content>
+                        <b-list-group-item to="#" @click="logout">
                             <b-icon-box-arrow-left class="mr-2"></b-icon-box-arrow-left> Cerrar sesión
                         </b-list-group-item>
                     </b-list-group>
@@ -177,6 +178,10 @@
                         passState: null,
                         loginLoading: false
                     },
+                    userData: {
+                        organizacion: "",
+                        nombre: ""
+                    },
                     sidebarShow: true,
                     breadcrumb: [],
                     query: '',
@@ -246,6 +251,8 @@
                                 }),
                                 success: function(data) {
                                     if(data.code == 200) {
+                                        this.userData.nombre = capitalizeFirstLetter(this.login.user);
+                                        this.userData.organizacion = data.organizacion.razonSocial;
                                         this.loginSuccess();
                                     }
                                     else {
@@ -269,6 +276,13 @@
                             this.softReloadPage();
                         }
                     },
+                    logout() {
+                        document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                        document.cookie = "organizacion=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                        document.cookie = "JSESSIONID=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+                        window.location.href = "http://{{ ip }}/login";
+                    },
                     softReloadPage() {
                         this.routerViewKey ? this.routerViewKey++ : this.routerViewKey--;
                     }
@@ -281,6 +295,11 @@
                 },
                 mounted() {
                     this.updateBreadcrumb();
+                    this.userData.nombre = capitalizeFirstLetter(getCookie("username"));
+                    this.userData.organizacion = getCookie("organizacion");
+
+                    if(!getCookie("JSESSIONID"))
+                        this.showSessionEndedAlert(true);
                 }
             });
             
@@ -293,6 +312,26 @@
 
             function softReloadPage() {
                 app.softReloadPage();
+            }
+
+            function getCookie(cname) {
+                var name = cname + "=";
+                var decodedCookie = decodeURIComponent(document.cookie);
+                var ca = decodedCookie.split(';');
+                for(var i = 0; i <ca.length; i++) {
+                    var c = ca[i];
+                    while (c.charAt(0) == ' ') {
+                        c = c.substring(1);
+                    }
+                    if (c.indexOf(name) == 0) {
+                        return c.substring(name.length, c.length);
+                    }
+                }
+                return "";
+            }
+
+            function capitalizeFirstLetter(string) {
+                return string.charAt(0).toUpperCase() + string.slice(1);
             }
         </script>
     </body>

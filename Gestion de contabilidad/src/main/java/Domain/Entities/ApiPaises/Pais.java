@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.persistence.*;
 
+import com.google.gson.annotations.Expose;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
@@ -15,12 +16,17 @@ public class Pais {
 	@GeneratedValue
 	@Column(name="pais_id")
 	private int clave;
+
 	@Column(name="pais_code")
 	public String id;
+
+	@Expose
 	@Column
 	public String name;
+
 	@Transient
 	public String currency_id;
+
 	@ManyToOne
 	@JoinColumn(name = "moneda_id", referencedColumnName = "moneda_id")
 	public Moneda moneda;

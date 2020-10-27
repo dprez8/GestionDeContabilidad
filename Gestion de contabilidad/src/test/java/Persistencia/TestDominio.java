@@ -1,6 +1,8 @@
 package Persistencia;
 
 import Domain.Entities.DatosDeOperaciones.*;
+import Domain.Entities.Operaciones.CategoriaOperacion;
+import Domain.Entities.Operaciones.CriterioOperacion;
 import Domain.Entities.Operaciones.Egreso.BuilderEgresoConcreto;
 import Domain.Entities.Operaciones.Egreso.Egreso;
 import Domain.Entities.Operaciones.Ingreso;
@@ -42,6 +44,8 @@ public class TestDominio {
     private Repositorio<TipoDocumento> repoTipoDocumento;
     private Repositorio<Presupuesto> repoPresupuestos;
     private Repositorio<Ingreso> repoIngresos;
+    private Repositorio<CriterioOperacion> repoCriterios;
+    private Repositorio<CategoriaOperacion> repoCategorias;
 
     @Before
     public void antesDePersistir() {
@@ -58,6 +62,8 @@ public class TestDominio {
         this.repoTipoDocumento   = new Repositorio<>(new DaoHibernate<>(TipoDocumento.class));
         this.repoPresupuestos    = new Repositorio<>(new DaoHibernate<>(Presupuesto.class));
         this.repoIngresos        = new Repositorio<>(new DaoHibernate<>(Ingreso.class));
+        this.repoCriterios       = new Repositorio<>(new DaoHibernate<>(CriterioOperacion.class));
+        this.repoCategorias       = new Repositorio<>(new DaoHibernate<>(CategoriaOperacion.class));
     }
 
     @Test
@@ -97,15 +103,15 @@ public class TestDominio {
     @Test
     public void T3persistirAUnUsuario () throws contraseniaCorta, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, IOException {
         EntidadJuridica entidadJuridica = repoEntidadJuridica.buscar(1);
-        Estandar usuario = new Estandar(entidadJuridica, "usuario", "una_contrasenia_segura", "usuario@gmail.com");
+        Estandar usuario = new Estandar(entidadJuridica, "javier", "una_contrasenia_segura", "javier@gmail.com");
         repoUsuarios.agregar(usuario);
     }
 
     @Test
     public void T4recuperarAUnUsuario () {
-        Usuario elPepe = repoUsuarios.buscar(1);
-        Assert.assertEquals(Estandar.class,elPepe.getClass());
-        System.out.println("tipo_usuario: " + elPepe.getClass());
+        Usuario javier = repoUsuarios.buscar(1);
+        Assert.assertEquals(Estandar.class,javier.getClass());
+        System.out.println("tipo_usuario: " + javier.getClass());
     }
 
     @Test
@@ -271,5 +277,63 @@ public class TestDominio {
         ingreso.setOrganizacion(pepsi);
         ingreso.setFechaOperacion(LocalDate.now());
         this.repoIngresos.agregar(ingreso);
+    }
+
+    @Test
+    public void T91persistirCriteriosYCategorias() {
+        CriterioOperacion criterio1 = new CriterioOperacion("Clientes");
+        CategoriaOperacion mayorista = new CategoriaOperacion();
+        mayorista.setDescripcion("Mayorista");
+        mayorista.setCriterio(criterio1);
+
+        CategoriaOperacion minorista = new CategoriaOperacion();
+        minorista.setDescripcion("Minorista");
+        minorista.setCriterio(criterio1);
+
+        CriterioOperacion criterio2 = new CriterioOperacion("Mercado");
+        CriterioOperacion criterioNacional = new CriterioOperacion("Nacional");
+        CriterioOperacion criterioInternacional = new CriterioOperacion("Internacional");
+
+        CategoriaOperacion interior = new CategoriaOperacion();
+        interior.setDescripcion("Interior");
+        CategoriaOperacion exterior = new CategoriaOperacion();
+        exterior.setDescripcion("Exterior");
+        CategoriaOperacion inter1 = new CategoriaOperacion();
+        inter1.setDescripcion("America");
+        CategoriaOperacion inter2 = new CategoriaOperacion();
+        inter2.setDescripcion("Asia");
+        CategoriaOperacion inter3 = new CategoriaOperacion();
+        inter3.setDescripcion("Africa");
+        CategoriaOperacion inter4 = new CategoriaOperacion();
+        inter4.setDescripcion("Europa");
+        CategoriaOperacion inter5 = new CategoriaOperacion();
+        inter5.setDescripcion("Oceania");
+
+        criterioNacional.setCriterioPadre(criterio2);
+        criterioInternacional.setCriterioPadre(criterio2);
+
+        interior.setCriterio(criterioNacional);
+        exterior.setCriterio(criterioNacional);
+
+        inter1.setCriterio(criterioInternacional);
+        inter2.setCriterio(criterioInternacional);
+        inter3.setCriterio(criterioInternacional);
+        inter4.setCriterio(criterioInternacional);
+        inter5.setCriterio(criterioInternacional);
+
+        this.repoCriterios.agregar(criterio1);
+        this.repoCriterios.agregar(criterio2);
+        this.repoCriterios.agregar(criterioNacional);
+        this.repoCriterios.agregar(criterioInternacional);
+
+        this.repoCategorias.agregar(mayorista);
+        this.repoCategorias.agregar(minorista);
+        this.repoCategorias.agregar(interior);
+        this.repoCategorias.agregar(exterior);
+        this.repoCategorias.agregar(inter1);
+        this.repoCategorias.agregar(inter2);
+        this.repoCategorias.agregar(inter3);
+        this.repoCategorias.agregar(inter4);
+        this.repoCategorias.agregar(inter5);
     }
 }

@@ -1,5 +1,7 @@
 package Domain.Entities.ApiPaises;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.*;
@@ -13,6 +15,8 @@ public class Provincia {
 	private int clave;
 	@Column(name="provincia_code")
 	public String id;
+
+	@Expose
 	@Column
 	public String name;
 	@Transient

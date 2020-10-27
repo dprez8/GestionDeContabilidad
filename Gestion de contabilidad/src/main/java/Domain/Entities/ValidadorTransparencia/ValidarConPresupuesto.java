@@ -13,8 +13,8 @@ public class ValidarConPresupuesto extends ValidacionDeTransparencia {
 		Presupuesto presupuestoElegido = egreso.getPresupuestos().stream()
 											.filter(unPresupuesto->
 												validarPresupuesto(egreso,unPresupuesto))
-													.collect(Collectors.toList())
-														.get(0);
+												.findAny()
+												.orElse(null);
 
 		if (presupuestoElegido != null){
 			cuerpo = "Se validó el egreso con uno de los presupuestos.";

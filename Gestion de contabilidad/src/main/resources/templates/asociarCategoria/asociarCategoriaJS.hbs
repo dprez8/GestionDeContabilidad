@@ -97,10 +97,80 @@ const asociarCategoria = {
                     ]
                 }
             ],
-            categoriasSeleccionadas: []
+            categoriasSeleccionadas: [],
+            categoriasLoading: false
         }
     },
     methods: {
+        cargarCriteriosAPI() {
+            this.categoriasLoading = false;
+
+            $.ajax({
+                url: "http://{{ ip }}/api/categorias",
+                type: "GET",
+                dataType: "json",
+                context: this,
+                cache: false,
+                success(response) {
+                    if(response.code == 403) {
+                        app.showSessionEndedAlert(true);
+                    } else if(response.code == 200) {
+                        this.criteriosAPI = response.criterios;
+                        this.procesarCriterios();
+                    }
+                },
+                error(response) {
+                    console.log("error");
+                    console.log(response);
+                },
+                complete() {
+                    this.categoriasLoading = false;
+                }
+            });
+        },
+        procesarCriterios() {
+            this.criteriosAPI.forEach(criterio => {
+                if(!criterio.categorias)
+                    criterio.categorias = [];
+                if(!criterio.criterios)
+                    criterio.criterios = [];
+                
+                criterio.id = criterio.id.toString();
+
+                if(criterio.idCriterioPadre) {
+                    var criterioPadre = this.criterioPorId(criterio.idCriterioPadre);
+
+                    if(!criterioPadre.criterios)
+                        criterioPadre.criterios = [];
+
+                    criterioPadre.criterios.push(criterio);
+                }
+            });
+
+            var criteriosToDelete = [];
+
+            for(var i = 0; i < this.criteriosAPI.length; i++) {
+                var criterio = this.criteriosAPI[i];
+
+                if(criterio.idCriterioPadre) {
+                    criteriosToDelete.push(i);
+                } 
+            }
+            
+            for (var i = criteriosToDelete.length -1; i >= 0; i--)
+                this.criteriosAPI.splice(criteriosToDelete[i], 1);
+
+            this.criterios = this.criteriosAPI;
+        },
+        criterioPorId(id) {
+            var criterioDefinido = null;
+            this.criteriosAPI.forEach(criterio => {
+                if(criterio.id == id) {
+                    criterioDefinido = criterio;
+                }
+            });
+            return criterioDefinido;
+        },
         seleccionoCategoria(criterio, selected) {
             if (selected)
                 this.categoriasSeleccionadas.push(criterio);
@@ -109,6 +179,9 @@ const asociarCategoria = {
                 this.categoriasSeleccionadas.splice(index, 1);
             }
         }
+    },
+    mounted() {
+        this.cargarCriteriosAPI();
     },
     components: {
         'criterio': criterio

@@ -83,6 +83,7 @@ const agregarEgreso = {
     methods: {
         convertDate: convertDate,
         softReloadPage: softReloadPage,
+        getCookie: getCookie,
         confirmar() {
 
             this.egresoLoading = true;
@@ -194,9 +195,45 @@ const agregarEgreso = {
             this.asociarIngresoAPI();
         },
         asociarIngresoAPI() {
-            // Proximamente
-            // FIN
-            this.$router.push('/operaciones/egreso');
+
+            if(this.ingresoAAsociar) {
+                var request = {
+                    ingresoId: this.ingresoAAsociar.id,
+                    egresoId: this.idEgreso,
+                }
+
+                console.log("POST '/api/operaciones/asociarManualmente'");
+                console.log(JSON.stringify(request, null, 4));
+
+                $.ajax({
+                    url: "http://{{ ip }}/api/operaciones/asociarManualmente",
+                    type: "POST",
+                    dataType: "json",
+                    context: this,
+                    data: JSON.stringify(request),
+                    success(response) {
+                        if(response.code == 403) {
+                            app.showSessionEndedAlert(false);
+                        } else if(response.code == 400) {
+                            // Fallo la carga de proveedor
+                            this.falloCarga = true;
+                        } else if(response.code == 200) {
+                            // El ingreso se asoció correctamente
+                            console.log(response);
+                            this.$router.push('/operaciones/egreso');
+                        } else {
+                            // Fallo la carga de proveedor (default)
+                            this.falloCarga = true;
+                            console.log(response)
+                        }
+                    },
+                    error() {
+                        this.falloCarga = true;
+                    }
+                });
+            } else {
+                this.$router.push('/operaciones/egreso');
+            }
         },
         cargarProveedoresAPI() {
             this.proveedoresLoading = true;

@@ -13,6 +13,38 @@ const bandeja = {
             var id = this.$route.params.id;
             this.selected = id;
         },
+        marcarVistoAPI() {
+            if(this.getMessageSelected == null) {
+                return;
+            }
+            
+            var request = {
+                url: "http://{{ ip }}/api/bandeja/visto",
+                type: "POST",
+                context: this,
+                cache: false,
+                success(data) {
+                    if(data.code == 200) {
+                        console.log(data);
+                    }
+                    else if(data.code == 403) {
+                        app.showSessionEndedAlert(true);
+                    }
+                    else {
+                        console.log("error");
+                        console.log(data);
+                    }
+                },
+                error(data) {
+                    console.log("oof");
+                    console.log(data);
+                },
+                complete() {
+
+                }
+            };
+            $.ajax(request);
+        },
         cargarMensajesAPI() {
             this.loading = true;
             var request = {

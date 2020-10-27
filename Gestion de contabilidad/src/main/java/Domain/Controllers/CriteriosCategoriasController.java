@@ -139,7 +139,7 @@ public String crearCategoria(Request request, Response response){
 	       
 	        catResponse.code=200;
 	        catResponse.message="Categoria creada exitosamente";
-	        catResponse.categoriaId= categoria.getCategoriaId();
+	        catResponse.categoriaId= categoria.getId();
 	        response.status(200);
         }
         catch (NullPointerException ex){
@@ -173,7 +173,7 @@ public String crearCriterio(Request request, Response response){
        
         criResponse.code=200;
         criResponse.message="Criterio creado exitosamente";
-        criResponse.criterioId= criterio.getCriterioId();
+        criResponse.criterioId= criterio.getId();
         response.status(200);
     }
     catch (NullPointerException ex){
@@ -197,14 +197,14 @@ public String crearCriterio(Request request, Response response){
    			List<CategoriaOperacion> categorias= new ArrayList<>();
    			
    			categorias = EntityManagerHelper.createQuery("SELECT c FROM CategoriaOperacion c WHERE c.criterio.criterioId= :code")
-   			        .setParameter("code",criterio.getCriterioId()).getResultList();
+   			        .setParameter("code",criterio.getId()).getResultList();
    	      
 
-   			criterioDato.id=criterio.getCriterioId();
+   			criterioDato.id=criterio.getId();
    			criterioDato.name= criterio.getDescripcion();
    			
    			if(criterio.getCriterioPadre()!=null)
-   				criterioDato.idCriterioPadre=criterio.getCriterioPadre().getCriterioId();
+   				criterioDato.idCriterioPadre=criterio.getCriterioPadre().getId();
    			
 	   		if(!categorias.isEmpty()) {
 	   			List<CategoriaDato> categoriasAEnviar = categorias.stream().map(this::mapCategoria).collect(Collectors.toList());
@@ -217,7 +217,7 @@ public String crearCriterio(Request request, Response response){
    	public CategoriaDato mapCategoria(CategoriaOperacion categoria){
    		CategoriaDato categoriaDato= new CategoriaDato();
    		
-   		categoriaDato.id=categoria.getCategoriaId();
+   		categoriaDato.id=categoria.getId();
    		categoriaDato.name=categoria.getDescripcion();
    		return categoriaDato;
    		}

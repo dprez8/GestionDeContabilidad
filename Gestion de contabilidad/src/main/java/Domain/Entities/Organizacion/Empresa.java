@@ -3,6 +3,7 @@ package Domain.Entities.Organizacion;
 
 import Domain.Entities.CategorizadorDeEmpresas.CategorizadorDeEmpresas;
 import Domain.Entities.CategorizadorDeEmpresas.*;
+import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
 
@@ -10,12 +11,15 @@ import javax.persistence.*;
 @DiscriminatorValue("empresa")
 public class Empresa extends CategoriaEntidadJuridica{
 
+    @Expose
     @Column(name = "cantidad_personal")
     private int cantidadDePersonal;
 
+    @Expose
     @Column(name = "ventas_anuales")
     private double ventasAnuales;
 
+    @Expose
     @Column
     private String actividad;
 
@@ -23,6 +27,7 @@ public class Empresa extends CategoriaEntidadJuridica{
     @JoinColumn(name="categoria_id", referencedColumnName = "categoria_id")
     private CategoriaEmpresa categoriaEmpresa;
 
+    @Expose
     @ManyToOne
     @JoinColumn(name = "sector_id",referencedColumnName = "sector_id")
     private Sector sector;

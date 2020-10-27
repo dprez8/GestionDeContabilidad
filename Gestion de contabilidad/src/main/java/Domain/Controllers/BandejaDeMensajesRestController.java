@@ -13,6 +13,8 @@ import Domain.Repositories.Repositorio;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
+import db.EntityManagerHelper;
+import org.hibernate.Hibernate;
 import spark.Request;
 import spark.Response;
 
@@ -85,6 +87,7 @@ public class BandejaDeMensajesRestController {
         this.codeResponse.setCode(200);
         this.codeResponse.setMessage("Ok");
         this.jsonResponse = gson.toJson(this.codeResponse);
+        response.body(this.jsonResponse);
         return response.body();
     }
 
