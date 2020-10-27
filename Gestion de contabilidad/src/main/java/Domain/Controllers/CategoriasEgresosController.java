@@ -9,13 +9,17 @@ import javax.persistence.NoResultException;
 import com.google.gson.Gson;
 
 import Domain.Controllers.MedioDePagoController.MedioDePagoRespuesta;
+import Domain.Controllers.DTO.Respuesta;
 import Domain.Entities.ApiPaises.Ciudad;
 import Domain.Entities.ClasesParciales.CategoriaDato;
 import Domain.Entities.ClasesParciales.CriterioDato;
 import Domain.Entities.ClasesParciales.ProveedorDato;
+import Domain.Entities.ClasesParciales.ProveedorNuevo;
 import Domain.Entities.DatosDeOperaciones.MedioDePago;
 import Domain.Entities.Operaciones.CategoriaOperacion;
 import Domain.Entities.Operaciones.CriterioOperacion;
+import Domain.Entities.Operaciones.Presupuesto;
+import Domain.Entities.Operaciones.Egreso.Egreso;
 import Domain.Repositories.Repositorio;
 import Domain.Repositories.Daos.DaoHibernate;
 import db.EntityManagerHelper;
@@ -26,6 +30,11 @@ public class CategoriasEgresosController {
 
 
 	private Repositorio<CriterioOperacion> repoCriterio;
+	private Repositorio<CategoriaOperacion> repoCategoria;
+	private Repositorio<Egreso> repoEgreso;
+	private Repositorio<Presupuesto> repoPresupuesto;
+	
+	
 	public String listadoCriterios(Request request, Response response){
 		
 		 	Gson gson = new Gson();
@@ -102,5 +111,53 @@ public CategoriaDato mapCategoria(CategoriaOperacion categoria){
 		public int code;
 		public String message;
 		public List<CriterioDato> criterios;
+	}
+	
+	public String asociarCategoriaEgreso(Request request, Response response){
+		
+	 	Gson gson = new Gson();
+        Respuesta respuesta= new Respuesta();        
+        CategoriaRequest categoriaRequest= new CategoriaRequest();
+        categoriaRequest = gson.fromJson(request.body(),CategoriaRequest.class);
+   	 	this.repoCategoria = new Repositorio<CategoriaOperacion>(new DaoHibernate<CategoriaOperacion>(CategoriaOperacion.class));
+   	 	
+   	 	
+   	 	try {
+	       Egreso egreso= this.repoEgreso.buscar(categoriaRequest.id);
+	       
+	       if(!categoriaRequest.categorias.isEmpty()) {
+		       for(Integer categoriaId: categoriaRequest.categorias){
+		    	  CategoriaOperacion categoria = this.repoCategoria.buscar(categoriaId);
+		    	  egreso.addCategorias(categoria);
+		       }
+	       }
+	       
+	        respuesta.setCode(200);
+	        respuesta.setMessage("Categorias asociadas exitosamente");
+	        response.status(200);
+        }
+        catch (NullPointerException ex){
+        	respuesta.setCode(200);
+	        respuesta.setMessage("Categorias no pudiron cargarse");
+            response.status(404);
+         }
+        
+        catch(NoResultException nf){
+        	respuesta.setCode(200);
+	        respuesta.setMessage("Categorias no pudiron cargarse");
+            response.status(404);
+        }
+       
+       
+        String jsonCategorias = gson.toJson(respuesta);
+       
+        response.type("application/json");
+        response.body(jsonCategorias);
+
+        return response.body();
+	}
+	public class CategoriaRequest{
+		public int id;
+		public List<Integer> categorias;
 	}
 }
