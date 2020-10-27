@@ -22,12 +22,8 @@ public class SchedulerTest {
         ValidarConPresupuesto validacionPresupuesto = new ValidarConPresupuesto();
         ValidarMenorValor validacionMenorValor = new ValidarMenorValor();
 
-        ValidadorDeTransparencia validador = new ValidadorDeTransparencia(validacionMinima,validacionPresupuesto,validacionMenorValor);
+        ValidadorDeTransparencia validador = new ValidadorDeTransparencia(validacionMinima, validacionPresupuesto, validacionMenorValor);
 
-        /**Creacion del Scheduler*/
-        /*
-        Scheduler hilo = new Scheduler(10000); //esta en ms, serian 10 seg
-*/
         /**Creacion de los datos de egreso y sus presupuestos, ejemplo*/
         Producto RAM = new Producto("Memoria RAM 4 gb DDR3");
         ItemEgreso RAMs = new ItemEgreso(RAM, 1, 3000);
@@ -40,7 +36,7 @@ public class SchedulerTest {
         DocumentoComercial unDocumento = new DocumentoComercial(FacturaA, 11111);
 
         MedioDePago efectivo = new MedioDePago("efectivo");
-        Pago unPago = new Pago("1231231",efectivo);
+        Pago unPago = new Pago("1231231", efectivo);
 
         Proveedor lautaroRobles = new Proveedor("Lautaro Robles", 41424242);
         Proveedor lautaroIturregui = new Proveedor("Lautaro Iturregui", 2224222);
@@ -59,32 +55,32 @@ public class SchedulerTest {
         miPyme.setActividad("Construccion");
         miPyme.setVentasAnuales(50000003.0);
         miPyme.setCantidadDePersonal(3);
-        EntidadJuridica unaEntidad  = new EntidadJuridica();
+        EntidadJuridica unaEntidad = new EntidadJuridica();
         unaEntidad.setTipoEntidadJuridica(miPyme);
 
         /**Construccion del egreso*/
         BuilderEgresoConcreto egresoBuilder = new BuilderEgresoConcreto();
 
         Egreso unaCompra = egresoBuilder.agregarProveedor(lautaroIturregui)
-                            .agregarFechaOperacion(LocalDate.now())
-                            .agregarPago(unPago)
-                            .agregarDocumentoComercial(unDocumento)
-                            .agregarDatosOrganizacion(unaEntidad)
-                            .agregarItems(RAMs,placasDeVideo)
-                            .build();
+                .agregarFechaOperacion(LocalDate.now())
+                .agregarPago(unPago)
+                .agregarDocumentoComercial(unDocumento)
+                .agregarDatosOrganizacion(unaEntidad)
+                .agregarItems(RAMs, placasDeVideo)
+                .build();
 
         /**Creacion de dos presupuestos con un egreso*/
         Presupuesto primerPresupuesto = new Presupuesto(4000, unaCompra);
         primerPresupuesto.setDocumento(unDocumento);
-        primerPresupuesto.setFechaVigente(LocalDate.of(2020, Month.AUGUST,14));
+        primerPresupuesto.setFechaVigente(LocalDate.of(2020, Month.AUGUST, 14));
         primerPresupuesto.setProveedor(lautaroIturregui);
-        primerPresupuesto.addItems(placaVideoPresupuesto,RAMpresupuesto);
+        primerPresupuesto.addItems(placaVideoPresupuesto, RAMpresupuesto);
 
         Presupuesto segundoPresupuesto = new Presupuesto(4210, unaCompra);
         segundoPresupuesto.setDocumento(unDocumento);
-        segundoPresupuesto.setFechaVigente(LocalDate.of(2020, Month.AUGUST,14));
+        segundoPresupuesto.setFechaVigente(LocalDate.of(2020, Month.AUGUST, 14));
         segundoPresupuesto.setProveedor(lautaroRobles);
-        segundoPresupuesto.addItems(placaVide2Presupuesto,RAM2presupuesto);
+        segundoPresupuesto.addItems(placaVide2Presupuesto, RAM2presupuesto);
 
         /**Creacion de un usuario, el cual sera revisor*/
         Estandar unUsuario = new Estandar(unaEntidad, "Lautaro", "1234", "lautaro@robles.com");
@@ -92,11 +88,16 @@ public class SchedulerTest {
         /**Configuracion del egreso para pruebas*/
         unaEntidad.addOperaciones(unaCompra);
         unaCompra.addRevisores(unUsuario);
-        unaCompra.addPresupuestos(primerPresupuesto,segundoPresupuesto);
+        unaCompra.addPresupuestos(primerPresupuesto, segundoPresupuesto);
+
+        /**Creacion del Scheduler*/
+        Scheduler scheduler = new Scheduler();
 
         /**Inicio scheduler para validar el egreso*/
-        Scheduler.setPeriodo(1);
-        Scheduler.arrancarTarea(unaEntidad,validador);
+        scheduler.setHoraInicio(12);
+        scheduler.setMinutoInicio(00);
+        scheduler.setValidadorDeTransparencia(validador);
+        scheduler.arrancarTarea();
 
         /**Solo es necesario un revisor para ver los mensajes*/
         List<Mensaje> mensajes = new ArrayList<>();

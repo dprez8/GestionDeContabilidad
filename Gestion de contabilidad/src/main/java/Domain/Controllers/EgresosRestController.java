@@ -126,7 +126,7 @@ public class EgresosRestController {
 
         jsonResponse = this.gson.toJson(listadoEgresos);
         response.body(jsonResponse);
-
+        egresosAEnviar.clear();
         return response.body();
     }
 
