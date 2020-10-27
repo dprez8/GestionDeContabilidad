@@ -11,6 +11,7 @@ import Domain.Entities.Operaciones.*;
 import Domain.Entities.Operaciones.Egreso.Egreso;
 import Domain.Entities.Usuarios.Estandar;
 import Domain.Entities.ValidadorTransparencia.Scheduler;
+import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
 
@@ -19,9 +20,9 @@ import javax.persistence.*;
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Organizacion extends EntidadPersistente {
 
+	@Expose
 	@Column(name = "nombre_ficticio")
     protected String nombreFicticio;
-
 
     @OneToMany(mappedBy = "organizacion",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER) //del otro lado es ManyToOne
     protected List<Operacion> operaciones;
