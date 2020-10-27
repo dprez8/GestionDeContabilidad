@@ -21,6 +21,7 @@ import spark.Response;
 
 import javax.persistence.NoResultException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +36,7 @@ public class EgresosRestController {
     private Repositorio<DocumentoComercial> repoDocumentos;
     private Repositorio<TipoDocumento> repoTipoDocumento;
     private Repositorio<EntidadJuridica> repoEntidadJuridica;
+    private List<Egreso> egresosMemo;
     private Respuesta respuesta;
     private Gson gson;
 
@@ -48,6 +50,7 @@ public class EgresosRestController {
         this.repoDocumentos      = new Repositorio<>(new DaoHibernate<>(DocumentoComercial.class));
         this.repoTipoDocumento   = new Repositorio<>(new DaoHibernate<>(TipoDocumento.class));
         this.repoEntidadJuridica = new Repositorio<>(new DaoHibernate<>(EntidadJuridica.class));
+        this.egresosMemo         = new ArrayList<>();
         this.respuesta           = new Respuesta();
     }
 
@@ -82,6 +85,8 @@ public class EgresosRestController {
         this.respuesta.setCode(200);
         this.respuesta.setMessage("Egreso cargado exitosamente");
 
+        this.egresosMemo.add(egreso);
+
         CargaEgresoResponse cargaEgresoResponse = new CargaEgresoResponse();
 
         cargaEgresoResponse.code    = this.respuesta.getCode();
@@ -106,7 +111,8 @@ public class EgresosRestController {
         List<EgresoResponse> egresosAEnviar;
         String jsonResponse;
 
-        egresosAEnviar = entidadJuridica.getEgresos()
+        List<Egreso> egresosBD = entidadJuridica.getEgresos();
+        egresosAEnviar = egresosBD
                     .stream()
                     .map(this::mapearEgreso)
                     .collect(Collectors.toList());
@@ -136,7 +142,6 @@ public class EgresosRestController {
         if(usuario == null) {
             return response.body();
         }
-
         String jsonResponse;
         Egreso egreso;
 
@@ -146,14 +151,18 @@ public class EgresosRestController {
                 .serializeNulls()
                 .create();
 
-        egreso = this.repoEgresos.buscar(new Integer(request.params("egresoId")));
+        int id = new Integer(request.params("egresoId"));
+        egreso = this.repoEgresos.buscar(id);
 
         if(egreso == null) {
-            this.respuesta.setCode(404);
-            this.respuesta.setMessage("El egreso no existe");
-            jsonResponse = this.gson.toJson(this.respuesta);
-            response.body(jsonResponse);
-            return response.body();
+            if(!estaEnMemo(id)){
+                this.respuesta.setCode(404);
+                this.respuesta.setMessage("El egreso no existe");
+                Gson gson = new Gson();
+                jsonResponse = gson.toJson(this.respuesta);
+                return jsonResponse;
+            }
+            egreso = this.egresosMemo.stream().filter(e->e.getId() == id).findFirst().get();
         }
 
         EgresoDetalladoResponse egresoDetallado = new EgresoDetalladoResponse();
@@ -165,7 +174,7 @@ public class EgresosRestController {
         jsonResponse = this.gson.toJson(egresoDetallado);
         response.body(jsonResponse);
 
-        return response.body();
+        return jsonResponse;
     }
 
     private Egreso asignarEgresoDesde (EgresoRequest egresoRequest, EntidadJuridica entidadJuridica) {
@@ -269,6 +278,10 @@ public class EgresosRestController {
         return egreso.getRevisores()
                         .stream()
                         .anyMatch(unRevisor->unRevisor.getId() == estandar.getId());
+    }
+
+    private boolean estaEnMemo(int egresoId) {
+        return this.egresosMemo.stream().anyMatch(e->e.getId() == egresoId);
     }
 
     private class CargaEgresoResponse {
