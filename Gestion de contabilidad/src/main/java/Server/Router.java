@@ -80,6 +80,7 @@ public class Router {
         Spark.get("/api/operaciones/egresos", egresosRestController::listadoDeEgresos);
         Spark.get("/api/operaciones/egreso/:egresoId", egresosRestController::mostrarEgreso);
         Spark.get("/api/operaciones/ingresos",ingresosRestController::listadoDeIngresos);
+        Spark.post("/api/categorias/asociar",categoriasController::asociarCategoriaEgreso);
         Spark.post("/api/operaciones/ingreso",ingresosRestController::cargarNuevoIngreso);
     }
 
