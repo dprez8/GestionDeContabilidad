@@ -29,11 +29,11 @@
             <span class="mr-2"><strong>Fecha Operación</strong></span>
         </div>
         <div class="col">
-            <b-collapse :visible="(!ingreso.fecha && falloCargarIngreso)">
+            <b-collapse :visible="(!ingreso.fechaOperacion && falloInput)">
                 <b-badge variant="danger">Ingrese la fecha de la operacion</b-badge>
             </b-collapse>
             <b-form-datepicker placeholder="Seleccione fecha de la Operación" class="mb-2"
-                :state="(!ingreso.fecha && falloCargarIngreso) ? false : null" v-model="ingreso.fecha"></b-form-datepicker>
+                :state="(!ingreso.fechaOperacion && falloInput) ? false : null" v-model="ingreso.fechaOperacion"></b-form-datepicker>
         </div>
         <div class="col-lg-1 col-xl-3"></div>
     </div>
@@ -42,28 +42,32 @@
             <span class="mr-2"><strong>Monto Total</strong></span>
         </div>
         <div class="col">
-            <b-collapse :visible="(!ingreso.montoTotal && falloCargarIngreso)">
+            <b-collapse :visible="(!ingreso.montoTotal && falloInput)">
                 <b-badge variant="danger">Ingrese el monto total</b-badge>
             </b-collapse>
             <b-form-input placeholder="Ingrese monto total"
-                :state="(!ingreso.montoTotal && falloCargarIngreso) ? false : null"
+                :state="(!ingreso.montoTotal && falloInput) ? false : null"
                 v-model="ingreso.montoTotal"></b-form-input>
         </div>
         <div class="col-lg-1 col-xl-3"></div>
     </div>
 
     <div class="row mb-4 mx-2">
-        <div class="col-sm-4">
+        <div class="col-sm-4 col-lg-3 text-sm-right py-2">
 
         </div>
         <div class="col">
+            <b-collapse :visible="(falloInput)">
+                <b-badge variant="danger">Hay problemas en los campos</b-badge>
+            </b-collapse>
             <b-collapse :visible="(falloCargarIngreso)">
-                <b-badge variant="danger">Hay campos que faltan completar</b-badge>
+                <b-badge variant="danger">Hubo un problema al cargar el ingreso</b-badge>
             </b-collapse>
             <b-button-group>
                 <b-button variant="primary" @click="confirmar">Confirmar</b-button>
                 <b-button variant="outline-dark" to="/operaciones/ingreso">Cancelar</b-button>
             </b-button-group>
         </div>
+        <div class="col-lg-1 col-xl-3"></div>
     </div>
 </div>

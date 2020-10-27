@@ -76,7 +76,11 @@ public class TestDominio {
         pepsi.setNombreFicticio("Pepsi");
 
         this.repoEntidadJuridica.agregar(pepsi);
-        System.out.println("Numero"+ pepsi.getId());
+        Scheduler scheduler = new Scheduler();
+        scheduler.setOrganizacion(pepsi);
+        pepsi.setScheduler(scheduler);
+        this.repoEntidadJuridica.modificar(pepsi);
+        System.out.println("Numero "+ pepsi.getId());
     }
 
     @Test
@@ -242,8 +246,9 @@ public class TestDominio {
         ValidadorDeTransparencia validador = new ValidadorDeTransparencia(validacionMinima,validacionPresupuesto,validacionMenorValor);
 
 
-        Scheduler scheduler = new Scheduler(pepsi.getUsuarios().get(0));
-        scheduler.arrancarTarea(pepsi,validador);
+        Scheduler scheduler = pepsi.getScheduler();
+        scheduler.setValidadorDeTransparencia(validador);
+        scheduler.arrancarTarea();
 
         //List<Egreso> egresos = pepsi.getEgresos().stream().filter(a -> a.isValidado() == false).collect(Collectors.toList()); //Lo egresos que no han sido validados o no pasaron las pruebas anteriormente
         //egresos.forEach(egreso -> validador.validarEgreso(egreso));

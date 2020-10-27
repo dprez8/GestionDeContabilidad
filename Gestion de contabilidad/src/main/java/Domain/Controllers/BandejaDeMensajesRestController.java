@@ -2,10 +2,12 @@ package Domain.Controllers;
 
 
 import Domain.Controllers.AdaptersJson.LocalDateAdapter;
+import Domain.Controllers.DTO.ConfigSchedulerRequest;
 import Domain.Controllers.DTO.Respuesta;
 import Domain.Entities.BandejaDeMensajes.Mensaje;
 import Domain.Entities.Usuarios.Estandar;
 import Domain.Entities.Usuarios.Usuario;
+import Domain.Entities.ValidadorTransparencia.Scheduler;
 import Domain.Repositories.Daos.DaoHibernate;
 import Domain.Repositories.Repositorio;
 import com.google.gson.Gson;
@@ -14,6 +16,7 @@ import com.google.gson.annotations.Expose;
 import spark.Request;
 import spark.Response;
 
+import javax.persistence.NoResultException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,11 +25,14 @@ import java.util.stream.Collectors;
 public class BandejaDeMensajesRestController {
     private Repositorio<Usuario> repoUsuarios;
     private Repositorio<Mensaje> repoMensajes;
+    private Repositorio<Scheduler> repoScheduler;
     private Respuesta codeResponse;
+    private String jsonResponse;
 
     public BandejaDeMensajesRestController() {
         this.repoUsuarios = new Repositorio<>(new DaoHibernate<Usuario>(Usuario.class));
         this.repoMensajes = new Repositorio<>(new DaoHibernate<Mensaje>(Mensaje.class));
+        this.repoScheduler= new Repositorio<>(new DaoHibernate<>(Scheduler.class));
         this.codeResponse = new Respuesta();
     }
 
@@ -48,18 +54,86 @@ public class BandejaDeMensajesRestController {
 
         filtrarMensajesDeUsuario(usuario);
         bandejaResponse  = asignarDatosABandejaResponse(usuario);
-        String jsonBandeja = gson.toJson(bandejaResponse);
+        this.jsonResponse = gson.toJson(bandejaResponse);
 
-        response.body(jsonBandeja);
+        response.body(jsonResponse);
 
         return response.body();
     }
 
     public String configurar(Request request, Response response) {
+        response.type("application/json");
+        Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
+        if(usuario == null) {
+            return response.body();
+        }
+
+        Gson gson = new Gson();
+        ConfigSchedulerRequest configSchedulerRequest = gson.fromJson(request.body(),ConfigSchedulerRequest.class);
+
+        Scheduler scheduler = usuario.getMiOrganizacion().getScheduler();
+
+        if(!configuracionExistosa(configSchedulerRequest,scheduler)) {
+            this.codeResponse.setCode(400);
+            this.codeResponse.setMessage("Error en los datos de envio");
+            this.jsonResponse = gson.toJson(this.codeResponse);
+            return jsonResponse;
+        }
+
+        this.repoScheduler.modificar(scheduler);
+
+        this.codeResponse.setCode(200);
+        this.codeResponse.setMessage("Ok");
+        this.jsonResponse = gson.toJson(this.codeResponse);
         return response.body();
     }
 
     public String mostrarConfiguracion(Request request, Response response) {
+        response.type("application/json");
+        Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
+        if(usuario == null) {
+            return response.body();
+        }
+        Gson gson = new GsonBuilder()
+                .excludeFieldsWithoutExposeAnnotation()
+                .create();
+
+        Scheduler scheduler = usuario.getMiOrganizacion().getScheduler();
+
+        ConfigResponse configResponse = new ConfigResponse();
+        configResponse.code           = 200;
+        configResponse.message        = "Ok";
+        configResponse.scheduler      = scheduler;
+
+        this.jsonResponse = gson.toJson(configResponse);
+        response.body(jsonResponse);
+        return response.body();
+    }
+
+    public String mensajeVisto(Request request, Response response) {
+        response.type("application/json");
+        Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
+        if(usuario == null) {
+            return response.body();
+        }
+        Gson gson = new Gson();
+        MensajeId idMensaje = gson.fromJson(request.body(),MensajeId.class);
+
+        try {
+            Mensaje mensaje = this.repoMensajes.buscar(idMensaje.id);
+            mensaje.setLeido(true);
+            this.repoMensajes.modificar(mensaje);
+        }
+        catch (NoResultException ex) {
+            this.codeResponse.setCode(404);
+            this.codeResponse.setMessage("El mensaje no existe");
+            this.jsonResponse = gson.toJson(this.codeResponse);
+            return jsonResponse;
+        }
+        this.codeResponse.setCode(200);
+        this.codeResponse.setMessage("Mensaje modificado");
+        this.jsonResponse = gson.toJson(this.codeResponse);
+        response.body(jsonResponse);
         return response.body();
     }
 
@@ -99,6 +173,16 @@ public class BandejaDeMensajesRestController {
         }
     }
 
+    private boolean configuracionExistosa(ConfigSchedulerRequest configSchedulerRequest,Scheduler scheduler) {
+        if(configSchedulerRequest.dias.isEmpty() || configSchedulerRequest.horaInicio == null || configSchedulerRequest.minutoInicio == null){
+            return false;
+        }
+        scheduler.setHoraInicio(configSchedulerRequest.horaInicio);
+        scheduler.setMinutoInicio(configSchedulerRequest.minutoInicio);
+        scheduler.setDias(configSchedulerRequest.dias);
+        return true;
+    }
+
     private class BandejaResponse {
         @Expose
         public int code;
@@ -108,5 +192,17 @@ public class BandejaDeMensajesRestController {
         public int usuarioId;
         @Expose
         public List<Mensaje> mensajes;
+    }
+
+    private class ConfigResponse {
+        @Expose
+        public int code;
+        @Expose
+        public String message;
+        @Expose
+        public Scheduler scheduler;
+    }
+    private class MensajeId {
+        public Integer id;
     }
 }

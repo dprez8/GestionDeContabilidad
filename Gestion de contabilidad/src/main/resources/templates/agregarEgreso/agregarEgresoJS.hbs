@@ -3,7 +3,7 @@ const agregarEgreso = {
     data() {
         return {
             egreso: {
-                fecha: null,
+                fechaOperacion: null,
                 proveedor: null,
                 medioDePago: {
                     id: null,
@@ -19,7 +19,9 @@ const agregarEgreso = {
                 },
                 items: []
             },
-            falloCargarEgreso: false,
+            idEgreso: null,
+            falloInput: false,
+            falloCarga: false,
             proveedoresSelect: [],
             mediosDePagoSelect: [],
             mediosDePagoType: {
@@ -40,11 +42,13 @@ const agregarEgreso = {
             ],
             proveedoresLoading: false,
             mediosDePagoLoading: false,
+            egresoLoading: false,
 
             suscribirse: false,
             proveedorAAgregar: null,
-            categoriasAAsociar: [],
             presupuestosAAgregar: [],
+            categoriasAAsociar: [],
+            ingresoAAsociar: null,
             presupuestosAAgregarCampos: [
                 {
                     key: 'fechaVigente',
@@ -80,15 +84,12 @@ const agregarEgreso = {
         convertDate: convertDate,
         softReloadPage: softReloadPage,
         confirmar() {
-            if (this.proveedorAAgregar != null) {
-                // Hay que agregar un proveedor antes de agregar el egreso
-                console.log("POST '/api/proveedor'");
-                console.log(JSON.stringify(this.proveedorAAgregar, null, 4));
-            }
 
-            // Creo el egreso
+            this.egresoLoading = true;
+            
+            // Verifico que los input sean correctos
             var todosLosCamposRellenos = 
-                this.egreso.fecha                               &&
+                this.egreso.fechaOperacion                      &&
                 this.egreso.proveedor                           &&
                 this.egreso.medioDePago.id                      &&
                 this.egreso.medioDePago.dato                    &&
@@ -98,11 +99,57 @@ const agregarEgreso = {
                 this.egreso.documentoComercial.fechaDeEntrega   &&
                 this.egreso.items.length > 1
 
-            this.falloCargarEgreso = !todosLosCamposRellenos;
-            if(this.falloCargarEgreso) {
+            if(this.ingresoAAsociar != null) {
+                todosLosCamposRellenos = this.precioTotal() <= this.ingresoAAsociar.montoTotal
+            }
+            this.falloInput = !todosLosCamposRellenos;
+            if(this.falloInput) {
+                this.egresoLoading = false;
                 return;
             }
+            
+            // Comienzo cargando el proveedor
+            this.crearProveedorAPI();
 
+        },
+        crearProveedorAPI() {
+            if (this.proveedorAAgregar != null) {
+                // Hay que agregar un proveedor antes de agregar el egreso
+                console.log("POST '/api/proveedor'");
+                console.log(JSON.stringify(this.proveedorAAgregar, null, 4));
+
+                $.ajax({
+                    url: "http://{{ ip }}/api/proveedor",
+                    type: "POST",
+                    dataType: "json",
+                    context: this,
+                    data: JSON.stringify(this.proveedorAAgregar),
+                    success(response) {
+                        if(response.code == 403) {
+                            app.showSessionEndedAlert(false);
+                        } else if(response.code == 400) {
+                            // Fallo la carga de proveedor
+                            this.falloCarga = true;
+                        } else if(response.code == 200) {
+                            // El proveedor se creo exitosamente
+                            this.egreso.proveedor = response.id;
+                            // Creo el egreso
+                            this.crearEgresoAPI();
+                        } else {
+                            // Fallo la carga de proveedor (default)
+                            this.falloCarga = true;
+                            console.log(response)
+                        }
+                    },
+                    error() {
+                        this.falloCarga = true;
+                    }
+                });
+            } else {
+                this.crearEgresoAPI()
+            }
+        },
+        crearEgresoAPI() {
             var egresoToSend = JSON.parse(JSON.stringify(this.egreso));
             egresoToSend.items.pop();
 
@@ -119,32 +166,37 @@ const agregarEgreso = {
                     if(response.code == 403) {
                         app.showSessionEndedAlert(false);
                     } else if(response.code == 400) {
-                        this.falloCargarEgreso = true;
+                        // Fallo la carga de egreso
+                        this.falloCarga = true;
                     } else if(response.code == 200) {
-                        this.$router.push('/operaciones/egreso');
+                        // El egreso se creo exitosamente
+                        this.idEgreso = response.id;
+                        // Creo los presupuestos
+                        console.log("Cree el egreso: "+this.idEgreso);
+                        this.crearPresupuestosAPI();
+                    } else {
+                        // Fallo la carga de egreso (default)
+                        this.falloCarga = true;
+                        console.log(response)
                     }
-                    console.log(response);
                 },
-                complete() {
-                    console.log("termino");
+                error() {
+                    this.falloCarga = true;
                 }
             });
-
-            // Obtengo la id del egreso que se creó
-
-            if (this.categoriasAAsociar.length) {
-                // Hay que crear el egreso y luego asociarlo a estas categorias
-                console.log("POST 'nose xd'");
-                console.log(JSON.stringify(this.categoriasAAsociar, null, 4));
-            }
-
-            if (this.presupuestosAAgregar.length) {
-                // Si se mandaron presupuestos hay que crearlos asociandolos a este presupuesto
-                this.presupuestosAAgregar.forEach(presupuesto => {
-                    console.log("POST '/api/presupuesto'");
-                    console.log(JSON.stringify(presupuesto, null, 4));
-                });
-            }
+        },
+        crearPresupuestosAPI() {
+            // Proximamente
+            this.asociarCategoriasAPI();
+        },
+        asociarCategoriasAPI() {
+            // Proximamente
+            this.asociarIngresoAPI();
+        },
+        asociarIngresoAPI() {
+            // Proximamente
+            // FIN
+            this.$router.push('/operaciones/egreso');
         },
         cargarProveedoresAPI() {
             this.proveedoresLoading = true;
@@ -153,6 +205,7 @@ const agregarEgreso = {
                 type: "GET",
                 dataType: "json",
                 context: this,
+                cache: false,
                 success(response) {
                     if(response.code == 403) {
                         app.showSessionEndedAlert(true);
@@ -165,7 +218,6 @@ const agregarEgreso = {
                     }
                 },
                 error(response) {
-                    console.log("oof");
                     console.log(response);
                 },
                 complete() {
@@ -187,6 +239,7 @@ const agregarEgreso = {
                 type: "GET",
                 dataType: "json",
                 context: this,
+                cache: false,
                 success(response) {
                     if(response.code == 403) {
                         app.showSessionEndedAlert(true);
@@ -218,6 +271,7 @@ const agregarEgreso = {
         actualizarItems(items) {
             this.egreso.items = items;
         },
+        // Proveedores
         confirmarNuevoProveedor(data) {
             this.$bvModal.hide('modal-agregar-proveedor');
             console.log(data);
@@ -228,15 +282,7 @@ const agregarEgreso = {
         cancelarNuevoProveedor() {
             this.$bvModal.hide('modal-agregar-proveedor');
         },
-        confirmarAsociarCategorias(data) {
-            this.$bvModal.hide('modal-asociar-categoria');
-            console.log(data);
-
-            this.categoriasAAsociar = data;
-        },
-        cancelarAsociarCategorias() {
-            this.$bvModal.hide('modal-asociar-categoria');
-        },
+        // Presupuestos
         confirmarNuevoPresupuesto(data) {
             this.$bvModal.hide('modal-agregar-presupuesto');
             console.log(data);
@@ -248,7 +294,39 @@ const agregarEgreso = {
         },
         removerPresupuesto(index) {
             this.presupuestosAAgregar.splice(index, 1);
-        } 
+        },
+        // Categorias
+        confirmarAsociarCategorias(data) {
+            this.$bvModal.hide('modal-asociar-categoria');
+            console.log(data);
+
+            this.categoriasAAsociar = data;
+        },
+        cancelarAsociarCategorias() {
+            this.$bvModal.hide('modal-asociar-categoria');
+        },
+        // Ingreso
+        confirmarAsociarIngreso(data) {
+            this.$bvModal.hide('modal-asociar-ingreso');
+            console.log(data);
+
+            this.ingresoAAsociar = data;
+        },
+        cancelarAsociarIngreso() {
+            this.$bvModal.hide('modal-asociar-ingreso');
+        },
+        
+        precioTotal() {
+            var precio = 0;
+            this.egreso.items.forEach(item => {
+                var itemPrecio = parseFloat(item.precio);
+                var itemCantidad = parseInt(item.cantidad);
+
+                if(!isNaN(itemPrecio) && !isNaN(itemCantidad))
+                    precio += itemPrecio * itemCantidad;
+            });
+            return precio;
+        }
     },
     mounted() {
         this.cargarProveedoresAPI();

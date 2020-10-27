@@ -19,12 +19,12 @@
             <span class="mr-2"><strong>Fecha Operación</strong></span>
         </div>
         <div class="col">
-            <b-collapse :visible="(!egreso.fecha && falloCargarEgreso)">
+            <b-collapse :visible="(!egreso.fechaOperacion && falloInput)">
                 <b-badge variant="danger">Ingrese la fecha de la operacion</b-badge>
             </b-collapse>
             <b-form-datepicker placeholder="Seleccione fecha de la Operación" class="mb-2"
-                :state="(!egreso.fecha && falloCargarEgreso) ? false : null"
-                v-model="egreso.fecha"
+                :state="(!egreso.fechaOperacion && falloInput) ? false : null"
+                v-model="egreso.fechaOperacion"
             ></b-form-datepicker>
         </div>
         <div class="col-lg-1 col-xl-3"></div>
@@ -35,13 +35,13 @@
         </div>
         <div class="col d-flex align-items-end">
             <div class="w-100">
-                <b-collapse :visible="(!egreso.proveedor && falloCargarEgreso)">
+                <b-collapse :visible="(!egreso.proveedor && falloInput)">
                     <b-badge variant="danger">Seleccione un proveedor</b-badge>
                 </b-collapse>
                 <b-overlay spinner-variant="primary" :show="proveedoresLoading" rounded="sm">
                     <b-form-select
                         :options="proveedoresSelect" 
-                        :state="(!egreso.proveedor && falloCargarEgreso) ? false : null"
+                        :state="(!egreso.proveedor && falloInput) ? false : null"
                         v-model="egreso.proveedor">
                         <template #first>
                             <b-form-select-option :value="null" disabled>-- Selecciona un Proveedor --</b-form-select-option>
@@ -67,13 +67,13 @@
         </div>
         <div class="col d-flex align-items-end">
             <div class="w-100">
-                <b-collapse :visible="(!egreso.medioDePago.id && falloCargarEgreso)">
+                <b-collapse :visible="(!egreso.medioDePago.id && falloInput)">
                     <b-badge variant="danger">Seleccione un medio de pago</b-badge>
                 </b-collapse>
                 <b-overlay spinner-variant="primary" :show="mediosDePagoLoading" rounded="sm">
                     <b-form-select 
                         :options="mediosDePagoSelect"
-                        :state="(!egreso.medioDePago.id && falloCargarEgreso) ? false : null"
+                        :state="(!egreso.medioDePago.id && falloInput) ? false : null"
                         v-model="egreso.medioDePago.id">
                         <template #first>
                             <b-form-select-option :value="null" disabled>-- Seleccionar un Medio de Pago --</b-form-select-option>
@@ -84,11 +84,11 @@
         </div>
         <div class="col d-flex align-items-end">
             <div class="w-100">
-                <b-collapse :visible="(!egreso.medioDePago.dato && falloCargarEgreso)">
+                <b-collapse :visible="(!egreso.medioDePago.dato && falloInput)">
                     <b-badge variant="danger">Ingrese el número de pago</b-badge>
                 </b-collapse>
                 <b-form-input placeholder="Ingrese número de pago" 
-                    :state="(!egreso.medioDePago.dato && falloCargarEgreso) ? false : null"
+                    :state="(!egreso.medioDePago.dato && falloInput) ? false : null"
                     v-model="egreso.medioDePago.dato"
                 ></b-form-input>
             </div>
@@ -106,12 +106,12 @@
                         <span class="mr-2"><strong>Tipo</strong></span>
                     </div>
                     <div class="col">
-                        <b-collapse :visible="(!egreso.documentoComercial.tipo && falloCargarEgreso)">
+                        <b-collapse :visible="(!egreso.documentoComercial.tipo && falloInput)">
                             <b-badge variant="danger">Seleccione un tipo de documento</b-badge>
                         </b-collapse>
                         <b-form-select 
                             :options="tipoDocumentoSelect"
-                            :state="(!egreso.documentoComercial.tipo && falloCargarEgreso) ? false : null"
+                            :state="(!egreso.documentoComercial.tipo && falloInput) ? false : null"
                             v-model="egreso.documentoComercial.tipo">
                             <template #first>
                                 <b-form-select-option :value="null" disabled>-- Seleccionar un Tipo de Documento --</b-form-select-option>
@@ -124,11 +124,11 @@
                         <span class="mr-2"><strong>Número documento</strong></span>
                     </div>
                     <div class="col">
-                        <b-collapse :visible="(!egreso.documentoComercial.numeroDocumento && falloCargarEgreso)">
+                        <b-collapse :visible="(!egreso.documentoComercial.numeroDocumento && falloInput)">
                             <b-badge variant="danger">Ingrese el número de documento</b-badge>
                         </b-collapse>
                         <b-form-input placeholder="Ingrese número de documento" 
-                            :state="(!egreso.documentoComercial.numeroDocumento && falloCargarEgreso) ? false : null"
+                            :state="(!egreso.documentoComercial.numeroDocumento && falloInput) ? false : null"
                             v-model="egreso.documentoComercial.numeroDocumento"
                         ></b-form-input>
                     </div>
@@ -138,11 +138,11 @@
                         <span class="mr-2"><strong>Fecha de Pedido</strong></span>
                     </div>
                     <div class="col">
-                        <b-collapse :visible="(!egreso.documentoComercial.fechaDePedido && falloCargarEgreso)">
+                        <b-collapse :visible="(!egreso.documentoComercial.fechaDePedido && falloInput)">
                             <b-badge variant="danger">Ingrese la fecha de pedido</b-badge>
                         </b-collapse>
                         <b-form-datepicker placeholder="Seleccione fecha de Pedido" class="mb-2"
-                            :state="(!egreso.documentoComercial.fechaDePedido && falloCargarEgreso) ? false : null"
+                            :state="(!egreso.documentoComercial.fechaDePedido && falloInput) ? false : null"
                             v-model="egreso.documentoComercial.fechaDePedido"></b-form-datepicker>
                     </div>
                 </div>
@@ -151,11 +151,11 @@
                         <span class="mr-2"><strong>Fecha de Entrega</strong></span>
                     </div>
                     <div class="col">
-                        <b-collapse :visible="(!egreso.documentoComercial.fechaDeEntrega && falloCargarEgreso)">
+                        <b-collapse :visible="(!egreso.documentoComercial.fechaDeEntrega && falloInput)">
                             <b-badge variant="danger">Ingrese la fecha de entrega</b-badge>
                         </b-collapse>
                         <b-form-datepicker placeholder="Seleccione fecha de Entrega" class="mb-2" 
-                        :state="(!egreso.documentoComercial.fechaDeEntrega && falloCargarEgreso) ? false : null"
+                        :state="(!egreso.documentoComercial.fechaDeEntrega && falloInput) ? false : null"
                         v-model="egreso.documentoComercial.fechaDeEntrega"></b-form-datepicker>
                     </div>
                 </div>
@@ -188,7 +188,7 @@
             <span class="mr-2"><strong>Items</strong></span>
         </div>
         <div class="col">
-            <b-collapse :visible="(!egreso.items.length && falloCargarEgreso)">
+            <b-collapse :visible="(!egreso.items.length && falloInput)">
                 <b-badge variant="danger">Ingrese por lo menos un item</b-badge>
             </b-collapse>
             <tabla-items
@@ -234,6 +234,13 @@
                 <b-button v-b-modal.modal-asociar-ingreso>Asociar a Ingreso</b-button>
                 <b-button v-b-modal.modal-asociar-categoria>Asociar a Categorías</b-button>
             </b-button-group>
+            <div class="pt-2" v-if="ingresoAAsociar">
+                <b-collapse v-if="ingresoAAsociar" :visible="precioTotal() > ingresoAAsociar.montoTotal">
+                    <b-badge variant="danger">El egreso supera el monto del ingreso</b-badge>
+                </b-collapse>
+                <span>El egreso se asociará al siguiente ingreso: </span>
+                <b-badge>\{{ ingresoAAsociar.descripcion + ' - $' + ingresoAAsociar.montoTotal}}</b-badge>
+            </div>
             <div class="pt-2" v-if="categoriasAAsociar.length">
                 <span>El egreso se asociará a las siguientes categorías: </span>
                 <template
@@ -261,13 +268,19 @@
 
         </div>
         <div class="col">
-            <b-collapse :visible="(falloCargarEgreso)">
-                <b-badge variant="danger">Hay campos que faltan completar</b-badge>
+            <b-collapse :visible="(falloInput)">
+                <b-badge variant="danger">Hay problemas en los campos</b-badge>
             </b-collapse>
-            <b-button-group>
-                <b-button variant="primary" @click="confirmar">Confirmar</b-button>
-                <b-button variant="outline-dark" to="/operaciones/egreso">Cancelar</b-button>
-            </b-button-group>
+            <b-collapse :visible="(falloCarga)">
+                <b-badge variant="danger">Hubo un problema al cargar el egreso</b-badge>
+            </b-collapse>
+            
+            <b-overlay spinner-variant="primary" :show="egresoLoading && !falloCarga" rounded="sm">
+                <b-button-group>
+                    <b-button variant="primary" @click="confirmar">Confirmar</b-button>
+                    <b-button variant="outline-dark" to="/operaciones/egreso">Cancelar</b-button>
+                </b-button-group>
+            </b-overlay>
         </div>
         <div class="col-lg-1 col-xl-3"></div>
     </div>
@@ -281,8 +294,8 @@
     
     <b-modal id="modal-asociar-ingreso" hide-footer scrollable centered title="Asociar a Ingreso">
         <asociar-ingreso
-            v-bind:confirmarAccion="confirmarAsociarCategorias"
-            v-bind:cancelarAccion="cancelarAsociarCategorias"
+            v-bind:confirmarAccion="confirmarAsociarIngreso"
+            v-bind:cancelarAccion="cancelarAsociarIngreso"
         ></asociar-ingreso>
     </b-modal>
 
