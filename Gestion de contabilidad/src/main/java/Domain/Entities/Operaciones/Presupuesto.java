@@ -46,9 +46,8 @@ public class Presupuesto extends EntidadPersistente {
     @Column(name="valor_total")
     private Double valorTotal;
 
-    protected Presupuesto(){
-    }
 
+    public Presupuesto(){}
     public Presupuesto(int operacionNumero, Egreso unEgreso){
         this.operacionNumero = operacionNumero;
         this.egresoAsociado = unEgreso;
