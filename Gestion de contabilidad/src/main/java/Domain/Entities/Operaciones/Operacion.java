@@ -19,6 +19,7 @@ public abstract class Operacion {
 	@Column(name="id")
 	private int id;
 
+	@Expose
 	@Column(name="fecha_operacion", columnDefinition = "DATE")
 	protected LocalDate fechaOperacion;
 

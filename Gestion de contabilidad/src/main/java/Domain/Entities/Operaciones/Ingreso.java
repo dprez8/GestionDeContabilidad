@@ -16,9 +16,11 @@ import java.util.stream.Collectors;
 @Table(name="ingreso")
 public class Ingreso extends Operacion {
 
+    @Expose
     @Column
     private String descripcion;
 
+    @Expose
     @Column
     private double montoTotal;
 

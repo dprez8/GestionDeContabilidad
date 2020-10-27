@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import javax.persistence.NoResultException;
 
+import Domain.Entities.Usuarios.Estandar;
 import com.google.gson.Gson;
 
 import Domain.Controllers.MedioDePagoController.MedioDePagoRespuesta;
@@ -114,14 +115,17 @@ public CategoriaDato mapCategoria(CategoriaOperacion categoria){
 	}
 	
 	public String asociarCategoriaEgreso(Request request, Response response){
-		
-	 	Gson gson = new Gson();
+		response.type("application/json");
+		Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
+		if(usuario == null) {
+			return response.body();
+		}
+		Gson gson = new Gson();
         Respuesta respuesta= new Respuesta();        
-        CategoriaRequest categoriaRequest= new CategoriaRequest();
+        CategoriaRequest categoriaRequest;
         categoriaRequest = gson.fromJson(request.body(),CategoriaRequest.class);
-   	 	this.repoCategoria = new Repositorio<CategoriaOperacion>(new DaoHibernate<CategoriaOperacion>(CategoriaOperacion.class));
-   	 	
-   	 	
+   	 	this.repoCategoria = new Repositorio<>(new DaoHibernate<>(CategoriaOperacion.class));
+
    	 	try {
 	       Egreso egreso= this.repoEgreso.buscar(categoriaRequest.id);
 	       
@@ -150,8 +154,7 @@ public CategoriaDato mapCategoria(CategoriaOperacion categoria){
        
        
         String jsonCategorias = gson.toJson(respuesta);
-       
-        response.type("application/json");
+
         response.body(jsonCategorias);
 
         return response.body();
