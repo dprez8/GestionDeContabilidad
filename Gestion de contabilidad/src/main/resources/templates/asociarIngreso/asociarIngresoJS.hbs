@@ -6,12 +6,48 @@ const asociarIngreso = {
     },
     data() {
         return {
-            ingresosSelect: [
-                {value: 1, text: "Ingreso 1"},
-                {value: 2, text: "Ingreso 2"},
-                {value: 3, text: "Ingreso 3"},
-            ],
-            ingresoSelected: null
+            ingresosSelect: [],
+            ingresoSelected: null,
+            ingresosLoading: false
         }
+    },
+    methods: {
+        cargarIngresosAPI(){            
+            this.ingresosLoading = true;
+            $.ajax({
+                url: "http://{{ ip }}/api/operaciones/ingresos",
+                type: "GET",
+                dataType: "json",
+                context: this,
+                success(response) {
+                    if(response.code == 403) {
+                        app.showSessionEndedAlert(true);
+                    } else if(response.code == 200) {
+                        console.log(response);
+                        this.ingresosSelect = response.ingresos.map(this.ingresosAPIConverter);
+                    }
+                },
+                error(response) {
+                    console.log("error");
+                    console.log(response);
+                },
+                complete() {
+                    this.ingresosLoading = false;
+                }
+            });
+        },
+        ingresosAPIConverter(ingresoAPI) {
+            return {
+                value: {
+                    id: ingresoAPI.id, 
+                    montoTotal: ingresoAPI.montoTotal, 
+                    descripcion: ingresoAPI.descripcion
+                },
+                text: ingresoAPI.descripcion + ' - $' + ingresoAPI.montoTotal
+            }
+        }
+    },
+    mounted() {
+        this.cargarIngresosAPI();
     }
 }

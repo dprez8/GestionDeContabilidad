@@ -29,15 +29,14 @@ const operaciones = {
     methods: {
         convertDate: convertDate,
         cargarEgresosAPI(){
-            if(!this.egresoOpened()) 
-                return;
-
             this.egresosLoading = true;
+            
             $.ajax({
                 url: "http://{{ ip }}/api/operaciones/egresos",
                 type: "GET",
                 dataType: "json",
                 context: this,
+                cache: false,
                 success(response) {
                     if(response.code == 403) {
                         app.showSessionEndedAlert(true);
@@ -60,7 +59,7 @@ const operaciones = {
                 id: egresoAPI.id,
                 name: 'Egreso ' + egresoAPI.id,
                 validado: egresoAPI.validado,
-                valorTotal: egresoAPI.valorTotal,
+                valorTotal: egresoAPI.montoTotal,
                 fechaOperacion: convertDate(egresoAPI.fechaOperacion),
                 _showDetails: true,
                 showEgreso: false
@@ -92,15 +91,13 @@ const operaciones = {
         },
 
         cargarIngresosAPI(){
-            if(!this.ingresoOpened()) 
-                return;
-            
             this.ingresosLoading = true;
             $.ajax({
                 url: "http://{{ ip }}/api/operaciones/ingresos",
                 type: "GET",
                 dataType: "json",
                 context: this,
+                cache: false,
                 success(response) {
                     if(response.code == 403) {
                         app.showSessionEndedAlert(true);
@@ -147,7 +144,10 @@ const operaciones = {
         $route(to, from) {
             if(this.$route.name == 'egresos')
                 this.cargarEgresosAPI();
-            this.cargarIngresosAPI();
+            
+            if(this.$route.name == 'ingresos')
+                this.cargarIngresosAPI();
+
             this.seleccionarEgreso();
         },
         egresosLoading(to, from) {

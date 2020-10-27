@@ -24,7 +24,7 @@
     <transition name="fade" mode="out-in">
         <div class="border border-top-0" v-if="egresoOpened()" key="egresos">
             <b-overlay variant="primary" spinner-variant="light" :show="egresosLoading" rounded="sm" class="border-bottom">
-                <b-table :tbody-tr-class="rowStyle" class="mb-0 border-0 border-bottom table-row-pointer" head-variant="dark"
+                <b-table show-empty :tbody-tr-class="rowStyle" class="mb-0 border-0 border-bottom table-row-pointer" head-variant="dark"
                     :fields="campos_egresos" 
                     :items="egresos"
                     :tbody-transition-props="transProps"
@@ -35,7 +35,7 @@
                         <b-badge v-else variant="warning">Sin Validar</b-badge>
                     </template>
 
-                    <template #cell(total)="data">
+                    <template #cell(valorTotal)="data">
                         <span>\{{ "$" + data.item.valorTotal }}</span>
                     </template>
                     <template #row-details="data">
@@ -50,6 +50,10 @@
                             </transition>
                         </b-collapse>
                     </template>
+
+                    <template #empty>
+                        <h4>No hay egresos para mostrar</h4>
+                    </template>
                 </b-table>
             </b-overlay>
             <b-button class="m-2" variant="outline-primary" to="/operaciones/egreso/agregar">
@@ -59,7 +63,7 @@
         </div>
         <div class="border border-top-0" v-else-if="ingresoOpened()" key="ingresos">
             <b-overlay variant="primary" spinner-variant="light" :show="ingresosLoading" rounded="sm" class="border-bottom">
-                <b-table :tbody-tr-class="rowStyle" class="mb-0 border-0 border-bottom" head-variant="dark" :fields="campos_ingresos"
+                <b-table show-empty :tbody-tr-class="rowStyle" class="mb-0 border-0 border-bottom" head-variant="dark" :fields="campos_ingresos"
                     :items="ingresos" :tbody-transition-props="transProps">
                     <template #cell(descripcion)="data">
                         <b-collapse :id="'ingreso-descripcion'+data.index" :visible="true">
@@ -71,6 +75,10 @@
                     </template>
                     <template #cell(montoTotal)="data">
                         <span>\{{ "$" + data.item.montoTotal }}</span>
+                    </template>
+
+                    <template #empty>
+                        <h4>No hay ingresos para mostrar</h4>
                     </template>
                 </b-table>
                 <b-button class="m-2" variant="outline-primary" to="/operaciones/ingreso/agregar">
