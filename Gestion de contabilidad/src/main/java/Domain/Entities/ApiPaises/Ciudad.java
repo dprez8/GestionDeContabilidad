@@ -1,6 +1,7 @@
 package Domain.Entities.ApiPaises;
 
 import Domain.Entities.EntidadPersistente.EntidadPersistente;
+import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
 import java.util.List;
@@ -18,6 +19,7 @@ public class Ciudad{
 	@Column(name="ciudad_code")
 	public String id;
 
+	@Expose
 	@Column
 	public String name;
 

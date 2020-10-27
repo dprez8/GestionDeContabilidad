@@ -7,6 +7,7 @@ import Domain.Entities.ApiPaises.Ciudad;
 import Domain.Entities.ApiPaises.Pais;
 import Domain.Entities.ApiPaises.Provincia;
 import Domain.Entities.Usuarios.Estandar;
+import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
 
@@ -14,12 +15,15 @@ import javax.persistence.*;
 @Table(name = "entidad_juridica")
 @PrimaryKeyJoinColumn(name = "id")
 public class EntidadJuridica extends Organizacion {
+	@Expose
 	@Column(name = "razon_social")
     private String razonSocial;
 
+	@Expose
 	@Column(name = "cuit")
     private int cuit;
 
+	@Expose
 	@Column(name = "codigo_igj")
     private int codigoDeInscripcionDefinitivaEnIGJ;
 
@@ -30,27 +34,34 @@ public class EntidadJuridica extends Organizacion {
 	@JoinColumn(name = "tipo_entidad_id")
     private CategoriaEntidadJuridica tipoEntidadJuridica;
 
+	@Expose
 	@ManyToOne
 	@JoinColumn(name="pais_id", referencedColumnName = "pais_id")
     private Pais pais;
 
+	@Expose
 	@ManyToOne
 	@JoinColumn(name="provincia_id", referencedColumnName = "provincia_id")
 	private Provincia provincia;
 
+	@Expose
 	@ManyToOne
 	@JoinColumn(name="ciudad_id", referencedColumnName = "ciudad_id")
 	private Ciudad ciudad;
 
+	@Expose
 	@Column(name = "calle")
 	private String calle;
 
+	@Expose
 	@Column(name = "altura")
 	private int altura;
 
+	@Expose
 	@Column(name = "piso")
 	private String piso;
 
+	@Expose
 	@Column(name = "zipcode")
 	private int zipcode;
 

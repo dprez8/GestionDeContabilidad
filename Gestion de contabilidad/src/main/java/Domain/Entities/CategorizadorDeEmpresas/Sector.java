@@ -1,6 +1,7 @@
 package Domain.Entities.CategorizadorDeEmpresas;
 
 import Domain.Entities.Organizacion.Empresa;
+import com.google.gson.annotations.Expose;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -13,6 +14,8 @@ public class Sector {
 	@GeneratedValue
 	@Column(name="sector_id")
 	private int sectorId;
+
+    @Expose
 	@Column
     private String nombre;
 
