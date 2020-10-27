@@ -3,12 +3,9 @@ const configuracion = {
     data() {
         return {
             scheduler: {
-                horaInicio: 2,
-                minutoInicio: 2,
-                dias: [
-                    1,
-                    2
-                ]
+                horaInicio: 0,
+                minutoInicio: 0,
+                dias: []
             },
             diasOptions: [
                 {value: 1, text: "Lu"},
@@ -18,11 +15,14 @@ const configuracion = {
                 {value: 5, text: "Vi"},
                 {value: 6, text: "Sa"},
                 {value: 7, text: "Do"}
-            ]
+            ],
+            loading: false
         }
     },
     methods: {
         cargarConfiguracionAPI() {
+            this.loading = true;
+
             var request = {
                 url: "http://{{ ip }}/api/bandeja/configuracion",
                 type: "GET",
@@ -46,12 +46,14 @@ const configuracion = {
                     console.log(data);
                 },
                 complete() {
-
+                    this.loading = false;
                 }
             };
             $.ajax(request);
         },
         guardarConfiguracionAPI() {
+            this.loading = true;
+
             var request = {
                 url: "http://{{ ip }}/api/bandeja/configurar",
                 type: "POST",
@@ -75,7 +77,7 @@ const configuracion = {
                     console.log(data);
                 },
                 complete() {
-
+                    this.loading = false;
                 }
             };
             $.ajax(request);

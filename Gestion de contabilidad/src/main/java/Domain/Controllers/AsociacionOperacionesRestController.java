@@ -37,11 +37,11 @@ public class AsociacionOperacionesRestController {
         AsociacionRequest asociacionRequest = gson.fromJson(request.body(),AsociacionRequest.class);
         Ingreso ingreso;
         Egreso egreso;
-        try {
-             egreso   = this.repoEgresos.buscar(asociacionRequest.egresoId);
-             ingreso  = this.repoIngresos.buscar(asociacionRequest.ingresoId);
-        }
-        catch (NullPointerException ex) {
+
+        ingreso  = this.repoIngresos.buscar(asociacionRequest.ingresoId);
+        egreso   = this.repoEgresos.buscar(asociacionRequest.egresoId);
+
+        if(egreso == null || ingreso == null) {
             this.respuesta.setCode(404);
             this.respuesta.setMessage("Uno de los recursos no existe");
             this.jsonRespose = gson.toJson(this.respuesta);
@@ -50,7 +50,7 @@ public class AsociacionOperacionesRestController {
 
         if(!laAsociacionEsPosible(egreso.getValorTotal(),ingreso.montoSobrante())) {
             this.respuesta.setCode(400);
-            this.respuesta.setMessage("No es posible asociar el el egreso al ingreso");
+            this.respuesta.setMessage("No es posible asociar el egreso al ingreso");
             this.jsonRespose = gson.toJson(this.respuesta);
             return jsonRespose;
         }

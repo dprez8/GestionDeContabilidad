@@ -36,6 +36,7 @@
                 data: {
                     user: "",
                     pass: "",
+                    loginData: null,
                     loginState: null,
                     userState: null,
                     passState: null,
@@ -70,6 +71,7 @@
                                 }),
                                 success: function(data) {
                                     if(data.code == 200) {
+                                        this.loginData = data.organizacion;
                                         this.loginSuccess();
                                     }
                                     else {
@@ -89,10 +91,34 @@
                     loginSuccess() {
                         this.userState = true;
                         this.passState = true;
+
+                        document.cookie = `username=${this.user}; path=/`;
+                        document.cookie = `organizacion=${this.loginData.razonSocial}; path=/`;
+
                         window.location.href = "http://{{ ip }}/";
                     }
+                },
+                mounted() {
+                    if(getCookie("JSESSIONID"))
+                        window.location.href = "http://{{ ip }}/";
                 }
             });
+
+            function getCookie(cname) {
+                var name = cname + "=";
+                var decodedCookie = decodeURIComponent(document.cookie);
+                var ca = decodedCookie.split(';');
+                for(var i = 0; i <ca.length; i++) {
+                    var c = ca[i];
+                    while (c.charAt(0) == ' ') {
+                        c = c.substring(1);
+                    }
+                    if (c.indexOf(name) == 0) {
+                        return c.substring(name.length, c.length);
+                    }
+                }
+                return "";
+            }
         </script>
     </body>
 </html>
