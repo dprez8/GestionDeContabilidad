@@ -8,6 +8,7 @@ import java.io.Serializable;
 public class CategoriaOperacion {
 
     @Id
+    @GeneratedValue
     @Column(name="categoria_id")
     private int categoriaId;
     @Column
@@ -16,7 +17,7 @@ public class CategoriaOperacion {
     @JoinColumn(name = "criterio_id")
     private CriterioOperacion criterio;
 
-    protected CategoriaOperacion() {
+    public CategoriaOperacion() {
 
     }
 

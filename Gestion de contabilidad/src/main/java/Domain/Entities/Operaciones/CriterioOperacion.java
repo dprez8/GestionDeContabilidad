@@ -9,6 +9,7 @@ import java.util.List;
 @Table(name="criterio_operacion")
 public class CriterioOperacion {
     @Id
+    @GeneratedValue
     @Column(name="criterio_id")
     private int criterioId;
     @Transient //@OneToMany(mappedBy = "criterio_id")
@@ -22,7 +23,7 @@ public class CriterioOperacion {
     @Column
     private String descripcion;
 
-    protected CriterioOperacion(){
+    public CriterioOperacion(){
     }
 
     public CriterioOperacion(String descrip){
