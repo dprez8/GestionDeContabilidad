@@ -39,7 +39,7 @@ public class PresupuestoRestController {
         this.repoTipoDocumento  = new Repositorio<>(new DaoHibernate<>(TipoDocumento.class));
         this.repoEgresos        = new Repositorio<>(new DaoHibernate<>(Egreso.class));
         this.repoProductos      = new Repositorio<>(new DaoHibernate<>(Producto.class));
-        this.repoItems          = new Repositorio<>(new DaoHibernate<>(ItemPresupuesto.class))
+        this.repoItems          = new Repositorio<>(new DaoHibernate<>(ItemPresupuesto.class));
         this.respuesta          = new Respuesta();
     }
 

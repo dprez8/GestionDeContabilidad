@@ -1,5 +1,7 @@
 package Domain.Entities.Operaciones;
 
+import Domain.Entities.EntidadPersistente.EntidadPersistente;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,17 +9,15 @@ import java.util.List;
 
 @Entity
 @Table(name="criterio_operacion")
-public class CriterioOperacion {
-    @Id
-    @Column(name="criterio_id")
-    private int criterioId;
+public class CriterioOperacion extends EntidadPersistente {
+
     @Transient //@OneToMany(mappedBy = "criterio_id")
     private List<CategoriaOperacion> categorias;
     @Transient
     private List<CriterioOperacion> criteriosHijo;
     @ManyToOne
     @OneToMany(mappedBy = "criterioPadre")
-    @JoinColumn(name="criterio_padre_id", referencedColumnName = "criterio_id")
+    @JoinColumn(name="criterio_padre_id", referencedColumnName = "id")
     private CriterioOperacion criterioPadre;
     @Column
     private String descripcion;
@@ -30,14 +30,6 @@ public class CriterioOperacion {
         categorias = new ArrayList<>();
         criteriosHijo = new ArrayList<>();
     }
-
-    public int getCriterioId() {
-		return criterioId;
-	}
-
-	public void setCriterioId(int criterioId) {
-		this.criterioId = criterioId;
-	}
 
 	public String getDescripcion() {
 		return descripcion;

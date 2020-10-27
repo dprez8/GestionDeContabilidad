@@ -42,9 +42,16 @@
             <div class="col p-0 pt-2">
                 <b-button-toolbar aria-label="Toolbar with button groups and dropdown menu">
                     <b-button-group size="sm">
-                        <b-button>Ver Ingreso asociado</b-button>
+                        <template v-if="egreso.ingresoAsociado">
+                            <b-button>Ver Ingreso asociado</b-button>
+                        </template>
+                        <template v-else>
+                            <b-button>Asociar a Ingreso</b-button>
+                        </template>
+                        <!--
                         <b-button>Ver Presupuestos asociados</b-button>
                         <b-button variant="danger">Suscribirse</b-button>
+                        -->
                     </b-button-group>
                 </b-button-toolbar>
             </div>

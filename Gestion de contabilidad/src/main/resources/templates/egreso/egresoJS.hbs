@@ -34,8 +34,6 @@ const egreso = {
             if(id == undefined)
                 return;
 
-            console.log(id);
-
             $.ajax({
                 url: "http://{{ ip }}/api/operaciones/egreso/"+id,
                 type: "GET",

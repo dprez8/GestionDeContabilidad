@@ -80,15 +80,15 @@ public class CategoriasEgresosController {
 		
 		List<CategoriaOperacion> categorias= new ArrayList<>();
 		
-		categorias = EntityManagerHelper.createQuery("SELECT c FROM CategoriaOperacion c WHERE c.criterio.criterioId= :code")
-		        .setParameter("code",criterio.getCriterioId()).getResultList();
+		categorias = EntityManagerHelper.createQuery("SELECT c FROM CategoriaOperacion c WHERE c.criterio.id= :code")
+		        .setParameter("code",criterio.getId()).getResultList();
       
 
-		criterioDato.id=criterio.getCriterioId();
+		criterioDato.id=criterio.getId();
 		criterioDato.name= criterio.getDescripcion();
 		
 		if(criterio.getCriterioPadre()!=null)
-			criterioDato.idCriterioPadre=criterio.getCriterioPadre().getCriterioId();
+			criterioDato.idCriterioPadre=criterio.getCriterioPadre().getId();
 		
 	if(!categorias.isEmpty()) {
 		List<CategoriaDato> categoriasAEnviar = categorias.stream().map(this::mapCategoria).collect(Collectors.toList());
@@ -102,7 +102,7 @@ public class CategoriasEgresosController {
 public CategoriaDato mapCategoria(CategoriaOperacion categoria){
 	CategoriaDato categoriaDato= new CategoriaDato();
 	
-	categoriaDato.id=categoria.getCategoriaId();
+	categoriaDato.id=categoria.getId();
 	categoriaDato.name=categoria.getDescripcion();
 	return categoriaDato;
 	}
