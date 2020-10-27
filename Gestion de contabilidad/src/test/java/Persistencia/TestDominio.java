@@ -97,15 +97,15 @@ public class TestDominio {
     @Test
     public void T3persistirAUnUsuario () throws contraseniaCorta, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, IOException {
         EntidadJuridica entidadJuridica = repoEntidadJuridica.buscar(1);
-        Estandar usuario = new Estandar(entidadJuridica, "usuario", "una_contrasenia_segura", "usuario@gmail.com");
+        Estandar usuario = new Estandar(entidadJuridica, "javier", "una_contrasenia_segura", "javier@gmail.com");
         repoUsuarios.agregar(usuario);
     }
 
     @Test
     public void T4recuperarAUnUsuario () {
-        Usuario elPepe = repoUsuarios.buscar(1);
-        Assert.assertEquals(Estandar.class,elPepe.getClass());
-        System.out.println("tipo_usuario: " + elPepe.getClass());
+        Usuario javier = repoUsuarios.buscar(1);
+        Assert.assertEquals(Estandar.class,javier.getClass());
+        System.out.println("tipo_usuario: " + javier.getClass());
     }
 
     @Test
