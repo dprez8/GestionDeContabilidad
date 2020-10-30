@@ -42,6 +42,24 @@ public class Sector {
     		categoriaSector.setSector(this);
         Collections.addAll(this.categoriasPorSector, categoria_sector);
     }
+
+	public int getSectorId() {
+		return sectorId;
+	}
+
+	public void setSectorId(int sectorId) {
+		this.sectorId = sectorId;
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+    
+    
     
     /*
     public void addCategoriaExistente(String key, Integer value) {
