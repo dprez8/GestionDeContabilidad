@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
-@Table(name="ingreso")
+@DiscriminatorValue("ingreso")
 public class Ingreso extends Operacion {
 
     @Expose

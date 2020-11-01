@@ -9,7 +9,8 @@ import com.google.gson.annotations.Expose;
 import javax.persistence.*;
 
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "tipo_operacion")
 public abstract class Operacion {
 
 	@Expose

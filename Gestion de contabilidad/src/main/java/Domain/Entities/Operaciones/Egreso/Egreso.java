@@ -21,7 +21,7 @@ import com.google.gson.annotations.Expose;
 import javax.persistence.*;
 
 @Entity
-@Table(name="egreso")
+@DiscriminatorValue("egreso")
 public class Egreso extends Operacion {
 
 	@Expose
