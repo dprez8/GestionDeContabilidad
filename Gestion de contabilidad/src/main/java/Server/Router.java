@@ -59,6 +59,7 @@ public class Router {
         EgresosRestController egresosRestController = new EgresosRestController();
         CategoriasEgresosController categoriasController = new CategoriasEgresosController();
         IngresosRestController ingresosRestController = new IngresosRestController();
+        AsociacionOperacionesRestController asociacionOperacionesRestController = new AsociacionOperacionesRestController();
         PresupuestoRestController presupuestoRestController = new PresupuestoRestController();
         
         Spark.post("/api/login",loginRestController::login);
@@ -80,6 +81,8 @@ public class Router {
         Spark.get("/api/operaciones/egreso/:egresoId", egresosRestController::mostrarEgreso);
         Spark.get("/api/operaciones/ingresos",ingresosRestController::listadoDeIngresos);
         Spark.post("/api/operaciones/ingreso",ingresosRestController::cargarNuevoIngreso);
+        Spark.post("/api/operaciones/asociarManualmente",asociacionOperacionesRestController::asociarManualmente);
+        Spark.post("/api/categorias/asociar",categoriasController::asociarCategoriaEgreso);
         Spark.post("/api/operaciones/presupuesto", presupuestoRestController::cargarNuevoPresupuesto);
     }
 
