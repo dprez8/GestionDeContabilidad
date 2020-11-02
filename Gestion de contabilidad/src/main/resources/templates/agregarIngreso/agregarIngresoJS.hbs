@@ -50,8 +50,12 @@ const agregarIngreso = {
                         this.falloCargarIngreso = true;
                     } else if(response.code == 200) {
                         this.$router.push('/operaciones/ingreso');
+                    } else {
+                        app.createCommonErrors(response);
                     }
-                    console.log(response);
+                },
+                error(data) {
+                    app.createCommonErrors(data);
                 },
                 complete() {
                     console.log("termino");

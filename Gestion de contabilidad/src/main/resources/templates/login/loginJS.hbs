@@ -1,0 +1,75 @@
+const login = {
+    template: `{{> login/loginHTML.hbs}}`,
+    data() {
+        return {
+            user: "",
+            pass: "",
+            loginData: null,
+            loginState: null,
+            userState: null,
+            passState: null,
+            loginLoading: false
+        }
+    },
+    methods: {
+        loginAttempt() {
+            this.loginState = null;
+            this.userState = null;
+            this.passState = null;
+
+            console.log(`Usuario: ${this.user}`);
+            console.log(`Contraseña: ${this.pass}`);
+
+            if(this.user == "") {
+                this.userState = false;
+            } 
+            if(this.pass == "") {
+                this.passState = false;
+            }
+
+            if(this.user != "" && this.pass != "") {
+                this.loginLoading = true;
+                $.ajax({
+                    url: "http://{{ ip }}/api/login",
+                    type: "POST",
+                    dataType: "json",
+                    context: this,
+                    data: JSON.stringify({
+                        username: this.user,
+                        password: this.pass
+                    }),
+                    success: function(data) {
+                        if(data.code == 200) {
+                            this.loginData = data.organizacion;
+                            this.loginSuccess();
+                        } else if (data.code == 404) {
+                            this.loginState = false;
+                        } else {
+                            app.createCommonErrors(data);
+                        }
+                    },
+                    error: function(data) {
+                        app.createCommonErrors(data);
+                    },
+                    complete: function() {
+                        this.loginLoading = false;
+                    }
+
+                });
+            }
+        },
+        loginSuccess() {
+            this.userState = true;
+            this.passState = true;
+
+            document.cookie = `username=${this.user}; path=/`;
+            document.cookie = `organizacion=${this.loginData.razonSocial}; path=/`;
+
+            this.$router.push("/");
+        }
+    },
+    mounted() {
+        if(getCookie("JSESSIONID"))
+            this.$router.push("/");
+    }
+}

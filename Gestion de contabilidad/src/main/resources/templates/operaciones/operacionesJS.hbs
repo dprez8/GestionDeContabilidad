@@ -43,11 +43,12 @@ const operaciones = {
                     } else if(response.code == 200) {
                         console.log(response);
                         this.egresos = response.egresos.map(this.egresosAPIConverter);
+                    } else {
+                        app.createCommonErrors(response);
                     }
                 },
-                error(response) {
-                    console.log("error");
-                    console.log(response);
+                error(data) {
+                    app.createCommonErrors(data);
                 },
                 complete() {
                     this.egresosLoading = false;
@@ -104,11 +105,12 @@ const operaciones = {
                     } else if(response.code == 200) {
                         console.log(response);
                         this.ingresos = response.ingresos.map(this.ingresosAPIConverter);
+                    } else {
+                        app.createCommonErrors(response);
                     }
                 },
-                error(response) {
-                    console.log("error");
-                    console.log(response);
+                error(data) {
+                    app.createCommonErrors(data);
                 },
                 complete() {
                     this.ingresosLoading = false;

@@ -117,11 +117,12 @@ const asociarCategoria = {
                     } else if(response.code == 200) {
                         this.criteriosAPI = response.criterios;
                         this.procesarCriterios();
+                    } else {
+                        app.createCommonErrors(data);
                     }
                 },
-                error(response) {
-                    console.log("error");
-                    console.log(response);
+                error(data) {
+                    app.createCommonErrors(data);
                 },
                 complete() {
                     this.categoriasLoading = false;

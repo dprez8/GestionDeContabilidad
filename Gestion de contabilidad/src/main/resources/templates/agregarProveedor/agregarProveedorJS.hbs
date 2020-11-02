@@ -77,9 +77,11 @@ const agregarProveedor = {
                             }
                         });
                     } else {
-                        // Fallo la carga de proveedor (default)
-                        console.log(response)
+                        app.createCommonErrors(response);
                     }
+                },
+                error(data) {
+                    app.createCommonErrors(data);
                 },
                 complete() {
                     this.loadingPaises = false;
@@ -112,9 +114,11 @@ const agregarProveedor = {
                             }
                         });
                     } else {
-                        // Fallo la carga de proveedor (default)
-                        console.log(response)
+                        app.createCommonErrors(response);
                     }
+                },
+                error(data) {
+                    app.createCommonErrors(data);
                 },
                 complete() {
                     this.provinciasLoading = false;
@@ -149,9 +153,11 @@ const agregarProveedor = {
                             }
                         });
                     } else {
-                        // Fallo la carga de proveedor (default)
-                        console.log(response)
+                        app.createCommonErrors(data);
                     }
+                },
+                error(data) {
+                    app.createCommonErrors(data);
                 },
                 complete() {
                     this.ciudadesLoading = false;

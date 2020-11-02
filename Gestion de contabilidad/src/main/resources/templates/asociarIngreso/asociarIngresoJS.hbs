@@ -25,11 +25,12 @@ const asociarIngreso = {
                     } else if(response.code == 200) {
                         console.log(response);
                         this.ingresosSelect = response.ingresos.map(this.ingresosAPIConverter);
+                    } else {
+                        app.createCommonErrors(response);
                     }
                 },
-                error(response) {
-                    console.log("error");
-                    console.log(response);
+                error(data) {
+                    app.createCommonErrors(data);
                 },
                 complete() {
                     this.ingresosLoading = false;

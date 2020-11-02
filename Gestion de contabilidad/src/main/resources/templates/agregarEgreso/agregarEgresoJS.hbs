@@ -139,11 +139,12 @@ const agregarEgreso = {
                         } else {
                             // Fallo la carga de proveedor (default)
                             this.falloCarga = true;
-                            console.log(response)
+                            app.createCommonErrors(response);
                         }
                     },
-                    error() {
+                    error(data) {
                         this.falloCarga = true;
+                        app.createCommonErrors(data);
                     }
                 });
             } else {
@@ -173,16 +174,16 @@ const agregarEgreso = {
                         // El egreso se creo exitosamente
                         this.idEgreso = response.id;
                         // Creo los presupuestos
-                        console.log("Cree el egreso: "+this.idEgreso);
                         this.crearPresupuestosAPI();
                     } else {
                         // Fallo la carga de egreso (default)
                         this.falloCarga = true;
-                        console.log(response)
+                        app.createCommonErrors(response);
                     }
                 },
-                error() {
+                error(data) {
                     this.falloCarga = true;
+                    app.createCommonErrors(data);
                 }
             });
         },
@@ -221,11 +222,12 @@ const agregarEgreso = {
                         } else {
                             // Fallo la asociacion de categorias (default)
                             this.falloCarga = true;
-                            console.log(response)
+                            app.createCommonErrors(response);
                         }
                     },
-                    error() {
+                    error(data) {
                         this.falloCarga = true;
+                        app.createCommonErrors(data);
                     }
                 });
             } else {
@@ -258,15 +260,17 @@ const agregarEgreso = {
                         } else if(response.code == 200) {
                             // El ingreso se asoció correctamente
                             console.log(response);
+                            app.createToast('Guardado exitoso', 'Se dio de alta el egreso correctamente', 'success');
                             this.$router.push('/operaciones/egreso');
                         } else {
                             // Fallo la asociacion de ingreso (default)
                             this.falloCarga = true;
-                            console.log(response)
+                            app.createCommonErrors(response);
                         }
                     },
-                    error() {
+                    error(data) {
                         this.falloCarga = true;
+                        app.createCommonErrors(data);
                     }
                 });
             } else {
@@ -288,12 +292,11 @@ const agregarEgreso = {
                         this.proveedoresSelect = response.data.map(this.proveedoresAPIConverter);
                     }
                     else {
-                        console.log("error");
-                        console.log(response)
+                        app.createCommonErrors(response);
                     }
                 },
-                error(response) {
-                    console.log(response);
+                error(data) {
+                    app.createCommonErrors(data);
                 },
                 complete() {
                     this.proveedoresLoading = false;
@@ -322,13 +325,11 @@ const agregarEgreso = {
                         this.mediosDePagoSelect = response.data.map(this.mediosDePagoAPIConverter);
                     }
                     else {
-                        console.log("error");
-                        console.log(response)
+                        app.createCommonErrors(response);
                     }
                 },
-                error(response) {
-                    console.log("oof");
-                    console.log(response);
+                error(data) {
+                    app.createCommonErrors(data);
                 },
                 complete() {
                     this.mediosDePagoLoading = false;

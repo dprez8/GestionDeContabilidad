@@ -24,7 +24,7 @@
     </b-nav>
     <transition name="fade" mode="out-in">
         <div class="border border-top-0" v-if="egresoOpened()" key="egresos">
-            <b-overlay variant="primary" spinner-variant="light" :show="egresosLoading" rounded="sm" class="border-bottom">
+            <b-overlay variant="primary" spinner-variant="light" :show="egresosLoading" class="border-bottom">
                 <b-table show-empty :tbody-tr-class="rowStyle" class="mb-0 border-0 border-bottom table-row-pointer" head-variant="dark"
                     :fields="campos_egresos" 
                     :items="egresos"
@@ -63,7 +63,7 @@
             </b-button>
         </div>
         <div class="border border-top-0" v-else-if="ingresoOpened()" key="ingresos">
-            <b-overlay variant="primary" spinner-variant="light" :show="ingresosLoading" rounded="sm" class="border-bottom">
+            <b-overlay variant="primary" spinner-variant="light" :show="ingresosLoading" class="border-bottom">
                 <b-table show-empty :tbody-tr-class="rowStyle" class="mb-0 border-0 border-bottom" head-variant="dark" :fields="campos_ingresos"
                     :items="ingresos" :tbody-transition-props="transProps">
                     <template #cell(descripcion)="data">
@@ -91,7 +91,7 @@
         <div class="border border-top-0 d-flex justify-content-center align-items-center p-2" v-else key="vacio" style="height: 300px;">
             <div class="text-center text-secondary">
                 <b-img src="http://{{ ip }}/img/thinking.svg" fluid alt="Responsive image" class="pb-2" style="width: 15%; opacity: 0.7"></b-img>
-                <p class="pb-4">Seleccione alguna opción para comenzar</p>
+                <p class="pb-4">Seleccione algún tipo de operación</p>
             </div>
         </div>
     </transition>

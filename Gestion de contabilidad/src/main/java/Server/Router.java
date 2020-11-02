@@ -11,7 +11,6 @@ import Domain.Repositories.Daos.DaoHibernate;
 import Domain.Repositories.Repositorio;
 import Spark.utils.BooleanHelper;
 import Spark.utils.HandlebarsTemplateEngineBuilder;
-import org.hibernate.Hibernate;
 import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
@@ -46,11 +45,9 @@ public class Router {
     }
 
     private static void rutasVista() {
-        LoginController loginController = new LoginController();
-        PanelController panelController = new PanelController();
-        
-        Spark.get("/login", loginController::mostrarLogin, Router.engine);
-        Spark.get("/*", panelController::mostrarInicio, Router.engine);
+        VistaController vistaController = new VistaController();
+
+        Spark.get("/*", vistaController::VueJSApp, Router.engine);
     }
 
     private static void rutasApi() {

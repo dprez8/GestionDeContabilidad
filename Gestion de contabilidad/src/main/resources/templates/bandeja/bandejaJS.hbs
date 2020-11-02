@@ -31,13 +31,11 @@ const bandeja = {
                         app.showSessionEndedAlert(true);
                     }
                     else {
-                        console.log("error");
-                        console.log(data);
+                        app.createCommonErrors(data);
                     }
                 },
                 error(data) {
-                    console.log("oof");
-                    console.log(data);
+                    app.createCommonErrors(data);
                 },
                 complete() {
 
@@ -60,13 +58,11 @@ const bandeja = {
                         app.showSessionEndedAlert(true);
                     }
                     else {
-                        console.log("error");
-                        console.log(data);
+                        app.createCommonErrors(data);
                     }
                 },
                 error(data) {
-                    console.log("oof");
-                    console.log(data);
+                    app.createCommonErrors(data);
                 },
                 complete(data) {
                     this.loading = false;

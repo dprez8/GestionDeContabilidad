@@ -50,11 +50,12 @@ const egreso = {
                         console.log(response);
                         this.egreso = response.egreso;
                         this.egreso.items = response.egreso.items.map(this.itemEgresoAPIConverter);
+                    } else {
+                        app.createCommonErrors(response);
                     }
                 },
-                error(response) {
-                    console.log("error");
-                    console.log(response);
+                error(data) {
+                    app.createCommonErrors(data);
                 },
                 complete() {
                     this.egresoLoaded();
@@ -107,11 +108,12 @@ const egreso = {
                         } else {
                             // Fallo la asociacion de ingreso (default)
                             this.falloAsociacionIngreso = true;
-                            console.log(response)
+                            app.createCommonErrors(response);
                         }
                     },
-                    error() {
+                    error(data) {
                         this.falloAsociacionIngreso = true;
+                        app.createCommonErrors(data);
                     }
                 });
             } 
@@ -158,11 +160,12 @@ const egreso = {
                         } else {
                             // Fallo la asociacion de categorias (default)
                             this.falloCarga = true;
-                            console.log(response)
+                            app.createCommonErrors(response);
                         }
                     },
-                    error() {
+                    error(data) {
                         this.falloCarga = true;
+                        app.createCommonErrors(data);
                     }
                 });
             }

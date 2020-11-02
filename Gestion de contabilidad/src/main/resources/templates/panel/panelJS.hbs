@@ -1,0 +1,171 @@
+const panel = {
+    template: `{{> panel/panelHTML.hbs}}`,
+    data() {
+        return {
+            sidebar: [
+                {
+                    label: "Operaciones",
+                    path: '/operaciones',
+                },
+                {
+                    label: "Bandeja de mensajes",
+                    path: '/bandeja'
+                }
+            ],
+            login: {
+                user: "",
+                pass: "",
+                loginState: null,
+                userState: null,
+                passState: null,
+                loginLoading: false
+            },
+            userData: {
+                organizacion: "",
+                nombre: ""
+            },
+            sidebarShow: true,
+            breadcrumb: [],
+            query: '',
+            searchSelected: false,
+            loggedOut: false,
+            reloadPage: false,
+            routerViewKey: 0
+        }
+    },
+    methods: {
+        updateBreadcrumb() {
+            
+            if(this.$route.meta.breadcrumb == undefined){
+                this.breadcrumb = [];
+                return;
+            }
+
+            var breadcrumb = JSON.parse(JSON.stringify(this.$route.meta.breadcrumb));
+
+            breadcrumb.forEach(crumb => {
+                if(crumb.type == "dynamic") {
+                    var key = crumb.label;
+                    var dynamicLabel = this.$route.params[key];
+
+                    if(dynamicLabel != undefined) {
+                        crumb.label = dynamicLabel;
+                        crumb.path = crumb.path.replace(key, dynamicLabel);
+                    }
+                }
+            });
+            this.breadcrumb = breadcrumb;
+        },
+        search() {
+            console.log(this.query);
+        },
+        showSessionEndedAlert(reloadPage) {
+            if(reloadPage == undefined)
+                this.reloadPage = true;
+            else
+                this.reloadPage = reloadPage;
+            this.loggedOut = true;
+        },
+        loginAttempt() {
+            this.login.loginState = null;
+            this.login.userState = null;
+            this.login.passState = null;
+
+            console.log(`Usuario: ${this.login.user}`);
+            console.log(`Contraseña: ${this.login.pass}`);
+
+            if(this.login.user == "") {
+                this.login.userState = false;
+            } 
+            if(this.login.pass == "") {
+                this.login.passState = false;
+            }
+
+            if(this.login.user != "" && this.login.pass != "") {
+                this.login.loginLoading = true;
+                $.ajax({
+                    url: "http://{{ ip }}/api/login",
+                    type: "POST",
+                    dataType: "json",
+                    context: this,
+                    data: JSON.stringify({
+                        username: this.login.user,
+                        password: this.login.pass
+                    }),
+                    success: function(data) {
+                        if(data.code == 200) {
+                            this.userData.nombre = capitalizeFirstLetter(data.nombre);
+                            this.userData.organizacion = data.organizacion.razonSocial;
+                            this.loginSuccess();
+                        } else if (data.code == 404) {
+                            this.login.loginState = false;
+                        } else {
+                            app.createCommonErrors(data);
+                        }
+                    },
+                    error: function(data) {
+                        app.createCommonErrors(data);
+                    },
+                    complete: function() {
+                        this.login.loginLoading = false;
+                    }
+
+                });
+            }
+        },
+        loginSuccess() {
+            this.loggedOut = false;
+
+            if(this.reloadPage) {
+                this.softReloadPage();
+            }
+        },
+        logout() {
+            document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            document.cookie = "organizacion=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            document.cookie = "JSESSIONID=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+            this.$router.push("/login");
+        },
+        checkIfLoggedIn() {
+            $.ajax({
+                url: "http://{{ ip }}/api/login",
+                type: "GET",
+                dataType: "json",
+                context: this,
+                success: function(data) {
+                    if(data.code == 200) {
+                        console.log(data);
+                        this.userData.nombre = capitalizeFirstLetter(data.nombre);
+                        this.userData.organizacion = data.organizacion.razonSocial;
+                    } else if (data.code == 403) {
+                        this.showSessionEndedAlert(true);
+                    } else {
+                        app.createCommonErrors(data);
+                    }
+                },
+                error: function(data) {
+                    app.createCommonErrors(data);
+                },
+                complete: function() {
+
+                }
+            });
+        },
+        softReloadPage() {
+            this.routerViewKey ? this.routerViewKey++ : this.routerViewKey--;
+        }
+    },
+    watch: {
+        $route(to, from) {
+            this.updateBreadcrumb();
+        }
+    },
+    mounted() {
+        this.updateBreadcrumb();
+        this.userData.nombre = capitalizeFirstLetter(getCookie("username"));
+        this.userData.organizacion = getCookie("organizacion");
+
+        this.checkIfLoggedIn();
+    }
+}
