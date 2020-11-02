@@ -1,11 +1,11 @@
 const router = new VueRouter({
     routes: [
         {
-            name: 'index',
             path: '/',
             component: panel,
             children: [
                 {
+                    name: 'index',
                     path: '',
                     component: inicio
                 },

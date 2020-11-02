@@ -6,8 +6,8 @@
                     <div class="d-flex align-items-center p-1">
                         <div class="w-100 pl-3 text-truncate">\{{mensajesFiltradosOrdenados.length}} Mensajes Filtrados</div>
                         <b-button-group>
-                            <b-button squared variant="outline" v-b-tooltip title="Ordenar mensajes" v-b-toggle.filter-sort><b-icon-sort-down></b-icon-sort-down></b-button>
-                            <b-button squared variant="outline" v-b-tooltip title="Configurar la bandeja" to="/configuracion/validacion"><b-icon-gear-fill></b-icon-gear-fill></b-button>
+                            <b-button squared variant="outline" v-b-tooltip.hover title="Ordenar mensajes" v-b-toggle.filter-sort><b-icon-sort-down></b-icon-sort-down></b-button>
+                            <b-button squared variant="outline" v-b-tooltip.hover title="Configurar la bandeja" to="/configuracion/validacion"><b-icon-gear-fill></b-icon-gear-fill></b-button>
                         </b-button-group>
                     </div>
                     <b-collapse id="filter-sort">
