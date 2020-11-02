@@ -74,7 +74,7 @@ public class TestPrincipal {
         this.pymeJuridica.setTipoEntidadJuridica(this.miPyme);
 
         /**Creacion de un usuario estandar*/
-        this.fernando = new Estandar(pymeJuridica, "Fernando", "1234", "fernando@herbas.com");
+        this.fernando = new Estandar(pymeJuridica, "Fernando", "1234JHBHJVHJ", "fernando@herbas.com");
 
         /**Creacion de un repositorio de egresos*/
         this.repoEgresos = new Repositorio<Egreso>(new DaoMemoria<Egreso>()); //Creo el repositorio de egresos
@@ -103,28 +103,7 @@ public class TestPrincipal {
 
         this.repoEgresos.agregar(compra);
     }
-/*
-    @Test
-    public void categorizacionDeEmpresas(){
 
-        this.construccion.addCategoriaExistente("Micro", 1);
-        this.construccion.addCategoriaExistente("Pequenia", 2);
-        this.construccion.addCategoriaExistente("Mediana T1", 3);
-        this.construccion.addCategoriaExistente("Mediana T2", 4);
-
-  
-        CategoriaEmpresa microConstruccion     = new CategoriaEmpresa("Micro",0.0,	19450000.0,1,12);
-        CategoriaEmpresa pequeniaConstruccion  = new CategoriaEmpresa("Pequenia",19450000.0,115370000.0,12,45);
-        CategoriaEmpresa medianaT1Construccion = new CategoriaEmpresa("Mediana T1",115370000.0,643710000.0,45,200);
-        CategoriaEmpresa medianaT2Construccion = new CategoriaEmpresa("Mediana T2",643710000.0,965460000.0,200,590);
-
-        this.construccion.addCategorias(pequeniaConstruccion,medianaT1Construccion,microConstruccion,medianaT2Construccion);
-
-        this.miPyme.cacularCategoria();
-        System.out.printf(miPyme.getCategoriaEmpresa().getNombre());
-        Assert.assertEquals(pequeniaConstruccion,miPyme.getCategoriaEmpresa());
-    }*/
-    
     @Test
     public void categorizacionDeEmpresas(){
  
@@ -157,10 +136,10 @@ public class TestPrincipal {
     public void validadorDeContrasenias() throws IOException, contraseniaCorta, contraseniaMuyComun, repiteContraseniaEnMailOUsuario {
         /**Leo un archivo de config mediante la clase Properties*/
         Properties prop=new Properties();
-        prop.load(new FileReader("src/main/resources/META-INF/config.properties"));
+        prop.load(new FileReader("src/main/resources/config/config.properties"));
 
-        ValidarLongitudCorta validarLongitudCorta           = new ValidarLongitudCorta(Integer.parseInt(prop.getProperty("longitudMinima")));
-        ValidarTop10k validarTop10k                         = new ValidarTop10k(prop.getProperty("dataFilePath"));
+        ValidarLongitudCorta validarLongitudCorta           = new ValidarLongitudCorta(Integer.parseInt(prop.getProperty("LONGITUDMINIMA")));
+        ValidarTop10k validarTop10k                         = new ValidarTop10k(prop.getProperty("DATAFILEPATH"));
         ValidarIgualAMailOUsuario validarIgualAMailOUsuario = new ValidarIgualAMailOUsuario();
 
         ValidadorDeContrasenia.addValidaciones(validarLongitudCorta,validarTop10k,validarIgualAMailOUsuario);
