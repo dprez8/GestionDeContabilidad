@@ -62,10 +62,9 @@ public class Router {
         EgresosRestController egresosRestController = new EgresosRestController();
         CategoriasEgresosController categoriasController = new CategoriasEgresosController();
         IngresosRestController ingresosRestController = new IngresosRestController();
-        AsociacionOperacionesRestController asociacionOperacionesRestController = new AsociacionOperacionesRestController();
+        PresupuestoRestController presupuestoRestController = new PresupuestoRestController();
         
         Spark.post("/api/login",loginRestController::login);
-        Spark.get("/api/login",loginRestController::sessionStatus);
         Spark.get("/api/pais",direccionController::listadoDePaises);
         Spark.get("/api/pais/:clavePais/provincia",direccionController::listadoDeProvincias);
         Spark.get("/api/pais/:clavePais/provincia/:claveProvincia/ciudad",direccionController::listadoDeCiudades);
@@ -76,14 +75,14 @@ public class Router {
         Spark.get("/api/bandeja/configuracion",bandejaDeMensajesRestController::mostrarConfiguracion);
         Spark.post("/api/bandeja/configurar", bandejaDeMensajesRestController::configurar);
         Spark.post("/api/bandeja/visto", bandejaDeMensajesRestController::mensajeVisto);
+        //Spark.get("/api/bandeja/:usuarioId",bandejaDeMensajesRestController::mostrarMensajes);
         Spark.get("/api/categorias",categoriasController::listadoCriterios);
         Spark.post("/api/operaciones/egreso", egresosRestController::cargarNuevoEgreso);
         Spark.get("/api/operaciones/egresos", egresosRestController::listadoDeEgresos);
         Spark.get("/api/operaciones/egreso/:egresoId", egresosRestController::mostrarEgreso);
         Spark.get("/api/operaciones/ingresos",ingresosRestController::listadoDeIngresos);
-        Spark.post("/api/operaciones/asociarManualmente",asociacionOperacionesRestController::asociarManualmente);
-        Spark.post("/api/categorias/asociar",categoriasController::asociarCategoriaEgreso);
         Spark.post("/api/operaciones/ingreso",ingresosRestController::cargarNuevoIngreso);
+        Spark.post("/api/operaciones/presupuesto", presupuestoRestController::cargarNuevoPresupuesto);
     }
 
     private static void verificarTareasProgramadas() {

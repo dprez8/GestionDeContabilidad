@@ -39,7 +39,7 @@ public class PresupuestoRestController {
         this.repoTipoDocumento  = new Repositorio<>(new DaoHibernate<>(TipoDocumento.class));
         this.repoEgresos        = new Repositorio<>(new DaoHibernate<>(Egreso.class));
         this.repoProductos      = new Repositorio<>(new DaoHibernate<>(Producto.class));
-        this.repoItems          = new Repositorio<>(new DaoHibernate<>(ItemPresupuesto.class));
+        this.repoItems          = new Repositorio<>(new DaoHibernate<>(ItemPresupuesto.class))
         this.respuesta          = new Respuesta();
     }
 
@@ -136,11 +136,10 @@ public class PresupuestoRestController {
     }
 
     private void relacionarItemsConPresupuesto(List<ItemPresupuesto> items, Presupuesto presupuesto) {
-        items.forEach(unItem -> {
-            unItem.setPresupuesto(presupuesto);
-            /*FALTA ASOCIAR EL ITEM PRESUPUESTO CON ITEM EGRESO*/
-            /*unItem.setItemEgresoAsociado(presupuesto.getEgresoAsociado().getItems().stream());*/
-            this.repoItems.modificar(unItem);
+        items.forEach(unItemPresupuesto -> {
+            unItemPresupuesto.setPresupuesto(presupuesto);
+            unItemPresupuesto.setItemEgresoAsociado(presupuesto.getEgresoAsociado().getItems().stream().filter(itemsEgreso -> itemsEgreso.getProducto().equals(unItemPresupuesto.getProducto())).findFirst().get());
+            this.repoItems.modificar(unItemPresupuesto);
         });
     }
 
