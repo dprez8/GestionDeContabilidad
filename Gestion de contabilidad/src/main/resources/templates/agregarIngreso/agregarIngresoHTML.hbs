@@ -19,7 +19,11 @@
             <span class="mr-2"><strong>Descripción</strong></span>
         </div>
         <div class="col">
+            <b-collapse :visible="(!ingreso.descripcion && falloInput)">
+                <b-badge variant="danger">Ingrese una descripcion para poder identificar el ingreso</b-badge>
+            </b-collapse>
             <b-form-textarea rows="3" max-rows="6" placeholder="Breve descripción"
+                :state="(!ingreso.descripcion && falloInput) ? false : null"
                 v-model="ingreso.descripcion"></b-form-textarea>
         </div>
         <div class="col-lg-1 col-xl-3"></div>

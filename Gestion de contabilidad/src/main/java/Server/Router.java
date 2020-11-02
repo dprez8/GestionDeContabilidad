@@ -62,6 +62,7 @@ public class Router {
         PresupuestoRestController presupuestoRestController = new PresupuestoRestController();
         
         Spark.post("/api/login",loginRestController::login);
+        Spark.get("/api/login",loginRestController::sessionStatus);
         Spark.get("/api/pais",direccionController::listadoDePaises);
         Spark.get("/api/pais/:clavePais/provincia",direccionController::listadoDeProvincias);
         Spark.get("/api/pais/:clavePais/provincia/:claveProvincia/ciudad",direccionController::listadoDeCiudades);

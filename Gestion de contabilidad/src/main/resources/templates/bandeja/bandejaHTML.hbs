@@ -1,28 +1,55 @@
 <b-overlay class="container-fluid h-100" spinner-variant="light" variant="primary" :show="loading">
     <div class="row h-100">
-        <b-list-group flush class="col-4 overflow-auto h-100 p-0 border-right" style="max-width: 300px;">
-            <div class="d-flex h-100 justify-content-center align-items-center" v-if="!mensajes.length">
-                <div class="text-secondary text-center">
-                    <h1><b-icon-emoji-sunglasses></b-icon-emoji-sunglasses></h1>
-                    <p>La bandeja de mensajes esta vacía</p>
+        <div class="col-5 col-lg-4 col-xl-3 h-100 border-right p-0">
+            <div class="w-100 h-100 d-flex flex-column">
+                <div class="flex-shrink-0 border-bottom">
+                    <div class="d-flex align-items-center p-1">
+                        <div class="w-100 pl-3 text-truncate">\{{mensajesFiltradosOrdenados.length}} Mensajes Filtrados</div>
+                        <b-button-group>
+                            <b-button squared variant="outline" v-b-tooltip title="Ordenar mensajes" v-b-toggle.filter-sort><b-icon-sort-down></b-icon-sort-down></b-button>
+                            <b-button squared variant="outline" v-b-tooltip title="Configurar la bandeja" to="/configuracion/validacion"><b-icon-gear-fill></b-icon-gear-fill></b-button>
+                        </b-button-group>
+                    </div>
+                    <b-collapse id="filter-sort">
+                        <div class="border-top p-3" style="background-color: #eee;">
+                            <b-form-group label="Ordenar por">
+                                <b-form-select v-model="ordenar">
+                                    <b-form-select-option :value="null" selected>Sin ordenar</b-form-select-option>
+                                    <b-form-select-option value="fecha">Fecha</b-form-select-option>
+                                </b-form-select>
+                            </b-form-group>
+                            <b-form-group label="Filtrar por" class="m-0">
+                                <b-form-radio v-model="filtrar" :value="null">Ambos</b-form-radio>
+                                <b-form-radio v-model="filtrar" value="leidos">Leidos</b-form-radio>
+                                <b-form-radio v-model="filtrar" value="no leidos">No Leidos</b-form-radio>
+                            </b-form-group>
+                        </div>
+                    </b-collapse>
                 </div>
+                <div class="d-flex h-100 justify-content-center align-items-center" v-if="!mensajesFiltradosOrdenados.length">
+                    <div class="text-secondary text-center">
+                        <h1><b-icon-emoji-sunglasses></b-icon-emoji-sunglasses></h1>
+                        <p>La bandeja de mensajes esta vacía</p>
+                    </div>
+                </div>
+                <b-list-group flush v-else class="overflow-auto h-100 p-0">
+                    <b-list-group-item class="d-flex justify-content-between align-items-center"
+                        v-for="mensaje in mensajesFiltradosOrdenados"
+                        v-bind:key="mensaje.id"
+                        v-bind:to="('/bandeja/' + mensaje.id)"
+                        v-bind:active="(mensaje.id == selected)"
+                    >
+                        <span class="d-inline-block text-truncate">\{{ mensaje.cuerpo }}</span>
+                        <b-badge pill variant="success" class="ml-1 mr-1" v-if="!mensaje.leido">nuevo</b-badge>
+                        <b-badge pill variant="light">\{{ convertDate(mensaje.fechaCreacion) }}</b-badge>
+                    </b-list-group-item>
+                </b-list-group>
             </div>
-            <b-list-group-item v-else class="d-flex justify-content-between align-items-center"
-                v-for="mensaje in mensajes"
-                v-bind:key="mensaje.id"
-                v-bind:to="('/bandeja/' + mensaje.id)"
-                v-bind:active="(mensaje.id == selected)"
-            >
-                <span class="d-inline-block text-truncate">\{{ mensaje.cuerpo }}</span>
-                <b-badge pill variant="success" class="ml-1 mr-1" v-if="!mensaje.leido">nuevo</b-badge>
-                <b-badge pill variant="light">\{{ convertDate(mensaje.fechaCreacion) }}</b-badge>
-            </b-list-group-item>
-        </b-list-group>
+        </div>
         <div class="col overflow-auto h-100 p-0">
             <transition name="fade" mode="out-in">
                 <div class="d-flex h-100 justify-content-center align-items-center" v-if="!getMessageSelected()">
                     <div class="text-secondary text-center">
-                        <h1>Bandeja de mensajes</h1>
                         <p>Seleccione algún mensaje para verlo aquí</p>
                     </div>
                 </div>

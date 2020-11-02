@@ -145,10 +145,8 @@ const panel = {
                     }
                 },
                 error: function(data) {
+                    console.log("me");
                     app.createCommonErrors(data);
-                },
-                complete: function() {
-
                 }
             });
         },

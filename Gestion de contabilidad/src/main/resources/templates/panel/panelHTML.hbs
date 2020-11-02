@@ -89,19 +89,15 @@
         <!-- /#sidebar-wrapper -->
 
         <!-- Rightside -->
-        <div class="w-100">
+        <div class="w-100 overflow-auto">
             <!-- Breadcrum -->
-            <b-breadcrumb class="m-0 border-bottom" style="border-radius: 0;">
-                <b-breadcrumb-item>
-                    <router-link to="/">
-                        <b-icon icon="house-fill" scale="1.25" shift-v="1.25" aria-hidden="true"></b-icon>
-                    </router-link>
+            <b-breadcrumb class="m-0 border-bottom bg-light" style="border-radius: 0;">
+                <b-breadcrumb-item to="/">
+                    <b-icon-house></b-icon-house>
                 </b-breadcrumb-item>
                 <template v-for="(page, index) in breadcrumb">
-                    <b-breadcrumb-item>
-                        <router-link v-bind:to="page.path" v-bind:active="page.active">
-                            \{{ page.label }}
-                        </router-link>
+                    <b-breadcrumb-item v-bind:to="page.path" v-bind:active="page.active">
+                        \{{ page.label }}
                     </b-breadcrumb-item>
                 </template>
             </b-breadcrumb>
