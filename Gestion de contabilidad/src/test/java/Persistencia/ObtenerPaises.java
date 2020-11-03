@@ -1,16 +1,11 @@
 package Persistencia;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.Test;
 
-import Domain.Entities.ApiPaises.Ciudad;
 import Domain.Entities.ApiPaises.Pais;
 import Domain.Entities.ApiPaises.Provincia;
 import Domain.Repositories.Repositorio;
 import Domain.Repositories.Daos.DaoHibernate;
-import db.EntityManagerHelper;
 
 
 public class ObtenerPaises {

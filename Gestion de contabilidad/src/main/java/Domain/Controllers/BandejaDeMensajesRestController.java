@@ -13,8 +13,6 @@ import Domain.Repositories.Repositorio;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
-import db.EntityManagerHelper;
-import org.hibernate.Hibernate;
 import spark.Request;
 import spark.Response;
 

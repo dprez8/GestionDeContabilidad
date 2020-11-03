@@ -17,7 +17,6 @@ import Domain.Exceptions.contraseniaMuyComun;
 import Domain.Exceptions.repiteContraseniaEnMailOUsuario;
 import Domain.Repositories.Daos.DaoHibernate;
 import Domain.Repositories.Repositorio;
-import db.EntityManagerHelper;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
