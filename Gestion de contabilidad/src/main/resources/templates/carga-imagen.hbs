@@ -1,0 +1,37 @@
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+<script>
+    function send(event) {
+        event.preventDefault();
+        var data = new FormData();
+{{!--
+        $.each($('.file')[0][0].files, function (i, file) {
+            console.log(file);
+            data.append('file-' + i, file);
+        });
+--}}
+
+        var file = $('.file')[0][0].files[0];
+        data.append('doc_comercial_file', file);
+
+        for (let [name, value] of data) {
+            console.log(`${name} = ${value}`); // key1=value1, then key2=value2
+        }
+
+        $.ajax({
+            data: data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            method: 'POST',
+            complete: function (data) {
+                console.log(data);
+                $('.response').html(data.responseText);
+            }
+        });
+    }
+</script>
+<form class='file' method='post' enctype='multipart/form-data'>
+    <input type='file' name='doc_comercial_file' accept='.png'>
+    <button onclick='send(event)'>Upload picture</button>
+    <div class='response'></div>
+</form>
