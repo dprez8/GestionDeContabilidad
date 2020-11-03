@@ -12,6 +12,9 @@ public class ValidarCantidadMinima extends ValidacionDeTransparencia {
 	
 	public String validarEgreso(Egreso egreso){
 		String cuerpo;
+		if(egreso.getPresupuestos().size() == 0)
+			return "El egreso no tiene presupuestos";
+
 		if(egreso.getPresupuestos().size() >= this.cantidadMinimaDePresupuestos) {
 			cuerpo = "Se validó con la cantidad minima de presupuestos.";
 		}

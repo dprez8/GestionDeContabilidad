@@ -10,6 +10,9 @@ public class ValidarConPresupuesto extends ValidacionDeTransparencia {
 	@Override
 	public String validarEgreso(Egreso egreso) {
 		String cuerpo;
+		if(egreso.getPresupuestos().size() == 0)
+			return "El egreso no tiene presupuestos";
+
 		Presupuesto presupuestoElegido = egreso.getPresupuestos().stream()
 											.filter(unPresupuesto->
 												validarPresupuesto(egreso,unPresupuesto))

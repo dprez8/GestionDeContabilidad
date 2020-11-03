@@ -7,10 +7,13 @@ import java.util.Comparator;
 import java.util.stream.Collectors;
 
 public class ValidarMenorValor extends ValidacionDeTransparencia {
+
 	@Override
 	public String validarEgreso(Egreso egreso) {
-		
 		String cuerpo;
+		if(egreso.getPresupuestos().size() == 0)
+			return "El egreso no tiene presupuestos";
+
 		Presupuesto presupuestoObtenido = egreso.getPresupuestos().stream()
 											.filter(unPresupuesto->
 												validarPresupuesto(egreso,unPresupuesto))
@@ -24,6 +27,6 @@ public class ValidarMenorValor extends ValidacionDeTransparencia {
 			return cuerpo;
 		}		
 			cuerpo = "El presupuesto elegido no es el de menor valor.";
-			return cuerpo;		
+			return cuerpo;
 	}
 }

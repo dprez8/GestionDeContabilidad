@@ -41,7 +41,7 @@ public class Scheduler extends EntidadPersistente {
 
 	public Calendar delay() {
 		Calendar calendar = Calendar.getInstance();
-		calendar.set(Calendar.DAY_OF_WEEK,retornarDia(dias));
+		calendar.set(Calendar.DAY_OF_WEEK, retornarDia(dias));
 		calendar.set(Calendar.HOUR_OF_DAY, this.horaInicio);
 		calendar.set(Calendar.MINUTE, this.minutoInicio);
 		calendar.set(Calendar.SECOND, 0);
