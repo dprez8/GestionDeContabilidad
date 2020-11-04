@@ -10,11 +10,6 @@ import java.io.Serializable;
 @Table(name="categoria_operacion")
 public class CategoriaOperacion extends EntidadPersistente {
 
-    @Expose
-    @Id
-    @GeneratedValue
-    @Column(name="categoria_id")
-    private int categoriaId;
     @Column
     private String descripcion;
     @ManyToOne

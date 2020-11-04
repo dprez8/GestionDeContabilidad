@@ -2,18 +2,31 @@
 package Server;
 
 import Domain.Controllers.*;
+import Domain.Entities.Organizacion.EntidadJuridica;
+import Domain.Entities.Organizacion.Organizacion;
+import Domain.Entities.ValidadorTransparencia.ValidadorDeTransparencia;
+import Domain.Entities.ValidadorTransparencia.ValidarCantidadMinima;
+import Domain.Entities.ValidadorTransparencia.ValidarConPresupuesto;
+import Domain.Entities.ValidadorTransparencia.ValidarMenorValor;
+import Domain.Repositories.Daos.DaoHibernate;
+import Domain.Repositories.Repositorio;
 import Spark.utils.BooleanHelper;
 import Spark.utils.HandlebarsTemplateEngineBuilder;
-import db.EntityManagerHelper;
 import db.EntityManagerHelperTwo;
 import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 
 public class Router {
     private static HandlebarsTemplateEngine engine;
+    private static ValidarCantidadMinima validacionMinima = new ValidarCantidadMinima(1);
+    private static ValidarConPresupuesto validacionPresupuesto = new ValidarConPresupuesto();
+    private static ValidarMenorValor validacionMenorValor = new ValidarMenorValor();
+
+    private static ValidadorDeTransparencia validador = new ValidadorDeTransparencia(validacionMinima, validacionPresupuesto, validacionMenorValor);
+
+    private static Repositorio<Organizacion> repoOrganizaciones = new Repositorio<>(new DaoHibernate<>(Organizacion.class));
 
     private static void initEngine(){
         Router.engine = HandlebarsTemplateEngineBuilder
@@ -31,7 +44,7 @@ public class Router {
     private static void configure(){
         rutasApi();
         rutasVista();
-       // verificarTareasProgramadas();
+        verificarTareasProgramadas();
     }
 
     private static void rutasVista() {
@@ -86,7 +99,6 @@ public class Router {
             response.type("application/json");
         });
     }
-/*
     private static void verificarTareasProgramadas() {
         List<Organizacion> organizaciones = repoOrganizaciones.buscarTodos();
         organizaciones.forEach(unaOrg->{

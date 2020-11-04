@@ -9,11 +9,8 @@ import java.util.List;
 
 @Entity
 @Table(name="criterio_operacion")
-public class CriterioOperacion {
-    @Id
-    @GeneratedValue
-    @Column(name="criterio_id")
-    private int criterioId;
+public class CriterioOperacion extends EntidadPersistente{
+
     @Transient //@OneToMany(mappedBy = "criterio_id")
     private List<CategoriaOperacion> categorias;
     @Transient
