@@ -31,7 +31,7 @@ public class Router {
     private static void configure(){
         rutasApi();
         rutasVista();
-        verificarTareasProgramadas();
+       // verificarTareasProgramadas();
     }
 
     private static void rutasVista() {
@@ -69,8 +69,7 @@ public class Router {
         //Spark.get("/api/bandeja/:usuarioId",bandejaDeMensajesRestController::mostrarMensajes);
         Spark.get("/api/categorias",categoriasController::listadoCriterios);
         Spark.post("/api/categorias",categoriasController::crearCategoria);
-        Spark.post("/api/categorias",categoriasController::crearCriterio);
-        
+        Spark.post("/api/categorias",categoriasController::crearCriterio);    
         Spark.post("/api/operaciones/egreso", egresosRestController::cargarNuevoEgreso);
         Spark.get("/api/operaciones/egresos", egresosRestController::listadoDeEgresos);
         Spark.get("/api/operaciones/egreso/:egresoId", egresosRestController::mostrarEgreso);
@@ -87,7 +86,7 @@ public class Router {
             response.type("application/json");
         });
     }
-
+/*
     private static void verificarTareasProgramadas() {
         List<Organizacion> organizaciones = repoOrganizaciones.buscarTodos();
         organizaciones.forEach(unaOrg->{
