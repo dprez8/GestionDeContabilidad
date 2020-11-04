@@ -1,0 +1,16 @@
+<template>
+    <div class="p-4">
+        <h1>Error 404</h1>
+        <p>La pagina que ha intentado acceder no se encuentra</p>
+    </div>
+</template>
+
+<script>
+export default {
+
+}
+</script>
+
+<style>
+
+</style>
