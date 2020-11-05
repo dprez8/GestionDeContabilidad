@@ -30,6 +30,10 @@ public class Ingreso extends Operacion {
     @ManyToOne
     @JoinColumn(name = "moneda_id", referencedColumnName = "moneda_id")
     private Moneda moneda;
+    
+    @Expose
+	@Column(name="fecha_acep_egreso", columnDefinition = "DATE")
+	protected LocalDate fechaAceptacionEgreso;
 
     @OneToMany(mappedBy = "ingresoAsociado",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Egreso> egresos;
@@ -75,7 +79,23 @@ public class Ingreso extends Operacion {
         }
     }
 
-    public void setDescripcion(String descripcion) {
+    public Moneda getMoneda() {
+		return moneda;
+	}
+
+	public void setMoneda(Moneda moneda) {
+		this.moneda = moneda;
+	}
+
+	public LocalDate getFechaAceptacionEgreso() {
+		return fechaAceptacionEgreso;
+	}
+
+	public void setFechaAceptacionEgreso(LocalDate fechaAceptacionEgreso) {
+		this.fechaAceptacionEgreso = fechaAceptacionEgreso;
+	}
+
+	public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
 

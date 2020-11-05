@@ -5,8 +5,10 @@ import Domain.Controllers.AdaptersJson.LocalDateTimeAdapter;
 import Domain.Controllers.DTO.IngresoRequest;
 import Domain.Controllers.DTO.IngresoResponse;
 import Domain.Controllers.DTO.Respuesta;
+import Domain.Entities.ApiPaises.Moneda;
 import Domain.Entities.Operaciones.Ingreso;
 import Domain.Entities.Organizacion.EntidadJuridica;
+import Domain.Entities.Organizacion.Organizacion;
 import Domain.Entities.Usuarios.Estandar;
 import Domain.Repositories.Daos.DaoHibernate;
 import Domain.Repositories.Repositorio;
@@ -23,12 +25,16 @@ import java.util.stream.Collectors;
 public class IngresosRestController {
     private Repositorio<Ingreso> repoIngresos;
     private Repositorio<EntidadJuridica> repoEntidadJuridica;
+    private Repositorio<Organizacion> repoOrganizacion;
+    private Repositorio<Moneda> repoMoneda;
     private Respuesta respuesta;
     private Gson gson;
 
     public IngresosRestController() {
         this.repoIngresos        = new Repositorio<>(new DaoHibernate<>(Ingreso.class));
         this.repoEntidadJuridica = new Repositorio<>(new DaoHibernate<>(EntidadJuridica.class));
+        this.repoOrganizacion 	 = new Repositorio<>(new DaoHibernate<>(Organizacion.class));
+        this.repoMoneda       	 = new Repositorio<>(new DaoHibernate<>(Moneda.class));
         this.respuesta           = new Respuesta();
     }
 
@@ -124,8 +130,16 @@ public class IngresosRestController {
         Ingreso ingreso = new Ingreso();
         ingreso.setDescripcion(ingresoRequest.descripcion);
         ingreso.setFechaOperacion(ingresoRequest.fechaOperacion);
-        ingreso.setOrganizacion(entidadJuridica);
         ingreso.setMontoTotal(ingresoRequest.montoTotal);
+        if(ingresoRequest.organizacion_id!=0){
+        	ingreso.=repoOrganizacion.buscar(ingresoRequest.organizacion_id);
+        	ingreso.setOrganizacion(entidadJuridica);
+        }
+        
+        if(ingresoRequest.moneda_id!=0) {
+        Moneda moneda=repoMoneda.buscar(ingresoRequest.moneda_id);
+        	ingreso.setMoneda(moneda);
+        }
 
         this.repoIngresos.agregar(ingreso);
 
