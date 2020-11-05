@@ -256,7 +256,6 @@ var router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    console.log(to);
     if ((from.name == null || from.name == 'erro404' || from.name == 'login') && to.name != 'error404' && to.name != 'login') {
         axios
             .get('/api/login')

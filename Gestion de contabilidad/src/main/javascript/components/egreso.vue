@@ -1,5 +1,5 @@
 <template>
-    <div class="p-2 egreso_container">
+    <div class="px-2 pb-2 egreso_container">
         <b-card v-if="egreso">
             <template v-if="egreso.categorias">
                 <template v-for="(categoria, index) in egreso.categorias">
@@ -9,14 +9,14 @@
             <div class="row m-0">
                 <div class="col p-0 pr-1">
                     <b-list-group>
-                        <b-list-group-item class="p-1 text-center" :class="{'bg-secondary': showDatosProveedor, 'text-light': showDatosProveedor}" @click="showDatosProveedor = !showDatosProveedor" button><strong>Proveedor</strong> {{ egreso.proveedor.nombre }}</b-list-group-item>
-                        <b-list-group-item class="p-0">
+                        <b-list-group-item class="p-2 text-center" :class="{'bg-secondary': showDatosProveedor, 'text-light': showDatosProveedor}" @click="showDatosProveedor = !showDatosProveedor" button><strong>Proveedor</strong> {{ egreso.proveedor.nombre }}</b-list-group-item>
+                        <b-list-group-item class="p-0 overflow-hidden">
                             <b-collapse :visible="showDatosProveedor">
                                 <b-list-group flush>
-                                    <b-list-group-item class="p-1"><strong>Calle: </strong>{{ egreso.proveedor.calle }}</b-list-group-item>
-                                    <b-list-group-item class="p-1"><strong>Altura: </strong>{{ egreso.proveedor.altura }}</b-list-group-item>
-                                    <b-list-group-item class="p-1"><strong>Piso: </strong>{{ egreso.proveedor.piso }}</b-list-group-item>
-                                    <b-list-group-item class="p-1"><strong>Codigo Postal: </strong>{{ egreso.proveedor.zipcode }}</b-list-group-item>
+                                    <b-list-group-item class="p-2"><strong>Calle: </strong>{{ egreso.proveedor.calle }}</b-list-group-item>
+                                    <b-list-group-item class="p-2"><strong>Altura: </strong>{{ egreso.proveedor.altura }}</b-list-group-item>
+                                    <b-list-group-item class="p-2"><strong>Piso: </strong>{{ egreso.proveedor.piso }}</b-list-group-item>
+                                    <b-list-group-item class="p-2"><strong>Codigo Postal: </strong>{{ egreso.proveedor.zipcode }}</b-list-group-item>
                                 </b-list-group>
                             </b-collapse>
                         </b-list-group-item>
@@ -24,13 +24,13 @@
                 </div>
                 <div class="col p-0 pl-1">
                     <b-list-group>
-                        <b-list-group-item class="p-1 text-center" :class="{'bg-secondary': showDatosFactura, 'text-light': showDatosFactura}" @click="showDatosFactura = !showDatosFactura" button><strong>Documento</strong> {{ egreso.documento.tipo.nombreTipoDeDocumento }}</b-list-group-item>
-                        <b-list-group-item class="p-0">
+                        <b-list-group-item class="p-2 text-center" :class="{'bg-secondary': showDatosFactura, 'text-light': showDatosFactura}" @click="showDatosFactura = !showDatosFactura" button><strong>Documento</strong> {{ egreso.documento.tipo.nombreTipoDeDocumento }}</b-list-group-item>
+                        <b-list-group-item class="p-0 overflow-hidden">
                             <b-collapse :visible="showDatosFactura">
                                 <b-list-group flush>
-                                    <b-list-group-item class="p-1"><strong>Fecha Pedido: </strong>{{ convertDate(egreso.documento.fechaDePedido) }}</b-list-group-item>
-                                    <b-list-group-item class="p-1"><strong>Fecha Entrega: </strong>{{ convertDate(egreso.documento.fechaDeEntrega) }}</b-list-group-item>
-                                    <b-list-group-item class="p-1"><strong>Descripcion: </strong>{{ egreso.documento.descripcion }}</b-list-group-item>
+                                    <b-list-group-item class="p-2"><strong>Fecha Pedido: </strong>{{ convertDate(egreso.documento.fechaDePedido) }}</b-list-group-item>
+                                    <b-list-group-item class="p-2"><strong>Fecha Entrega: </strong>{{ convertDate(egreso.documento.fechaDeEntrega) }}</b-list-group-item>
+                                    <b-list-group-item class="p-2"><strong>Descripcion: </strong>{{ egreso.documento.descripcion }}</b-list-group-item>
                                 </b-list-group>
                             </b-collapse>
                         </b-list-group-item>
@@ -39,14 +39,14 @@
             </div>
             <div class="row m-0">
                 <div class="col p-0 pt-2">
-                    <b-list-group horizontal class="w-100">
-                        <b-list-group-item class="p-1 w-100"><strong>Medio de pago: </strong>{{ egreso.pago.medioDePago.medioDePago }} {{ egreso.pago.codigoAsociado }}</b-list-group-item>
+                    <b-list-group>
+                        <b-list-group-item class="p-2"><strong>Medio de pago: </strong>{{ egreso.pago.medioDePago.medioDePago }} {{ egreso.pago.codigoAsociado }}</b-list-group-item>
                     </b-list-group>
                 </div>
             </div>
             <div class="row m-0 pt-2">
                 <div class="col p-0 rounded overflow-hidden border">
-                    <b-table borderless small foot class="m-0 border-0"
+                    <b-table borderless foot class="m-0 border-0"
                         :fields="campos_items" 
                         :items="egreso.items"
                     >
@@ -56,6 +56,22 @@
                     </b-table>
                 </div>
             </div>
+            <div class="row m-0 pt-2" v-if="egreso.ingresoAsociado">
+                <div class="col p-0">
+                    <b-list-group>
+                        <b-list-group-item class="p-2 text-center" :class="{'bg-secondary': showIngreso, 'text-light': showIngreso}" @click="showIngreso = !showIngreso" button><strong>Ingreso</strong></b-list-group-item>
+                        <b-list-group-item class="p-0 overflow-hidden">
+                            <b-collapse :visible="showIngreso">
+                                <b-list-group flush>
+                                    <b-list-group-item class="p-2"><strong>Fecha Operacion</strong> {{convertDate(egreso.ingresoAsociado.fechaOperacion)}}</b-list-group-item>
+                                    <b-list-group-item class="p-2"><strong>Descripcion</strong> {{egreso.ingresoAsociado.descripcion}}</b-list-group-item>
+                                    <b-list-group-item class="p-2"><strong>Total:</strong> {{'$'+egreso.ingresoAsociado.montoTotal}}</b-list-group-item>
+                                </b-list-group>
+                            </b-collapse>
+                        </b-list-group-item>
+                    </b-list-group>
+                </div>
+            </div>
             <div class="row m-0">
                 <div class="col p-0 pt-2">
                     <b-collapse :visible="(falloAsociacionIngreso)">
@@ -63,10 +79,7 @@
                     </b-collapse>
                     <b-button-toolbar>
                         <b-button-group size="sm">
-                            <template v-if="egreso.ingresoAsociado">
-                                <b-button v-b-modal.modal-ver-ingresos variant="outline-secondary">Ver Ingreso asociado</b-button>
-                            </template>
-                            <template v-else>
+                            <template v-if="!egreso.ingresoAsociado">
                                 <b-button v-b-modal.modal-asociar-ingreso variant="outline-secondary">Asociar a Ingreso</b-button>
                             </template>
                             <template>
@@ -84,25 +97,7 @@
         <div v-else>
             
         </div>
-        
-        <b-modal id="modal-ver-ingresos" hide-footer hide-header scrollable centered size="sm" v-if="egreso">
-            <div v-if="egreso.ingresoAsociado">
-                <div class="text-center pb-3">
-                    <h4>Ingreso {{egreso.ingresoAsociado.id}}</h4>
-                </div>
-                <div>
-                    <p class="text-break"><strong>Descripcion: </strong> {{egreso.ingresoAsociado.descripcion}}</p>
-                </div>
-                <div>
-                    <p><strong>Total:</strong> {{'$'+egreso.ingresoAsociado.montoTotal}}</p>
-                </div>
-                <div>
-                    <p class="m-0"><strong>Fecha Operacion</strong> {{convertDate(egreso.ingresoAsociado.fechaOperacion)}}</p>
-                </div>
-            </div>
-        </b-modal>
 
-        <!--
         <b-modal id="modal-asociar-ingreso" hide-footer scrollable centered title="Asociar a Ingreso">
             <asociar-ingreso
                 v-bind:confirmarAccion="confirmarAsociarIngreso"
@@ -116,13 +111,14 @@
                 v-bind:cancelarAccion="cancelarAsociarCategorias"
             ></asociar-categoria>
         </b-modal>
-        -->
     </div>
 </template>
 
 <script>
 import axios from 'axios'
 import {convertDate} from '../util/utils'
+import asociarCategoria from './asociarCategoria'
+import asociarIngreso from './asociarIngreso'
 
 export default {
     props: {
@@ -135,11 +131,13 @@ export default {
             ingresos: [],
             showDatosProveedor: false,
             showDatosFactura: false,
+            showIngreso: false,
+            showPresupuesto: false,
             campos_items: [
                 {
                     key: 'producto',
                     label: 'Producto',
-                    tdClass: ['w-50'],
+                    tdClass: ['w-100'],
                     thClass: []
                 },
                 {
@@ -151,8 +149,8 @@ export default {
                 {
                     key: 'precio',
                     label: 'Precio',
-                    tdClass: ['text-center'],
-                    thClass: ['text-center']
+                    tdClass: [],
+                    thClass: []
                 }
             ],
             falloAsociacionIngreso: false
@@ -306,10 +304,8 @@ export default {
         this.cargarEgresoAPI();
     },
     components: {
-        /*
         'asociar-ingreso': asociarIngreso,
         'asociar-categoria': asociarCategoria
-        */
     }
 }
 </script>

@@ -42,9 +42,6 @@ export default {
             this.userState = null;
             this.passState = null;
 
-            console.log(`Usuario: ${this.user}`);
-            console.log(`Contraseña: ${this.pass}`);
-
             if(this.user == "") {
                 this.userState = false;
             } 
@@ -53,7 +50,8 @@ export default {
             }
 
             if(this.user != "" && this.pass != "") {
-                
+                this.loginLoading = true;
+
                 axios
                     .post('/api/login', {
                         username: this.user,
@@ -62,15 +60,24 @@ export default {
                     .then(response => {
                         var data = response.data;
                         if(data.code == 200) {
-                            console.log(response.headers);
                             document.cookie = `username=${data.nombre}; path=/`;
                             document.cookie = `organizacion=${data.organizacion.razonSocial}; path=/`;
                             this.loginSuccess();
                         } else if (data.code == 404) {
                             this.loginState = false;
-                        } else {
-                            //app.createCommonErrors(data);
                         }
+                    })
+                    .catch(error => {
+                        this.$bvToast.toast(`Ocurrió un error al iniciar sesión`, {
+                            title: 'Error',
+                            variant: 'danger',
+                            toaster: 'b-toaster-bottom-right',
+                            solid: true,
+                            appendToToast: true
+                        });
+                    })
+                    .then(() => {
+                        this.loginLoading = false;
                     });
             }
         },
