@@ -41,7 +41,7 @@ public class Scheduler extends EntidadPersistente {
 
 	public Calendar delay() {
 		Calendar calendar = Calendar.getInstance();
-		calendar.set(Calendar.DAY_OF_WEEK,retornarDia(dias));
+		calendar.set(Calendar.DAY_OF_WEEK, retornarDiaActualSegun(this.dias));
 		calendar.set(Calendar.HOUR_OF_DAY, this.horaInicio);
 		calendar.set(Calendar.MINUTE, this.minutoInicio);
 		calendar.set(Calendar.SECOND, 0);
@@ -52,9 +52,10 @@ public class Scheduler extends EntidadPersistente {
 		Inicializador hilo = new Inicializador(this.organizacion,this.validadorDeTransparencia);
 		Timer timer    = new Timer();
 		timer.schedule(hilo,delay().getTime());
+		System.out.println("holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 	}
 
-	private int retornarDia(List<Integer> dias) {
+	private int retornarDiaActualSegun(List<Integer> dias) {
 		Integer dia = dias.stream()
 							.filter(unDia->
 									DayOfWeek.of(unDia) == LocalDate.now().getDayOfWeek())
