@@ -22,10 +22,22 @@ import spark.Request;
 import spark.Response;
 
 import javax.persistence.NoResultException;
+import javax.servlet.MultipartConfigElement;
+import javax.servlet.ServletException;
+import javax.servlet.http.Part;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.apache.commons.io.FilenameUtils.getExtension;
 
 /*****************************************************************/
 public class EgresosRestController {
@@ -42,6 +54,79 @@ public class EgresosRestController {
         this.respuesta           = new Respuesta();
     }
 
+
+    public String procesarFicheroParte(File uploadDir, Part part) throws IOException {
+        String uploaded_file_name = getFileName(part);
+        // creo el fichero temporal, con un nombre generico generado y la extension del archivo que fue subido
+        Path tempFile = Files.createTempFile(uploadDir.toPath(), "", "." + getExtension(uploaded_file_name));
+        // copiar el stream de lo que me pasaron al fichero temporal
+        InputStream input = part.getInputStream();
+        Files.copy(input, tempFile, StandardCopyOption.REPLACE_EXISTING);
+        return tempFile.toAbsolutePath().toString();
+    }
+
+    public String cargarArchivoDocumentoComercial(Request request, Response response) throws IOException, ServletException {
+
+        response.type("application/json");
+        String jsonResponse;
+
+        Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request, response);
+        if(usuario == null) {
+            return response.body();
+        }
+
+        File uploadDir = new File("src/main/resources/public/upload");
+        uploadDir.mkdir(); // create the upload directory if it doesn't exist
+
+        String location = "temp";          // the directory location where files will be stored temporarily
+        long maxFileSize = 100000000;       // the maximum size allowed for uploaded files
+        long maxRequestSize = 100000000;    // the maximum size allowed for multipart/form-data requests
+        int fileSizeThreshold = 1024;       // the size threshold after which files will be written to disk
+
+        // configuracion standard
+        MultipartConfigElement multipartConfigElement = new MultipartConfigElement(
+                location, maxFileSize, maxRequestSize, fileSizeThreshold);
+        request.raw().setAttribute("org.eclipse.jetty.multipartConfig",
+                multipartConfigElement);
+
+        HashMap<String, String> filePaths = new HashMap<>();
+        for (Part part : request.raw().getParts()) {
+            if (part.getContentType().contains("text")){
+                // TODO: me mandaron un "texto" y no un archivo, corroborar que los .txt no terminan acá
+            } else {
+                String path = procesarFicheroParte(uploadDir, part);
+                if (path != "") {
+                    filePaths.put(part.getName(), path);
+                } else {
+                    this.respuesta.setCode(400);
+                    this.respuesta.setMessage("Problema al subir un fichero");
+                    jsonResponse = this.gson.toJson(this.respuesta);
+                    response.body(jsonResponse);
+                    return response.body();
+                }
+            }
+        }
+        this.respuesta.setCode(200);
+        this.respuesta.setMessage("Se produjo exitosamente la carga de archivos.");
+
+        ArchivosSubidosResponse archivosSubidosResponse = new ArchivosSubidosResponse();
+
+        archivosSubidosResponse.code    = this.respuesta.getCode();
+        archivosSubidosResponse.message = this.respuesta.getMessage();
+        archivosSubidosResponse.paths = filePaths;
+        jsonResponse = this.gson.toJson(archivosSubidosResponse);
+        response.body(jsonResponse);
+        return response.body();
+    }
+
+    private static String getFileName(Part part) {
+        for (String cd : part.getHeader("content-disposition").split(";")) {
+            if (cd.trim().startsWith("filename")) {
+                return cd.substring(cd.indexOf('=') + 1).trim().replace("\"", "");
+            }
+        }
+        return null;
+    }
 
     public String cargarNuevoEgreso(Request request, Response response) {
 
@@ -335,7 +420,13 @@ public class EgresosRestController {
                         .stream()
                         .anyMatch(unRevisor->unRevisor.getId() == estandar.getId());
     }
- 
+
+    private class ArchivosSubidosResponse {
+        public int code;
+        public String message;
+        public HashMap<String, String> paths;
+    }
+
     private class CargaEgresoResponse {
         public int code;
         public String message;

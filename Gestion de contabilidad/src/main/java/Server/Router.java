@@ -88,6 +88,8 @@ public class Router {
         Spark.post("/api/operaciones/presupuesto", presupuestoRestController::cargarNuevoPresupuesto);
         Spark.post("/api/organizacion",organizacionController::crearOrganizacion);
         Spark.get("/api/usuario/organizaciones",organizacionController::listarOrganizacionesPropias);
+        Spark.post("/api/operaciones/egreso/cargar-archivos",egresosRestController::cargarArchivoDocumentoComercial);
+    }
 
 
         Spark.after("/api/*",(request, response) -> {
