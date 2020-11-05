@@ -9,14 +9,9 @@ import javax.persistence.NoResultException;
 import Domain.Entities.Usuarios.Estandar;
 import com.google.gson.Gson;
 
-import Domain.Controllers.MedioDePagoController.MedioDePagoRespuesta;
 import Domain.Controllers.DTO.Respuesta;
-import Domain.Entities.ApiPaises.Ciudad;
 import Domain.Entities.ClasesParciales.CategoriaDato;
 import Domain.Entities.ClasesParciales.CriterioDato;
-import Domain.Entities.ClasesParciales.ProveedorDato;
-import Domain.Entities.ClasesParciales.ProveedorNuevo;
-import Domain.Entities.DatosDeOperaciones.MedioDePago;
 import Domain.Entities.Operaciones.CategoriaOperacion;
 import Domain.Entities.Operaciones.CriterioOperacion;
 import Domain.Entities.Operaciones.Presupuesto;

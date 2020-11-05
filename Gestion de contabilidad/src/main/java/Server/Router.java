@@ -1,19 +1,32 @@
 
 package Server;
 
-import Domain.Entities.Organizacion.Organizacion;
 import Domain.Controllers.*;
+import Domain.Entities.Organizacion.EntidadJuridica;
+import Domain.Entities.Organizacion.Organizacion;
+import Domain.Entities.ValidadorTransparencia.ValidadorDeTransparencia;
+import Domain.Entities.ValidadorTransparencia.ValidarCantidadMinima;
+import Domain.Entities.ValidadorTransparencia.ValidarConPresupuesto;
+import Domain.Entities.ValidadorTransparencia.ValidarMenorValor;
+import Domain.Repositories.Daos.DaoHibernate;
+import Domain.Repositories.Repositorio;
 import Spark.utils.BooleanHelper;
 import Spark.utils.HandlebarsTemplateEngineBuilder;
-
-import java.util.List;
-
-import org.hibernate.Hibernate;
+import db.EntityManagerHelperTwo;
 import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
+import java.util.List;
+
 public class Router {
     private static HandlebarsTemplateEngine engine;
+    private static ValidarCantidadMinima validacionMinima = new ValidarCantidadMinima(1);
+    private static ValidarConPresupuesto validacionPresupuesto = new ValidarConPresupuesto();
+    private static ValidarMenorValor validacionMenorValor = new ValidarMenorValor();
+
+    private static ValidadorDeTransparencia validador = new ValidadorDeTransparencia(validacionMinima, validacionPresupuesto, validacionMenorValor);
+
+    private static Repositorio<Organizacion> repoOrganizaciones = new Repositorio<>(new DaoHibernate<>(Organizacion.class));
 
     private static void initEngine(){
         Router.engine = HandlebarsTemplateEngineBuilder
@@ -31,7 +44,7 @@ public class Router {
     private static void configure(){
         rutasApi();
         rutasVista();
-       // verificarTareasProgramadas();
+        verificarTareasProgramadas();
     }
 
     private static void rutasVista() {
@@ -65,6 +78,8 @@ public class Router {
         Spark.get("/api/bandeja/configuracion",bandejaDeMensajesRestController::mostrarConfiguracion);
         Spark.post("/api/bandeja/configurar", bandejaDeMensajesRestController::configurar);
         Spark.post("/api/bandeja/visto", bandejaDeMensajesRestController::mensajeVisto);
+        Spark.get("api/bandeja",bandejaDeMensajesRestController::mostrarMensajes);
+        //Spark.get("/api/bandeja/:usuarioId",bandejaDeMensajesRestController::mostrarMensajes);
         Spark.get("/api/categorias",categoriasController::listadoCriterios);
         Spark.post("/api/categorias",categoriasController::crearCategoria);
         Spark.post("/api/categorias",categoriasController::crearCriterio);    
@@ -75,14 +90,23 @@ public class Router {
         Spark.post("/api/operaciones/asociarManualmente",asociacionOperacionesRestController::asociarManualmente);
         Spark.post("/api/categorias/asociar",categoriasController::asociarCategoriaEgreso);
         Spark.post("/api/operaciones/ingreso",ingresosRestController::cargarNuevoIngreso);
+
+
+        Spark.after("/api/*",(request, response) -> {
+            if(EntityManagerHelperTwo.getEntityManager().isOpen()){
+                EntityManagerHelperTwo.closeEntityManager();
+            }
+            response.type("application/json");
+        });
     }
-/*
     private static void verificarTareasProgramadas() {
         List<Organizacion> organizaciones = repoOrganizaciones.buscarTodos();
         organizaciones.forEach(unaOrg->{
                 unaOrg.getScheduler().setValidadorDeTransparencia(validador);
                 unaOrg.getScheduler().arrancarTarea();
         });
-    }*/
-
+        if(EntityManagerHelperTwo.getEntityManager().isOpen()){
+            EntityManagerHelperTwo.closeEntityManager();
+        }
+    }
 }

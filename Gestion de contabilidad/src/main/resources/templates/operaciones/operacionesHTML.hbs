@@ -1,4 +1,4 @@
-<div class="px-1 px-md-3 py-4">
+<div class="px-1 px-md-3 px-lg-5 py-4">
     <p>Buscar egresos e ingresos</p>
     <!--
     <div>
@@ -47,7 +47,7 @@
                         </b-collapse>
                         <b-collapse :visible="data.item.showEgreso && !egresoLoading" class="bg-light">
                             <transition name="fade">
-                                <egreso v-if="data.item.showEgreso" :egresoLoaded="egresoLoaded"></egreso>
+                                <egreso v-if="data.item.showEgreso" :egresoLoaded="egresoLoaded" :ingresos="ingresos"></egreso>
                             </transition>
                         </b-collapse>
                     </template>

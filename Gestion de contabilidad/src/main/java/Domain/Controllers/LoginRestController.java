@@ -1,6 +1,5 @@
 package Domain.Controllers;
 
-import Domain.Controllers.AdaptersJson.LocalDateAdapter;
 import Domain.Controllers.DTO.Respuesta;
 import Domain.Entities.Organizacion.Organizacion;
 import Domain.Entities.Usuarios.Estandar;
@@ -69,14 +68,12 @@ public class LoginRestController {
         }
         String jsonLogin = gson2.toJson(usuarioResponse);
 
-        response.type("application/json");
         response.body(jsonLogin);
 
         return response.body();
     }
 
     public String sessionStatus(Request request, Response response) {
-        response.type("application/json");
         Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
         if(usuario == null) {
             return response.body();

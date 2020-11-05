@@ -171,6 +171,7 @@
                         </b-col>
                     </div>
                 </div>
+                <!--
                 <div class="row mb-2">
                     <div class="col-sm-4 text-sm-right py-2">
                         <span class="mr-2"><strong>Imagen</strong></span>
@@ -179,6 +180,7 @@
                         <span class="ml-2">We'll see...</span>
                     </div>
                 </div>
+                -->
             </div>
         </div>
         <div class="col-lg-1 col-xl-3"></div>
@@ -246,7 +248,7 @@
                 <template
                     v-for="(categoria, index) in categoriasAAsociar"
                 >
-                    <b-badge class="mr-1">\{{ categoria }}</b-badge>
+                    <b-badge class="mr-1">\{{ categoria.name }}</b-badge>
                 </template>
             </div>
         </div>

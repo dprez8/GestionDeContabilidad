@@ -251,7 +251,7 @@
                                 }),
                                 success: function(data) {
                                     if(data.code == 200) {
-                                        this.userData.nombre = capitalizeFirstLetter(this.login.user);
+                                        this.userData.nombre = capitalizeFirstLetter(data.nombre);
                                         this.userData.organizacion = data.organizacion.razonSocial;
                                         this.loginSuccess();
                                     }
@@ -283,6 +283,30 @@
 
                         window.location.href = "http://{{ ip }}/login";
                     },
+                    checkIfLoggedIn() {
+                        $.ajax({
+                            url: "http://{{ ip }}/api/login",
+                            type: "GET",
+                            dataType: "json",
+                            context: this,
+                            success: function(data) {
+                                if(data.code == 200) {
+                                    console.log(data);
+                                    this.userData.nombre = capitalizeFirstLetter(data.nombre);
+                                    this.userData.organizacion = data.organizacion.razonSocial;
+                                }
+                                else if (data.code == 403) {
+                                    this.showSessionEndedAlert(true);
+                                }
+                            },
+                            error: function(data) {
+                                console.log(data);
+                            },
+                            complete: function() {
+
+                            }
+                        });
+                    },
                     softReloadPage() {
                         this.routerViewKey ? this.routerViewKey++ : this.routerViewKey--;
                     }
@@ -298,8 +322,7 @@
                     this.userData.nombre = capitalizeFirstLetter(getCookie("username"));
                     this.userData.organizacion = getCookie("organizacion");
 
-                    if(!getCookie("JSESSIONID"))
-                        this.showSessionEndedAlert(true);
+                    this.checkIfLoggedIn();
                 }
             });
             

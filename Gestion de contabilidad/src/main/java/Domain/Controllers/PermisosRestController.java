@@ -9,8 +9,10 @@ import com.google.gson.Gson;
 import spark.Request;
 import spark.Response;
 
+
+
 public class PermisosRestController {
-    private static Repositorio<Usuario> repoUsuarios = new Repositorio<>(new DaoHibernate<Usuario>(Usuario.class));
+    private static Repositorio<Usuario> repoUsuarios;
     private static Respuesta respuesta = new Respuesta();
 
 
@@ -35,11 +37,11 @@ public class PermisosRestController {
 
     private static Usuario asignarUsuarioSiEstaLogueado(Request request) throws FueraDeSesion {
         if(!request.session().isNew() && request.session().attribute("id") != null) {
+            repoUsuarios = new Repositorio<>(new DaoHibernate<Usuario>(Usuario.class));
             Usuario usuario =  repoUsuarios.buscar(request.session().attribute("id"));
             return usuario;
         }
         throw new FueraDeSesion("Usuario fuera de sesion o no existente");
     }
-
 
 }
