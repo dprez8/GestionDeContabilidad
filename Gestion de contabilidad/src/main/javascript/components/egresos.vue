@@ -4,7 +4,6 @@
             <b-table show-empty :tbody-tr-class="rowStyle" class="mb-0 border-0 border-bottom table-row-pointer" head-variant="dark"
                 :fields="campos_egresos" 
                 :items="egresos"
-                :tbody-transition-props="transProps"
                 @row-clicked="toggleEgreso"
             >
                 <template #cell(validado)="data">
@@ -13,17 +12,17 @@
                 </template>
 
                 <template #cell(valorTotal)="data">
-                    <span>\{{ "$" + data.item.valorTotal }}</span>
+                    <span>{{ "$" + data.item.valorTotal }}</span>
                 </template>
                 <template #row-details="data">
-                    <b-collapse :visible="data.item.showEgreso && egresoLoading" class="bg-light">
+                    <b-collapse :visible="data.item.showEgreso && egresoLoading">
                         <div class="text-center p-4">
-                            <b-spinner variant="primary" label="Spinning"></b-spinner>
+                            <b-spinner variant="light" label="Spinning"></b-spinner>
                         </div>
                     </b-collapse>
-                    <b-collapse :visible="data.item.showEgreso && !egresoLoading" class="bg-light">
+                    <b-collapse :visible="data.item.showEgreso && !egresoLoading">
                         <transition name="fade">
-                            <egreso v-if="data.item.showEgreso" :egresoLoaded="egresoLoaded" :ingresos="ingresos"></egreso>
+                            <egreso v-if="data.item.showEgreso" :egresoLoaded="egresoLoaded"></egreso>
                         </transition>
                     </b-collapse>
                 </template>
@@ -59,56 +58,32 @@ export default {
                 { key: 'validado', label: 'Estado', thClass:['text-center'], tdClass:['text-center'] },
                 { key: 'valorTotal', label: 'Total', thClass:['text-center'], tdClass:['text-center'] },
                 { key: 'fechaOperacion', label: 'Emitido', thClass:['text-center'], tdClass:['text-center'] }
-            ],
-            transProps: {
-              name: "fade"
-            }
+            ]
         }
     },
-    inject: ['showLoginModal'],
+    inject: ['showLoginModal', 'errorHandling'],
     methods: {
         cargarEgresosAPI(){
             this.egresosLoading = true;
             
             axios
-                .get('http://gesoc.ddns.net/api/operaciones/egresos')
+                .get('/api/operaciones/egresos')
                 .then(response => {
                     var data = response.data;
-                    console.log(data);
 
                     if(data.code == 200) {
-                        // aaa
+                        this.egresos = data.egresos.map(this.egresosAPIConverter);
                     } else if (data.code == 403) {
                         this.showLoginModal(true);
-                    } else {
-                        //app.createCommonErrors(data);
                     }
-                });
-            /*
-            $.ajax({
-                url: "http://{{ ip }}/api/operaciones/egresos",
-                type: "GET",
-                dataType: "json",
-                context: this,
-                cache: false,
-                success(response) {
-                    if(response.code == 403) {
-                        app.showSessionEndedAlert(true);
-                    } else if(response.code == 200) {
-                        console.log(response);
-                        this.egresos = response.egresos.map(this.egresosAPIConverter);
-                    } else {
-                        app.createCommonErrors(response);
-                    }
-                },
-                error(data) {
-                    app.createCommonErrors(data);
-                },
-                complete() {
+                })
+                .catch(error => {
+                    this.errorHandling(error);
+                })
+                .then(() => {
+                    // allways
                     this.egresosLoading = false;
-                }
-            });
-            */
+                })
         },
         egresosAPIConverter(egresoAPI) {
             return {
@@ -151,6 +126,9 @@ export default {
                     return ['bg-secondary', 'text-light'];
                 }
             }
+            if(type == 'row-details') {
+                return ['bg-secondary']
+            }
         }
     },
     components: {
@@ -177,5 +155,16 @@ export default {
 </script>
 
 <style>
-
+    .b-table-details > td {
+        padding: 0 !important;
+    }
+    .mw-0{
+        max-width: 0;
+    }
+    table.table-row-pointer > tbody > tr{
+        cursor: pointer;
+    }
+    table.table-row-pointer > tbody > tr.b-table-details{
+        cursor: initial;
+    }
 </style>

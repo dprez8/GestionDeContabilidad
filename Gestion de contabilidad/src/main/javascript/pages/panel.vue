@@ -6,26 +6,15 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <!-- Nombre de organizacion -->
-            <div id="navbar-organizacion" class="navbar-brand mr-2">
+            <router-link id="navbar-organizacion" class="navbar-brand mr-2" to="/">
                 <img src="../assets/utn_logo.png" width="30" height="30" class="d-inline-block align-top" style="filter: invert(1)">
                 <span class="p-2">{{userData.organizacion}}</span>
-            </div>
+            </router-link>
             <!-- Avatar -->
-            <div class="ml-auto" v-b-toggle.user-content>
+            <div class="ml-auto user-panel-avatar" @click="userPanelShow = true">
                 <b-avatar variant="primary" :text="userData.nombre.substring(0,1)"></b-avatar>
             </div>
             <!-- Panel de opciones de usuario -->
-            <b-collapse class="shadow-lg" id="user-content">
-                <b-list-group>
-                    <b-list-group-item>{{userData.nombre}}</b-list-group-item>
-                    <b-list-group-item to="/configuracion" v-b-toggle.user-content>
-                            <b-icon-gear-fill class="mr-2"></b-icon-gear-fill> Configuración
-                    </b-list-group-item>
-                    <b-list-group-item to="#" @click="logout">
-                        <b-icon-box-arrow-left class="mr-2"></b-icon-box-arrow-left> Cerrar sesión
-                    </b-list-group-item>
-                </b-list-group>
-            </b-collapse>
         </nav>
         <!-- /#navbar-wrapper -->
 
@@ -72,18 +61,35 @@
         </div>
         <!-- /#wrapper -->
 
-        <b-modal id="login-modal" centered hide-footer hide-header :no-close-on-backdrop="true">
-            <p>Se ha cerrado la sesión, ingrese su usuario y contraseña para poder continuar</p>
-            <loginForm @loginSuccess="loginSuccess"></loginForm>
+        <!-- Panel de opciones de usuario -->
+        <b-modal hide-footer hide-header hide-backdrop
+            body-class="p-0 rounded overflow-hidden"
+            dialog-class="user-panel"
+            content-class="shadow"
+            v-model="userPanelShow"
+        >
+            <b-list-group flush>
+                <b-list-group-item>{{userData.nombre}}</b-list-group-item>
+                <b-list-group-item to="/configuracion" @click="userPanelShow = false">
+                        <b-icon-gear-fill class="mr-2"></b-icon-gear-fill> Configuración
+                </b-list-group-item>
+                <b-list-group-item to="#" @click="logout">
+                    <b-icon-box-arrow-left class="mr-2"></b-icon-box-arrow-left> Cerrar sesión
+                </b-list-group-item>
+            </b-list-group>
+        </b-modal>
+
+        <b-modal id="login-modal" centered hide-footer hide-header no-close-on-esc no-close-on-backdrop size="sm">
+            <div>
+                <h3>Se cerró la sesión</h3>
+                <p>Vuelva a iniciar sesión para continuar</p>
+                <loginForm @loginSuccess="loginSuccess"></loginForm>
+            </div>
         </b-modal>
 
     </div>
     <!-- /#panel-wrapper -->
 </template>
-
-<style>
-
-</style>
 
 <script>
 import {capitalizeFirstLetter, getCookie} from '../util/utils'
@@ -111,6 +117,7 @@ export default {
                 organizacion: "",
                 nombre: ""
             },
+            userPanelShow: false,
             sidebarShow: true,
             breadcrumb: [],
             reloadPage: false,
@@ -129,11 +136,11 @@ export default {
 
             breadcrumb.forEach(crumb => {
                 if(crumb.type == "dynamic") {
-                    var key = crumb.label;
+                    var key = crumb.dynamicText;
                     var dynamicLabel = this.$route.params[key];
 
                     if(dynamicLabel != undefined) {
-                        crumb.label = dynamicLabel;
+                        crumb.label = crumb.label.replace(key, dynamicLabel);
                         crumb.path = crumb.path.replace(key, dynamicLabel);
                     }
                 }
@@ -153,30 +160,35 @@ export default {
 
             this.$bvModal.hide('login-modal');
         },
-        checkIfLoggedIn() {
-            axios
-                .get('http://gesoc.ddns.net/api/login')
-                .then(response => {
-                    var data = response.data;
-
-                    if(data.code == 200) {
-                        console.log(data);
-                        this.userData.nombre = capitalizeFirstLetter(data.nombre);
-                        this.userData.organizacion = data.organizacion.razonSocial;
-                    } else if (data.code == 403) {
-                        this.showLoginModal(true);
-                    } else {
-                        //app.createCommonErrors(data);
-                    }
-                });
-        },
         showLoginModal(reload) {
             this.reloadPage = reload;
             this.$bvModal.show('login-modal');
         },
         softReloadPage() {
             this.routerViewKey ? this.routerViewKey++ : this.routerViewKey--;
-        }
+        },
+        createToast(title, body, variant) {
+			this.$bvToast.toast(body, {
+				title: title,
+				variant: variant,
+				toaster: 'b-toaster-bottom-right',
+				solid: true,
+				appendToToast: true
+			});
+		},
+		errorHandling(response) {
+			if(response.status) {
+				switch(response.status) {
+					case 500 :
+						this.createToast('Error 500', 'Ha ocurrido un error en el servidor, vuelva a intentarlo mas tarde', 'danger');
+						break;
+					default :
+						this.createToast('Error', 'Ha ocurrido un error, vuelva a intentarlo mas tarde', 'danger');
+				}
+			} else {
+				this.createToast('Error', 'Ha ocurrido un error, vuelva a intentarlo mas tarde', 'danger');
+			}
+		}
     },
     watch: {
         $route(to, from) {
@@ -187,12 +199,12 @@ export default {
         this.updateBreadcrumb();
         this.userData.nombre = capitalizeFirstLetter(getCookie("username"));
         this.userData.organizacion = getCookie("organizacion");
-
-        this.checkIfLoggedIn();
     },
     provide() {
         return {
-            showLoginModal: this.showLoginModal
+            showLoginModal: this.showLoginModal,
+            errorHandling: this.errorHandling,
+            createToast: this.createToast
         }
     },
     components: {
@@ -200,3 +212,66 @@ export default {
     }
 }
 </script>
+
+<style>
+.user-panel-avatar{
+    cursor: pointer;
+}
+.user-panel{
+    position: absolute;
+    top: 2rem;
+    right: 5px;
+}
+
+#navbar-organizacion{
+    width: auto;
+}
+#wrapper {
+    overflow-x: hidden;
+}
+
+#sidebar-wrapper {
+    min-height: calc(100vh - 57px);
+    margin-left: -15rem;
+    -webkit-transition: margin .25s ease-out;
+    -moz-transition: margin .25s ease-out;
+    -o-transition: margin .25s ease-out;
+    transition: margin .25s ease-out;
+}
+
+#sidebar-wrapper .sidebar-heading {
+    padding: 0.875rem 1.25rem;
+    font-size: 1.2rem;
+}
+
+#sidebar-wrapper .list-group {
+    width: 15rem;
+}
+
+#page-content-wrapper {
+    min-width: 100vw;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+    margin-left: 0;
+}
+
+@media (min-width: 768px) {
+    #sidebar-wrapper {
+        margin-left: 0;
+    }
+
+    #page-content-wrapper {
+        min-width: 0;
+        width: 100%;
+    }
+
+    #wrapper.toggled #sidebar-wrapper {
+        margin-left: -15rem;
+    }
+    #navbar-organizacion{
+        width: 14rem;
+    }
+}
+
+</style>

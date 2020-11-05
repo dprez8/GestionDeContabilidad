@@ -1,0 +1,321 @@
+<template>
+    <div class="p-2 egreso_container">
+        <b-card v-if="egreso">
+            <template v-if="egreso.categorias">
+                <template v-for="(categoria, index) in egreso.categorias">
+                    <b-badge :key="index" class="mr-1">{{categoria.descripcion}}</b-badge>
+                </template>
+            </template>
+            <div class="row m-0">
+                <div class="col p-0 pr-1">
+                    <b-list-group>
+                        <b-list-group-item class="p-1 text-center" :class="{'bg-secondary': showDatosProveedor, 'text-light': showDatosProveedor}" @click="showDatosProveedor = !showDatosProveedor" button><strong>Proveedor</strong> {{ egreso.proveedor.nombre }}</b-list-group-item>
+                        <b-list-group-item class="p-0">
+                            <b-collapse :visible="showDatosProveedor">
+                                <b-list-group flush>
+                                    <b-list-group-item class="p-1"><strong>Calle: </strong>{{ egreso.proveedor.calle }}</b-list-group-item>
+                                    <b-list-group-item class="p-1"><strong>Altura: </strong>{{ egreso.proveedor.altura }}</b-list-group-item>
+                                    <b-list-group-item class="p-1"><strong>Piso: </strong>{{ egreso.proveedor.piso }}</b-list-group-item>
+                                    <b-list-group-item class="p-1"><strong>Codigo Postal: </strong>{{ egreso.proveedor.zipcode }}</b-list-group-item>
+                                </b-list-group>
+                            </b-collapse>
+                        </b-list-group-item>
+                    </b-list-group>
+                </div>
+                <div class="col p-0 pl-1">
+                    <b-list-group>
+                        <b-list-group-item class="p-1 text-center" :class="{'bg-secondary': showDatosFactura, 'text-light': showDatosFactura}" @click="showDatosFactura = !showDatosFactura" button><strong>Documento</strong> {{ egreso.documento.tipo.nombreTipoDeDocumento }}</b-list-group-item>
+                        <b-list-group-item class="p-0">
+                            <b-collapse :visible="showDatosFactura">
+                                <b-list-group flush>
+                                    <b-list-group-item class="p-1"><strong>Fecha Pedido: </strong>{{ convertDate(egreso.documento.fechaDePedido) }}</b-list-group-item>
+                                    <b-list-group-item class="p-1"><strong>Fecha Entrega: </strong>{{ convertDate(egreso.documento.fechaDeEntrega) }}</b-list-group-item>
+                                    <b-list-group-item class="p-1"><strong>Descripcion: </strong>{{ egreso.documento.descripcion }}</b-list-group-item>
+                                </b-list-group>
+                            </b-collapse>
+                        </b-list-group-item>
+                    </b-list-group>
+                </div>
+            </div>
+            <div class="row m-0">
+                <div class="col p-0 pt-2">
+                    <b-list-group horizontal class="w-100">
+                        <b-list-group-item class="p-1 w-100"><strong>Medio de pago: </strong>{{ egreso.pago.medioDePago.medioDePago }} {{ egreso.pago.codigoAsociado }}</b-list-group-item>
+                    </b-list-group>
+                </div>
+            </div>
+            <div class="row m-0 pt-2">
+                <div class="col p-0 rounded overflow-hidden border">
+                    <b-table borderless small foot class="m-0 border-0"
+                        :fields="campos_items" 
+                        :items="egreso.items"
+                    >
+                        <template #cell(precio)="data">
+                            <span>{{ "$" + data.item.precio }}</span>
+                        </template>
+                    </b-table>
+                </div>
+            </div>
+            <div class="row m-0">
+                <div class="col p-0 pt-2">
+                    <b-collapse :visible="(falloAsociacionIngreso)">
+                        <b-badge variant="danger">No se pudo asociar al ingreso</b-badge>
+                    </b-collapse>
+                    <b-button-toolbar>
+                        <b-button-group size="sm">
+                            <template v-if="egreso.ingresoAsociado">
+                                <b-button v-b-modal.modal-ver-ingresos variant="outline-secondary">Ver Ingreso asociado</b-button>
+                            </template>
+                            <template v-else>
+                                <b-button v-b-modal.modal-asociar-ingreso variant="outline-secondary">Asociar a Ingreso</b-button>
+                            </template>
+                            <template>
+                                <b-button v-b-modal.modal-asociar-categoria variant="outline-secondary">Asociar a categorias</b-button>
+                            </template>
+                            <!--
+                            <b-button>Ver Presupuestos asociados</b-button>
+                            <b-button variant="danger">Suscribirse</b-button>
+                            -->
+                        </b-button-group>
+                    </b-button-toolbar>
+                </div>
+            </div>
+        </b-card>
+        <div v-else>
+            
+        </div>
+        
+        <b-modal id="modal-ver-ingresos" hide-footer hide-header scrollable centered size="sm" v-if="egreso">
+            <div v-if="egreso.ingresoAsociado">
+                <div class="text-center pb-3">
+                    <h4>Ingreso {{egreso.ingresoAsociado.id}}</h4>
+                </div>
+                <div>
+                    <p class="text-break"><strong>Descripcion: </strong> {{egreso.ingresoAsociado.descripcion}}</p>
+                </div>
+                <div>
+                    <p><strong>Total:</strong> {{'$'+egreso.ingresoAsociado.montoTotal}}</p>
+                </div>
+                <div>
+                    <p class="m-0"><strong>Fecha Operacion</strong> {{convertDate(egreso.ingresoAsociado.fechaOperacion)}}</p>
+                </div>
+            </div>
+        </b-modal>
+
+        <!--
+        <b-modal id="modal-asociar-ingreso" hide-footer scrollable centered title="Asociar a Ingreso">
+            <asociar-ingreso
+                v-bind:confirmarAccion="confirmarAsociarIngreso"
+                v-bind:cancelarAccion="cancelarAsociarIngreso"
+            ></asociar-ingreso>
+        </b-modal>
+
+        <b-modal id="modal-asociar-categoria" hide-footer scrollable centered title="Asociar a Categoría">
+            <asociar-categoria
+                v-bind:confirmarAccion="confirmarAsociarCategorias"
+                v-bind:cancelarAccion="cancelarAsociarCategorias"
+            ></asociar-categoria>
+        </b-modal>
+        -->
+    </div>
+</template>
+
+<script>
+import axios from 'axios'
+import {convertDate} from '../util/utils'
+
+export default {
+    props: {
+        egresoLoaded: Function
+    },
+    template: `{{> egreso/egresoHTML.hbs}}`,
+    data() {
+        return {
+            egreso: null,
+            ingresos: [],
+            showDatosProveedor: false,
+            showDatosFactura: false,
+            campos_items: [
+                {
+                    key: 'producto',
+                    label: 'Producto',
+                    tdClass: ['w-50'],
+                    thClass: []
+                },
+                {
+                    key: 'cantidad',
+                    label: 'Cantidad',
+                    tdClass: ['text-center'],
+                    thClass: ['text-center']
+                },
+                {
+                    key: 'precio',
+                    label: 'Precio',
+                    tdClass: ['text-center'],
+                    thClass: ['text-center']
+                }
+            ],
+            falloAsociacionIngreso: false
+        }
+    },
+    inject: ['showLoginModal', 'errorHandling'],
+    methods: {
+        convertDate: convertDate,
+        cargarEgresoAPI() {
+            var id = this.$route.params.id;
+            if(id == undefined)
+                return;
+
+            axios
+                .get(`/api/operaciones/egreso/${id}`)
+                .then(response => {
+                    var data = response.data;
+
+                    if(data.code == 200) {
+                        this.egreso = data.egreso;
+                        this.egreso.items = data.egreso.items.map(this.itemEgresoAPIConverter);
+                    } else if (data.code == 403) {
+                        this.showLoginModal(true);
+                    }
+                })
+                .catch(error => {
+                    this.errorHandling(error);
+                })
+                .then(() => {
+                    // allways
+                    this.egresoLoaded();
+                })
+        },
+        itemEgresoAPIConverter(item) {
+            return {
+                producto: item.producto.nombreProducto,
+                cantidad: item.cantidad,
+                precio: item.precio
+            }
+        },
+        // Ingreso
+        confirmarAsociarIngreso(data) {
+
+            this.falloAsociacionIngreso = false;
+
+            this.$bvModal.hide('modal-asociar-ingreso');
+            console.log(data);
+
+            var ingreso = data;
+
+            if(ingreso) {
+
+                var request = {
+                    egresoId: this.egreso.id,
+                    ingresoId: ingreso.id
+                }
+
+                console.log("POST '/api/operaciones/asociarManualmente'");
+                console.log(JSON.stringify(request, null, 4));
+
+                /*
+                $.ajax({
+                    url: "http://{{ ip }}/api/operaciones/asociarManualmente",
+                    type: "POST",
+                    dataType: "json",
+                    context: this,
+                    data: JSON.stringify(request),
+                    success(response) {
+                        if(response.code == 403) {
+                            app.showSessionEndedAlert(true);
+                        } else if(response.code == 400) {
+                            // Fallo la asociacion de ingreso
+                            this.falloAsociacionIngreso = true;
+                        } else if(response.code == 200) {
+                            // El ingreso se asoció correctamente
+                            console.log(response);
+                            app.softReloadPage();
+                        } else {
+                            // Fallo la asociacion de ingreso (default)
+                            this.falloAsociacionIngreso = true;
+                            app.createCommonErrors(response);
+                        }
+                    },
+                    error(data) {
+                        this.falloAsociacionIngreso = true;
+                        app.createCommonErrors(data);
+                    }
+                });
+                */
+            } 
+
+        },
+        cancelarAsociarIngreso() {
+            this.$bvModal.hide('modal-asociar-ingreso');
+        },
+        // Categorias
+        confirmarAsociarCategorias(data) {
+            this.$bvModal.hide('modal-asociar-categoria');
+            console.log(data);
+
+            var categorias = data;
+
+            if(categorias) {
+
+                var request = {
+                    id: this.egreso.id,
+                    categorias: categorias.map(function(categoria){
+                        return categoria.id;
+                    }),
+                }
+
+                console.log("POST '/api/categorias/asociar'");
+                console.log(JSON.stringify(request, null, 4));
+
+                /*
+                $.ajax({
+                    url: "http://{{ ip }}/api/categorias/asociar",
+                    type: "POST",
+                    dataType: "json",
+                    context: this,
+                    data: JSON.stringify(request),
+                    success(response) {
+                        if(response.code == 403) {
+                            app.showSessionEndedAlert(false);
+                        } else if(response.code == 400) {
+                            // Fallo la asociacion de categorias
+                            this.falloCarga = true;
+                        } else if(response.code == 200) {
+                            // Las categorias se asociaron correctamente
+                            console.log(response);
+                            app.softReloadPage();
+                        } else {
+                            // Fallo la asociacion de categorias (default)
+                            this.falloCarga = true;
+                            app.createCommonErrors(response);
+                        }
+                    },
+                    error(data) {
+                        this.falloCarga = true;
+                        app.createCommonErrors(data);
+                    }
+                });
+                */
+            }
+        },
+        cancelarAsociarCategorias() {
+            this.$bvModal.hide('modal-asociar-categoria');
+        },
+    },
+    mounted() {
+        this.cargarEgresoAPI();
+    },
+    components: {
+        /*
+        'asociar-ingreso': asociarIngreso,
+        'asociar-categoria': asociarCategoria
+        */
+    }
+}
+</script>
+
+<style>
+.egreso_container{
+    background: var(--secondary);
+}
+</style>

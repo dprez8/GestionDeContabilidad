@@ -5,14 +5,14 @@
                 :items="ingresos">
                 <template #cell(descripcion)="data">
                     <b-collapse :id="'ingreso-descripcion'+data.index" :visible="true">
-                        <div class="text-nowrap text-truncate" v-b-toggle="'ingreso-descripcion'+data.index">\{{data.item.descripcion}}</div>
+                        <div class="text-nowrap text-truncate" v-b-toggle="'ingreso-descripcion'+data.index">{{data.item.descripcion}}</div>
                     </b-collapse>
                     <b-collapse :id="'ingreso-descripcion'+data.index">
-                        <div style="overflow-wrap: break-word" v-b-toggle="'ingreso-descripcion'+data.index">\{{data.item.descripcion}}</div>
+                        <div style="overflow-wrap: break-word" v-b-toggle="'ingreso-descripcion'+data.index">{{data.item.descripcion}}</div>
                     </b-collapse>
                 </template>
                 <template #cell(montoTotal)="data">
-                    <span>\{{ "$" + data.item.montoTotal }}</span>
+                    <span>{{ "$" + data.item.montoTotal }}</span>
                 </template>
 
                 <template #empty>
@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import {convertDate} from '../util/utils'
 
 export default {
@@ -43,34 +44,29 @@ export default {
             ]
         }
     },
+    inject: ['showLoginModal', 'errorHandling'],
     methods: {
         cargarIngresosAPI(){
             this.ingresosLoading = true;
-            /*
-            $.ajax({
-                url: "http://{{ ip }}/api/operaciones/ingresos",
-                type: "GET",
-                dataType: "json",
-                context: this,
-                cache: false,
-                success(response) {
-                    if(response.code == 403) {
-                        app.showSessionEndedAlert(true);
-                    } else if(response.code == 200) {
-                        console.log(response);
-                        this.ingresos = response.ingresos.map(this.ingresosAPIConverter);
-                    } else {
-                        app.createCommonErrors(response);
+
+            axios
+                .get(`/api/operaciones/ingresos`)
+                .then(response => {
+                    var data = response.data;
+
+                    if(data.code == 200) {
+                        this.ingresos = data.ingresos.map(this.ingresosAPIConverter);
+                    } else if (data.code == 403) {
+                        this.showLoginModal(true);
                     }
-                },
-                error(data) {
-                    app.createCommonErrors(data);
-                },
-                complete() {
+                })
+                .catch(error => {
+                    this.errorHandling(error);
+                })
+                .then(() => {
+                    // allways
                     this.ingresosLoading = false;
-                }
-            });
-            */
+                })
         },
         ingresosAPIConverter(ingresoAPI) {
             return {

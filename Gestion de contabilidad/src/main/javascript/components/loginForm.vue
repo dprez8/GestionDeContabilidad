@@ -55,15 +55,17 @@ export default {
             if(this.user != "" && this.pass != "") {
                 
                 axios
-                    .post('http://gesoc.ddns.net/api/login', {
+                    .post('/api/login', {
                         username: this.user,
                         password: this.pass
                     })
                     .then(response => {
                         var data = response.data;
                         if(data.code == 200) {
+                            console.log(response.headers);
+                            document.cookie = `username=${data.nombre}; path=/`;
+                            document.cookie = `organizacion=${data.organizacion.razonSocial}; path=/`;
                             this.loginSuccess();
-                            console.log(response);
                         } else if (data.code == 404) {
                             this.loginState = false;
                         } else {

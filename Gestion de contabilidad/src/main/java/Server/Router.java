@@ -12,9 +12,11 @@ import Domain.Repositories.Repositorio;
 import Spark.utils.BooleanHelper;
 import Spark.utils.HandlebarsTemplateEngineBuilder;
 import spark.Filter;
+import spark.ModelAndView;
 import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class Router {
@@ -46,9 +48,10 @@ public class Router {
     }
 
     private static void rutasVista() {
-        VistaController vistaController = new VistaController();
-
-        //Spark.get("/*", vistaController::VueJSApp, Router.engine);
+        Spark.get("/*", (req, res) ->
+                        new ModelAndView(new HashMap(),
+                                "../public/index.html"),
+                        Router.engine);
     }
 
     private static void rutasApi() {

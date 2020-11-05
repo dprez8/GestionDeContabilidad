@@ -12,7 +12,13 @@ module.exports = {
             contentBase: contentBaseDir,
             compress: true,
             port: 9000,
-            disableHostCheck: true
+            disableHostCheck: true,
+            proxy: {
+                '^/api': {
+                    target: 'http://localhost:80',
+                    changeOrigin: true
+                },
+            }
     },
     pages: {
             index: {
@@ -24,7 +30,7 @@ module.exports = {
                 filename: 'index.html',
                 // when using title option,
                 // template title tag needs to be <title><%= htmlWebpackPlugin.options.title %></title>
-                title: 'Vue with Java',
+                title: 'GeSoc',
                 // chunks to include on this page, by default includes
                 // extracted common chunks and vendor chunks.
                 chunks: ['chunk-vendors', 'chunk-common', 'index']
