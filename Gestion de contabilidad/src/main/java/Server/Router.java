@@ -48,10 +48,7 @@ public class Router {
     private static void rutasVista() {
         LoginController loginController = new LoginController();
         PanelController panelController = new PanelController();
-        TestController testController = new TestController();
 
-        Spark.get("/test/cargar-archivo", testController::mostrarFormularioCargarArchivo, Router.engine);
-        Spark.post("/test/cargar-archivo", testController::cargarArchivo);
         Spark.get("/login", loginController::mostrarLogin, Router.engine);
         Spark.get("/*", panelController::mostrarInicio, Router.engine);
     }
@@ -87,6 +84,7 @@ public class Router {
         Spark.post("/api/operaciones/asociarManualmente",asociacionOperacionesRestController::asociarManualmente);
         Spark.post("/api/categorias/asociar",categoriasController::asociarCategoriaEgreso);
         Spark.post("/api/operaciones/ingreso",ingresosRestController::cargarNuevoIngreso);
+        Spark.post("/api/operaciones/egreso/cargar-archivos",egresosRestController::cargarArchivoDocumentoComercial);
     }
 
     private static void verificarTareasProgramadas() {

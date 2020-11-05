@@ -1,4 +1,5 @@
-
+src/resources/public/upload/
+src/resources/public/upload/*
 src/resources/public/*
 # Created by https://www.gitignore.io/api/java,intellij
 # Edit at https://www.gitignore.io/?templates=java,intellij
