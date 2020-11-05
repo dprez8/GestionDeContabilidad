@@ -15,8 +15,11 @@ import spark.Filter;
 import spark.ModelAndView;
 import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
-
 import java.util.HashMap;
+import db.EntityManagerHelper;
+import db.EntityManagerHelperTwo;
+
+import javax.persistence.EntityManager;
 import java.util.List;
 
 public class Router {
@@ -110,6 +113,14 @@ public class Router {
         Spark.post("/api/operaciones/asociarManualmente",asociacionOperacionesRestController::asociarManualmente);
         Spark.post("/api/categorias/asociar",categoriasController::asociarCategoriaEgreso);
         Spark.post("/api/operaciones/presupuesto", presupuestoRestController::cargarNuevoPresupuesto);
+
+
+        Spark.after("/api/*",(request, response) -> {
+            if(EntityManagerHelperTwo.getEntityManager().isOpen()){
+                EntityManagerHelperTwo.closeEntityManager();
+            }
+            response.type("application/json");
+        });
     }
 
     private static void verificarTareasProgramadas() {
@@ -118,5 +129,8 @@ public class Router {
                 unaOrg.getScheduler().setValidadorDeTransparencia(validador);
                 unaOrg.getScheduler().arrancarTarea();
         });
+        if(EntityManagerHelperTwo.getEntityManager().isOpen()){
+            EntityManagerHelperTwo.closeEntityManager();
+        }
     }
 }

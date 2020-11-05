@@ -15,7 +15,8 @@ import Domain.Repositories.Repositorio;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
-import db.EntityManagerHelper;
+
+import db.EntityManagerHelperTwo;
 import spark.Request;
 import spark.Response;
 
@@ -54,7 +55,6 @@ public class EgresosRestController {
 
     public String cargarNuevoEgreso(Request request, Response response) {
 
-        response.type("application/json");
         String jsonResponse;
 
         Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
@@ -93,16 +93,17 @@ public class EgresosRestController {
     }
 
     public String listadoDeEgresos(Request request, Response response) {
-        response.type("application/json");
+
         Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
         if(usuario == null) {
             return response.body();
         }
+
         this.gson  = new GsonBuilder()
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())
                 .create();
 
-        EntidadJuridica entidadJuridica= this.repoEntidadJuridica.buscar(usuario.getMiOrganizacion().getId());
+        EntidadJuridica entidadJuridica = this.repoEntidadJuridica.buscar(usuario.getMiOrganizacion().getId());
         List<EgresoResponse> egresosAEnviar;
         String jsonResponse;
 
@@ -127,11 +128,12 @@ public class EgresosRestController {
         jsonResponse = this.gson.toJson(listadoEgresos);
         response.body(jsonResponse);
         egresosAEnviar.clear();
+
         return response.body();
     }
 
     public String mostrarEgreso(Request request, Response response) {
-        response.type("application/json");
+
         Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
         if(usuario == null) {
             return response.body();
@@ -149,9 +151,10 @@ public class EgresosRestController {
         egreso = this.repoEgresos.buscar(new Integer(request.params("egresoId")));
 
         if(egreso == null) {
+            Gson gson = new Gson();
             this.respuesta.setCode(404);
             this.respuesta.setMessage("El egreso no existe");
-            jsonResponse = this.gson.toJson(this.respuesta);
+            jsonResponse = gson.toJson(this.respuesta);
             response.body(jsonResponse);
             return response.body();
         }
@@ -238,7 +241,7 @@ public class EgresosRestController {
 
     private Producto buscarProducto(String nombreProducto) {
         try {
-            Producto producto= (Producto) EntityManagerHelper
+            Producto producto= (Producto) EntityManagerHelperTwo
                         .createQuery("from Producto where nombre_producto = :nombre")
                         .setParameter("nombre",nombreProducto)
                         .getSingleResult();
@@ -266,11 +269,14 @@ public class EgresosRestController {
     }
 
     private boolean verificarSuscripcion(Estandar estandar, Egreso egreso) {
+        if(egreso.getRevisores().isEmpty()){
+            return false;
+        }
         return egreso.getRevisores()
                         .stream()
                         .anyMatch(unRevisor->unRevisor.getId() == estandar.getId());
     }
-
+ 
     private class CargaEgresoResponse {
         public int code;
         public String message;
