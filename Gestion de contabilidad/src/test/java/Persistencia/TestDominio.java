@@ -45,6 +45,8 @@ public class TestDominio {
     private Repositorio<Ingreso> repoIngresos;
     private Repositorio<CriterioOperacion> repoCriterios;
     private Repositorio<CategoriaOperacion> repoCategorias;
+    private Repositorio<ValidadorDeTransparencia> repoValidadores;
+    private Repositorio<ValidacionDeTransparencia> repoValidaciones;
 
     @Before
     public void antesDePersistir() {
@@ -63,6 +65,8 @@ public class TestDominio {
         this.repoIngresos        = new Repositorio<>(new DaoHibernate<>(Ingreso.class));
         this.repoCriterios       = new Repositorio<>(new DaoHibernate<>(CriterioOperacion.class));
         this.repoCategorias       = new Repositorio<>(new DaoHibernate<>(CategoriaOperacion.class));
+        this.repoValidadores      = new Repositorio<>(new DaoHibernate<>(ValidadorDeTransparencia.class));
+        this.repoValidaciones     = new Repositorio<>(new DaoHibernate<>(ValidacionDeTransparencia.class));
     }
 
     @Test
@@ -81,9 +85,9 @@ public class TestDominio {
         entidadJuridica.setNombreFicticio("Organizacion");
 
         this.repoEntidadJuridica.agregar(entidadJuridica);
-        Scheduler scheduler = new Scheduler();
-        scheduler.setOrganizacion(entidadJuridica);
-        entidadJuridica.setScheduler(scheduler);
+        SchedulerInit schedulerInit = new SchedulerInit();
+        schedulerInit.setOrganizacion(entidadJuridica);
+        entidadJuridica.setSchedulerInit(schedulerInit);
         this.repoEntidadJuridica.modificar(entidadJuridica);
         System.out.println("Numero "+ entidadJuridica.getId());
     }
@@ -245,7 +249,7 @@ public class TestDominio {
     }
 
     @Test
-    public void T8persistirUnMensajeAPepe (){
+    public void T8persistirValidadorAPepsi (){
         EntidadJuridica pepsi = this.repoEntidadJuridica.buscar(1);
 
         /**Creacion de los validadores*/
@@ -254,17 +258,19 @@ public class TestDominio {
         ValidarMenorValor validacionMenorValor = new ValidarMenorValor();
 
         ValidadorDeTransparencia validador = new ValidadorDeTransparencia(validacionMinima,validacionPresupuesto,validacionMenorValor);
+        this.repoValidadores.agregar(validador);
 
+        SchedulerInit schedulerInit = pepsi.getSchedulerInit();
 
-        Scheduler scheduler = pepsi.getScheduler();
-
-        scheduler.setValidadorDeTransparencia(validador);
-        scheduler.arrancarTarea();
+        schedulerInit.setValidadorDeTransparencia(validador);
+        pepsi.setSchedulerInit(schedulerInit);
+        this.repoEntidadJuridica.modificar(pepsi);
+        //schedulerInit.arrancarTarea();
 
         //List<Egreso> egresos = pepsi.getEgresos().stream().filter(a -> a.isValidado() == false).collect(Collectors.toList()); //Lo egresos que no han sido validados o no pasaron las pruebas anteriormente
         //egresos.forEach(egreso -> validador.validarEgreso(egreso));
 
-        Assert.assertEquals(true,pepsi.getEgresos().get(0).isValidado());
+        //Assert.assertEquals(true,pepsi.getEgresos().get(0).isValidado());
     }
 
     @Test

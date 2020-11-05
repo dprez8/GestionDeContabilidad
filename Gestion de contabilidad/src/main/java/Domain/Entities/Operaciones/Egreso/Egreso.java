@@ -48,6 +48,7 @@ public class Egreso extends Operacion {
 	private List<Presupuesto> presupuestos;
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinTable(name = "egreso_x_revisor")
 	private List<Estandar> revisores;
 
 	@Expose

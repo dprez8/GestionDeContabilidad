@@ -8,7 +8,7 @@ import com.google.common.hash.Hashing;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
-import db.EntityManagerHelper;
+import db.EntityManagerHelperTwo;
 import spark.Request;
 import spark.Response;
 
@@ -39,7 +39,7 @@ public class LoginRestController {
                     .hashString(usuarioRequest.password, StandardCharsets.UTF_8)
                     .toString();
         try{
-             usuario = (Usuario) EntityManagerHelper
+             usuario = (Usuario) EntityManagerHelperTwo
                     .createQuery("from Usuario where nombre = :username and contrasenia = :password")
                     .setParameter("username",usuarioRequest.username)
                     .setParameter("password",passwordHash)

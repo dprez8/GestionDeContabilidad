@@ -19,13 +19,13 @@
                 <div class="d-flex justify-content-center pb-5">
                     <div class="d-flex align-items-center">
                         <b-button-group vertical>
-                            <b-button @click="scheduler.horaInicio++">
+                            <b-button @click="schedulerInit.horaInicio++">
                                 <b-icon-chevron-compact-up></b-icon-chevron-compact-up>
                             </b-button>
                             <b-button style="font-size: 2rem;">
                                 \{{getHora()}}
                             </b-button>
-                            <b-button @click="scheduler.horaInicio--">
+                            <b-button @click="schedulerInit.horaInicio--">
                                 <b-icon-chevron-compact-down></b-icon-chevron-compact-down>
                             </b-button></b-button>
                         </b-button-group>
@@ -34,13 +34,13 @@
                             <b-icon-dot class="d-block"></b-icon-dot>
                         </div>
                         <b-button-group vertical>
-                            <b-button @click="scheduler.minutoInicio++">
+                            <b-button @click="schedulerInit.minutoInicio++">
                                 <b-icon-chevron-compact-up></b-icon-chevron-compact-up>
                             </b-button>
                             <b-button style="font-size: 2rem;">
                                 \{{getMinuto()}}
                             </b-button>
-                            <b-button @click="scheduler.minutoInicio--">
+                            <b-button @click="schedulerInit.minutoInicio--">
                                 <b-icon-chevron-compact-down></b-icon-chevron-compact-down>
                             </b-button></b-button>
                         </b-button-group>

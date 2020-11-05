@@ -2,12 +2,8 @@
 package Server;
 
 import Domain.Controllers.*;
-import Domain.Entities.Organizacion.EntidadJuridica;
 import Domain.Entities.Organizacion.Organizacion;
-import Domain.Entities.ValidadorTransparencia.ValidadorDeTransparencia;
-import Domain.Entities.ValidadorTransparencia.ValidarCantidadMinima;
-import Domain.Entities.ValidadorTransparencia.ValidarConPresupuesto;
-import Domain.Entities.ValidadorTransparencia.ValidarMenorValor;
+import Domain.Entities.ValidadorTransparencia.*;
 import Domain.Repositories.Daos.DaoHibernate;
 import Domain.Repositories.Repositorio;
 import Spark.utils.BooleanHelper;
@@ -16,15 +12,12 @@ import db.EntityManagerHelperTwo;
 import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
 
 public class Router {
     private static HandlebarsTemplateEngine engine;
-    private static ValidarCantidadMinima validacionMinima = new ValidarCantidadMinima(1);
-    private static ValidarConPresupuesto validacionPresupuesto = new ValidarConPresupuesto();
-    private static ValidarMenorValor validacionMenorValor = new ValidarMenorValor();
-
-    private static ValidadorDeTransparencia validador = new ValidadorDeTransparencia(validacionMinima, validacionPresupuesto, validacionMenorValor);
 
     private static Repositorio<Organizacion> repoOrganizaciones = new Repositorio<>(new DaoHibernate<>(Organizacion.class));
 
@@ -102,11 +95,24 @@ public class Router {
     private static void verificarTareasProgramadas() {
         List<Organizacion> organizaciones = repoOrganizaciones.buscarTodos();
         organizaciones.forEach(unaOrg->{
-                unaOrg.getScheduler().setValidadorDeTransparencia(validador);
-                unaOrg.getScheduler().arrancarTarea();
+                Tarea tarea = new Tarea();
+                Timer timer = new Timer();
+
+                HashMap<Integer, Tarea> schedulerHashMap = new HashMap<>();
+                schedulerHashMap.put(unaOrg.getSchedulerInit().getId(), tarea);
+
+                HashMap<Integer, Timer> timerHashMap = new HashMap<>();
+                timerHashMap.put(unaOrg.getSchedulerInit().getId(),timer);
+
+                TimersController.instancia().setSchedulerHashMap(schedulerHashMap);
+                TimersController.instancia().setTimerHashMap(timerHashMap);
+
+                unaOrg.getSchedulerInit().setTarea(tarea);
+                unaOrg.getSchedulerInit().setTimer(timer);
+                unaOrg.getSchedulerInit().arrancarTarea();
         });
-        if(EntityManagerHelperTwo.getEntityManager().isOpen()){
+        /*if(EntityManagerHelperTwo.getEntityManager().isOpen()){
             EntityManagerHelperTwo.closeEntityManager();
-        }
+        }*/
     }
 }

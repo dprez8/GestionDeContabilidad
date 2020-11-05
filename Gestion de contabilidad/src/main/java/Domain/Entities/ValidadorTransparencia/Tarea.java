@@ -11,12 +11,8 @@ import Domain.Entities.Operaciones.Egreso.Egreso;
 import Domain.Entities.Organizacion.*;
 import Domain.Repositories.Daos.DaoHibernate;
 import Domain.Repositories.Repositorio;
-import com.google.gson.annotations.Expose;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-
-public class Scheduler extends TimerTask {
+public class Tarea extends TimerTask {
     private Organizacion organizacion;
     private ValidadorDeTransparencia validador;
     private Repositorio<Organizacion> repoOrganizacion;
@@ -24,7 +20,7 @@ public class Scheduler extends TimerTask {
     private int minutoInicio;
     private List<Integer> dias;
 
-    public Scheduler(){
+    public Tarea(){
         this.repoOrganizacion = new Repositorio<>(new DaoHibernate<>(Organizacion.class));
         this.dias = new ArrayList<>();
     }
@@ -32,26 +28,34 @@ public class Scheduler extends TimerTask {
     @Override
     public void run() {
         if(retornarDiaActualSegun(this.dias) != 0) {
-            List<Egreso> egresos = this.organizacion.getEgresos().stream().filter(a -> a.isValidado() == false).collect(Collectors.toList()); //Lo egresos que no han sido validados o no pasaron las pruebas anteriormente
-            egresos.forEach(egreso -> this.validador.validarEgreso(egreso)); //valida cada uno de los egresos que no se habian validado
-            this.repoOrganizacion.modificar(this.organizacion);
-            System.out.println("valide");
+            //Lo egresos que no han sido validados o no pasaron las pruebas anteriormente
+            List<Egreso> egresos = this.organizacion
+                                        .getEgresos()
+                                        .stream().filter(a ->
+                                                         a.isValidado() == false)
+                                        .collect(Collectors.toList());
+            if(egresos.isEmpty()) {
+                System.out.println("No hay egresos para validar");
+                System.out.println(egresos);
+            }
+            else {
+                egresos.forEach(egreso -> this.validador.validarEgreso(egreso));
+                this.repoOrganizacion.modificar(this.organizacion);
+                System.out.println("valide");
+            }
         }
         System.out.println("ejecutando");
     }
 
     public Calendar delay() {
         Calendar calendar = Calendar.getInstance();
-        if(retornarDiaActualSegun(this.dias) == 0) {
-            calendar.set(Calendar.HOUR_OF_DAY, this.horaInicio);
-            calendar.set(Calendar.MINUTE, this.minutoInicio);
-            calendar.set(Calendar.SECOND, 0);
-            return calendar;
-        }
-        calendar.set(Calendar.DAY_OF_WEEK, retornarDiaActualSegun(this.dias));
         calendar.set(Calendar.HOUR_OF_DAY, this.horaInicio);
         calendar.set(Calendar.MINUTE, this.minutoInicio);
         calendar.set(Calendar.SECOND, 0);
+        if(retornarDiaActualSegun(this.dias) != 0) {
+            calendar.set(Calendar.DAY_OF_WEEK, retornarDiaActualSegun(this.dias));
+            return calendar;
+        }
         return calendar;
     }
 

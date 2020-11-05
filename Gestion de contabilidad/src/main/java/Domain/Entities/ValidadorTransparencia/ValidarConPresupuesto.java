@@ -3,8 +3,11 @@ package Domain.Entities.ValidadorTransparencia;
 import Domain.Entities.Operaciones.Egreso.Egreso;
 import Domain.Entities.Operaciones.Presupuesto;
 
-import java.util.stream.Collectors;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 
+@Entity
+@DiscriminatorValue("validacion_con_presupuesto")
 public class ValidarConPresupuesto extends ValidacionDeTransparencia {
 
 	@Override

@@ -5,12 +5,11 @@ import Domain.Entities.Organizacion.Organizacion;
 import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
-import java.time.*;
 import java.util.*;
 
 @Entity
 @Table(name = "scheduler")
-public class Scheduler extends EntidadPersistente {
+public class SchedulerInit extends EntidadPersistente {
 
 	@Expose
 	@Column(name = "hora_inicio")
@@ -28,10 +27,16 @@ public class Scheduler extends EntidadPersistente {
 	@OneToOne(fetch = FetchType.LAZY)
 	private Organizacion organizacion;
 
-	@Transient
+	@ManyToOne
+	@JoinColumn(name = "validador_id",referencedColumnName = "id")
 	private ValidadorDeTransparencia validadorDeTransparencia;
 
-	public Scheduler() {
+	@Transient
+	private Tarea tarea;
+	@Transient
+	private Timer timer;
+
+	public SchedulerInit() {
 		this.horaInicio = 20;
 		this.minutoInicio = 00;
 		this.dias = new ArrayList<>();
@@ -39,47 +44,17 @@ public class Scheduler extends EntidadPersistente {
 		Collections.addAll(this.dias,diasDefault);
 	}
 
-	public Calendar delay() {
-		Calendar calendar = Calendar.getInstance();
-		calendar.set(Calendar.DAY_OF_WEEK, retornarDiaActualSegun(this.dias));
-		calendar.set(Calendar.HOUR_OF_DAY, this.horaInicio);
-		calendar.set(Calendar.MINUTE, this.minutoInicio);
-		calendar.set(Calendar.SECOND, 0);
-		return calendar;
-	}
-
 	public void arrancarTarea(){
-		Inicializador hilo = new Inicializador(this.organizacion,this.validadorDeTransparencia);
-		Timer timer    = new Timer();
-		timer.schedule(hilo,delay().getTime());
-		System.out.println("holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+		this.tarea.setOrganizacion(this.organizacion);
+		this.tarea.setValidador(this.validadorDeTransparencia);
+		this.tarea.setDias(this.dias);
+		this.tarea.setHoraInicio(this.horaInicio);
+		this.tarea.setMinutoInicio(this.minutoInicio);
+		/*1000*60*60*24 = a un dia de demora*/
+		this.timer.schedule(tarea, tarea.delay().getTime(),10000);
+
 	}
 
-	private int retornarDiaActualSegun(List<Integer> dias) {
-		Integer dia = dias.stream()
-							.filter(unDia->
-									DayOfWeek.of(unDia) == LocalDate.now().getDayOfWeek())
-							.findAny()
-							.orElse(null);
-		switch(dia) {
-			case 0:
-				return Calendar.SUNDAY;
-			case 1:
-				return Calendar.MONDAY;
-			case 2:
-				return Calendar.TUESDAY;
-			case 3:
-				return Calendar.WEDNESDAY;
-			case 4:
-				return Calendar.THURSDAY;
-			case 5:
-				return Calendar.FRIDAY;
-			case 6:
-				return Calendar.SATURDAY;
-			default:
-				return 0;
-		}
-	}
 	/** Setter & Getters */
 	public int getHoraInicio() {
 		return horaInicio;
@@ -119,5 +94,21 @@ public class Scheduler extends EntidadPersistente {
 
 	public void setValidadorDeTransparencia(ValidadorDeTransparencia validadorDeTransparencia) {
 		this.validadorDeTransparencia = validadorDeTransparencia;
+	}
+
+	public Tarea getTarea() {
+		return tarea;
+	}
+
+	public void setTarea(Tarea tarea) {
+		this.tarea = tarea;
+	}
+
+	public Timer getTimer() {
+		return timer;
+	}
+
+	public void setTimer(Timer timer) {
+		this.timer = timer;
 	}
 }
