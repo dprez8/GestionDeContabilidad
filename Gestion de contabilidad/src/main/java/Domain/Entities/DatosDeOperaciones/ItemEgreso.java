@@ -12,8 +12,8 @@ public class ItemEgreso extends EntidadPersistente {
 
 	@Expose
 	@ManyToOne
-	@JoinColumn(name = "producto_id", referencedColumnName="id")
-	private Producto producto;
+	@JoinColumn(name = "tipo_id", referencedColumnName="id")
+	private TipoItem tipo;
 
 	@Expose
 	@Column
@@ -30,8 +30,8 @@ public class ItemEgreso extends EntidadPersistente {
 	public ItemEgreso() {
 	}
 
-    public ItemEgreso(Producto producto, int cantidad, double precio) {
-            this.producto = producto;
+    public ItemEgreso(TipoItem tipo, int cantidad, double precio) {
+            this.tipo = tipo;
             this.cantidad = cantidad;
             this.precio = precio;
     }
@@ -39,8 +39,8 @@ public class ItemEgreso extends EntidadPersistente {
         return this.cantidad * this.precio;
     }
 
-	public void setProducto(Producto producto) {
-		this.producto = producto;
+	public void setTipo(TipoItem tipo) {
+		this.tipo = tipo;
 	}
 
 	public void setCantidad(int cantidad) {
@@ -68,8 +68,8 @@ public class ItemEgreso extends EntidadPersistente {
 	public double getPrecio() {
 		return precio;
 	}
-	public Producto getProducto() {
-		return producto;
+	public TipoItem getTipo() {
+		return tipo;
 	}
     /********************************/
 }

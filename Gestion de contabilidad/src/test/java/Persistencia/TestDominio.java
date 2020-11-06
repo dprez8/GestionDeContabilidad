@@ -240,8 +240,8 @@ public class TestDominio {
         Assert.assertEquals(0,segundoPresupuesto.getEgresoAsociado().getId());
         Assert.assertEquals("Factura A",unaCompra.getDocumento().getTipo().getNombreTipoDeDocumento());
         Assert.assertEquals("razonSocial",pepsiCompra.getRazonSocial());
-        Assert.assertEquals("4GB DDR5",unaCompra.getItems().get(1).getProducto().getNombreProducto());
-        Assert.assertEquals("Memoria RAM 4 gb DDR3",unaCompra.getItems().get(0).getProducto().getNombreProducto());
+        Assert.assertEquals("4GB DDR5",unaCompra.getItems().get(1).getTipo().getNombre());
+        Assert.assertEquals("Memoria RAM 4 gb DDR3",unaCompra.getItems().get(0).getTipo().getNombre());
         Assert.assertEquals(2,unaCompra.getPresupuestos().get(0).getId());
         Assert.assertEquals(1,unaCompra.getPresupuestos().get(1).getId());
         Assert.assertEquals(1,unaCompra.getRevisores().get(0).getId());

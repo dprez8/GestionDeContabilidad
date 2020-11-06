@@ -32,6 +32,7 @@ public class EgresosRestController {
     private Repositorio<Egreso> repoEgresos;
     private Repositorio<ItemEgreso> repoItems;
     private Repositorio<Producto> repoProductos;
+    private Repositorio<Servicio> repoServicios;
     private Repositorio<Pago> repoPagos;
     private Repositorio<MedioDePago> repoMedioDePagos;
     private Repositorio<Proveedor> repoProveedores;
@@ -47,6 +48,7 @@ public class EgresosRestController {
         this.repoEgresos         = new Repositorio<>(new DaoHibernate<>(Egreso.class));
         this.repoItems           = new Repositorio<>(new DaoHibernate<>(ItemEgreso.class));
         this.repoProductos       = new Repositorio<>(new DaoHibernate<>(Producto.class));
+        this.repoServicios       = new Repositorio<>(new DaoHibernate<>(Servicio.class));
         this.repoPagos           = new Repositorio<>(new DaoHibernate<>(Pago.class));
         this.repoMedioDePagos    = new Repositorio<>(new DaoHibernate<>(MedioDePago.class));
         this.repoProveedores     = new Repositorio<>(new DaoHibernate<>(Proveedor.class));
@@ -256,14 +258,30 @@ public class EgresosRestController {
         itemEgreso.setPrecio(itemRequest.precio);
         itemEgreso.setCantidad(itemRequest.cantidad);
 
-        Producto producto = buscarProducto(itemRequest.nombreProducto.toLowerCase());
-        if (producto == null) {
-            producto = new Producto();
-            producto.setNombreProducto(itemRequest.nombreProducto);
-
-            this.repoProductos.agregar(producto);
+        if(itemRequest.tipoItem==1) {
+        Producto producto = buscarProducto(itemRequest.nombreTipo.toLowerCase());
+	        if (producto == null) {
+	            producto = new Producto();
+	            producto.setNombre(itemRequest.nombreTipo);
+	
+	            this.repoProductos.agregar(producto);
+	        
+	        } 
+	        itemEgreso.setTipo(producto);
         }
-        itemEgreso.setProducto(producto);
+        
+        else {
+            Servicio servicio = buscarServicio(itemRequest.nombreTipo.toLowerCase());
+    	        if (servicio == null) {
+    	            servicio = new Servicio();
+    	            servicio.setNombre(itemRequest.nombreTipo);
+    	
+    	            this.repoServicios.agregar(servicio);
+    	        
+    	        } 
+    	        itemEgreso.setTipo(servicio);
+            }
+       
 
         this.repoItems.agregar(itemEgreso);
 
@@ -273,10 +291,23 @@ public class EgresosRestController {
     private Producto buscarProducto(String nombreProducto) {
         try {
             Producto producto= (Producto) EntityManagerHelperTwo
-                        .createQuery("from Producto where nombre_producto = :nombre")
+                        .createQuery("from Producto where nombre = :nombre")
                         .setParameter("nombre",nombreProducto)
                         .getSingleResult();
             return producto;
+        }
+        catch (NoResultException ex) {
+            return null;
+        }
+    }
+   
+    private Servicio buscarServicio(String nombreServicio) {
+        try {
+           Servicio servicio= (Servicio) EntityManagerHelperTwo
+                        .createQuery("from Servicio where nombre = :nombre")
+                        .setParameter("nombre",nombreServicio)
+                        .getSingleResult();
+            return servicio;
         }
         catch (NoResultException ex) {
             return null;

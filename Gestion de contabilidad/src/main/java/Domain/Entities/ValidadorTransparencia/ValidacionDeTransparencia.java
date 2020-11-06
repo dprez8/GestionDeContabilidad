@@ -41,7 +41,7 @@ public abstract class ValidacionDeTransparencia extends EntidadPersistente {
 	private boolean itemCoincide(ItemEgreso item, ItemPresupuesto itemPresupuesto) {
 		return itemPresupuesto.getItemEgresoAsociado().equals(item)
 				&& itemPresupuesto.valorTotal() == item.valorTotal()
-				&& itemPresupuesto.getProducto().equals(item.getProducto());
+				&& itemPresupuesto.getProducto().equals(item.getTipo());
 	}
 
 	private boolean coincideDocumentoComercial(Egreso egreso, Presupuesto presupuesto) {
