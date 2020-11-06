@@ -5,6 +5,7 @@ import Domain.Controllers.AdaptersJson.LocalDateTimeAdapter;
 import Domain.Controllers.DTO.IngresoRequest;
 import Domain.Controllers.DTO.IngresoResponse;
 import Domain.Controllers.DTO.Respuesta;
+import Domain.Entities.ClasesParciales.ProveedorNuevo;
 import Domain.Entities.Operaciones.Ingreso;
 import Domain.Entities.Organizacion.EntidadJuridica;
 import Domain.Entities.Usuarios.Estandar;
@@ -80,7 +81,18 @@ public class IngresosRestController {
                 .create();
         String jsonResponse;
 
-        IngresoRequest ingresoRequest    = this.gson.fromJson(request.body(),IngresoRequest.class);
+        IngresoRequest ingresoRequest = null;
+
+        try {
+            ingresoRequest = this.gson.fromJson(request.body(),IngresoRequest.class);
+        } catch (Exception exception) {
+            this.respuesta.setCode(400);
+            this.respuesta.setMessage("Formato incorrecto en datos del ingreso");
+            String jsonRespuesta = this.gson.toJson(this.respuesta);
+            response.body(jsonRespuesta);
+            return response.body();
+        }
+
 
         EntidadJuridica entidadJuridica= this.repoEntidadJuridica.buscar(usuario.getMiOrganizacion().getId());
 

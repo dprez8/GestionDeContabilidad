@@ -4,6 +4,7 @@ import Domain.Controllers.AdaptersJson.LocalDateAdapter;
 import Domain.Controllers.DTO.ItemRequest;
 import Domain.Controllers.DTO.PresupuestoRequest;
 import Domain.Controllers.DTO.Respuesta;
+import Domain.Entities.ClasesParciales.ProveedorNuevo;
 import Domain.Entities.DatosDeOperaciones.*;
 import Domain.Entities.Operaciones.Egreso.Egreso;
 import Domain.Entities.Operaciones.Presupuesto;
@@ -58,7 +59,17 @@ public class PresupuestoRestController {
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())
                 .create();
 
-        PresupuestoRequest presupuestoRequest = this.gson.fromJson(request.body(),PresupuestoRequest.class);
+        PresupuestoRequest presupuestoRequest = null;
+
+        try {
+            presupuestoRequest = this.gson.fromJson(request.body(),PresupuestoRequest.class);
+        } catch (Exception exception) {
+            this.respuesta.setCode(400);
+            this.respuesta.setMessage("Formato incorrecto en datos del presupuesto");
+            String jsonRespuesta = this.gson.toJson(this.respuesta);
+            response.body(jsonRespuesta);
+            return response.body();
+        }
 
         Egreso egreso= this.repoEgresos.buscar(presupuestoRequest.egresoId);
 

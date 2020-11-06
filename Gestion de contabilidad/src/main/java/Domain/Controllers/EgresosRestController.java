@@ -1,10 +1,7 @@
 package Domain.Controllers;
 
 import Domain.Controllers.AdaptersJson.LocalDateAdapter;
-import Domain.Controllers.DTO.EgresoRequest;
-import Domain.Controllers.DTO.EgresoResponse;
-import Domain.Controllers.DTO.ItemRequest;
-import Domain.Controllers.DTO.Respuesta;
+import Domain.Controllers.DTO.*;
 import Domain.Entities.DatosDeOperaciones.*;
 import Domain.Entities.Operaciones.Egreso.BuilderEgresoConcreto;
 import Domain.Entities.Operaciones.Egreso.Egreso;
@@ -51,7 +48,17 @@ public class EgresosRestController {
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())
                 .create();
 
-        EgresoRequest egresoRequest    = this.gson.fromJson(request.body(),EgresoRequest.class);
+        EgresoRequest egresoRequest = null;
+
+        try {
+            egresoRequest = this.gson.fromJson(request.body(),EgresoRequest.class);
+        } catch (Exception exception) {
+            this.respuesta.setCode(400);
+            this.respuesta.setMessage("Formato incorrecto en datos del egreso");
+            String jsonRespuesta = this.gson.toJson(this.respuesta);
+            response.body(jsonRespuesta);
+            return response.body();
+        }
 
         EntidadJuridica entidadJuridica= this.repoEntidadJuridica.buscar(usuario.getMiOrganizacion().getId());
 

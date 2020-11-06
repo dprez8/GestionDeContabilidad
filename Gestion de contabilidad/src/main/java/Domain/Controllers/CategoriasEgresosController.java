@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import javax.persistence.NoResultException;
 
+import Domain.Controllers.DTO.PresupuestoRequest;
 import Domain.Entities.Usuarios.Estandar;
 import com.google.gson.Gson;
 
@@ -118,8 +119,19 @@ public CategoriaDato mapCategoria(CategoriaOperacion categoria){
 		Gson gson = new Gson();
         Respuesta respuesta= new Respuesta();        
         CategoriaRequest categoriaRequest;
-        categoriaRequest = gson.fromJson(request.body(),CategoriaRequest.class);
-   	 	this.repoCategoria = new Repositorio<>(new DaoHibernate<>(CategoriaOperacion.class));
+        categoriaRequest = null;
+
+		try {
+			categoriaRequest = gson.fromJson(request.body(),CategoriaRequest.class);
+		} catch (Exception exception) {
+			respuesta.setCode(400);
+			respuesta.setMessage("Formato incorrecto en datos de las categorias");
+			String jsonRespuesta = gson.toJson(respuesta);
+			response.body(jsonRespuesta);
+			return response.body();
+		}
+
+        this.repoCategoria = new Repositorio<>(new DaoHibernate<>(CategoriaOperacion.class));
 		this.repoEgreso = new Repositorio<>(new DaoHibernate<>(Egreso.class));
 
    	 	try {

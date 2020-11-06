@@ -69,7 +69,16 @@ public class BandejaDeMensajesRestController {
         }
 
         Gson gson = new Gson();
-        ConfigSchedulerRequest configSchedulerRequest = gson.fromJson(request.body(),ConfigSchedulerRequest.class);
+        ConfigSchedulerRequest configSchedulerRequest = null;
+        try {
+            configSchedulerRequest = gson.fromJson(request.body(),ConfigSchedulerRequest.class);
+        } catch (Exception exception) {
+            this.codeResponse.setCode(400);
+            this.codeResponse.setMessage("Formato incorrecto en datos de la configuracion del Scheduler");
+            String jsonRespuesta = gson.toJson(this.codeResponse);
+            response.body(jsonRespuesta);
+            return response.body();
+        }
 
         Scheduler scheduler = usuario.getMiOrganizacion().getScheduler();
 
@@ -118,7 +127,16 @@ public class BandejaDeMensajesRestController {
             return response.body();
         }
         Gson gson = new Gson();
-        MensajeId idMensaje = gson.fromJson(request.body(),MensajeId.class);
+        MensajeId idMensaje = null; //
+        try {
+            idMensaje = gson.fromJson(request.body(),MensajeId.class);
+        } catch (Exception exception) {
+            this.codeResponse.setCode(400);
+            this.codeResponse.setMessage("Formato incorrecto en datos del id Mensaje");
+            String jsonRespuesta = gson.toJson(this.codeResponse);
+            response.body(jsonRespuesta);
+            return response.body();
+        }
 
         try {
             Mensaje mensaje = this.repoMensajes.buscar(idMensaje.id);

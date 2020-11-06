@@ -1,11 +1,13 @@
 package Domain.Controllers;
 
+import java.awt.font.NumericShaper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.persistence.NoResultException;
 
+import Domain.Controllers.DTO.Respuesta;
 import Domain.Entities.Usuarios.Estandar;
 import com.google.gson.Gson;
 
@@ -30,6 +32,7 @@ public class ProveedorController {
 	private Repositorio<Pais> repoPais;
 	private Repositorio<Provincia> repoProvincia;
 	private Repositorio<Ciudad> repoCiudad;
+	private Respuesta respuesta = new Respuesta();
 	
 	
 	public String listadoProveedores(Request request, Response response){
@@ -99,9 +102,22 @@ public class ProveedorController {
 			return response.body();
 		}
 		this.repoProveedor = new Repositorio<Proveedor>(new DaoHibernate<Proveedor>(Proveedor.class));
-		ProveedorNuevo proveedorNuevo = gson2.fromJson(request.body(),ProveedorNuevo.class);
+
+		ProveedorRespuesta proveedorRespuesta = new ProveedorRespuesta();
+		ProveedorNuevo proveedorNuevo = null;
+		try {
+			proveedorNuevo = gson2.fromJson(request.body(),ProveedorNuevo.class);
+		} catch (Exception exception) {
+
+			this.respuesta.setCode(400);
+			this.respuesta.setMessage("Formato incorrecto en datos del proveedor");
+			String jsonRespuesta = gson2.toJson(this.respuesta);
+			response.body(jsonRespuesta);
+			return response.body();
+		}
+
+		ProveedorRespuesta proveedorCreado = new ProveedorRespuesta();
 		Proveedor proveedor=mapProveedor(proveedorNuevo);
-		ProveedorRespuesta proveedorCreado= new ProveedorRespuesta();
 		try{
 	
            repoProveedor.agregar(proveedor);

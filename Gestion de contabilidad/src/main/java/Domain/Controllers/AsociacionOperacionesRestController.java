@@ -34,7 +34,17 @@ public class AsociacionOperacionesRestController {
             return response.body();
         }
         this.gson = new Gson();
-        AsociacionRequest asociacionRequest = gson.fromJson(request.body(),AsociacionRequest.class);
+        AsociacionRequest asociacionRequest = null;
+        try {
+            asociacionRequest = gson.fromJson(request.body(),AsociacionRequest.class);
+        } catch (Exception exception) {
+            this.respuesta.setCode(400);
+            this.respuesta.setMessage("Formato incorrecto de asociación de operación");
+            String jsonRespuesta = gson.toJson(this.respuesta);
+            response.body(jsonRespuesta);
+            return response.body();
+        }
+
         Ingreso ingreso;
         Egreso egreso;
 
