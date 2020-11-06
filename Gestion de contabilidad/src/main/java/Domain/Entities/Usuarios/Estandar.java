@@ -24,7 +24,7 @@ public class Estandar extends Usuario {
 	@ManyToOne
 	@JoinColumn(name = "organizacion_id", referencedColumnName = "id")
 	@Cascade(CascadeType.ALL)
-	private Organizacion miOrganizacion; // Conoce su organizacion
+	private EntidadJuridica miOrganizacion; // Conoce su organizacion
 	@Transient
 	private BandejaDeMensajes bandejaDeMensajes;
 
@@ -57,11 +57,11 @@ public class Estandar extends Usuario {
 			this.HashearPassword(contrasenia);}
 	}
 
-	public Organizacion getMiOrganizacion() {
+	public EntidadJuridica getMiOrganizacion() {
 		return miOrganizacion;
 	}
 
-	public void setMiOrganizacion(Organizacion miOrganizacion) {
+	public void setMiOrganizacion(EntidadJuridica miOrganizacion) {
 		this.miOrganizacion = miOrganizacion;
 	}
 

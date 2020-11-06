@@ -182,7 +182,7 @@ public class EgresosRestController {
         Proveedor proveedor;
         MedioDePago medioDePago;
         TipoDocumento tipoDocumento;
-        Egreso egreso;
+        Egreso egreso = null;
         try {
              proveedor     = this.repoProveedores.buscar(egresoRequest.proveedor);
              medioDePago   = this.repoMedioDePagos.buscar(egresoRequest.medioDePago.id);

@@ -14,17 +14,22 @@ import Domain.Entities.ApiPaises.Pais;
 import Domain.Entities.ApiPaises.Provincia;
 import Domain.Entities.CategorizadorDeEmpresas.Sector;
 import Domain.Entities.ClasesParciales.CiudadDato;
+import Domain.Entities.ClasesParciales.EntidadBaseDato;
 import Domain.Entities.ClasesParciales.OrganizacionDato;
+import Domain.Entities.ClasesParciales.OrganizacionPropia;
 import Domain.Entities.ClasesParciales.ProveedorNuevo;
 import Domain.Entities.ClasesParciales.SectorDato;
 import Domain.Entities.DatosDeOperaciones.MedioDePago;
 import Domain.Entities.DatosDeOperaciones.Proveedor;
+import Domain.Entities.Organizacion.EntidadBase;
 import Domain.Entities.Organizacion.EntidadJuridica;
 import Domain.Entities.Organizacion.Organizacion;
 import Domain.Entities.Usuarios.Administrador;
 import Domain.Entities.Usuarios.Estandar;
 import Domain.Repositories.Repositorio;
 import Domain.Repositories.Daos.DaoHibernate;
+import db.EntityManagerHelper;
+import javassist.NotFoundException;
 import spark.Request;
 import spark.Response;
 
@@ -78,7 +83,7 @@ public class OrganizacionController {
 	        return response.body();
 	}
 	
-public String crearOrganizacion(Request request,Response response){
+	public String crearOrganizacion(Request request,Response response){
 		
 		Gson gson2 = new Gson();
 	
@@ -108,7 +113,50 @@ public String crearOrganizacion(Request request,Response response){
 
         return response.body();
 	}
+	
+//para mostrar la lista de organizaciones pertenecientes a un usuario
+	@SuppressWarnings("unchecked")
+	public String listarOrganizacionesPropias(Request request,Response response){
+	
+		List<EntidadBase> entidadesBase= new ArrayList<>();
+		
+		Gson gson2 = new Gson();
+	
+		Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
+		if(usuario == null) {
+			return response.body();
+		}
+		OrganizacionPropia organizacionPropia= new OrganizacionPropia();
 
+		EntidadJuridica entidadJuridica=usuario.getMiOrganizacion();
+		
+		organizacionPropia.juridica_id=entidadJuridica.getId();
+		organizacionPropia.juridica_name=entidadJuridica.getNombreFicticio();
+	
+	
+		entidadesBase = EntityManagerHelper.createQuery("SELECT c FROM EntidadBase c WHERE c.entidadJuridica.id= :code")
+								.setParameter("code",entidadJuridica.getId()).getResultList();
+	 
+		if(!entidadesBase.isEmpty()) {
+			List<EntidadBaseDato> basesAEnviar = entidadesBase.stream().map(this::mapBases).collect(Collectors.toList());
+			organizacionPropia.bases=basesAEnviar;
+		}
+
+        String jsonOrganizacion = gson2.toJson(organizacionPropia);
+    	response.type("application/json");
+        response.body(jsonOrganizacion);
+
+        return response.body();
+	}
+	
+
+	public EntidadBaseDato mapBases(EntidadBase entidadBase){
+		EntidadBaseDato base= new EntidadBaseDato();
+		base.id=entidadBase.getId();
+		base.name=entidadBase.getNombreFicticio();
+		
+		return base;
+	}
 	
 	public EntidadJuridica mapOrganizacion(OrganizacionDato organizacionDato){
 		EntidadJuridica entidad= new EntidadJuridica();

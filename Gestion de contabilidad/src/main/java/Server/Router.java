@@ -58,6 +58,7 @@ public class Router {
         CriteriosCategoriasController categoriasController = new CriteriosCategoriasController();
         IngresosRestController ingresosRestController = new IngresosRestController();
         AsociacionOperacionesRestController asociacionOperacionesRestController = new AsociacionOperacionesRestController();
+        OrganizacionController organizacionController = new OrganizacionController();
         
         Spark.post("/api/login",loginRestController::login);
         Spark.get("/api/login",loginRestController::sessionStatus);
@@ -83,6 +84,8 @@ public class Router {
         Spark.post("/api/operaciones/asociarManualmente",asociacionOperacionesRestController::asociarManualmente);
         Spark.post("/api/categorias/asociar",categoriasController::asociarCategoriaEgreso);
         Spark.post("/api/operaciones/ingreso",ingresosRestController::cargarNuevoIngreso);
+        Spark.post("/api/organizacion",organizacionController::crearOrganizacion);
+        Spark.get("/api/usuario/organizaciones",organizacionController::listarOrganizacionesPropias);
 
 
         Spark.after("/api/*",(request, response) -> {
