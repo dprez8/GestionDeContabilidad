@@ -87,6 +87,12 @@
             </div>
         </b-modal>
 
+        <b-modal id="spark-modal" ok-title="Cerrar" ok-only hide-header size="sm" modal-class="modal-fullscreen">
+            <iframe :srcdoc="debugSparkModalHTML" style="width: 100%; height: 100%">
+                <p>Your browser does not support iframes.</p>
+            </iframe>
+        </b-modal>
+
     </div>
     <!-- /#panel-wrapper -->
 </template>
@@ -122,7 +128,9 @@ export default {
             breadcrumb: [],
             reloadPage: false,
             routerViewKey: 0,
-            loading: true
+            loading: true,
+
+            debugSparkModalHTML: ""
         }
     },
     methods: {
@@ -177,11 +185,15 @@ export default {
 				appendToToast: true
 			});
 		},
-		errorHandling(response) {
-			if(response.status) {
-				switch(response.status) {
-					case 500 :
-						this.createToast('Error 500', 'Ha ocurrido un error en el servidor, vuelva a intentarlo mas tarde', 'danger');
+		errorHandling(error) {
+            console.log(error.response);
+
+			if(error.response) {
+				switch(error.response.status) {
+                    case 500 : 
+                        //this.createToast('Error 500', 'Ha ocurrido un error en el servidor, vuelva a intentarlo mas tarde', 'danger');
+                        this.$bvModal.show('spark-modal');
+                        this.debugSparkModalHTML = error.response.data;
 						break;
 					default :
 						this.createToast('Error', 'Ha ocurrido un error, vuelva a intentarlo mas tarde', 'danger');
@@ -215,6 +227,22 @@ export default {
 </script>
 
 <style>
+.modal-fullscreen .modal-dialog {
+    max-width: 100%;
+    margin: 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100vh;
+    display: flex;
+    position: fixed;
+    z-index: 100000;
+}
+.modal-fullscreen .modal-body {
+    padding: 0;
+}
+
 .user-panel-avatar{
     cursor: pointer;
 }

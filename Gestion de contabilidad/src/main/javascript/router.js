@@ -261,7 +261,7 @@ var router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    if ((from.name == null || from.name == 'erro404' || from.name == 'login') && to.name != 'error404' && to.name != 'login') {
+    if ((from.name == null || from.name == 'error404' || from.name == 'error500' || from.name == 'login') && to.name != 'error404' && to.name != 'error500' && to.name != 'login') {
         axios
             .get('/api/login')
             .then(response => {
@@ -275,6 +275,7 @@ router.beforeEach((to, from, next) => {
                 }
             })
             .catch(error => {
+                console.log('error500')
                 next({name: 'error500'});
             });
     } else if (to.name == 'login') {

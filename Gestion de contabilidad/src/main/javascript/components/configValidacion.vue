@@ -15,44 +15,36 @@
                 </div>
                 <p class="mt-4 mb-2">Horario de inicio</p>
                 <div class="d-flex justify-content-center mb-5">
-                    <b-overlay rounded variant="light" :show="cambiarHora || cambiarMinuto" @shown="focusInput">
-                        <template #overlay>
-                            <b-form @submit.prevent="cambiarHora = false" v-if="cambiarHora">
-                                <b-form-input ref="inputHora" class="bg-secondary text-light text-center border-secondary" v-model="scheduler.horaInicio" style="font-size: 2rem;"></b-form-input>
-                            </b-form>
-                            <b-form @submit.prevent="cambiarMinuto = false" v-else>
-                                <b-form-input ref="inputMinuto" class="bg-secondary text-light text-center border-secondary" v-model="scheduler.minutoInicio" style="font-size: 2rem;"></b-form-input>
-                            </b-form>
-                        </template>
-                        <div class="d-flex p-2 align-items-center">
-                            <b-button-group vertical>
-                                <b-button @click="scheduler.horaInicio++">
-                                    <b-icon-chevron-compact-up></b-icon-chevron-compact-up>
-                                </b-button>
-                                <b-button style="font-size: 2rem;" @click="cambiarHora = true">
-                                    {{scheduler.horaInicio}}
-                                </b-button>
-                                <b-button @click="scheduler.horaInicio--">
-                                    <b-icon-chevron-compact-down></b-icon-chevron-compact-down>
-                                </b-button>
-                            </b-button-group>
-                            <div class="p-2">
-                                <b-icon-dot class="d-block"></b-icon-dot>
-                                <b-icon-dot class="d-block"></b-icon-dot>
-                            </div>
-                            <b-button-group vertical>
-                                <b-button @click="scheduler.minutoInicio++">
-                                    <b-icon-chevron-compact-up></b-icon-chevron-compact-up>
-                                </b-button>
-                                <b-button style="font-size: 2rem;" @click="cambiarMinuto = true">
-                                    {{scheduler.minutoInicio}}
-                                </b-button>
-                                <b-button @click="scheduler.minutoInicio--">
-                                    <b-icon-chevron-compact-down></b-icon-chevron-compact-down>
-                                </b-button>
-                            </b-button-group>
+                    <div class="d-flex p-2 align-items-center">
+                        <b-button-group vertical>
+                            <b-button @click="scheduler.horaInicio++">
+                                <b-icon-chevron-compact-up></b-icon-chevron-compact-up>
+                            </b-button>
+                            <b-form-input class="bg-secondary text-light border-0 rounded-0 text-center"
+                            style="font-size: 2rem; width: 70px" 
+                            v-model="scheduler.horaInicio" 
+                            lazy></b-form-input>
+                            <b-button @click="scheduler.horaInicio--">
+                                <b-icon-chevron-compact-down></b-icon-chevron-compact-down>
+                            </b-button>
+                        </b-button-group>
+                        <div class="p-2">
+                            <b-icon-dot class="d-block"></b-icon-dot>
+                            <b-icon-dot class="d-block"></b-icon-dot>
                         </div>
-                    </b-overlay>
+                        <b-button-group vertical>
+                            <b-button @click="scheduler.minutoInicio++">
+                                <b-icon-chevron-compact-up></b-icon-chevron-compact-up>
+                            </b-button>
+                            <b-form-input class="bg-secondary text-light border-0 rounded-0 text-center"
+                            style="font-size: 2rem; width: 70px" 
+                            v-model="scheduler.minutoInicio"
+                            lazy></b-form-input>
+                            <b-button @click="scheduler.minutoInicio--">
+                                <b-icon-chevron-compact-down></b-icon-chevron-compact-down>
+                            </b-button>
+                        </b-button-group>
+                    </div>
                 </div>
             </div>
             <div class="d-flex justify-content-center">
@@ -82,9 +74,7 @@ export default {
                 {value: 6, text: "Sa"},
                 {value: 7, text: "Do"}
             ],
-            loading: false,
-            cambiarHora: false,
-            cambiarMinuto: false
+            loading: false
         }
     },
     inject: ['showLoginModal', 'errorHandling', 'createToast'],
@@ -151,6 +141,9 @@ export default {
             this.scheduler.minutoInicio = ('0' + this.scheduler.minutoInicio).slice(-2);
         },
         formatHora(hora) {
+            if(isNaN(hora))
+                this.scheduler.horaInicio = 0;
+
             if(hora > 23) {
                 this.scheduler.horaInicio = 0
             } else if(hora < 0) {
@@ -158,21 +151,15 @@ export default {
             }
         },
         formatMinuto(minuto) {
+            if(isNaN(minuto))
+                this.scheduler.minutoInicio = 0;
+
             if(minuto > 59) {
                 this.scheduler.minutoInicio = 0;
                 this.scheduler.horaInicio++;
             } else if(minuto < 0) {
                 this.scheduler.minutoInicio = 59;
                 this.scheduler.horaInicio--;
-            }
-        },
-        focusInput() {
-            if(this.cambiarHora) {
-                this.$refs.inputHora.focus();
-                this.$refs.inputHora.select();
-            } else if(this.cambiarMinuto) {
-                this.$refs.inputMinuto.focus();
-                this.$refs.inputMinuto.select();
             }
         }
     },

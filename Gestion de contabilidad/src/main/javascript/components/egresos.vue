@@ -4,6 +4,8 @@
             <b-table show-empty :tbody-tr-class="rowStyle" class="mb-0 border-0 border-bottom table-row-pointer" head-variant="dark"
                 :fields="campos_egresos" 
                 :items="egresos"
+                sort-by="name"
+                @sort-changed="test"
                 @row-clicked="toggleEgreso"
             >
                 <template #cell(validado)="data">
@@ -22,7 +24,7 @@
                     </b-collapse>
                     <b-collapse :visible="data.item.showEgreso && !egresoLoading">
                         <transition name="fade">
-                            <egreso v-if="data.item.showEgreso" :egresoLoaded="egresoLoaded"></egreso>
+                            <egreso ref="egreso" :key="egresoKey" v-if="data.item.showEgreso" :egresoLoaded="egresoLoaded"></egreso>
                         </transition>
                     </b-collapse>
                 </template>
@@ -51,19 +53,24 @@ export default {
             egresoLoading: true,
             egresosLoading: false,
             egresoSelected: null,
+            egresoKey: 0,
 
             ingresosLoading: false,
             campos_egresos: [
-                { key: 'name', label: 'Egreso', thClass:['w-100'], tdClass:[] },
-                { key: 'validado', label: 'Estado', thClass:['text-center'], tdClass:['text-center'] },
-                { key: 'valorTotal', label: 'Total', thClass:['text-center'], tdClass:['text-center'] },
-                { key: 'fechaOperacion', label: 'Emitido', thClass:['text-center'], tdClass:['text-center'] }
+                { key: 'name', label: 'Egreso', thClass:['w-100'], tdClass:[], sortable: true },
+                { key: 'validado', label: 'Estado', thClass:['text-center'], tdClass:['text-center'], sortable: true },
+                { key: 'valorTotal', label: 'Total', thClass:['text-center'], tdClass:['text-center'], sortable: true },
+                { key: 'fechaOperacion', label: 'Emitido', thClass:['text-center'], tdClass:['text-center'], sortable: true }
             ]
         }
     },
     inject: ['showLoginModal', 'errorHandling'],
     methods: {
-        cargarEgresosAPI(){
+        test(table) {
+            this.seleccionarEgreso();
+            this.egresoKey = !this.egresoKey;
+        },
+        cargarEgresosAPI() {
             this.egresosLoading = true;
             
             axios

@@ -129,33 +129,6 @@ export default {
                     // allways
                     this.loading = false;
                 })
-
-            /*
-            var request = {
-                url: "http://{{ ip }}/api/bandeja/visto",
-                type: "POST",
-                context: this,
-                data: JSON.stringify(mensajeToSend),
-                success(data) {
-                    if(data.code == 200) {
-                        console.log(data);
-                    }
-                    else if(data.code == 403) {
-                        app.showSessionEndedAlert(true);
-                    }
-                    else {
-                        app.createCommonErrors(data);
-                    }
-                },
-                error(data) {
-                    app.createCommonErrors(data);
-                },
-                complete() {
-
-                }
-            };
-            $.ajax(request);
-            */
         },
         cargarMensajesAPI() {
             this.loading = true;
@@ -182,37 +155,6 @@ export default {
                     // allways
                     this.loading = false;
                 })
-            /*
-            var request = {
-                url: "http://{{ ip }}/api/bandeja",
-                type: "GET",
-                context: this,
-                success(data) {
-                    if(data.code == 200) {
-                        if(data.mensajes != undefined) {
-                            this.mensajes = data.mensajes;
-                            this.ordenarFiltrarMensajes();
-                        }
-                    }
-                    else if(data.code == 403) {
-                        app.showSessionEndedAlert(true);
-                    }
-                    else if(data.code == 404) {
-                        this.mensajes = [];
-                    }
-                    else {
-                        app.createCommonErrors(data);
-                    }
-                },
-                error(data) {
-                    app.createCommonErrors(data);
-                },
-                complete(data) {
-                    this.loading = false;
-                }
-            };
-            $.ajax(request);
-            */
         },
         getMessageSelected() {
             var mensajeSeleccionado = null;
@@ -237,6 +179,13 @@ export default {
                 return 1;
             return 0;
         },
+        ordenarPorId(mensajeA, mensajeB) {
+            if (mensajeA.id < mensajeB.id)
+                return -1;
+            if (mensajeA.id > mensajeB.id)
+                return 1;
+            return 0;
+        },
         filtrarSoloLeidos(mensaje) {
             return mensaje.leido;
         },
@@ -245,7 +194,7 @@ export default {
         },
         ordenarFiltrarMensajes() {
             var filtro = function(){return 1};
-            var ordenador = function(){};
+            var ordenador = this.ordenarPorId;
 
             switch(this.filtrar) {
                 case "leidos":

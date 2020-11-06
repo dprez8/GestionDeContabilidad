@@ -38,5 +38,10 @@ export default {
 </script>
 
 <style>
-
+.criterio-toggle > svg {
+    transition: .2s transform;
+}
+.criterio-toggle.not-collapsed > svg {
+    transform: rotate(90deg);
+}
 </style>

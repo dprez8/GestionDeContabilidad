@@ -1,7 +1,7 @@
 <template>
     <div class="border border-top-0">
         <b-overlay variant="primary" spinner-variant="light" :show="ingresosLoading" class="border-bottom">
-            <b-table show-empty class="mb-0 border-0 border-bottom" head-variant="dark" :fields="campos_ingresos"
+            <b-table show-empty class="mb-0 border-0 border-bottom" head-variant="dark" sort-by="name" :fields="campos_ingresos"
                 :items="ingresos">
                 <template #cell(descripcion)="data">
                     <b-collapse :id="'ingreso-descripcion'+data.index" :visible="true">
@@ -37,10 +37,10 @@ export default {
             ingresos: [],
             ingresosLoading: false,
             campos_ingresos: [
-                { key: 'name', label: 'Ingreso', thClass:['w-25'], tdClass:[] },
+                { key: 'name', label: 'Ingreso', thClass:['w-25'], tdClass:[], sortable: true },
                 { key: 'descripcion', label: 'Descripcion', thClass:['w-50'], tdClass:['mw-0'] },
-                { key: 'montoTotal', label: 'Total', thClass:['text-center'], tdClass:['text-center'] },
-                { key: 'fechaOperacion', label: 'Fecha Operación', thClass: ['text-center', 'w-25'], tdClass: ['text-center'] },
+                { key: 'montoTotal', label: 'Total', thClass:['text-center'], tdClass:['text-center'], sortable: true },
+                { key: 'fechaOperacion', label: 'Fecha Operación', thClass: ['text-center', 'w-25'], tdClass: ['text-center'], sortable: true },
             ]
         }
     },
