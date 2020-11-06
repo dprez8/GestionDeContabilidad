@@ -173,16 +173,34 @@
                             </b-col>
                         </div>
                     </div>
-                    <!--
                     <div class="row mb-2">
                         <div class="col-sm-4 text-sm-right py-2">
-                            <span class="mr-2"><strong>Imagen</strong></span>
+                            <span class="mr-2"><strong>Archivo</strong></span>
                         </div>
-                        <div class="col p-2">
-                            <span class="ml-2">We'll see...</span>
+                        <div class="col">
+                            <b-col class="px-0 mx-0">
+                                <b-input-group >
+                                    <b-form-file
+                                        v-model="egreso.archivo"
+                                        placeholder="Seleccione un archivo o sueltelo aqui"
+                                        drop-placeholder="Suelta el archivo aqui..."
+                                        browse-text="Buscar"
+                                    ></b-form-file>
+                                    <template #append>
+                                        <b-button variant="outline-secondary" @click="egreso.archivo = null">
+                                            <b-icon-x />
+                                        </b-button>
+                                        <b-button variant="outline-primary" @click="uploadFileTest">
+                                            <b-icon-upload />
+                                        </b-button>
+                                    </template>
+                                </b-input-group>
+                                <b-collapse :visible="archivoImagenUrl != ''">
+                                    <b-img :src="archivoImagenUrl" fluid />
+                                </b-collapse>
+                            </b-col>
                         </div>
                     </div>
-                    -->
                 </div>
             </div>
             <div class="col-lg-1 col-xl-3"></div>
@@ -341,7 +359,8 @@ export default {
                     fechaDePedido: null,
                     fechaDeEntrega: null,
                     descripcion: null,
-                    imagenDelDocumento: null
+                    imagenDelDocumento: null,
+                    archivo: null
                 },
                 items: []
             },
@@ -397,7 +416,8 @@ export default {
                     tdClass: [],
                     thClass: ['text-center']
                 }
-            ]
+            ],
+            archivoImagenUrl: ''
         }
     },
     computed: {
@@ -407,8 +427,30 @@ export default {
         }
     },
     inject: ['errorHandling', 'createToast', 'showLoginModal'],
+    watch: {
+        'egreso.archivo'() {
+            if(this.egreso.archivo) {
+                // Si es imagen mostrar la imagen
+                if( this.egreso.archivo.type == "image/png" ||
+                    this.egreso.archivo.type == "image/jpeg" ||
+                    this.egreso.archivo.type == "image/gif") {
+                        var reader = new FileReader();
+                        reader.onload = () => {
+                            var dataURL = reader.result;
+                            this.archivoImagenUrl = dataURL;
+                        };
+                        reader.readAsDataURL(this.egreso.archivo);
+                    }
+            } else {
+                this.archivoImagenUrl = "";
+            }
+        }
+    },
     methods: {
         getCookie: getCookie,
+        uploadFileTest() {
+            console.log(this.egreso.archivo);
+        },
         confirmar() {
 
             this.egresoLoading = true;
@@ -467,36 +509,6 @@ export default {
                     .then(() => {
                         // allways
                     })
-                /*
-                $.ajax({
-                    url: "http://{{ ip }}/api/proveedor",
-                    type: "POST",
-                    dataType: "json",
-                    context: this,
-                    data: JSON.stringify(this.proveedorAAgregar),
-                    success(response) {
-                        if(response.code == 403) {
-                            app.showSessionEndedAlert(false);
-                        } else if(response.code == 400) {
-                            // Fallo la carga de proveedor
-                            this.falloCarga = true;
-                        } else if(response.code == 200) {
-                            // El proveedor se creo exitosamente
-                            this.egreso.proveedor = response.id;
-                            // Creo el egreso
-                            this.crearEgresoAPI();
-                        } else {
-                            // Fallo la carga de proveedor (default)
-                            this.falloCarga = true;
-                            app.createCommonErrors(response);
-                        }
-                    },
-                    error(data) {
-                        this.falloCarga = true;
-                        app.createCommonErrors(data);
-                    }
-                });
-                */
             } else {
                 this.crearEgresoAPI()
             }
@@ -531,36 +543,6 @@ export default {
                 .then(() => {
                     // allways
                 })
-            /*
-            $.ajax({
-                url: "http://{{ ip }}/api/operaciones/egreso",
-                type: "POST",
-                dataType: "json",
-                context: this,
-                data: JSON.stringify(egresoToSend),
-                success(response) {
-                    if(response.code == 403) {
-                        app.showSessionEndedAlert(false);
-                    } else if(response.code == 400) {
-                        // Fallo la carga de egreso
-                        this.falloCarga = true;
-                    } else if(response.code == 200) {
-                        // El egreso se creo exitosamente
-                        this.idEgreso = response.id;
-                        // Creo los presupuestos
-                        this.crearPresupuestosAPI();
-                    } else {
-                        // Fallo la carga de egreso (default)
-                        this.falloCarga = true;
-                        app.createCommonErrors(response);
-                    }
-                },
-                error(data) {
-                    this.falloCarga = true;
-                    app.createCommonErrors(data);
-                }
-            });
-            */
         },
         crearPresupuestosAPI() {
             // Proximamente
@@ -600,36 +582,6 @@ export default {
                     .then(() => {
                         // allways
                     })
-
-                /*
-                $.ajax({
-                    url: "http://{{ ip }}/api/categorias/asociar",
-                    type: "POST",
-                    dataType: "json",
-                    context: this,
-                    data: JSON.stringify(request),
-                    success(response) {
-                        if(response.code == 403) {
-                            app.showSessionEndedAlert(false);
-                        } else if(response.code == 400) {
-                            // Fallo la asociacion de categorias
-                            this.falloCarga = true;
-                        } else if(response.code == 200) {
-                            // Las categorias se asociaron correctamente
-                            console.log(response);
-                            this.asociarIngresoAPI();
-                        } else {
-                            // Fallo la asociacion de categorias (default)
-                            this.falloCarga = true;
-                            app.createCommonErrors(response);
-                        }
-                    },
-                    error(data) {
-                        this.falloCarga = true;
-                        app.createCommonErrors(data);
-                    }
-                });
-                */
             } else {
                 this.asociarIngresoAPI();
             }
@@ -668,36 +620,6 @@ export default {
                     .then(() => {
                         // allways
                     })
-                /*
-                $.ajax({
-                    url: "http://{{ ip }}/api/operaciones/asociarManualmente",
-                    type: "POST",
-                    dataType: "json",
-                    context: this,
-                    data: JSON.stringify(request),
-                    success(response) {
-                        if(response.code == 403) {
-                            app.showSessionEndedAlert(false);
-                        } else if(response.code == 400) {
-                            // Fallo la asociacion de ingreso
-                            this.falloCarga = true;
-                        } else if(response.code == 200) {
-                            // El ingreso se asoció correctamente
-                            console.log(response);
-                            app.createToast('Guardado exitoso', 'Se dio de alta el egreso correctamente', 'success');
-                            this.$router.push('/operaciones/egreso');
-                        } else {
-                            // Fallo la asociacion de ingreso (default)
-                            this.falloCarga = true;
-                            app.createCommonErrors(response);
-                        }
-                    },
-                    error(data) {
-                        this.falloCarga = true;
-                        app.createCommonErrors(data);
-                    }
-                });
-                */
             } else {
                 this.$router.push('/operaciones/egreso');
             }
@@ -723,32 +645,6 @@ export default {
                     // allways
                     this.proveedoresLoading = false;
                 })
-            /*
-            var request = {
-                url: "http://{{ ip }}/api/proveedores",
-                type: "GET",
-                dataType: "json",
-                context: this,
-                cache: false,
-                success(response) {
-                    if(response.code == 403) {
-                        app.showSessionEndedAlert(true);
-                    } else if(response.code == 200) {
-                        this.proveedoresSelect = response.data.map(this.proveedoresAPIConverter);
-                    }
-                    else {
-                        app.createCommonErrors(response);
-                    }
-                },
-                error(data) {
-                    app.createCommonErrors(data);
-                },
-                complete() {
-                    this.proveedoresLoading = false;
-                }
-            };
-            $.ajax(request);
-            */
         },
         proveedoresAPIConverter(proveedor) {
             return {
@@ -777,32 +673,6 @@ export default {
                     // allways
                     this.mediosDePagoLoading = false;
                 })
-            /*
-            var request = {
-                url: "http://{{ ip }}/api/medios",
-                type: "GET",
-                dataType: "json",
-                context: this,
-                cache: false,
-                success(response) {
-                    if(response.code == 403) {
-                        app.showSessionEndedAlert(true);
-                    } else if(response.code == 200) {
-                        this.mediosDePagoSelect = response.data.map(this.mediosDePagoAPIConverter);
-                    }
-                    else {
-                        app.createCommonErrors(response);
-                    }
-                },
-                error(data) {
-                    app.createCommonErrors(data);
-                },
-                complete() {
-                    this.mediosDePagoLoading = false;
-                }
-            };
-            $.ajax(request);
-            */
         },
         mediosDePagoAPIConverter(medioDePago) {
             return {
@@ -881,15 +751,16 @@ export default {
         'asociar-ingreso': asociarIngreso,
         'agregar-proveedor': agregarProveedor,
         'agregar-presupuesto': agregarPresupuesto
-    },
-    watch: {
-        'egreso.medioDePago.id': function (medioDePagoId) {
-
-        }
     }
 }
 </script>
 
 <style>
-
+    .custom-file-label {
+        border-color: var(--secondary);
+    }
+    .custom-file-label::after {
+        display: none;
+        content: "" !important;
+    }
 </style>

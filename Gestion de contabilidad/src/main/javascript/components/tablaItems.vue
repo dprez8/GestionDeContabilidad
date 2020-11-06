@@ -1,7 +1,14 @@
 <template>
     <b-table small responsive hover bordered class="mb-0 rounded" :fields="campos_items" :items="items"
         head-variant="dark" foot-variant="light" foot-clone>
-        <template #cell(nombreProducto)="row">
+        <template #cell(tipoItem)="row">
+            <b-form-select class="border-0 px-2 bg-transparent" v-model="row.item.tipoItem" @input="addItem">
+                <b-form-select-option :value="null">--Tipo--</b-form-select-option>
+                <b-form-select-option value="0">Producto</b-form-select-option>
+                <b-form-select-option value="1">Servicio</b-form-select-option>
+            </b-form-select>
+        </template>
+        <template #cell(descripcion)="row">
             <b-form-input class="border-0 px-2 bg-transparent" v-model="row.item.nombreProducto" @input="addItem"></b-form-input>
         </template>
         <template #cell(precio)="row">
@@ -17,7 +24,10 @@
         </template>
 
         
-        <template #foot(nombreProducto)>
+        <template #foot(tipoItem)>
+            <span class="text-danger"></span>
+        </template>
+        <template #foot(descripcion)>
             <span class="text-danger"></span>
         </template>
         <template #foot(cantidad)>
@@ -38,15 +48,20 @@ export default {
         return {
             items: [
                 {
+                    tipoItem: 0,
                     nombreProducto: "",
                     cantidad: "",
                     precio: ""
                 }
             ],
             campos_items: [{
-                    key: 'nombreProducto',
-                    label: 'Producto',
-                    tdClass: ['w-75']
+                    key: 'tipoItem',
+                    label: 'Tipo',
+                    thClass: ['tipo-th']
+                },{
+                    key: 'descripcion',
+                    label: 'Descripcion',
+                    thClass: ['w-75']
                 },
                 {
                     key: 'cantidad',
@@ -57,8 +72,8 @@ export default {
                 {
                     key: 'precio',
                     label: 'Precio',
-                    tdClass: ['w-25'],
-                    thClass: ['text-center']
+                    tdClass: [],
+                    thClass: ['text-center', 'precio-th']
                 },
                 {
                     key: 'delete',
@@ -87,6 +102,7 @@ export default {
         addItem() {
             if (this.checkIfAddItem()) {
                 this.items.push({
+                    tipoItem: null,
                     nombreProducto: "",
                     cantidad: "",
                     precio: ""
@@ -114,5 +130,10 @@ export default {
 </script>
 
 <style>
-
+    .tipo-th {
+        min-width: 120px;
+    }
+    .precio-th {
+        min-width: 100px;
+    }
 </style>
