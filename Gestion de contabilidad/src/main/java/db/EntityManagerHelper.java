@@ -1,12 +1,8 @@
 package db;
 
+import javax.persistence.*;
 import java.util.function.*;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
-import javax.persistence.Query;
 
 public class EntityManagerHelper {
 
@@ -33,6 +29,11 @@ public class EntityManagerHelper {
             manager = emf.createEntityManager();
             threadLocal.set(manager);
         }
+        return manager;
+    }
+
+    public static EntityManager getEntityManagerRecent() {
+        EntityManager manager = threadLocal.get();
         return manager;
     }
 

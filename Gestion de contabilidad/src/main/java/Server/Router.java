@@ -11,15 +11,13 @@ import Domain.Repositories.Daos.DaoHibernate;
 import Domain.Repositories.Repositorio;
 import Spark.utils.BooleanHelper;
 import Spark.utils.HandlebarsTemplateEngineBuilder;
-import spark.Filter;
-import spark.ModelAndView;
+import db.EntityManagerHelper;
 import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 import java.util.HashMap;
 import db.EntityManagerHelper;
 import db.EntityManagerHelperTwo;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 
 public class Router {
@@ -47,7 +45,7 @@ public class Router {
     private static void configure(){
         rutasApi();
         rutasVista();
-        verificarTareasProgramadas();
+        //verificarTareasProgramadas();
     }
 
     private static void rutasVista() {
@@ -92,14 +90,10 @@ public class Router {
         Spark.post("/api/categorias/asociar",categoriasController::asociarCategoriaEgreso);
         Spark.post("/api/operaciones/presupuesto", presupuestoRestController::cargarNuevoPresupuesto);
 
-
         Spark.after("/api/*",(request, response) -> {
-            if(EntityManagerHelperTwo.getEntityManager().isOpen()){
-                EntityManagerHelperTwo.closeEntityManager();
-            }
-            if(EntityManagerHelper.getEntityManager().isOpen()){
+             if(EntityManagerHelper.getEntityManagerRecent() != null && EntityManagerHelper.getEntityManagerRecent().isOpen()){
                 EntityManagerHelper.closeEntityManager();
-            }
+             }
             response.type("application/json");
         });
     }

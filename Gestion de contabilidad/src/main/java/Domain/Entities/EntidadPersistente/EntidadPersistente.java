@@ -8,7 +8,7 @@ import javax.persistence.*;
 public class EntidadPersistente {
     @Expose
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     public int getId() {
