@@ -49,7 +49,7 @@
                 <!-- /$breadcrum-wrapper -->
 
                 <!-- Page Content -->
-                <div class="overflow-auto" style="height: calc(100vh - 106px)">
+                <div class="overflow-auto" style="height: calc(100vh - 106px);">
                     <transition name="fade" mode="out-in">
                         <router-view :key="routerViewKey"></router-view>
                     </transition>
@@ -121,7 +121,8 @@ export default {
             sidebarShow: true,
             breadcrumb: [],
             reloadPage: false,
-            routerViewKey: 0
+            routerViewKey: 0,
+            loading: true
         }
     },
     methods: {
@@ -188,7 +189,7 @@ export default {
 			} else {
 				this.createToast('Error', 'Ha ocurrido un error, vuelva a intentarlo mas tarde', 'danger');
 			}
-		}
+        },
     },
     watch: {
         $route(to, from) {

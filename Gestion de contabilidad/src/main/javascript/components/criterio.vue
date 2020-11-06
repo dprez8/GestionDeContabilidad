@@ -24,6 +24,7 @@
 
 <script>
 export default {
+    name: 'criterio',
     props: {
         criterio: Object,
         seleccionoCategoria: Function

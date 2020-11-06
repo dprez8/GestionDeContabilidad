@@ -23,6 +23,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
     props: {
         confirmarAccion: Function,
@@ -35,34 +37,29 @@ export default {
             ingresosLoading: false
         }
     },
+    inject: ['showLoginModal', 'errorHandling'],
     methods: {
         cargarIngresosAPI(){            
             this.ingresosLoading = true;
 
-            /*
-            $.ajax({
-                url: "http://{{ ip }}/api/operaciones/ingresos",
-                type: "GET",
-                dataType: "json",
-                context: this,
-                success(response) {
-                    if(response.code == 403) {
-                        app.showSessionEndedAlert(true);
-                    } else if(response.code == 200) {
-                        console.log(response);
-                        this.ingresosSelect = response.ingresos.map(this.ingresosAPIConverter);
-                    } else {
-                        app.createCommonErrors(response);
+            axios
+                .get('/api/operaciones/ingresos')
+                .then(response => {
+                    var data = response.data;
+
+                    if(data.code == 200) {
+                        this.ingresosSelect = data.ingresos.map(this.ingresosAPIConverter);
+                    } else if (data.code == 403) {
+                        this.showLoginModal(true);
                     }
-                },
-                error(data) {
-                    app.createCommonErrors(data);
-                },
-                complete() {
+                })
+                .catch(error => {
+                    this.errorHandling(error);
+                })
+                .then(() => {
+                    // allways
                     this.ingresosLoading = false;
-                }
-            });
-            */
+                })
         },
         ingresosAPIConverter(ingresoAPI) {
             return {

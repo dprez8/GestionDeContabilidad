@@ -11,6 +11,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import loginForm from '../components/loginForm.vue'
 
 export default {

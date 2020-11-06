@@ -4,6 +4,7 @@ import axios from 'axios'
 import panel from './pages/panel'
 import login from './pages/login'
 import error404 from './pages/error404'
+import error500 from './pages/error500'
 import inicio from './pages/inicio'
 import operaciones from './pages/operaciones'
 import egresos from './components/egresos'
@@ -17,7 +18,6 @@ import agregarIngreso from './pages/agregarIngreso'
 
 const routes = [
     {
-        name: 'panel',
         path: '/',
         component: panel,
         children: [
@@ -247,6 +247,11 @@ const routes = [
         name: 'error404',
         path: '/*',
         component: error404,
+    },
+    {
+        name: 'error500',
+        path: '/*',
+        component: error500,
     }
 ];
 
@@ -268,6 +273,9 @@ router.beforeEach((to, from, next) => {
                 } else if (data.code == 403) {
                     next('/login');
                 }
+            })
+            .catch(error => {
+                next({name: 'error500'});
             });
     } else if (to.name == 'login') {
         axios

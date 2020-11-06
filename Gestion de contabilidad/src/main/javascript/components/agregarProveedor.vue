@@ -165,6 +165,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
     props: {
         confirmarAccion: Function,
@@ -192,6 +194,7 @@ export default {
             falloInput: false
         }
     },
+    inject: ['showLoginModal', 'errorHandling'],
     methods: {
         confirmar() {
             var todosLosCamposRellenos = 
@@ -220,35 +223,30 @@ export default {
             this.proveedor.provincia = null;
             this.proveedor.ciudad = null;
 
-            /*
-            $.ajax({
-                url: "http://{{ ip }}/api/pais",
-                type: "GET",
-                dataType: "json",
-                context: this,
-                success(response) {
-                    if(response.code == 403) {
-                        app.showSessionEndedAlert(false);
-                    } else if(response.code == 200) {
-                        // Se cargaron los paises
-                        this.paises = response.data.map(function(unPais){
+            axios
+                .get('/api/pais')
+                .then(response => {
+                    var data = response.data;
+
+                    if(data.code == 200) {
+                        this.paises = data.data.map(function(unPais){
                             return {
                                 value: unPais.clave,
                                 text: unPais.name
                             }
                         });
-                    } else {
-                        app.createCommonErrors(response);
+                    } else if (data.code == 403) {
+                        this.showLoginModal(true);
                     }
-                },
-                error(data) {
-                    app.createCommonErrors(data);
-                },
-                complete() {
+                })
+                .catch(error => {
+                    console.log(error);
+                    this.errorHandling(error);
+                })
+                .then(() => {
+                    // allways
                     this.loadingPaises = false;
-                }
-            });
-            */
+                })
         },
         cargarProvinciasAPI() {
             this.provinciasLoading = true;
@@ -259,35 +257,29 @@ export default {
             if(paisID == null)
                 return;
 
-            /*
-            $.ajax({
-                url: "http://{{ ip }}/api/pais/"+paisID+"/provincia",
-                type: "GET",
-                dataType: "json",
-                context: this,
-                success(response) {
-                    if(response.code == 403) {
-                        app.showSessionEndedAlert(false);
-                    } else if(response.code == 200) {
-                        // Se cargaron las provincias
-                        this.provincias = response.data.map(function(unaProvincia){
+            axios
+                .get(`/api/pais/${paisID}/provincia`)
+                .then(response => {
+                    var data = response.data;
+
+                    if(data.code == 200) {
+                        this.provincias = data.data.map(function(unaProvincia){
                             return {
                                 value: unaProvincia.clave,
                                 text: unaProvincia.name
                             }
                         });
-                    } else {
-                        app.createCommonErrors(response);
+                    } else if (data.code == 403) {
+                        this.showLoginModal(true);
                     }
-                },
-                error(data) {
-                    app.createCommonErrors(data);
-                },
-                complete() {
+                })
+                .catch(error => {
+                    this.errorHandling(error);
+                })
+                .then(() => {
+                    // allways
                     this.provinciasLoading = false;
-                }
-            });
-            */
+                })
         },
         cargarCiudadesAPI() {
             this.proveedor.ciudad = null;
@@ -299,35 +291,29 @@ export default {
             if(paisID == null || provinciaID == null)
                 return;
 
-            /*
-            $.ajax({
-                url: "http://{{ ip }}/api/pais/"+paisID+"/provincia/"+provinciaID+"/ciudad",
-                type: "GET",
-                dataType: "json",
-                context: this,
-                success(response) {
-                    if(response.code == 403) {
-                        app.showSessionEndedAlert(false);
-                    } else if(response.code == 200) {
-                        // Se cargaron las ciudades
-                        this.ciudades = response.data.map(function(unaCiudad){
+            axios
+                .get(`/api/pais/${paisID}/provincia/${provinciaID}/ciudad`)
+                .then(response => {
+                    var data = response.data;
+
+                    if(data.code == 200) {
+                        this.ciudades = data.data.map(function(unaCiudad){
                             return {
                                 value: unaCiudad.clave,
                                 text: unaCiudad.name
                             }
                         });
-                    } else {
-                        app.createCommonErrors(data);
+                    } else if (data.code == 403) {
+                        this.showLoginModal(true);
                     }
-                },
-                error(data) {
-                    app.createCommonErrors(data);
-                },
-                complete() {
+                })
+                .catch(error => {
+                    this.errorHandling(error);
+                })
+                .then(() => {
+                    // allways
                     this.ciudadesLoading = false;
-                }
-            });
-            */
+                })
         }
     },
     watch: {

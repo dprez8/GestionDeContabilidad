@@ -1,5 +1,6 @@
 <template>
     <div class="pt-3">
+        <b-overlay spinner-variant="light" variant="primary" :show="ingresoLoading" no-wrap></b-overlay>
         <div class="row mb-4 mx-2">
             <div class="col py-2 text-center">
                 <h2>Cargar nuevo ingreso</h2>
@@ -66,6 +67,7 @@
                 <b-collapse :visible="(falloCargarIngreso)">
                     <b-badge variant="danger">Hubo un problema al cargar el ingreso</b-badge>
                 </b-collapse>
+                
                 <b-button-group>
                     <b-button variant="primary" @click="confirmar">Confirmar</b-button>
                     <b-button variant="outline-dark" to="/operaciones/ingreso">Cancelar</b-button>
@@ -90,6 +92,7 @@ export default {
             },
             falloInput: false,
             falloCargarIngreso: false,
+            ingresoLoading: false
         }
     },
     computed: {
@@ -104,47 +107,43 @@ export default {
         confirmar() {
             // Creo el ingreso
             var todosLosCamposRellenos = 
-                this.ingreso.fechaOperacion                               &&
+                this.ingreso.fechaOperacion &&
                 this.ingreso.montoTotal                          
 
             this.falloInput = !todosLosCamposRellenos;
             if(this.falloInput) {
                 return;
             }
+
+            this.ingresoLoading = true;
+            this.falloCargarIngreso = false;
             
             var ingresoToSend = JSON.parse(JSON.stringify(this.ingreso));
 
             console.log("POST '/api/operaciones/ingreso'");
             console.log(JSON.stringify(ingresoToSend, null, 4));
 
-            /*
-            $.ajax({
-                url: "http://{{ ip }}/api/operaciones/ingreso",
-                type: "POST",
-                dataType: "json",
-                context: this,
-                data: JSON.stringify(ingresoToSend),
-                success(response) {
-                    if(response.code == 403) {
-                        app.showSessionEndedAlert(false);
-                    } else if(response.code == 400) {
-                        this.falloCargarIngreso = true;
-                    } else if(response.code == 200) {
-                        this.$router.push('/operaciones/ingreso');
-                    } else {
-                        app.createCommonErrors(response);
-                    }
-                },
-                error(data) {
-                    app.createCommonErrors(data);
-                },
-                complete() {
-                    console.log("termino");
-                }
-            });
-            */
+            axios
+                .post('/api/operaciones/ingreso', ingresoToSend)
+                .then(response => {
+                    var data = response.data;
 
-            // Obtengo la id del ingreso que se creó
+                    if(data.code == 200) {
+                        this.createToast('Guardado exitoso', 'Se dio de alta el ingreso correctamente', 'success');
+                        this.$router.push('/operaciones/ingreso');
+                    } else if (data.code == 403) {
+                        this.showLoginModal(true);
+                    } else if (data.code == 400) {
+                        this.falloCargarIngreso = true;
+                    }
+                })
+                .catch(error => {
+                    this.errorHandling(error);
+                })
+                .then(() => {
+                    // allways
+                    this.ingresoLoading = false;
+                })
         },
     }
 }

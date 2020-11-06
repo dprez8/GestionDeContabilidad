@@ -1,11 +1,7 @@
 <template>
     <div class="px-2 pb-2 egreso_container">
         <b-card v-if="egreso">
-            <template v-if="egreso.categorias">
-                <template v-for="(categoria, index) in egreso.categorias">
-                    <b-badge :key="index" class="mr-1">{{categoria.descripcion}}</b-badge>
-                </template>
-            </template>
+            <b-overlay spinner-variant="light" variant="primary" rounded="sm" :show="egresoLoading" no-wrap></b-overlay>
             <div class="row m-0">
                 <div class="col p-0 pr-1">
                     <b-list-group>
@@ -74,15 +70,15 @@
             </div>
             <div class="row m-0">
                 <div class="col p-0 pt-2">
-                    <b-collapse :visible="(falloAsociacionIngreso)">
-                        <b-badge variant="danger">No se pudo asociar al ingreso</b-badge>
+                    <b-collapse :visible="falloCarga">
+                        <b-badge variant="danger">{{falloCargaDetalles}}</b-badge>
                     </b-collapse>
                     <b-button-toolbar>
                         <b-button-group size="sm">
                             <template v-if="!egreso.ingresoAsociado">
                                 <b-button v-b-modal.modal-asociar-ingreso variant="outline-secondary">Asociar a Ingreso</b-button>
                             </template>
-                            <template>
+                            <template v-if="!egreso.categorias.length">
                                 <b-button v-b-modal.modal-asociar-categoria variant="outline-secondary">Asociar a categorias</b-button>
                             </template>
                             <!--
@@ -93,6 +89,11 @@
                     </b-button-toolbar>
                 </div>
             </div>
+            <template v-if="egreso.categorias">
+                <template v-for="(categoria, index) in egreso.categorias">
+                    <b-badge :key="index" class="mr-1">{{categoria.descripcion}}</b-badge>
+                </template>
+            </template>
         </b-card>
         <div v-else>
             
@@ -153,7 +154,9 @@ export default {
                     thClass: []
                 }
             ],
-            falloAsociacionIngreso: false
+            egresoLoading: false,
+            falloCarga: false,
+            falloCargaDetalles: ""
         }
     },
     inject: ['showLoginModal', 'errorHandling'],
@@ -194,7 +197,7 @@ export default {
         // Ingreso
         confirmarAsociarIngreso(data) {
 
-            this.falloAsociacionIngreso = false;
+            this.falloCarga = false;
 
             this.$bvModal.hide('modal-asociar-ingreso');
             console.log(data);
@@ -202,6 +205,7 @@ export default {
             var ingreso = data;
 
             if(ingreso) {
+                this.egresoLoading = true;
 
                 var request = {
                     egresoId: this.egreso.id,
@@ -211,35 +215,28 @@ export default {
                 console.log("POST '/api/operaciones/asociarManualmente'");
                 console.log(JSON.stringify(request, null, 4));
 
-                /*
-                $.ajax({
-                    url: "http://{{ ip }}/api/operaciones/asociarManualmente",
-                    type: "POST",
-                    dataType: "json",
-                    context: this,
-                    data: JSON.stringify(request),
-                    success(response) {
-                        if(response.code == 403) {
-                            app.showSessionEndedAlert(true);
-                        } else if(response.code == 400) {
-                            // Fallo la asociacion de ingreso
-                            this.falloAsociacionIngreso = true;
-                        } else if(response.code == 200) {
-                            // El ingreso se asoció correctamente
-                            console.log(response);
-                            app.softReloadPage();
-                        } else {
-                            // Fallo la asociacion de ingreso (default)
-                            this.falloAsociacionIngreso = true;
-                            app.createCommonErrors(response);
+                axios
+                    .post(`/api/operaciones/asociarManualmente`, request)
+                    .then(response => {
+                        var data = response.data;
+                        console.log(data);
+                        if(data.code == 200) {
+                            this.cargarEgresoAPI();
+                        } else if (data.code == 403) {
+                            this.showLoginModal(true);
+                        } else if (data.code == 400) {
+                            this.falloCarga = true;
+                            this.falloCargaDetalles = data.message;
                         }
-                    },
-                    error(data) {
-                        this.falloAsociacionIngreso = true;
-                        app.createCommonErrors(data);
-                    }
-                });
-                */
+                    })
+                    .catch(error => {
+                        this.falloCarga = true;
+                        this.errorHandling(error);
+                    })
+                    .then(() => {
+                        // allways
+                        this.egresoLoading = false;
+                    })
             } 
 
         },
@@ -248,12 +245,16 @@ export default {
         },
         // Categorias
         confirmarAsociarCategorias(data) {
+            this.falloCarga = false;
+
             this.$bvModal.hide('modal-asociar-categoria');
             console.log(data);
 
             var categorias = data;
 
             if(categorias) {
+                
+                this.egresoLoading = true;
 
                 var request = {
                     id: this.egreso.id,
@@ -265,35 +266,28 @@ export default {
                 console.log("POST '/api/categorias/asociar'");
                 console.log(JSON.stringify(request, null, 4));
 
-                /*
-                $.ajax({
-                    url: "http://{{ ip }}/api/categorias/asociar",
-                    type: "POST",
-                    dataType: "json",
-                    context: this,
-                    data: JSON.stringify(request),
-                    success(response) {
-                        if(response.code == 403) {
-                            app.showSessionEndedAlert(false);
-                        } else if(response.code == 400) {
-                            // Fallo la asociacion de categorias
+                axios
+                    .post(`/api/categorias/asociar`, request)
+                    .then(response => {
+                        var data = response.data;
+                        console.log(data);
+                        if(data.code == 200) {
+                            this.cargarEgresoAPI();
+                        } else if (data.code == 403) {
+                            this.showLoginModal(true);
+                        } else if (data.code == 400) {
                             this.falloCarga = true;
-                        } else if(response.code == 200) {
-                            // Las categorias se asociaron correctamente
-                            console.log(response);
-                            app.softReloadPage();
-                        } else {
-                            // Fallo la asociacion de categorias (default)
-                            this.falloCarga = true;
-                            app.createCommonErrors(response);
+                            this.falloAsociacionDetalles = data.message;
                         }
-                    },
-                    error(data) {
+                    })
+                    .catch(error => {
                         this.falloCarga = true;
-                        app.createCommonErrors(data);
-                    }
-                });
-                */
+                        this.errorHandling(error);
+                    })
+                    .then(() => {
+                        // allways
+                        this.egresoLoading = false;
+                    })
             }
         },
         cancelarAsociarCategorias() {

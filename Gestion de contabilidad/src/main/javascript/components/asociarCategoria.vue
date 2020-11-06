@@ -1,5 +1,6 @@
 <template>
     <div>
+        <b-overlay spinner-variant="light" variant="primary" :show="categoriasLoading" no-wrap></b-overlay>
         <p>Seleccione categorias para asociar al egreso</p>
         <ul class="list-group">
             <criterio
@@ -29,6 +30,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import criterio from './criterio.vue'
 
 export default {
@@ -44,35 +46,30 @@ export default {
             categoriasLoading: false
         }
     },
+    inject: ['showLoginModal', 'errorHandling'],
     methods: {
         cargarCriteriosAPI() {
-            this.categoriasLoading = false;
+            this.categoriasLoading = true;
 
-            /*
-            $.ajax({
-                url: "http://{{ ip }}/api/categorias",
-                type: "GET",
-                dataType: "json",
-                context: this,
-                cache: false,
-                success(response) {
-                    if(response.code == 403) {
-                        app.showSessionEndedAlert(true);
-                    } else if(response.code == 200) {
-                        this.criteriosAPI = response.criterios;
+            axios
+                .get(`/api/categorias`)
+                .then(response => {
+                    var data = response.data;
+
+                    if(data.code == 200) {
+                        this.criteriosAPI = data.criterios;
                         this.procesarCriterios();
-                    } else {
-                        app.createCommonErrors(data);
+                    } else if (data.code == 403) {
+                        this.showLoginModal(true);
                     }
-                },
-                error(data) {
-                    app.createCommonErrors(data);
-                },
-                complete() {
+                })
+                .catch(error => {
+                    this.errorHandling(error);
+                })
+                .then(() => {
+                    // allways
                     this.categoriasLoading = false;
-                }
-            });
-            */
+                })
         },
         procesarCriterios() {
             this.criteriosAPI.forEach(criterio => {

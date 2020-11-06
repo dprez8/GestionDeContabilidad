@@ -1,6 +1,7 @@
 <template>
     <!-- template para nuevo egreso -->
     <div class="pt-3">
+        <b-overlay spinner-variant="light" variant="primary" :show="egresoLoading && !falloCarga" no-wrap></b-overlay>
         <div class="row mb-4 mx-2">
             <div class="col py-2 text-center">
                 <h2>Cargar nuevo egreso</h2>
@@ -277,13 +278,10 @@
                 <b-collapse :visible="(falloCarga)">
                     <b-badge variant="danger">Hubo un problema al cargar el egreso</b-badge>
                 </b-collapse>
-                
-                <b-overlay spinner-variant="primary" :show="egresoLoading && !falloCarga" rounded="sm">
-                    <b-button-group>
-                        <b-button variant="primary" @click="confirmar">Confirmar</b-button>
-                        <b-button variant="outline-dark" to="/operaciones/egreso">Cancelar</b-button>
-                    </b-button-group>
-                </b-overlay>
+                <b-button-group>
+                    <b-button variant="primary" @click="confirmar">Confirmar</b-button>
+                    <b-button variant="outline-dark" to="/operaciones/egreso">Cancelar</b-button>
+                </b-button-group>
             </div>
             <div class="col-lg-1 col-xl-3"></div>
         </div>
@@ -446,6 +444,29 @@ export default {
                 console.log("POST '/api/proveedor'");
                 console.log(JSON.stringify(this.proveedorAAgregar, null, 4));
 
+                axios
+                    .post('/api/proveedor', this.proveedorAAgregar)
+                    .then(response => {
+                        var data = response.data;
+
+                        if(data.code == 200) {
+                            this.egreso.proveedor = data.id;
+                            this.crearEgresoAPI()
+                        } else if (data.code == 403) {
+                            this.showLoginModal(true);
+                        } else if (data.code == 400) {
+                            this.falloCarga = true;
+                        } else {
+                            this.falloCarga = true;
+                        }
+                    })
+                    .catch(error => {
+                        this.errorHandling(error);
+                        this.falloCarga = true;
+                    })
+                    .then(() => {
+                        // allways
+                    })
                 /*
                 $.ajax({
                     url: "http://{{ ip }}/api/proveedor",
@@ -487,6 +508,29 @@ export default {
             console.log("POST '/api/operaciones/egreso'");
             console.log(JSON.stringify(egresoToSend, null, 4));
 
+            axios
+                .post('/api/operaciones/egreso', egresoToSend)
+                .then(response => {
+                    var data = response.data;
+
+                    if(data.code == 200) {
+                        this.idEgreso = data.id;
+                        this.crearPresupuestosAPI();
+                    } else if (data.code == 403) {
+                        this.showLoginModal(true);
+                    } else if (data.code == 400) {
+                        this.falloCarga = true;
+                    } else {
+                        this.falloCarga = true;
+                    }
+                })
+                .catch(error => {
+                    this.errorHandling(error);
+                    this.falloCarga = true;
+                })
+                .then(() => {
+                    // allways
+                })
             /*
             $.ajax({
                 url: "http://{{ ip }}/api/operaciones/egreso",
@@ -523,7 +567,7 @@ export default {
             this.asociarCategoriasAPI();
         },
         asociarCategoriasAPI() {
-            if(this.categoriasAAsociar) {
+            if(this.categoriasAAsociar.length) {
                 var request = {
                     id: this.idEgreso,
                     categorias: this.categoriasAAsociar.map(function(categoria){
@@ -533,6 +577,29 @@ export default {
 
                 console.log("POST '/api/categorias/asociar'");
                 console.log(JSON.stringify(request, null, 4));
+
+                axios
+                    .post('/api/categorias/asociar', request)
+                    .then(response => {
+                        var data = response.data;
+
+                        if(data.code == 200) {
+                            this.asociarIngresoAPI();
+                        } else if (data.code == 403) {
+                            this.showLoginModal(true);
+                        } else if (data.code == 400) {
+                            this.falloCarga = true;
+                        } else {
+                            this.falloCarga = true;
+                        }
+                    })
+                    .catch(error => {
+                        this.errorHandling(error);
+                        this.falloCarga = true;
+                    })
+                    .then(() => {
+                        // allways
+                    })
 
                 /*
                 $.ajax({
@@ -578,6 +645,29 @@ export default {
                 console.log("POST '/api/operaciones/asociarManualmente'");
                 console.log(JSON.stringify(request, null, 4));
 
+                axios
+                    .post('/api/operaciones/asociarManualmente', request)
+                    .then(response => {
+                        var data = response.data;
+
+                        if(data.code == 200) {
+                            this.createToast('Guardado exitoso', 'Se dio de alta el egreso correctamente', 'success');
+                            this.$router.push('/operaciones/egreso');
+                        } else if (data.code == 403) {
+                            this.showLoginModal(true);
+                        } else if (data.code == 400) {
+                            this.falloCarga = true;
+                        } else {
+                            this.falloCarga = true;
+                        }
+                    })
+                    .catch(error => {
+                        this.errorHandling(error);
+                        this.falloCarga = true;
+                    })
+                    .then(() => {
+                        // allways
+                    })
                 /*
                 $.ajax({
                     url: "http://{{ ip }}/api/operaciones/asociarManualmente",
@@ -614,6 +704,25 @@ export default {
         },
         cargarProveedoresAPI() {
             this.proveedoresLoading = true;
+
+            axios
+                .get('/api/proveedores')
+                .then(response => {
+                    var data = response.data;
+
+                    if(data.code == 200) {
+                        this.proveedoresSelect = data.data.map(this.proveedoresAPIConverter);
+                    } else if (data.code == 403) {
+                        this.showLoginModal(true);
+                    }
+                })
+                .catch(error => {
+                    this.errorHandling(error);
+                })
+                .then(() => {
+                    // allways
+                    this.proveedoresLoading = false;
+                })
             /*
             var request = {
                 url: "http://{{ ip }}/api/proveedores",
@@ -649,6 +758,25 @@ export default {
         },
         cargarMediosDePagoAPI() {
             this.mediosDePagoLoading = true;
+
+            axios
+                .get('/api/medios')
+                .then(response => {
+                    var data = response.data;
+
+                    if(data.code == 200) {
+                        this.mediosDePagoSelect = data.data.map(this.mediosDePagoAPIConverter);
+                    } else if (data.code == 403) {
+                        this.showLoginModal(true);
+                    }
+                })
+                .catch(error => {
+                    this.errorHandling(error);
+                })
+                .then(() => {
+                    // allways
+                    this.mediosDePagoLoading = false;
+                })
             /*
             var request = {
                 url: "http://{{ ip }}/api/medios",
