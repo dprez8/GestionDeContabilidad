@@ -12,7 +12,7 @@ public class PanelController {
 
         Map<String, String> parametros = new HashMap<>();
 
-        parametros.put("ip", "gesoc.ddns.net");
+        parametros.put("ip", "localhost");
         parametros.put("titulo", "Inicio");
 
         return new ModelAndView(parametros, "panel.hbs");

@@ -16,7 +16,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 
-import db.EntityManagerHelperTwo;
+import db.EntityManagerHelper;
 import spark.Request;
 import spark.Response;
 
@@ -27,27 +27,12 @@ import java.util.stream.Collectors;
 
 /*****************************************************************/
 public class EgresosRestController {
-    private Repositorio<Egreso> repoEgresos;
-    private Repositorio<ItemEgreso> repoItems;
-    private Repositorio<Producto> repoProductos;
-    private Repositorio<Pago> repoPagos;
-    private Repositorio<MedioDePago> repoMedioDePagos;
-    private Repositorio<Proveedor> repoProveedores;
-    private Repositorio<DocumentoComercial> repoDocumentos;
-    private Repositorio<TipoDocumento> repoTipoDocumento;
+
     private Repositorio<EntidadJuridica> repoEntidadJuridica;
     private Respuesta respuesta;
     private Gson gson;
 
     public EgresosRestController(){
-        this.repoEgresos         = new Repositorio<>(new DaoHibernate<>(Egreso.class));
-        this.repoItems           = new Repositorio<>(new DaoHibernate<>(ItemEgreso.class));
-        this.repoProductos       = new Repositorio<>(new DaoHibernate<>(Producto.class));
-        this.repoPagos           = new Repositorio<>(new DaoHibernate<>(Pago.class));
-        this.repoMedioDePagos    = new Repositorio<>(new DaoHibernate<>(MedioDePago.class));
-        this.repoProveedores     = new Repositorio<>(new DaoHibernate<>(Proveedor.class));
-        this.repoDocumentos      = new Repositorio<>(new DaoHibernate<>(DocumentoComercial.class));
-        this.repoTipoDocumento   = new Repositorio<>(new DaoHibernate<>(TipoDocumento.class));
         this.repoEntidadJuridica = new Repositorio<>(new DaoHibernate<>(EntidadJuridica.class));
         this.respuesta           = new Respuesta();
     }
@@ -89,6 +74,7 @@ public class EgresosRestController {
         cargaEgresoResponse.id = egreso.getId();
         jsonResponse = this.gson.toJson(cargaEgresoResponse);
         response.body(jsonResponse);
+
         return response.body();
     }
 
@@ -148,7 +134,8 @@ public class EgresosRestController {
                 .serializeNulls()
                 .create();
 
-        egreso = this.repoEgresos.buscar(new Integer(request.params("egresoId")));
+        Repositorio<Egreso> repoEgresos = new Repositorio<>(new DaoHibernate<>(Egreso.class));
+        egreso = repoEgresos.buscar(new Integer(request.params("egresoId")));
 
         if(egreso == null) {
             Gson gson = new Gson();
@@ -175,10 +162,15 @@ public class EgresosRestController {
         Proveedor proveedor;
         MedioDePago medioDePago;
         TipoDocumento tipoDocumento;
+
+        Repositorio<Proveedor> repoProveedores   = new Repositorio<>(new DaoHibernate<>(Proveedor.class));
+        Repositorio<TipoDocumento> repoTipoDocumento = new Repositorio<>(new DaoHibernate<>(TipoDocumento.class));
+        Repositorio<MedioDePago> repoMediosDePagos = new Repositorio<>(new DaoHibernate<>(MedioDePago.class));
+
         try {
-             proveedor     = this.repoProveedores.buscar(egresoRequest.proveedor);
-             medioDePago   = this.repoMedioDePagos.buscar(egresoRequest.medioDePago.id);
-             tipoDocumento = this.repoTipoDocumento.buscar(egresoRequest.documentoComercial.tipo);
+             proveedor     = repoProveedores.buscar(egresoRequest.proveedor);
+             medioDePago   = repoMediosDePagos.buscar(egresoRequest.medioDePago.id);
+             tipoDocumento = repoTipoDocumento.buscar(egresoRequest.documentoComercial.tipo);
              if(proveedor == null || medioDePago == null || tipoDocumento == null) {
                 return null;
              }
@@ -197,8 +189,11 @@ public class EgresosRestController {
         documentoComercial.setFechaDeEntrega(egresoRequest.documentoComercial.fechaDeEntrega);
         documentoComercial.setDescripcion(egresoRequest.documentoComercial.descripcion);
 
-        this.repoPagos.agregar(pago);
-        this.repoDocumentos.agregar(documentoComercial);
+        Repositorio<Pago> repoPagos = new Repositorio<>(new DaoHibernate<>(Pago.class));
+        Repositorio<DocumentoComercial> repoDocumentos = new Repositorio<>(new DaoHibernate<>(DocumentoComercial.class));
+
+        repoPagos.agregar(pago);
+        repoDocumentos.agregar(documentoComercial);
 
         List<ItemEgreso> items = egresoRequest.items
                                             .stream()
@@ -214,9 +209,12 @@ public class EgresosRestController {
                     .agregarItems(items)
                     .build();
 
-        this.repoEgresos.agregar(egreso);
+        Repositorio<Egreso> repoEgresos = new Repositorio<>(new DaoHibernate<>(Egreso.class));
+
+        repoEgresos.agregar(egreso);
             //Modificar items con el egreso, o sea linkearlos
         relacionarItemsConEgreso(items,egreso);
+
         return egreso;
     }
 
@@ -225,23 +223,26 @@ public class EgresosRestController {
         itemEgreso.setPrecio(itemRequest.precio);
         itemEgreso.setCantidad(itemRequest.cantidad);
 
+        Repositorio<ItemEgreso> repoItems = new Repositorio<>(new DaoHibernate<>(ItemEgreso.class));
+        Repositorio<Producto> repoProductos = new Repositorio<>(new DaoHibernate<>(Producto.class));
+
         Producto producto = buscarProducto(itemRequest.nombreProducto.toLowerCase());
         if (producto == null) {
             producto = new Producto();
             producto.setNombreProducto(itemRequest.nombreProducto);
 
-            this.repoProductos.agregar(producto);
+            repoProductos.agregar(producto);
         }
         itemEgreso.setProducto(producto);
 
-        this.repoItems.agregar(itemEgreso);
+        repoItems.agregar(itemEgreso);
 
         return  itemEgreso;
     }
 
     private Producto buscarProducto(String nombreProducto) {
         try {
-            Producto producto= (Producto) EntityManagerHelperTwo
+            Producto producto= (Producto) EntityManagerHelper
                         .createQuery("from Producto where nombre_producto = :nombre")
                         .setParameter("nombre",nombreProducto)
                         .getSingleResult();
@@ -253,9 +254,10 @@ public class EgresosRestController {
     }
 
     private void relacionarItemsConEgreso(List<ItemEgreso> items, Egreso egreso) {
+        Repositorio<ItemEgreso> repoItems = new Repositorio<>(new DaoHibernate<>(ItemEgreso.class));
         items.forEach(unItem -> {
                 unItem.setEgresoAsociado(egreso);
-                this.repoItems.modificar(unItem);
+                repoItems.modificar(unItem);
         });
     }
 
