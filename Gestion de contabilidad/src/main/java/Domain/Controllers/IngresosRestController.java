@@ -9,7 +9,6 @@ import Domain.Entities.ApiPaises.Moneda;
 import Domain.Entities.Operaciones.Ingreso;
 import Domain.Entities.Organizacion.EntidadBase;
 import Domain.Entities.Organizacion.EntidadJuridica;
-import Domain.Entities.Organizacion.Organizacion;
 import Domain.Entities.Usuarios.Estandar;
 import Domain.Repositories.Daos.DaoHibernate;
 import Domain.Repositories.Repositorio;
@@ -27,7 +26,7 @@ public class IngresosRestController {
     private Repositorio<Ingreso> repoIngresos;
     private Repositorio<EntidadJuridica> repoEntidadJuridica;
     private Repositorio<EntidadBase> repoEntidadBase;
-    private Repositorio<Organizacion> repoOrganizacion;
+
     private Repositorio<Moneda> repoMoneda;
     private Respuesta respuesta;
     private Gson gson;
@@ -36,7 +35,6 @@ public class IngresosRestController {
         this.repoIngresos        = new Repositorio<>(new DaoHibernate<>(Ingreso.class));
         this.repoEntidadJuridica = new Repositorio<>(new DaoHibernate<>(EntidadJuridica.class));
         this.repoEntidadBase     = new Repositorio<>(new DaoHibernate<>(EntidadBase.class));
-        this.repoOrganizacion 	 = new Repositorio<>(new DaoHibernate<>(Organizacion.class));
         this.repoMoneda       	 = new Repositorio<>(new DaoHibernate<>(Moneda.class));
         this.respuesta           = new Respuesta();
     }

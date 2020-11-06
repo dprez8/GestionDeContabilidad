@@ -8,6 +8,7 @@ import Domain.Controllers.DTO.Respuesta;
 import Domain.Entities.DatosDeOperaciones.*;
 import Domain.Entities.Operaciones.Egreso.BuilderEgresoConcreto;
 import Domain.Entities.Operaciones.Egreso.Egreso;
+import Domain.Entities.Organizacion.EntidadBase;
 import Domain.Entities.Organizacion.EntidadJuridica;
 import Domain.Entities.Usuarios.Estandar;
 import Domain.Repositories.Daos.DaoHibernate;
@@ -37,6 +38,7 @@ public class EgresosRestController {
     private Repositorio<DocumentoComercial> repoDocumentos;
     private Repositorio<TipoDocumento> repoTipoDocumento;
     private Repositorio<EntidadJuridica> repoEntidadJuridica;
+    private Repositorio<EntidadBase> repoEntidadBase;
     private List<Egreso> egresosMemo;
     private Respuesta respuesta;
     private Gson gson;
@@ -51,6 +53,7 @@ public class EgresosRestController {
         this.repoDocumentos      = new Repositorio<>(new DaoHibernate<>(DocumentoComercial.class));
         this.repoTipoDocumento   = new Repositorio<>(new DaoHibernate<>(TipoDocumento.class));
         this.repoEntidadJuridica = new Repositorio<>(new DaoHibernate<>(EntidadJuridica.class));
+        this.repoEntidadBase     = new Repositorio<>(new DaoHibernate<>(EntidadBase.class));
         this.egresosMemo         = new ArrayList<>();
         this.respuesta           = new Respuesta();
     }
@@ -71,9 +74,7 @@ public class EgresosRestController {
 
         EgresoRequest egresoRequest    = this.gson.fromJson(request.body(),EgresoRequest.class);
 
-        EntidadJuridica entidadJuridica= this.repoEntidadJuridica.buscar(usuario.getMiOrganizacion().getId());
-
-        Egreso egreso = asignarEgresoDesde(egresoRequest, entidadJuridica);
+        Egreso egreso = asignarEgresoDesde(egresoRequest);
 
         if(egreso == null) {
             this.respuesta.setCode(400);
@@ -177,10 +178,11 @@ public class EgresosRestController {
         return jsonResponse;
     }
 
-    private Egreso asignarEgresoDesde (EgresoRequest egresoRequest, EntidadJuridica entidadJuridica) {
+    private Egreso asignarEgresoDesde (EgresoRequest egresoRequest) {
         Proveedor proveedor;
         MedioDePago medioDePago;
         TipoDocumento tipoDocumento;
+        Egreso egreso;
         try {
              proveedor     = this.repoProveedores.buscar(egresoRequest.proveedor);
              medioDePago   = this.repoMedioDePagos.buscar(egresoRequest.medioDePago.id);
@@ -202,6 +204,7 @@ public class EgresosRestController {
         documentoComercial.setFechaDePedido(egresoRequest.documentoComercial.fechaDePedido);
         documentoComercial.setFechaDeEntrega(egresoRequest.documentoComercial.fechaDeEntrega);
         documentoComercial.setDescripcion(egresoRequest.documentoComercial.descripcion);
+        
 
         this.repoPagos.agregar(pago);
         this.repoDocumentos.agregar(documentoComercial);
@@ -211,14 +214,36 @@ public class EgresosRestController {
                                             .map(item->mapearItem(item))
                                             .collect(Collectors.toList());
 
-        Egreso egreso = new BuilderEgresoConcreto()
-                    .agregarFechaOperacion(egresoRequest.fechaOperacion)
-                    .agregarDatosOrganizacion(entidadJuridica)
-                    .agregarProveedor(proveedor)
-                    .agregarPago(pago)
-                    .agregarDocumentoComercial(documentoComercial)
-                    .agregarItems(items)
-                    .build();
+        
+        if(egresoRequest.organizacion_id!=0){
+        	if(egresoRequest.tipo==0) {
+        		EntidadJuridica entidadJuridica=repoEntidadJuridica.buscar(egresoRequest.organizacion_id);
+
+                egreso = new BuilderEgresoConcreto()
+                            .agregarFechaOperacion(egresoRequest.fechaOperacion)
+                            .agregarDatosOrganizacion(entidadJuridica)
+                            .agregarProveedor(proveedor)
+                            .agregarPago(pago)
+                            .agregarDocumentoComercial(documentoComercial)
+                            .agregarItems(items)
+                            .build();
+
+        	}
+        	else {
+        		EntidadBase entidadBase= repoEntidadBase.buscar(egresoRequest.organizacion_id);
+
+                egreso = new BuilderEgresoConcreto()
+                            .agregarFechaOperacion(egresoRequest.fechaOperacion)
+                            .agregarDatosOrganizacion(entidadBase)
+                            .agregarProveedor(proveedor)
+                            .agregarPago(pago)
+                            .agregarDocumentoComercial(documentoComercial)
+                            .agregarItems(items)
+                            .build();
+
+        	}
+        }
+        
 
         this.repoEgresos.agregar(egreso);
             //Modificar items con el egreso, o sea linkearlos
