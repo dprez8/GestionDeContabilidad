@@ -8,5 +8,6 @@ public class IngresoRequest {
     public LocalDate fechaOperacion;
     public LocalDate fechaAceptacionEgresos;
     public int organizacion_id;
+    public int tipo;
     public int moneda_id;
 }
