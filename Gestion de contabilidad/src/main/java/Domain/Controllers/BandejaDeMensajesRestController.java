@@ -7,7 +7,8 @@ import Domain.Controllers.DTO.Respuesta;
 import Domain.Entities.BandejaDeMensajes.Mensaje;
 import Domain.Entities.Usuarios.Estandar;
 import Domain.Entities.Usuarios.Usuario;
-import Domain.Entities.ValidadorTransparencia.Scheduler;
+import Domain.Entities.ValidadorTransparencia.Tarea;
+import Domain.Entities.ValidadorTransparencia.SchedulerInit;
 import Domain.Repositories.Daos.DaoHibernate;
 import Domain.Repositories.Repositorio;
 import com.google.gson.Gson;
@@ -18,21 +19,23 @@ import spark.Response;
 
 import javax.persistence.NoResultException;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
 import java.util.stream.Collectors;
 
 
 public class BandejaDeMensajesRestController {
     private Repositorio<Usuario> repoUsuarios;
     private Repositorio<Mensaje> repoMensajes;
-    private Repositorio<Scheduler> repoScheduler;
+    private Repositorio<SchedulerInit> repoScheduler;
     private Respuesta codeResponse;
     private String jsonResponse;
 
     public BandejaDeMensajesRestController() {
         this.repoUsuarios = new Repositorio<>(new DaoHibernate<Usuario>(Usuario.class));
         this.repoMensajes = new Repositorio<>(new DaoHibernate<Mensaje>(Mensaje.class));
-        this.repoScheduler= new Repositorio<>(new DaoHibernate<>(Scheduler.class));
+        this.repoScheduler= new Repositorio<>(new DaoHibernate<>(SchedulerInit.class));
         this.codeResponse = new Respuesta();
     }
 
@@ -71,16 +74,24 @@ public class BandejaDeMensajesRestController {
         Gson gson = new Gson();
         ConfigSchedulerRequest configSchedulerRequest = gson.fromJson(request.body(),ConfigSchedulerRequest.class);
 
-        Scheduler scheduler = usuario.getMiOrganizacion().getScheduler();
+        SchedulerInit schedulerInit = this.repoScheduler.buscar(usuario.getMiOrganizacion().getSchedulerInit().getId());
 
-        if(!configuracionExistosa(configSchedulerRequest,scheduler)) {
+        if(!configuracionExistosa(configSchedulerRequest, schedulerInit)) {
             this.codeResponse.setCode(400);
             this.codeResponse.setMessage("Error en los datos de envio");
             this.jsonResponse = gson.toJson(this.codeResponse);
             return jsonResponse;
         }
 
-        this.repoScheduler.modificar(scheduler);
+        Tarea tarea = obtenerTareaYActualizar(schedulerInit.getId());
+        Timer timer = obtenerTimerYActualizar(schedulerInit.getId());
+
+        schedulerInit.setTarea(tarea);
+        schedulerInit.setTimer(timer);
+
+        this.repoScheduler.modificar(schedulerInit);
+
+        schedulerInit.arrancarTarea();
 
         this.codeResponse.setCode(200);
         this.codeResponse.setMessage("Ok");
@@ -99,12 +110,12 @@ public class BandejaDeMensajesRestController {
                 .excludeFieldsWithoutExposeAnnotation()
                 .create();
 
-        Scheduler scheduler = usuario.getMiOrganizacion().getScheduler();
+        SchedulerInit schedulerInit = usuario.getMiOrganizacion().getSchedulerInit();
 
         ConfigResponse configResponse = new ConfigResponse();
         configResponse.code           = 200;
         configResponse.message        = "Ok";
-        configResponse.scheduler      = scheduler;
+        configResponse.schedulerInit = schedulerInit;
 
         this.jsonResponse = gson.toJson(configResponse);
         response.body(jsonResponse);
@@ -174,15 +185,51 @@ public class BandejaDeMensajesRestController {
         }
     }
 
-    private boolean configuracionExistosa(ConfigSchedulerRequest configSchedulerRequest,Scheduler scheduler) {
+    private boolean configuracionExistosa(ConfigSchedulerRequest configSchedulerRequest, SchedulerInit schedulerInit) {
         if(configSchedulerRequest.dias.isEmpty() || configSchedulerRequest.horaInicio == null || configSchedulerRequest.minutoInicio == null){
             return false;
         }
-        scheduler.setHoraInicio(configSchedulerRequest.horaInicio);
-        scheduler.setMinutoInicio(configSchedulerRequest.minutoInicio);
-        scheduler.setDias(configSchedulerRequest.dias);
+
+        schedulerInit.setHoraInicio(configSchedulerRequest.horaInicio);
+        schedulerInit.setMinutoInicio(configSchedulerRequest.minutoInicio);
+        schedulerInit.setDias(configSchedulerRequest.dias);
         return true;
     }
+
+    private Timer obtenerTimerYActualizar(Integer id) {
+        HashMap<Integer, Timer> timerHashMap = TimersController.instancia().getTimerHashMap();
+
+        Timer timer = timerHashMap.get(id);
+        timerHashMap.remove(id);
+
+        timer.cancel();
+
+        timer = new Timer();
+
+        timerHashMap.put(id,timer);
+
+        TimersController.instancia().setTimerHashMap(timerHashMap);
+
+        return timer;
+    }
+
+    private Tarea obtenerTareaYActualizar(Integer id) {
+        HashMap<Integer, Tarea> tareaHashMap = TimersController.instancia().getSchedulerHashMap();
+
+        Tarea tarea = tareaHashMap.get(id);
+        tareaHashMap.remove(id);
+
+        tarea.cancel();
+
+        tarea = new Tarea();
+
+        tareaHashMap.put(id, tarea);
+
+        TimersController.instancia().setSchedulerHashMap(tareaHashMap);
+
+        return tarea;
+    }
+
 
     private class BandejaResponse {
         @Expose
@@ -201,7 +248,7 @@ public class BandejaDeMensajesRestController {
         @Expose
         public String message;
         @Expose
-        public Scheduler scheduler;
+        public SchedulerInit schedulerInit;
     }
     private class MensajeId {
         public Integer id;

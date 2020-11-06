@@ -4,7 +4,6 @@ import Domain.Entities.BandejaDeMensajes.Mensaje;
 import Domain.Entities.CategorizadorDeEmpresas.Sector;
 import Domain.Entities.DatosDeOperaciones.*;
 import Domain.Entities.Operaciones.*;
-import Domain.Entities.ValidadorTransparencia.*;
 import Domain.Entities.Organizacion.*;
 import Domain.Entities.Operaciones.Egreso.*;
 import Domain.Entities.Usuarios.*;
@@ -91,13 +90,14 @@ public class SchedulerTest {
         unaCompra.addPresupuestos(primerPresupuesto, segundoPresupuesto);
 
         /**Creacion del Scheduler*/
-        Scheduler scheduler = new Scheduler();
+        SchedulerInit schedulerInit = new SchedulerInit();
 
         /**Inicio scheduler para validar el egreso*/
-        scheduler.setHoraInicio(12);
-        scheduler.setMinutoInicio(00);
-        scheduler.setValidadorDeTransparencia(validador);
-        scheduler.arrancarTarea();
+        schedulerInit.setHoraInicio(18);
+        schedulerInit.setMinutoInicio(16);
+        schedulerInit.setValidadorDeTransparencia(validador);
+        schedulerInit.setOrganizacion(unaEntidad);
+        schedulerInit.arrancarTarea();
 
         /**Solo es necesario un revisor para ver los mensajes*/
         List<Mensaje> mensajes = new ArrayList<>();
@@ -106,9 +106,7 @@ public class SchedulerTest {
         revisor = unaCompra.getRevisores().get(0);
         /**Por alguna razon, antes de que se ejecute el Scheduler, pasan muchas cosas, por lo tanto, espero a que se valide
          * la compra. Aca entra otro problema, si o si debo colocar este system.out dentro del while, sin el no muestra los msj*/
-        while (unaCompra.isValidado()==false){
-            System.out.printf(" ");
-        }
+
         mensajes.addAll(revisor.getBandejaDeMensajes().getMensajes());
         mensajes.forEach(msj->System.out.println(msj.getCuerpo()));
         mensajes.clear();

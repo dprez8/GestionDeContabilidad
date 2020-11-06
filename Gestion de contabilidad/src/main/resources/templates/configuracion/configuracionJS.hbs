@@ -2,7 +2,7 @@ const configuracion = {
     template: `{{> configuracion/configuracionHTML.hbs}}`,
     data() {
         return {
-            scheduler: {
+            schedulerInit: {
                 horaInicio: 0,
                 minutoInicio: 0,
                 dias: []
@@ -31,7 +31,7 @@ const configuracion = {
                 success(data) {
                     if(data.code == 200) {
                         console.log(data);
-                        this.scheduler = data.scheduler;
+                        this.schedulerInit = data.schedulerInit;
                     }
                     else if(data.code == 403) {
                         app.showSessionEndedAlert(true);
@@ -59,7 +59,7 @@ const configuracion = {
                 type: "POST",
                 context: this,
                 cache: false,
-                data: JSON.stringify(this.scheduler),
+                data: JSON.stringify(this.schedulerInit),
                 success(data) {
                     if(data.code == 200) {
                         console.log(data);
@@ -84,42 +84,42 @@ const configuracion = {
         },
         toggleDia(dia) {
             if(this.diaIsSelected(dia)) {
-                this.scheduler.dias.splice(this.getDiaIndex(dia), 1);
+                this.schedulerInit.dias.splice(this.getDiaIndex(dia), 1);
             } else {
-                this.scheduler.dias.push(dia);
+                this.schedulerInit.dias.push(dia);
             }
         },
         diaIsSelected(dia) {
             return this.getDiaIndex(dia) != - 1;
         },
         getDiaIndex(dia) {
-            return this.scheduler.dias.indexOf(dia);
+            return this.schedulerInit.dias.indexOf(dia);
         },
         getHora() {
-            return ('0' + this.scheduler.horaInicio).slice(-2);;
+            return ('0' + this.schedulerInit.horaInicio).slice(-2);;
         },
         getMinuto() {
-            return ('0' + this.scheduler.minutoInicio).slice(-2);;
+            return ('0' + this.schedulerInit.minutoInicio).slice(-2);;
         }
     },
     mounted() {
         this.cargarConfiguracionAPI()
     },
     watch: {
-        'scheduler.horaInicio'(hora) {
+        'schedulerInit.horaInicio'(hora) {
             if(hora > 23) {
-                this.scheduler.horaInicio = 0
+                this.schedulerInit.horaInicio = 0
             } else if(hora < 0) {
-                this.scheduler.horaInicio = 23
+                this.schedulerInit.horaInicio = 23
             }
         },
-        'scheduler.minutoInicio'(minuto) {
+        'schedulerInit.minutoInicio'(minuto) {
             if(minuto > 59) {
-                this.scheduler.minutoInicio = 0;
-                this.scheduler.horaInicio++;
+                this.schedulerInit.minutoInicio = 0;
+                this.schedulerInit.horaInicio++;
             } else if(minuto < 0) {
-                this.scheduler.minutoInicio = 59;
-                this.scheduler.horaInicio--;
+                this.schedulerInit.minutoInicio = 59;
+                this.schedulerInit.horaInicio--;
             }
         }
     }

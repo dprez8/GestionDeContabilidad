@@ -9,7 +9,7 @@ public class SchedulerTestPersistencia {
         Repositorio<EntidadJuridica> repoEntidadJuridica = new Repositorio<>(new DaoHibernate<>(EntidadJuridica.class));
         EntidadJuridica pepsi = repoEntidadJuridica.buscar(1);
 
-        Scheduler scheduler = pepsi.getScheduler();
+        SchedulerInit schedulerInit = pepsi.getSchedulerInit();
 
         /**Creacion de los validadores*/
         ValidarCantidadMinima validacionMinima = new ValidarCantidadMinima(1);
@@ -18,9 +18,9 @@ public class SchedulerTestPersistencia {
 
         ValidadorDeTransparencia validador = new ValidadorDeTransparencia(validacionMinima,validacionPresupuesto,validacionMenorValor);
 
-        scheduler.setHoraInicio(22);
-        scheduler.setMinutoInicio(35);
-        scheduler.setValidadorDeTransparencia(validador);
-        scheduler.arrancarTarea();
+        schedulerInit.setHoraInicio(22);
+        schedulerInit.setMinutoInicio(35);
+        schedulerInit.setValidadorDeTransparencia(validador);
+        schedulerInit.arrancarTarea();
     }
 }
