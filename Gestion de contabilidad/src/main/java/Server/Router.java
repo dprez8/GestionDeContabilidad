@@ -92,6 +92,9 @@ public class Router {
             if(EntityManagerHelperTwo.getEntityManager().isOpen()){
                 EntityManagerHelperTwo.closeEntityManager();
             }
+            if(EntityManagerHelper.getEntityManager().isOpen()){
+                EntityManagerHelper.closeEntityManager();
+            }
             response.type("application/json");
         });
     }
@@ -102,8 +105,5 @@ public class Router {
                 unaOrg.getScheduler().setValidadorDeTransparencia(validador);
                 unaOrg.getScheduler().arrancarTarea();
         });
-        if(EntityManagerHelperTwo.getEntityManager().isOpen()){
-            EntityManagerHelperTwo.closeEntityManager();
-        }
     }
 }
