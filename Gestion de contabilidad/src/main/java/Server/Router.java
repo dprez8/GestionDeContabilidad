@@ -97,6 +97,9 @@ public class Router {
             if(EntityManagerHelperTwo.getEntityManager().isOpen()){
                 EntityManagerHelperTwo.closeEntityManager();
             }
+            if(EntityManagerHelper.getEntityManager().isOpen()){
+                EntityManagerHelper.closeEntityManager();
+            }
             response.type("application/json");
         });
     }
