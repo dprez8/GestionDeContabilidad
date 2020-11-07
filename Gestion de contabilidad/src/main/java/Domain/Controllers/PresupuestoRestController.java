@@ -108,10 +108,10 @@ public class PresupuestoRestController {
         itemPresupuesto.setPrecio(itemRequest.precio);
         itemPresupuesto.setCantidad(itemRequest.cantidad);
 
-        Producto producto = buscarProducto(itemRequest.nombreProducto.toLowerCase());
+        Producto producto = buscarProducto(itemRequest.nombreTipo.toLowerCase());
         if (producto == null) {
             producto = new Producto();
-            producto.setNombre(itemRequest.nombreProducto);
+            producto.setNombre(itemRequest.nombreTipo);
 
             this.repoProductos.agregar(producto);
         }
@@ -138,7 +138,7 @@ public class PresupuestoRestController {
     private void relacionarItemsConPresupuesto(List<ItemPresupuesto> items, Presupuesto presupuesto) {
         items.forEach(unItemPresupuesto -> {
             unItemPresupuesto.setPresupuesto(presupuesto);
-            unItemPresupuesto.setItemEgresoAsociado(presupuesto.getEgresoAsociado().getItems().stream().filter(itemsEgreso -> itemsEgreso.getProducto().equals(unItemPresupuesto.getProducto())).findFirst().get());
+            unItemPresupuesto.setItemEgresoAsociado(presupuesto.getEgresoAsociado().getItems().stream().filter(itemsEgreso -> itemsEgreso.getTipo().equals(unItemPresupuesto.getProducto())).findFirst().get());
             this.repoItems.modificar(unItemPresupuesto);
         });
     }

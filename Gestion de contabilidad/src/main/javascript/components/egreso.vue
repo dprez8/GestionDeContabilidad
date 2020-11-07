@@ -171,7 +171,7 @@ export default {
                 .get(`/api/operaciones/egreso/${id}`)
                 .then(response => {
                     var data = response.data;
-
+                    console.log(data);
                     if(data.code == 200) {
                         this.egreso = data.egreso;
                         this.egreso.items = data.egreso.items.map(this.itemEgresoAPIConverter);

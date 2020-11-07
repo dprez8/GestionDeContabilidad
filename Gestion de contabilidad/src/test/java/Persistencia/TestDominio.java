@@ -133,13 +133,13 @@ public class TestDominio {
         ItemEgreso placasDeVideo = new ItemEgreso();
         placasDeVideo.setCantidad(2);
         placasDeVideo.setPrecio(5000);
-        placasDeVideo.setProducto(producto1);
+        placasDeVideo.setTipo(producto1);
 
         Producto producto2 = this.repoProductos.buscar(2);
         ItemEgreso RAMs = new ItemEgreso();
         RAMs.setCantidad(1);
         RAMs.setPrecio(3000);
-        RAMs.setProducto(producto2);
+        RAMs.setTipo(producto2);
 
         this.repoItems.agregar(RAMs);
         this.repoItems.agregar(placasDeVideo);

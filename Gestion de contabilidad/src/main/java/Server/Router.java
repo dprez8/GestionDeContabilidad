@@ -39,7 +39,7 @@ public class Router {
     private static void configure(){
         rutasApi();
         rutasVista();
-        //verificarTareasProgramadas();
+        verificarTareasProgramadas();
     }
 
     private static void rutasVista() {

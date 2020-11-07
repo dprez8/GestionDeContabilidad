@@ -87,7 +87,7 @@ export default {
                 .then(response => {
                     var data = response.data;
                     if(data.code == 200) {
-                        this.scheduler = data.scheduler;
+                        this.scheduler = data.schedulerInit;
                         this.updateHoraYMinuto();
                     } else if (data.code == 403) {
                         this.showLoginModal(true);

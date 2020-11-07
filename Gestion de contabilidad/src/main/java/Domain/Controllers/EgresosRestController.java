@@ -206,7 +206,7 @@ public class EgresosRestController {
                                             .map(item->mapearItem(item))
                                             .collect(Collectors.toList());
 
-        
+        Egreso egreso = null;
         if(egresoRequest.organizacion_id!=0){
         	if(egresoRequest.tipo==0) {
         		EntidadJuridica entidadJuridica=repoEntidadJuridica.buscar(egresoRequest.organizacion_id);
