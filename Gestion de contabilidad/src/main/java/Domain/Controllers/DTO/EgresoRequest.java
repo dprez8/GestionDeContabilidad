@@ -10,6 +10,8 @@ public class EgresoRequest {
     public int proveedor;
     public MedioDePagoRequest medioDePago;
     public DocumentoRequest documentoComercial;
+    public int organizacion_id;
+    public int tipo;
     public List<ItemRequest> items;
 
     public EgresoRequest(){

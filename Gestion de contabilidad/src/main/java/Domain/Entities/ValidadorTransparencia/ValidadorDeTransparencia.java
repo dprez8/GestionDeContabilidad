@@ -2,14 +2,26 @@ package Domain.Entities.ValidadorTransparencia;
 
 import java.util.*;
 
+import Domain.Entities.EntidadPersistente.EntidadPersistente;
 import Domain.Entities.Operaciones.Egreso.Egreso;
 
-public class ValidadorDeTransparencia {
+import javax.persistence.*;
+
+@Entity
+@Table(name = "validador_de_transparencia")
+public class ValidadorDeTransparencia extends EntidadPersistente {
+
+	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	@JoinTable(name = "validador_x_validaciones")
 	private List<ValidacionDeTransparencia> validaciones;
 
 	public ValidadorDeTransparencia(ValidacionDeTransparencia ... unasValidaciones) {
 		this.validaciones = new ArrayList<>();
 		addValidaciones(unasValidaciones);
+	}
+
+	protected ValidadorDeTransparencia(){
+		this.validaciones = new ArrayList<>();
 	}
 
 	public void validarEgreso (Egreso egreso) {

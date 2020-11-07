@@ -3,13 +3,21 @@ package Domain.Entities.ValidadorTransparencia;
 import Domain.Entities.Operaciones.Egreso.Egreso;
 import Domain.Entities.Operaciones.Presupuesto;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 import java.util.Comparator;
-import java.util.stream.Collectors;
 
+@Entity
+@DiscriminatorValue("validacion_menor_valor")
 public class ValidarMenorValor extends ValidacionDeTransparencia {
 
 	@Override
 	public String validarEgreso(Egreso egreso) {
+
+		if(egreso.getPresupuestos().isEmpty()){
+			return "El egreso no tiene presupuestos asociados";
+		}
+
 		String cuerpo;
 		if(egreso.getPresupuestos().size() == 0)
 			return "El egreso no tiene presupuestos";

@@ -5,7 +5,9 @@ import Domain.Controllers.AdaptersJson.LocalDateTimeAdapter;
 import Domain.Controllers.DTO.IngresoRequest;
 import Domain.Controllers.DTO.IngresoResponse;
 import Domain.Controllers.DTO.Respuesta;
+import Domain.Entities.ApiPaises.Moneda;
 import Domain.Entities.Operaciones.Ingreso;
+import Domain.Entities.Organizacion.EntidadBase;
 import Domain.Entities.Organizacion.EntidadJuridica;
 import Domain.Entities.Usuarios.Estandar;
 import Domain.Repositories.Daos.DaoHibernate;
@@ -23,12 +25,17 @@ import java.util.stream.Collectors;
 public class IngresosRestController {
     private Repositorio<Ingreso> repoIngresos;
     private Repositorio<EntidadJuridica> repoEntidadJuridica;
+    private Repositorio<EntidadBase> repoEntidadBase;
+
+    private Repositorio<Moneda> repoMoneda;
     private Respuesta respuesta;
     private Gson gson;
 
     public IngresosRestController() {
         this.repoIngresos        = new Repositorio<>(new DaoHibernate<>(Ingreso.class));
         this.repoEntidadJuridica = new Repositorio<>(new DaoHibernate<>(EntidadJuridica.class));
+        this.repoEntidadBase     = new Repositorio<>(new DaoHibernate<>(EntidadBase.class));
+        this.repoMoneda       	 = new Repositorio<>(new DaoHibernate<>(Moneda.class));
         this.respuesta           = new Respuesta();
     }
 
@@ -82,9 +89,7 @@ public class IngresosRestController {
 
         IngresoRequest ingresoRequest    = this.gson.fromJson(request.body(),IngresoRequest.class);
 
-        EntidadJuridica entidadJuridica= this.repoEntidadJuridica.buscar(usuario.getMiOrganizacion().getId());
-
-        Ingreso ingreso = asignarIngresoDesde(ingresoRequest, entidadJuridica);
+        Ingreso ingreso = asignarIngresoDesde(ingresoRequest);
 
         if(ingreso == null) {
             this.respuesta.setCode(400);
@@ -117,15 +122,30 @@ public class IngresosRestController {
         return ingresoAEnviar;
     }
 
-    private Ingreso asignarIngresoDesde(IngresoRequest ingresoRequest, EntidadJuridica entidadJuridica) {
+    private Ingreso asignarIngresoDesde(IngresoRequest ingresoRequest) {
         if(ingresoRequest.descripcion == null || ingresoRequest.fechaOperacion == null || ingresoRequest.montoTotal == null){
             return null;
         }
         Ingreso ingreso = new Ingreso();
         ingreso.setDescripcion(ingresoRequest.descripcion);
         ingreso.setFechaOperacion(ingresoRequest.fechaOperacion);
-        ingreso.setOrganizacion(entidadJuridica);
+        ingreso.setFechaAceptacionEgreso(ingresoRequest.fechaAceptacionEgresos);
         ingreso.setMontoTotal(ingresoRequest.montoTotal);
+        if(ingresoRequest.organizacion_id!=0){
+        	if(ingresoRequest.tipo==0) {
+        		EntidadJuridica entidadJuridica=repoEntidadJuridica.buscar(ingresoRequest.organizacion_id);
+        		ingreso.setOrganizacion(entidadJuridica);
+        	}
+        	else {
+        		EntidadBase entidadBase= repoEntidadBase.buscar(ingresoRequest.organizacion_id);
+        		ingreso.setOrganizacion(entidadBase);
+        	}
+        }
+        
+        if(ingresoRequest.moneda_id!=0) {
+        Moneda moneda=repoMoneda.buscar(ingresoRequest.moneda_id);
+        	ingreso.setMoneda(moneda);
+        }
 
         this.repoIngresos.agregar(ingreso);
 

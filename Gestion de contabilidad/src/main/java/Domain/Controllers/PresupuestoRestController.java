@@ -111,7 +111,7 @@ public class PresupuestoRestController {
         Producto producto = buscarProducto(itemRequest.nombreProducto.toLowerCase());
         if (producto == null) {
             producto = new Producto();
-            producto.setNombreProducto(itemRequest.nombreProducto);
+            producto.setNombre(itemRequest.nombreProducto);
 
             this.repoProductos.agregar(producto);
         }

@@ -8,6 +8,7 @@ import Domain.Controllers.DTO.Respuesta;
 import Domain.Entities.DatosDeOperaciones.*;
 import Domain.Entities.Operaciones.Egreso.BuilderEgresoConcreto;
 import Domain.Entities.Operaciones.Egreso.Egreso;
+import Domain.Entities.Organizacion.EntidadBase;
 import Domain.Entities.Organizacion.EntidadJuridica;
 import Domain.Entities.Usuarios.Estandar;
 import Domain.Repositories.Daos.DaoHibernate;
@@ -22,18 +23,22 @@ import spark.Response;
 
 import javax.persistence.NoResultException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /*****************************************************************/
 public class EgresosRestController {
-
     private Repositorio<EntidadJuridica> repoEntidadJuridica;
+    private Repositorio<EntidadBase> repoEntidadBase;
+    private List<Egreso> egresosMemo;
     private Respuesta respuesta;
     private Gson gson;
 
     public EgresosRestController(){
         this.repoEntidadJuridica = new Repositorio<>(new DaoHibernate<>(EntidadJuridica.class));
+        this.repoEntidadBase     = new Repositorio<>(new DaoHibernate<>(EntidadBase.class));
+        this.egresosMemo         = new ArrayList<>();
         this.respuesta           = new Respuesta();
     }
 
@@ -53,9 +58,7 @@ public class EgresosRestController {
 
         EgresoRequest egresoRequest    = this.gson.fromJson(request.body(),EgresoRequest.class);
 
-        EntidadJuridica entidadJuridica= this.repoEntidadJuridica.buscar(usuario.getMiOrganizacion().getId());
-
-        Egreso egreso = asignarEgresoDesde(egresoRequest, entidadJuridica);
+        Egreso egreso = asignarEgresoDesde(egresoRequest);
 
         if(egreso == null) {
             this.respuesta.setCode(400);
@@ -66,6 +69,8 @@ public class EgresosRestController {
         }
         this.respuesta.setCode(200);
         this.respuesta.setMessage("Egreso cargado exitosamente");
+
+        this.egresosMemo.add(egreso);
 
         CargaEgresoResponse cargaEgresoResponse = new CargaEgresoResponse();
 
@@ -93,7 +98,8 @@ public class EgresosRestController {
         List<EgresoResponse> egresosAEnviar;
         String jsonResponse;
 
-        egresosAEnviar = entidadJuridica.getEgresos()
+        List<Egreso> egresosBD = entidadJuridica.getEgresos();
+        egresosAEnviar = egresosBD
                     .stream()
                     .map(this::mapearEgreso)
                     .collect(Collectors.toList());
@@ -124,7 +130,6 @@ public class EgresosRestController {
         if(usuario == null) {
             return response.body();
         }
-
         String jsonResponse;
         Egreso egreso;
 
@@ -155,10 +160,10 @@ public class EgresosRestController {
         jsonResponse = this.gson.toJson(egresoDetallado);
         response.body(jsonResponse);
 
-        return response.body();
+        return jsonResponse;
     }
 
-    private Egreso asignarEgresoDesde (EgresoRequest egresoRequest, EntidadJuridica entidadJuridica) {
+    private Egreso asignarEgresoDesde (EgresoRequest egresoRequest) {
         Proveedor proveedor;
         MedioDePago medioDePago;
         TipoDocumento tipoDocumento;
@@ -188,6 +193,7 @@ public class EgresosRestController {
         documentoComercial.setFechaDePedido(egresoRequest.documentoComercial.fechaDePedido);
         documentoComercial.setFechaDeEntrega(egresoRequest.documentoComercial.fechaDeEntrega);
         documentoComercial.setDescripcion(egresoRequest.documentoComercial.descripcion);
+        
 
         Repositorio<Pago> repoPagos = new Repositorio<>(new DaoHibernate<>(Pago.class));
         Repositorio<DocumentoComercial> repoDocumentos = new Repositorio<>(new DaoHibernate<>(DocumentoComercial.class));
@@ -200,14 +206,36 @@ public class EgresosRestController {
                                             .map(item->mapearItem(item))
                                             .collect(Collectors.toList());
 
-        Egreso egreso = new BuilderEgresoConcreto()
-                    .agregarFechaOperacion(egresoRequest.fechaOperacion)
-                    .agregarDatosOrganizacion(entidadJuridica)
-                    .agregarProveedor(proveedor)
-                    .agregarPago(pago)
-                    .agregarDocumentoComercial(documentoComercial)
-                    .agregarItems(items)
-                    .build();
+        
+        if(egresoRequest.organizacion_id!=0){
+        	if(egresoRequest.tipo==0) {
+        		EntidadJuridica entidadJuridica=repoEntidadJuridica.buscar(egresoRequest.organizacion_id);
+
+                egreso = new BuilderEgresoConcreto()
+                            .agregarFechaOperacion(egresoRequest.fechaOperacion)
+                            .agregarDatosOrganizacion(entidadJuridica)
+                            .agregarProveedor(proveedor)
+                            .agregarPago(pago)
+                            .agregarDocumentoComercial(documentoComercial)
+                            .agregarItems(items)
+                            .build();
+
+        	}
+        	else {
+        		EntidadBase entidadBase= repoEntidadBase.buscar(egresoRequest.organizacion_id);
+
+                egreso = new BuilderEgresoConcreto()
+                            .agregarFechaOperacion(egresoRequest.fechaOperacion)
+                            .agregarDatosOrganizacion(entidadBase)
+                            .agregarProveedor(proveedor)
+                            .agregarPago(pago)
+                            .agregarDocumentoComercial(documentoComercial)
+                            .agregarItems(items)
+                            .build();
+
+        	}
+        }
+        
 
         Repositorio<Egreso> repoEgresos = new Repositorio<>(new DaoHibernate<>(Egreso.class));
 
@@ -225,15 +253,31 @@ public class EgresosRestController {
 
         Repositorio<ItemEgreso> repoItems = new Repositorio<>(new DaoHibernate<>(ItemEgreso.class));
         Repositorio<Producto> repoProductos = new Repositorio<>(new DaoHibernate<>(Producto.class));
+        Repositorio<Servicio> repoServicios = new Repositorio<>(new DaoHibernate<>(Servicio.class));
 
-        Producto producto = buscarProducto(itemRequest.nombreProducto.toLowerCase());
-        if (producto == null) {
-            producto = new Producto();
-            producto.setNombreProducto(itemRequest.nombreProducto);
-
-            repoProductos.agregar(producto);
+        if(itemRequest.tipoItem==1) {
+            Producto producto = buscarProducto(itemRequest.nombreTipo.toLowerCase());
+	        if (producto == null) {
+	            producto = new Producto();
+	            producto.setNombre(itemRequest.nombreTipo);
+	
+	            repoProductos.agregar(producto);
+	        
+	        } 
+	        itemEgreso.setTipo(producto);
         }
-        itemEgreso.setProducto(producto);
+        else {
+            Servicio servicio = buscarServicio(itemRequest.nombreTipo.toLowerCase());
+    	        if (servicio == null) {
+    	            servicio = new Servicio();
+    	            servicio.setNombre(itemRequest.nombreTipo);
+    	
+    	            repoServicios.agregar(servicio);
+    	        
+    	        } 
+    	        itemEgreso.setTipo(servicio);
+            }
+       
 
         repoItems.agregar(itemEgreso);
 
@@ -243,10 +287,23 @@ public class EgresosRestController {
     private Producto buscarProducto(String nombreProducto) {
         try {
             Producto producto= (Producto) EntityManagerHelper
-                        .createQuery("from Producto where nombre_producto = :nombre")
+                        .createQuery("from Producto where nombre = :nombre")
                         .setParameter("nombre",nombreProducto)
                         .getSingleResult();
             return producto;
+        }
+        catch (NoResultException ex) {
+            return null;
+        }
+    }
+   
+    private Servicio buscarServicio(String nombreServicio) {
+        try {
+           Servicio servicio= (Servicio) EntityManagerHelper
+                        .createQuery("from Servicio where nombre = :nombre")
+                        .setParameter("nombre",nombreServicio)
+                        .getSingleResult();
+            return servicio;
         }
         catch (NoResultException ex) {
             return null;

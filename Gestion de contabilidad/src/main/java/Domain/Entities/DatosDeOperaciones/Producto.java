@@ -1,32 +1,17 @@
 package Domain.Entities.DatosDeOperaciones;
 
-import Domain.Entities.EntidadPersistente.EntidadPersistente;
-import com.google.gson.annotations.Expose;
-
 import javax.persistence.*;
 
 @Entity
-@Table(name="producto")
-public class Producto extends EntidadPersistente {
-
-    @Expose
-    @Column(name="nombre_producto")
-    private String nombreProducto;
+@DiscriminatorValue("producto")
+public class Producto extends TipoItem {
 
     public Producto(){
     }
 
     public Producto(String nombreProducto){
-        this.nombreProducto = nombreProducto;
+        this.nombre = nombreProducto;
     }
-    public String getNombreProducto() {
-        return nombreProducto;
-    }
-
-
-    public void setNombreProducto(String nombreProducto) {
-        this.nombreProducto = nombreProducto;
-    }
-
+ 
 }
 

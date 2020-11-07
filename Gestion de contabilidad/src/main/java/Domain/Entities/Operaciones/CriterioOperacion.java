@@ -9,7 +9,7 @@ import java.util.List;
 
 @Entity
 @Table(name="criterio_operacion")
-public class CriterioOperacion extends EntidadPersistente {
+public class CriterioOperacion extends EntidadPersistente{
 
     @Transient //@OneToMany(mappedBy = "criterio_id")
     private List<CategoriaOperacion> categorias;
@@ -22,7 +22,7 @@ public class CriterioOperacion extends EntidadPersistente {
     @Column
     private String descripcion;
 
-    protected CriterioOperacion(){
+    public CriterioOperacion(){
     }
 
     public CriterioOperacion(String descrip){

@@ -3,10 +3,7 @@ package Server;
 
 import Domain.Controllers.*;
 import Domain.Entities.Organizacion.Organizacion;
-import Domain.Entities.ValidadorTransparencia.ValidadorDeTransparencia;
-import Domain.Entities.ValidadorTransparencia.ValidarCantidadMinima;
-import Domain.Entities.ValidadorTransparencia.ValidarConPresupuesto;
-import Domain.Entities.ValidadorTransparencia.ValidarMenorValor;
+import Domain.Entities.ValidadorTransparencia.*;
 import Domain.Repositories.Daos.DaoHibernate;
 import Domain.Repositories.Repositorio;
 import Spark.utils.BooleanHelper;
@@ -17,16 +14,14 @@ import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 import java.util.HashMap;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
 
 public class Router {
     private static HandlebarsTemplateEngine engine;
-    private static Repositorio<Organizacion> repoOrganizaciones = new Repositorio<>(new DaoHibernate<>(Organizacion.class));
-    private static ValidarCantidadMinima validacionMinima = new ValidarCantidadMinima(1);
-    private static ValidarConPresupuesto validacionPresupuesto = new ValidarConPresupuesto();
-    private static ValidarMenorValor validacionMenorValor = new ValidarMenorValor();
 
-    private static ValidadorDeTransparencia validador = new ValidadorDeTransparencia(validacionMinima,validacionPresupuesto,validacionMenorValor);
+    private static Repositorio<Organizacion> repoOrganizaciones = new Repositorio<>(new DaoHibernate<>(Organizacion.class));
 
     private static void initEngine(){
         Router.engine = HandlebarsTemplateEngineBuilder
@@ -61,17 +56,18 @@ public class Router {
         MedioDePagoController medioController = new MedioDePagoController();
         BandejaDeMensajesRestController bandejaDeMensajesRestController= new BandejaDeMensajesRestController();
         EgresosRestController egresosRestController = new EgresosRestController();
-        CategoriasEgresosController categoriasController = new CategoriasEgresosController();
+        CriteriosCategoriasController categoriasController = new CriteriosCategoriasController();
         IngresosRestController ingresosRestController = new IngresosRestController();
         AsociacionOperacionesRestController asociacionOperacionesRestController = new AsociacionOperacionesRestController();
         PresupuestoRestController presupuestoRestController = new PresupuestoRestController();
+        OrganizacionController organizacionController = new OrganizacionController();
         
         Spark.post("/api/login",loginRestController::login);
         Spark.get("/api/login",loginRestController::sessionStatus);
         Spark.get("/api/pais",direccionController::listadoDePaises);
         Spark.get("/api/pais/:clavePais/provincia",direccionController::listadoDeProvincias);
         Spark.get("/api/pais/:clavePais/provincia/:claveProvincia/ciudad",direccionController::listadoDeCiudades);
-        Spark.post("/api/proveedor",proveedorController::crearProveedor);
+        Spark.get("/api/proveedor",proveedorController::crearProveedor);
         Spark.get("/api/proveedores",proveedorController::listadoProveedores);
         Spark.get("/api/medios",medioController::listadoMediosDePago);
         Spark.get("/api/bandeja",bandejaDeMensajesRestController::mostrarMensajes);
@@ -80,6 +76,8 @@ public class Router {
         Spark.post("/api/bandeja/visto", bandejaDeMensajesRestController::mensajeVisto);
         //Spark.get("/api/bandeja/:usuarioId",bandejaDeMensajesRestController::mostrarMensajes);
         Spark.get("/api/categorias",categoriasController::listadoCriterios);
+        Spark.post("/api/categorias",categoriasController::crearCategoria);
+        Spark.post("/api/categorias",categoriasController::crearCriterio);    
         Spark.post("/api/operaciones/egreso", egresosRestController::cargarNuevoEgreso);
         Spark.get("/api/operaciones/egresos", egresosRestController::listadoDeEgresos);
         Spark.get("/api/operaciones/egreso/:egresoId", egresosRestController::mostrarEgreso);
@@ -88,6 +86,9 @@ public class Router {
         Spark.post("/api/operaciones/asociarManualmente",asociacionOperacionesRestController::asociarManualmente);
         Spark.post("/api/categorias/asociar",categoriasController::asociarCategoriaEgreso);
         Spark.post("/api/operaciones/presupuesto", presupuestoRestController::cargarNuevoPresupuesto);
+        Spark.post("/api/organizacion",organizacionController::crearOrganizacion);
+        Spark.get("/api/usuario/organizaciones",organizacionController::listarOrganizacionesPropias);
+
 
         Spark.after("/api/*",(request, response) -> {
              if(EntityManagerHelper.getEntityManagerRecent() != null && EntityManagerHelper.getEntityManagerRecent().isOpen()){
@@ -96,12 +97,24 @@ public class Router {
             response.type("application/json");
         });
     }
-
     private static void verificarTareasProgramadas() {
         List<Organizacion> organizaciones = repoOrganizaciones.buscarTodos();
         organizaciones.forEach(unaOrg->{
-                unaOrg.getScheduler().setValidadorDeTransparencia(validador);
-                unaOrg.getScheduler().arrancarTarea();
+                Tarea tarea = new Tarea();
+                Timer timer = new Timer();
+
+                HashMap<Integer, Tarea> schedulerHashMap = new HashMap<>();
+                schedulerHashMap.put(unaOrg.getSchedulerInit().getId(), tarea);
+
+                HashMap<Integer, Timer> timerHashMap = new HashMap<>();
+                timerHashMap.put(unaOrg.getSchedulerInit().getId(),timer);
+
+                TimersController.instancia().setSchedulerHashMap(schedulerHashMap);
+                TimersController.instancia().setTimerHashMap(timerHashMap);
+
+                unaOrg.getSchedulerInit().setTarea(tarea);
+                unaOrg.getSchedulerInit().setTimer(timer);
+                unaOrg.getSchedulerInit().arrancarTarea();
         });
     }
 }

@@ -1,7 +1,10 @@
 package Domain.Entities.Operaciones;
 
 
+import Domain.Entities.ApiPaises.Moneda;
 import Domain.Entities.Operaciones.Egreso.Egreso;
+import Domain.Entities.Organizacion.Organizacion;
+
 import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
@@ -23,6 +26,14 @@ public class Ingreso extends Operacion {
     @Expose
     @Column
     private double montoTotal;
+    
+    @ManyToOne
+    @JoinColumn(name = "moneda_id", referencedColumnName = "moneda_id")
+    private Moneda moneda;
+    
+    @Expose
+	@Column(name="fecha_acep_egreso", columnDefinition = "DATE")
+	protected LocalDate fechaAceptacionEgreso;
 
     @OneToMany(mappedBy = "ingresoAsociado",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Egreso> egresos;
@@ -36,6 +47,15 @@ public class Ingreso extends Operacion {
     	this.fechaCarga= LocalDateTime.now();
     	this.descripcion = descripcion;
         this.montoTotal = montoTotal;
+        this.egresos = new ArrayList<>();
+    }
+    
+    public Ingreso(String descripcion, double montoTotal,Organizacion organizacion, Moneda moneda){
+    	this.fechaCarga= LocalDateTime.now();
+    	this.descripcion = descripcion;
+        this.montoTotal = montoTotal;
+        this.organizacion = organizacion;
+        this.moneda = moneda;
         this.egresos = new ArrayList<>();
     }
 
@@ -59,7 +79,23 @@ public class Ingreso extends Operacion {
         }
     }
 
-    public void setDescripcion(String descripcion) {
+    public Moneda getMoneda() {
+		return moneda;
+	}
+
+	public void setMoneda(Moneda moneda) {
+		this.moneda = moneda;
+	}
+
+	public LocalDate getFechaAceptacionEgreso() {
+		return fechaAceptacionEgreso;
+	}
+
+	public void setFechaAceptacionEgreso(LocalDate fechaAceptacionEgreso) {
+		this.fechaAceptacionEgreso = fechaAceptacionEgreso;
+	}
+
+	public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
 

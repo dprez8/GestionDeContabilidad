@@ -10,7 +10,6 @@ import java.io.Serializable;
 @Table(name="categoria_operacion")
 public class CategoriaOperacion extends EntidadPersistente {
 
-    @Expose
     @Column
     private String descripcion;
     @ManyToOne

@@ -1,10 +1,18 @@
 package Domain.Entities.ValidadorTransparencia;
 
+import Domain.Entities.EntidadPersistente.EntidadPersistente;
 import Domain.Entities.Operaciones.Egreso.Egreso;
 import Domain.Entities.Operaciones.Presupuesto;
 import Domain.Entities.DatosDeOperaciones.*;
 
-public abstract class ValidacionDeTransparencia {
+import javax.persistence.*;
+
+
+@Entity
+@Table(name = "validacion_de_transparencia")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "tipo_de_validacion")
+public abstract class ValidacionDeTransparencia extends EntidadPersistente {
 
 	public abstract String validarEgreso(Egreso egreso);
 
@@ -33,7 +41,7 @@ public abstract class ValidacionDeTransparencia {
 	private boolean itemCoincide(ItemEgreso item, ItemPresupuesto itemPresupuesto) {
 		return itemPresupuesto.getItemEgresoAsociado().equals(item)
 				&& itemPresupuesto.valorTotal() == item.valorTotal()
-				&& itemPresupuesto.getProducto().equals(item.getProducto());
+				&& itemPresupuesto.getProducto().equals(item.getTipo());
 	}
 
 	private boolean coincideDocumentoComercial(Egreso egreso, Presupuesto presupuesto) {

@@ -10,7 +10,7 @@ import Domain.Entities.EntidadPersistente.EntidadPersistente;
 import Domain.Entities.Operaciones.*;
 import Domain.Entities.Operaciones.Egreso.Egreso;
 import Domain.Entities.Usuarios.Estandar;
-import Domain.Entities.ValidadorTransparencia.Scheduler;
+import Domain.Entities.ValidadorTransparencia.SchedulerInit;
 import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
@@ -31,7 +31,7 @@ public abstract class Organizacion extends EntidadPersistente {
 	protected List<Estandar> usuarios;
 
 	@OneToOne(mappedBy = "organizacion", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	protected Scheduler scheduler;
+	protected SchedulerInit schedulerInit;
 
     public Organizacion(){
     	this.operaciones = new ArrayList<>();
@@ -84,11 +84,11 @@ public abstract class Organizacion extends EntidadPersistente {
 		this.operaciones = operaciones;
 	}
 
-	public Scheduler getScheduler() {
-		return scheduler;
+	public SchedulerInit getSchedulerInit() {
+		return schedulerInit;
 	}
 
-	public void setScheduler(Scheduler scheduler) {
-		this.scheduler = scheduler;
+	public void setSchedulerInit(SchedulerInit schedulerInit) {
+		this.schedulerInit = schedulerInit;
 	}
 }
