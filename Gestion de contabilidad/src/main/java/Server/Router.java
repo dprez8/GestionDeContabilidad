@@ -14,7 +14,6 @@ import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 import java.util.HashMap;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 
@@ -94,6 +93,11 @@ public class Router {
              if(EntityManagerHelper.getEntityManagerRecent() != null && EntityManagerHelper.getEntityManagerRecent().isOpen()){
                 EntityManagerHelper.closeEntityManager();
              }
+            response.type("application/json");
+        });
+
+
+        Spark.after("/api/bandeja/configurar",(request, response) -> {
             response.type("application/json");
         });
     }

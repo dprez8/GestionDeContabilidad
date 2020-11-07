@@ -2,6 +2,7 @@ package Domain.Controllers;
 
 
 import Domain.Controllers.AdaptersJson.LocalDateAdapter;
+import Domain.Controllers.AdaptersJson.LocalDateTimeAdapter;
 import Domain.Controllers.DTO.ConfigSchedulerRequest;
 import Domain.Controllers.DTO.Respuesta;
 import Domain.Entities.BandejaDeMensajes.Mensaje;
@@ -19,6 +20,7 @@ import spark.Response;
 
 import javax.persistence.NoResultException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
@@ -43,7 +45,7 @@ public class BandejaDeMensajesRestController {
         /**anotar los campos que se debe serializar con @Expose**/
         Gson gson = new GsonBuilder()
                 .excludeFieldsWithoutExposeAnnotation()
-                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter().nullSafe())
                 .create();
 
         response.type("application/json");
@@ -65,7 +67,6 @@ public class BandejaDeMensajesRestController {
     }
 
     public String configurar(Request request, Response response) {
-        response.type("application/json");
         Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
         if(usuario == null) {
             return response.body();
@@ -101,7 +102,6 @@ public class BandejaDeMensajesRestController {
     }
 
     public String mostrarConfiguracion(Request request, Response response) {
-        response.type("application/json");
         Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
         if(usuario == null) {
             return response.body();
@@ -123,7 +123,6 @@ public class BandejaDeMensajesRestController {
     }
 
     public String mensajeVisto(Request request, Response response) {
-        response.type("application/json");
         Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
         if(usuario == null) {
             return response.body();

@@ -2,6 +2,8 @@ package Domain.Entities.ValidadorTransparencia;
 
 import Domain.Entities.EntidadPersistente.EntidadPersistente;
 import Domain.Entities.Organizacion.Organizacion;
+import Domain.Repositories.Daos.DaoHibernate;
+import Domain.Repositories.Repositorio;
 import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
@@ -23,6 +25,9 @@ public class SchedulerInit extends EntidadPersistente {
 	@ElementCollection
 	private List<Integer> dias;
 
+	@Column
+	private long periodo;
+
 	@JoinColumn(name = "organizacion_id")
 	@OneToOne(fetch = FetchType.LAZY)
 	private Organizacion organizacion;
@@ -39,6 +44,7 @@ public class SchedulerInit extends EntidadPersistente {
 	public SchedulerInit() {
 		this.horaInicio = 20;
 		this.minutoInicio = 00;
+		this.periodo   = 1000*60*60*24; /**un dia de demora por default*/
 		this.dias = new ArrayList<>();
 		Integer diasDefault[] = {1,2,3,4,5,6,7};
 		Collections.addAll(this.dias,diasDefault);
@@ -50,8 +56,7 @@ public class SchedulerInit extends EntidadPersistente {
 		this.tarea.setDias(this.dias);
 		this.tarea.setHoraInicio(this.horaInicio);
 		this.tarea.setMinutoInicio(this.minutoInicio);
-		/*1000*60*60*24 = a un dia de demora*/
-		this.timer.schedule(tarea, tarea.delay().getTime(),10000);
+		this.timer.schedule(tarea, tarea.delay().getTime(),this.periodo);
 
 	}
 
@@ -110,5 +115,13 @@ public class SchedulerInit extends EntidadPersistente {
 
 	public void setTimer(Timer timer) {
 		this.timer = timer;
+	}
+
+	public long getPeriodo() {
+		return periodo;
+	}
+
+	public void setPeriodo(long periodo) {
+		this.periodo = periodo;
 	}
 }
