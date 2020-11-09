@@ -41,6 +41,9 @@ public class Router {
     }
 
     private static void rutasVista() {
+        Spark.get("/upload/*", (req, res) -> {
+                    return "xd";
+                });
         Spark.get("/*", (req, res) ->
                         new ModelAndView(new HashMap(),
                                 "../public/index.html"),
