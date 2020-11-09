@@ -8,10 +8,12 @@
         </div>
         <div class="row mb-4 mx-2">
             <div class="col-sm-4 col-lg-3 text-sm-right py-2">
-                <span class="mr-2"><strong>Organización</strong></span>
+                <span class="mr-2"><strong>Entidad</strong></span>
             </div>
             <div class="col bg-light p-2">
-                <span class="ml-2">{{getCookie("organizacion")}}</span>
+                <span class="ml-2">
+                    <b-select></b-select>
+                </span>
             </div>
             <div class="col-lg-1 col-xl-3"></div>
         </div>
@@ -80,13 +82,15 @@
 
 <script>
 import axios from 'axios';
-import {convertDate, getCookie} from '../util/utils.js'
+import {convertDate, getCookie, RequestHelper} from '../util/utils.js'
 
 export default {
     data() {
         return {
             ingreso: {
+                organizacion_id: null,
                 fechaOperacion: null,
+                fechaAceptacionEgresos: null,
                 descripcion: null,
                 montoTotal: null
             },
@@ -123,27 +127,46 @@ export default {
             console.log("POST '/api/operaciones/ingreso'");
             console.log(JSON.stringify(ingresoToSend, null, 4));
 
-            axios
-                .post('/api/operaciones/ingreso', ingresoToSend)
-                .then(response => {
-                    var data = response.data;
-
-                    if(data.code == 200) {
-                        this.createToast('Guardado exitoso', 'Se dio de alta el ingreso correctamente', 'success');
-                        this.$router.push('/operaciones/ingreso');
-                    } else if (data.code == 403) {
-                        this.showLoginModal(true);
-                    } else if (data.code == 400) {
-                        this.falloCargarIngreso = true;
-                    }
-                })
-                .catch(error => {
+            RequestHelper.post('/api/operaciones/ingreso', ingresoToSend, {
+                success: (data) => {
+                    this.createToast('Guardado exitoso', 'Se dio de alta el ingreso correctamente', 'success');
+                    this.$router.push('/operaciones/ingreso');
+                },
+                notLoggedIn: () => {
+                    this.showLoginModal(true);
+                },
+                failed: () => {
+                    this.falloCargarIngreso = true;
+                },
+                error: (error) => {
                     this.errorHandling(error);
-                })
-                .then(() => {
-                    // allways
+                },
+                always: () => {
                     this.ingresoLoading = false;
-                })
+                }
+            })
+
+            // axios
+            //     .post('/api/operaciones/ingreso', ingresoToSend)
+            //     .then(response => {
+            //         var data = response.data;
+
+            //         if(data.code == 200) {
+            //             this.createToast('Guardado exitoso', 'Se dio de alta el ingreso correctamente', 'success');
+            //             this.$router.push('/operaciones/ingreso');
+            //         } else if (data.code == 403) {
+            //             this.showLoginModal(true);
+            //         } else if (data.code == 400) {
+            //             this.falloCargarIngreso = true;
+            //         }
+            //     })
+            //     .catch(error => {
+            //         this.errorHandling(error);
+            //     })
+            //     .then(() => {
+            //         // allways
+            //         this.ingresoLoading = false;
+            //     })
         },
     }
 }

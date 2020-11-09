@@ -21,10 +21,5 @@ import router from './router.js'
 new Vue({
 	el: "#app",
 	router: router,
-	render: h => h(App),
-	methods: {
-		loadingFinish() {
-			this.$children[0].loading = false;
-		}
-	}
+	render: h => h(App)
 })

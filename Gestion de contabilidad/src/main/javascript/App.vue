@@ -1,18 +1,12 @@
 <template>
     <transition name="fade" mode="out-in">
-        <router-view ref="childComponent"></router-view>
+        <router-view></router-view>
     </transition>
 </template>
 
 <script>
 
-export default {
-    watch: {
-        '$refs'() {
-            console.log("algo pasó");
-        }
-    }
-}
+export default {}
 
 </script>
 

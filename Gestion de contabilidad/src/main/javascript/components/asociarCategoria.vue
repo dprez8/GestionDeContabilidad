@@ -30,8 +30,8 @@
 </template>
 
 <script>
-import axios from 'axios'
-import criterio from './criterio.vue'
+import { RequestHelper } from '../util/utils.js'
+import criterio from './criterio'
 
 export default {
     props: {
@@ -51,25 +51,22 @@ export default {
         cargarCriteriosAPI() {
             this.categoriasLoading = true;
 
-            axios
-                .get(`/api/categorias`)
-                .then(response => {
-                    var data = response.data;
-
-                    if(data.code == 200) {
-                        this.criteriosAPI = data.criterios;
-                        this.procesarCriterios();
-                    } else if (data.code == 403) {
-                        this.showLoginModal(true);
-                    }
-                })
-                .catch(error => {
+            RequestHelper.get(`/api/categorias`, {
+                success: (data) => {
+                    this.criteriosAPI = data.criterios;
+                    this.procesarCriterios();
+                },
+                notLoggedIn: () => {
+                    this.showLoginModal(true);
+                },
+                error: (error) => {
+                    console.log(this)
                     this.errorHandling(error);
-                })
-                .then(() => {
-                    // allways
+                },
+                always: () => {
                     this.categoriasLoading = false;
-                })
+                }
+            });
         },
         procesarCriterios() {
             this.criteriosAPI.forEach(criterio => {

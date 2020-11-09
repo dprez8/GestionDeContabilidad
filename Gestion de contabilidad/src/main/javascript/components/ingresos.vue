@@ -53,6 +53,7 @@ export default {
                 .get(`/api/operaciones/ingresos`)
                 .then(response => {
                     var data = response.data;
+                    console.log(data);
 
                     if(data.code == 200) {
                         this.ingresos = data.ingresos.map(this.ingresosAPIConverter);

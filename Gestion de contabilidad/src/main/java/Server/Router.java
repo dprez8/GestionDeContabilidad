@@ -13,8 +13,6 @@ import spark.ModelAndView;
 import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 import java.util.HashMap;
-
-import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 
@@ -32,7 +30,7 @@ public class Router {
     }
     public static void init(){
         Router.initEngine();
-        Spark.staticFileLocation("/public");
+        Spark.staticFiles.location("/public");
         Router.configure();
     }
 
@@ -43,6 +41,9 @@ public class Router {
     }
 
     private static void rutasVista() {
+        Spark.get("/upload/*", (req, res) -> {
+                    return "xd";
+                });
         Spark.get("/*", (req, res) ->
                         new ModelAndView(new HashMap(),
                                 "../public/index.html"),
@@ -88,9 +89,7 @@ public class Router {
         Spark.post("/api/operaciones/presupuesto", presupuestoRestController::cargarNuevoPresupuesto);
         Spark.post("/api/organizacion",organizacionController::crearOrganizacion);
         Spark.get("/api/usuario/organizaciones",organizacionController::listarOrganizacionesPropias);
-        Spark.post("/api/operaciones/egreso/cargar-archivos",egresosRestController::cargarArchivoDocumentoComercial);
-    }
-
+        Spark.post("/api/operaciones/egreso/cargarArchivos",egresosRestController::cargarArchivoDocumentoComercial);
 
         Spark.after("/api/*",(request, response) -> {
              if(EntityManagerHelper.getEntityManagerRecent() != null && EntityManagerHelper.getEntityManagerRecent().isOpen()){

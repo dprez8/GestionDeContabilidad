@@ -9,6 +9,7 @@
                 <div v-if="!egresoOpened() && !ingresoOpened()" class="border border-top-0 d-flex justify-content-center align-items-center p-2" key="vacio" style="height: 300px;">
                     <div class="text-center text-secondary">
                         <b-img class="thinking_emoji" :src="require('../assets/thinking.svg')"/>
+                        <b-img :src="`${publicPath}upload/7633727283733220142.JPG`"/>
                         <p class="pb-4">Seleccione algún tipo de operación</p>
                     </div>
                 </div>
@@ -20,6 +21,11 @@
 
 <script>
 export default {
+    data() {
+        return {
+            publicPath: process.env.BASE_URL
+        }
+    },
     methods: {
         egresoOpened() {
             return (this.$route.name == 'egresos' || this.$route.name == 'egreso');
