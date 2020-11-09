@@ -3,22 +3,25 @@ package Domain.Entities.BandejaDeMensajes;
 import Domain.Entities.EntidadPersistente.EntidadPersistente;
 import Domain.Entities.Usuarios.Usuario;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.*;
 
 import com.google.gson.annotations.Expose;
+import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name="mensaje")
 public class Mensaje extends EntidadPersistente {
 
 	@Expose
-	@Column(columnDefinition = "DATE")
-    private LocalDate fechaCreacion;
+	@Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime fechaCreacion;
 
 	@Expose
-	@Column
+	@Column(name = "cuerpo")
+	@Lob
+	@Type(type = "org.hibernate.type.TextType")
     private String cuerpo;
 
 	@Expose
@@ -30,7 +33,7 @@ public class Mensaje extends EntidadPersistente {
 	Usuario usuario;
 
     public Mensaje(String cuerpo,Usuario usuario){
-        this.fechaCreacion=LocalDate.now();
+        this.fechaCreacion=LocalDateTime.now();
         this.cuerpo = cuerpo;
         this.usuario = usuario;
     }
@@ -38,7 +41,7 @@ public class Mensaje extends EntidadPersistente {
     public Mensaje(){
 	}
 
-    public LocalDate getFecha() {
+    public LocalDateTime getFecha() {
         return fechaCreacion;
     }
 
@@ -46,15 +49,15 @@ public class Mensaje extends EntidadPersistente {
         return cuerpo;
     }
 
-    public void setFecha(LocalDate fecha) {
+    public void setFecha(LocalDateTime fecha) {
         this.fechaCreacion = fecha;
     }
 
-	public LocalDate getFechaCreacion() {
+	public LocalDateTime getFechaCreacion() {
 		return fechaCreacion;
 	}
 
-	public void setFechaCreacion(LocalDate fechaCreacion) {
+	public void setFechaCreacion(LocalDateTime fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
 	}
 

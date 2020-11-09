@@ -27,6 +27,11 @@ public class Tarea extends TimerTask {
 
     @Override
     public void run() {
+        Repositorio<Organizacion> repoOrganizacion = new Repositorio<>(new DaoHibernate<>(Organizacion.class));
+        Repositorio<ValidadorDeTransparencia> repoValidador = new Repositorio<>(new DaoHibernate<>(ValidadorDeTransparencia.class));
+        this.organizacion = repoOrganizacion.buscar(this.organizacion.getId());
+        this.validador    = repoValidador.buscar(this.validador.getId());
+
         if(retornarDiaActualSegun(this.dias) != 0) {
             //Lo egresos que no han sido validados o no pasaron las pruebas anteriormente
             List<Egreso> egresos = this.organizacion

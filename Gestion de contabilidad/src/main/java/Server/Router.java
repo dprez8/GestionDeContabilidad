@@ -97,6 +97,11 @@ public class Router {
              }
             response.type("application/json");
         });
+
+
+        Spark.after("/api/bandeja/configurar",(request, response) -> {
+            response.type("application/json");
+        });
     }
     private static void verificarTareasProgramadas() {
         List<Organizacion> organizaciones = repoOrganizaciones.buscarTodos();
