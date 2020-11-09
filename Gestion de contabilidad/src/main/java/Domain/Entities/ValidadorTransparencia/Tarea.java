@@ -32,6 +32,8 @@ public class Tarea extends TimerTask {
         this.organizacion = repoOrganizacion.buscar(this.organizacion.getId());
         this.validador    = repoValidador.buscar(this.validador.getId());
 
+        System.out.println(retornarDiaActualSegun(this.dias));
+
         if(retornarDiaActualSegun(this.dias) != 0) {
             //Lo egresos que no han sido validados o no pasaron las pruebas anteriormente
             List<Egreso> egresos = this.organizacion
@@ -65,16 +67,16 @@ public class Tarea extends TimerTask {
     }
 
     private int retornarDiaActualSegun(List<Integer> dias) {
+        System.out.println("Dias: "+dias);
         Integer dia = dias.stream()
                 .filter(unDia->
                         DayOfWeek.of(unDia) == LocalDate.now().getDayOfWeek())
                 .findAny()
                 .orElse(null);
+        System.out.println("Dia elegido: "+dia);
         if(dia == null)
             return 0;
         switch(dia) {
-            case 0:
-                return Calendar.SUNDAY;
             case 1:
                 return Calendar.MONDAY;
             case 2:
@@ -87,6 +89,8 @@ public class Tarea extends TimerTask {
                 return Calendar.FRIDAY;
             case 6:
                 return Calendar.SATURDAY;
+            case 7:
+                return Calendar.SUNDAY;
             default:
                 return 0;
         }

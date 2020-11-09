@@ -14,7 +14,7 @@ public abstract class Operacion {
 
 	@Expose
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE, generator = "ConfirmationCodeGenerator")
+	@GeneratedValue(strategy = GenerationType.IDENTITY, generator = "ConfirmationCodeGenerator")
 	@TableGenerator(table = "SEQUENCES", name = "ConfirmationCodeGenerator")
 	@Column(name="id")
 	private int id;
