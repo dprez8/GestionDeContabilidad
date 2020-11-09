@@ -186,7 +186,7 @@ export default {
 			});
 		},
 		errorHandling(error) {
-            console.log(error.response);
+            console.log(error);
 
 			if(error.response) {
 				switch(error.response.status) {

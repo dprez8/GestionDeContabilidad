@@ -79,8 +79,8 @@ public class EgresosRestController {
         uploadDir.mkdir(); // create the upload directory if it doesn't exist
 
         String location = "temp";          // the directory location where files will be stored temporarily
-        long maxFileSize = 100000000;       // the maximum size allowed for uploaded files
-        long maxRequestSize = 100000000;    // the maximum size allowed for multipart/form-data requests
+        long maxFileSize = 12000000;       // the maximum size allowed for uploaded files
+        long maxRequestSize = 12000000;    // the maximum size allowed for multipart/form-data requests
         int fileSizeThreshold = 1024;       // the size threshold after which files will be written to disk
 
         // configuracion standard
@@ -93,6 +93,11 @@ public class EgresosRestController {
         for (Part part : request.raw().getParts()) {
             if (part.getContentType().contains("text")){
                 // TODO: me mandaron un "texto" y no un archivo, corroborar que los .txt no terminan acá
+                this.respuesta.setCode(400);
+                this.respuesta.setMessage("No se pueden subir archivos de texto");
+                jsonResponse = this.gson.toJson(this.respuesta);
+                response.body(jsonResponse);
+                return response.body();
             } else {
                 String path = procesarFicheroParte(uploadDir, part);
                 if (path != "") {

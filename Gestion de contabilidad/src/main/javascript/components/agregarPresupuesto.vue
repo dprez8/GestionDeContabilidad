@@ -58,7 +58,7 @@ export default {
     },
     methods: {
         confirmar() {
-            if(this.confirmarAccion != null && this.confirmarAccion != undefined) {
+            if(this.confirmarAccion != undefined && this.cancelarAccion != undefined) {
                 this.presupuesto.items.pop();
                 this.confirmarAccion(this.presupuesto);
                 return;

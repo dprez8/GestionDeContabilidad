@@ -79,7 +79,7 @@
 
 <script>
 import axios from 'axios'
-import {convertDate} from '../util/utils.js'
+import {convertDate, RequestHelper} from '../util/utils.js'
 export default {
     data() {
         return {
@@ -109,52 +109,37 @@ export default {
             var mensajeToSend = {
                 id: this.getMessageSelected().id
             }
-            
-            axios
-                .post('/api/bandeja/visto', mensajeToSend)
-                .then(response => {
-                    var data = response.data;
-                    console.log(data);
 
-                    if(data.code == 200) {
-                        // Mensaje se marco como visto
-                    } else if (data.code == 403) {
-                        this.showLoginModal(true);
-                    }
-                })
-                .catch(error => {
+            RequestHelper.post('/api/bandeja/visto', mensajeToSend, {
+                notLoggedIn: () => {
+                    this.showLoginModal(true);
+                },
+                error: (error) => {
                     this.errorHandling(error);
-                })
-                .then(() => {
-                    // allways
-                    this.loading = false;
-                })
+                }
+            })
         },
         cargarMensajesAPI() {
             this.loading = true;
 
-            axios
-                .get('/api/bandeja')
-                .then(response => {
-                    var data = response.data;
-                    console.log(data);
-
-                    if(data.code == 200) {
-                        this.mensajes = data.mensajes;
-                        this.ordenarFiltrarMensajes();
-                    } else if (data.code == 403) {
-                        this.showLoginModal(true);
-                    } else if(data.code == 404) {
-                        this.mensajes = [];
-                    }
-                })
-                .catch(error => {
+            RequestHelper.get('/api/bandeja', {
+                success: (data) => {
+                    this.mensajes = data.mensajes;
+                    this.ordenarFiltrarMensajes();
+                },
+                notLoggedIn: () => {
+                    this.showLoginModal(true);
+                },
+                empty: () => {
+                    this.mensajes = [];
+                },
+                error: (error) => {
                     this.errorHandling(error);
-                })
-                .then(() => {
-                    // allways
+                },
+                always: () => {
                     this.loading = false;
-                })
+                }
+            })
         },
         getMessageSelected() {
             var mensajeSeleccionado = null;

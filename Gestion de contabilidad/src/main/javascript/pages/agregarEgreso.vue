@@ -327,6 +327,7 @@
 
         <b-modal id="modal-agregar-presupuesto" size="xl" hide-footer scrollable centered title="Crear nuevo Presupuesto">
             <agregar-presupuesto
+                ref="agregarPresupuesto"
                 v-bind:confirmarAccion="confirmarNuevoPresupuesto"
                 v-bind:cancelarAccion="cancelarNuevoPresupuesto"
             ></agregar-presupuesto>
@@ -335,8 +336,8 @@
 </template>
 
 <script>
-import axios from 'axios';
-import {convertDate, getCookie} from '../util/utils.js'
+import axios from 'axios'
+import {convertDate, getCookie, RequestHelper} from '../util/utils.js'
 import agregarProveedor from '../components/agregarProveedor'
 import agregarPresupuesto from '../components/agregarPresupuesto'
 import asociarCategoria from '../components/asociarCategoria'
@@ -450,6 +451,23 @@ export default {
         getCookie: getCookie,
         uploadFileTest() {
             console.log(this.egreso.archivo);
+
+            var request = new FormData();
+            request.append('fasdasdassadsad', this.egreso.archivo);
+
+            RequestHelper.post('/api/operaciones/egreso/cargarArchivos', request, {
+                success: (data) => {
+                    console.log(data);
+                },
+                failed: (data) => {
+                    console.log(data);
+                },
+                error: (error) => {
+                    console.log("oof");
+                    console.log(error);
+                }
+            });
+
         },
         confirmar() {
 
@@ -546,6 +564,7 @@ export default {
         },
         crearPresupuestosAPI() {
             // Proximamente
+            this.$refs.agregarPresupuesto.crearPresupuestosAPI();
             this.asociarCategoriasAPI();
         },
         asociarCategoriasAPI() {

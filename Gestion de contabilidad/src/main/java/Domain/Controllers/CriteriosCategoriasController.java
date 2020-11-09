@@ -196,7 +196,7 @@ public String crearCriterio(Request request, Response response){
    			
    			List<CategoriaOperacion> categorias= new ArrayList<>();
    			
-   			categorias = EntityManagerHelper.createQuery("SELECT c FROM CategoriaOperacion c WHERE c.criterio.criterioId= :code")
+   			categorias = EntityManagerHelper.createQuery("SELECT c FROM CategoriaOperacion c WHERE c.criterio.id= :code")
    			        .setParameter("code",criterio.getId()).getResultList();
    	      
 
