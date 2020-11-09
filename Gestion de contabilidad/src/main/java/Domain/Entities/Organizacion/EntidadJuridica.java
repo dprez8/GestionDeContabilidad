@@ -16,6 +16,10 @@ import javax.persistence.*;
 @PrimaryKeyJoinColumn(name = "id")
 public class EntidadJuridica extends Organizacion {
 	@Expose
+	@Column(name = "nombre_ficticio")
+	private String nombreFicticio;
+
+	@Expose
 	@Column(name = "razon_social")
     private String razonSocial;
 

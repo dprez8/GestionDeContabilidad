@@ -8,28 +8,21 @@ import javax.persistence.NoResultException;
 
 import com.google.gson.Gson;
 
-import Domain.Controllers.ProveedorController.ProveedorRespuesta;
 import Domain.Entities.ApiPaises.Ciudad;
 import Domain.Entities.ApiPaises.Pais;
 import Domain.Entities.ApiPaises.Provincia;
 import Domain.Entities.CategorizadorDeEmpresas.Sector;
-import Domain.Entities.ClasesParciales.CiudadDato;
 import Domain.Entities.ClasesParciales.EntidadBaseDato;
 import Domain.Entities.ClasesParciales.OrganizacionDato;
 import Domain.Entities.ClasesParciales.OrganizacionPropia;
-import Domain.Entities.ClasesParciales.ProveedorNuevo;
 import Domain.Entities.ClasesParciales.SectorDato;
-import Domain.Entities.DatosDeOperaciones.MedioDePago;
-import Domain.Entities.DatosDeOperaciones.Proveedor;
 import Domain.Entities.Organizacion.EntidadBase;
 import Domain.Entities.Organizacion.EntidadJuridica;
-import Domain.Entities.Organizacion.Organizacion;
 import Domain.Entities.Usuarios.Administrador;
 import Domain.Entities.Usuarios.Estandar;
 import Domain.Repositories.Repositorio;
 import Domain.Repositories.Daos.DaoHibernate;
 import db.EntityManagerHelper;
-import javassist.NotFoundException;
 import spark.Request;
 import spark.Response;
 
@@ -131,7 +124,7 @@ public class OrganizacionController {
 		EntidadJuridica entidadJuridica=usuario.getMiOrganizacion();
 		
 		organizacionPropia.juridica_id=entidadJuridica.getId();
-		organizacionPropia.juridica_name=entidadJuridica.getNombreFicticio();
+		organizacionPropia.juridica_name=entidadJuridica.getNombre();
 	
 	
 		entidadesBase = EntityManagerHelper.createQuery("SELECT c FROM EntidadBase c WHERE c.entidadJuridica.id= :code")
@@ -153,7 +146,7 @@ public class OrganizacionController {
 	public EntidadBaseDato mapBases(EntidadBase entidadBase){
 		EntidadBaseDato base= new EntidadBaseDato();
 		base.id=entidadBase.getId();
-		base.name=entidadBase.getNombreFicticio();
+		base.name=entidadBase.getNombre();
 		
 		return base;
 	}
@@ -163,7 +156,7 @@ public class OrganizacionController {
         
 		entidad.setRazonSocial(organizacionDato.razonSocial);
         entidad.setCuit(organizacionDato.cuit);
-        entidad.setNombreFicticio(organizacionDato.nombreFicticio);
+        entidad.setNombre(organizacionDato.nombreFicticio);
         entidad.setCodigoDeInscripcionDefinitivaEnIGJ(organizacionDato.codigoDeInscripcionDefinitivaEnIGJ);
     	
         this.repoPais = new Repositorio<Pais>(new DaoHibernate<Pais>(Pais.class));

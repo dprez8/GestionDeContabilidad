@@ -82,7 +82,7 @@ public class TestDominio {
         entidadJuridica.setAltura(1234);
         entidadJuridica.setRazonSocial("Entidad Juridica");
         entidadJuridica.setTipoEntidadJuridica(pyme);
-        entidadJuridica.setNombreFicticio("Organizacion");
+        entidadJuridica.setNombre("Organizacion");
 
         this.repoEntidadJuridica.agregar(entidadJuridica);
         SchedulerInit schedulerInit = new SchedulerInit();

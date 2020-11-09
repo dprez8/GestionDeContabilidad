@@ -21,8 +21,8 @@ import javax.persistence.*;
 public abstract class Organizacion extends EntidadPersistente {
 
 	@Expose
-	@Column(name = "nombre_ficticio")
-    protected String nombreFicticio;
+	@Column(name = "nombre")
+    protected String nombre;
 
     @OneToMany(mappedBy = "organizacion",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER) //del otro lado es ManyToOne
     protected List<Operacion> operaciones;
@@ -72,12 +72,12 @@ public abstract class Organizacion extends EntidadPersistente {
 		this.usuarios = usuarios;
 	}
 
-	public String getNombreFicticio() {
-		return nombreFicticio;
+	public String getNombre() {
+		return nombre;
 	}
 
-	public void setNombreFicticio(String nombreFicticio) {
-		this.nombreFicticio = nombreFicticio;
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
 
 	public void setOperaciones(List<Operacion> operaciones) {

@@ -14,7 +14,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/org/uqbar-project/jpa-java8-extras/1.0-alpha-1/jpa-java8-extras-1.0-alpha-1.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/uqbar-project/jpa-java8-extras/1.0-alpha-1/jpa-java8-extras-1.0-alpha-1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -23,7 +23,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/org/hibernate/hibernate-entitymanager/5.4.23.Final/hibernate-entitymanager-5.4.23.Final.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/hibernate/hibernate-entitymanager/5.4.23.Final/hibernate-entitymanager-5.4.23.Final.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -32,7 +32,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/org/jboss/logging/jboss-logging/3.4.1.Final/jboss-logging-3.4.1.Final.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/jboss/logging/jboss-logging/3.4.1.Final/jboss-logging-3.4.1.Final.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -41,7 +41,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/org/hibernate/hibernate-core/5.4.23.Final/hibernate-core-5.4.23.Final.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/hibernate/hibernate-core/5.4.23.Final/hibernate-core-5.4.23.Final.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -50,7 +50,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/org/jboss/spec/javax/transaction/jboss-transaction-api_1.2_spec/1.1.1.Final/jboss-transaction-api_1.2_spec-1.1.1.Final.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/jboss/spec/javax/transaction/jboss-transaction-api_1.2_spec/1.1.1.Final/jboss-transaction-api_1.2_spec-1.1.1.Final.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -59,7 +59,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/org/hibernate/common/hibernate-commons-annotations/5.1.2.Final/hibernate-commons-annotations-5.1.2.Final.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/hibernate/common/hibernate-commons-annotations/5.1.2.Final/hibernate-commons-annotations-5.1.2.Final.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -68,7 +68,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/org/hibernate/javax/persistence/hibernate-jpa-2.1-api/1.0.0.Final/hibernate-jpa-2.1-api-1.0.0.Final.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/hibernate/javax/persistence/hibernate-jpa-2.1-api/1.0.0.Final/hibernate-jpa-2.1-api-1.0.0.Final.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -77,7 +77,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/org/javassist/javassist/3.24.0-GA/javassist-3.24.0-GA.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/javassist/javassist/3.24.0-GA/javassist-3.24.0-GA.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -86,7 +86,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/antlr/antlr/2.7.7/antlr-2.7.7.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/antlr/antlr/2.7.7/antlr-2.7.7.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -95,7 +95,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/org/jboss/jandex/2.1.3.Final/jandex-2.1.3.Final.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/jboss/jandex/2.1.3.Final/jandex-2.1.3.Final.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -104,7 +104,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/org/slf4j/slf4j-simple/1.7.21/slf4j-simple-1.7.21.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/slf4j/slf4j-simple/1.7.21/slf4j-simple-1.7.21.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -113,7 +113,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/org/slf4j/slf4j-api/1.7.21/slf4j-api-1.7.21.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/slf4j/slf4j-api/1.7.21/slf4j-api-1.7.21.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -122,7 +122,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/com/sparkjava/spark-debug-tools/0.5/spark-debug-tools-0.5.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/com/sparkjava/spark-debug-tools/0.5/spark-debug-tools-0.5.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -131,7 +131,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/mysql/mysql-connector-java/5.1.26/mysql-connector-java-5.1.26.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/mysql/mysql-connector-java/8.0.21/mysql-connector-java-8.0.21.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -140,7 +140,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/org/hsqldb/hsqldb/2.2.8/hsqldb-2.2.8.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/com/google/protobuf/protobuf-java/3.11.4/protobuf-java-3.11.4.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -149,7 +149,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/junit/junit/4.12/junit-4.12.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/hsqldb/hsqldb/2.2.8/hsqldb-2.2.8.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -158,7 +158,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/junit/junit/4.12/junit-4.12.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -167,7 +167,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/com/sparkjava/spark-core/2.7.2/spark-core-2.7.2.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -176,7 +176,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/org/eclipse/jetty/jetty-server/9.4.8.v20171121/jetty-server-9.4.8.v20171121.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/com/sparkjava/spark-core/2.7.2/spark-core-2.7.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -185,7 +185,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/javax/servlet/javax.servlet-api/3.1.0/javax.servlet-api-3.1.0.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/jetty/jetty-server/9.4.8.v20171121/jetty-server-9.4.8.v20171121.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -194,7 +194,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/org/eclipse/jetty/jetty-http/9.4.8.v20171121/jetty-http-9.4.8.v20171121.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/javax/servlet/javax.servlet-api/3.1.0/javax.servlet-api-3.1.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -203,7 +203,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/org/eclipse/jetty/jetty-util/9.4.8.v20171121/jetty-util-9.4.8.v20171121.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/jetty/jetty-http/9.4.8.v20171121/jetty-http-9.4.8.v20171121.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -212,7 +212,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/org/eclipse/jetty/jetty-io/9.4.8.v20171121/jetty-io-9.4.8.v20171121.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/jetty/jetty-util/9.4.8.v20171121/jetty-util-9.4.8.v20171121.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -221,7 +221,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/org/eclipse/jetty/jetty-webapp/9.4.8.v20171121/jetty-webapp-9.4.8.v20171121.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/jetty/jetty-io/9.4.8.v20171121/jetty-io-9.4.8.v20171121.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -230,7 +230,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/org/eclipse/jetty/jetty-xml/9.4.8.v20171121/jetty-xml-9.4.8.v20171121.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/jetty/jetty-webapp/9.4.8.v20171121/jetty-webapp-9.4.8.v20171121.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -239,7 +239,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/org/eclipse/jetty/jetty-servlet/9.4.8.v20171121/jetty-servlet-9.4.8.v20171121.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/jetty/jetty-xml/9.4.8.v20171121/jetty-xml-9.4.8.v20171121.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -248,7 +248,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/org/eclipse/jetty/jetty-security/9.4.8.v20171121/jetty-security-9.4.8.v20171121.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/jetty/jetty-servlet/9.4.8.v20171121/jetty-servlet-9.4.8.v20171121.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -257,7 +257,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/org/eclipse/jetty/websocket/websocket-server/9.4.8.v20171121/websocket-server-9.4.8.v20171121.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/jetty/jetty-security/9.4.8.v20171121/jetty-security-9.4.8.v20171121.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -266,7 +266,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/org/eclipse/jetty/websocket/websocket-common/9.4.8.v20171121/websocket-common-9.4.8.v20171121.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/jetty/websocket/websocket-server/9.4.8.v20171121/websocket-server-9.4.8.v20171121.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -275,7 +275,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/org/eclipse/jetty/websocket/websocket-api/9.4.8.v20171121/websocket-api-9.4.8.v20171121.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/jetty/websocket/websocket-common/9.4.8.v20171121/websocket-common-9.4.8.v20171121.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -284,7 +284,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/org/eclipse/jetty/websocket/websocket-client/9.4.8.v20171121/websocket-client-9.4.8.v20171121.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/jetty/websocket/websocket-api/9.4.8.v20171121/websocket-api-9.4.8.v20171121.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -293,7 +293,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/org/eclipse/jetty/jetty-client/9.4.8.v20171121/jetty-client-9.4.8.v20171121.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/jetty/websocket/websocket-client/9.4.8.v20171121/websocket-client-9.4.8.v20171121.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -302,7 +302,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/org/eclipse/jetty/websocket/websocket-servlet/9.4.8.v20171121/websocket-servlet-9.4.8.v20171121.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/jetty/jetty-client/9.4.8.v20171121/jetty-client-9.4.8.v20171121.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -311,7 +311,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/com/github/jknack/handlebars-helpers/4.2.0/handlebars-helpers-4.2.0.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/jetty/websocket/websocket-servlet/9.4.8.v20171121/websocket-servlet-9.4.8.v20171121.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -320,7 +320,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/com/github/jknack/handlebars/4.2.0/handlebars-4.2.0.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/com/github/jknack/handlebars-helpers/4.2.0/handlebars-helpers-4.2.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -329,7 +329,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/org/apache/commons/commons-lang3/3.0/commons-lang3-3.0.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/com/github/jknack/handlebars/4.2.0/handlebars-4.2.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -338,7 +338,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/com/squareup/retrofit2/retrofit/2.5.0/retrofit-2.5.0.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/apache/commons/commons-lang3/3.0/commons-lang3-3.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -347,7 +347,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/com/squareup/okhttp3/okhttp/3.12.0/okhttp-3.12.0.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/com/squareup/retrofit2/retrofit/2.5.0/retrofit-2.5.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -356,7 +356,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/com/squareup/okio/okio/1.15.0/okio-1.15.0.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/com/squareup/okhttp3/okhttp/3.12.0/okhttp-3.12.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -365,7 +365,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/com/google/guava/guava/20.0/guava-20.0.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/com/squareup/okio/okio/1.15.0/okio-1.15.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -374,7 +374,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/com/github/jknack/handlebars-humanize/4.2.0/handlebars-humanize-4.2.0.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/com/google/guava/guava/20.0/guava-20.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -383,7 +383,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/com/github/mfornos/humanize-slim/1.2.2/humanize-slim-1.2.2.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/com/github/jknack/handlebars-humanize/4.2.0/handlebars-humanize-4.2.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -392,7 +392,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/org/ocpsoft/prettytime/prettytime/3.2.5.Final/prettytime-3.2.5.Final.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/com/github/mfornos/humanize-slim/1.2.2/humanize-slim-1.2.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -401,7 +401,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/me/xuender/unidecode/0.0.7/unidecode-0.0.7.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/ocpsoft/prettytime/prettytime/3.2.5.Final/prettytime-3.2.5.Final.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -410,7 +410,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/com/google/code/findbugs/jsr305/1.3.9/jsr305-1.3.9.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/me/xuender/unidecode/0.0.7/unidecode-0.0.7.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -419,7 +419,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/javax/persistence/javax.persistence-api/2.2/javax.persistence-api-2.2.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/com/google/code/findbugs/jsr305/1.3.9/jsr305-1.3.9.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -428,7 +428,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/net/bytebuddy/byte-buddy/1.10.17/byte-buddy-1.10.17.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/javax/persistence/javax.persistence-api/2.2/javax.persistence-api-2.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -437,7 +437,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/com/fasterxml/classmate/1.5.1/classmate-1.5.1.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/net/bytebuddy/byte-buddy/1.10.17/byte-buddy-1.10.17.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -446,7 +446,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/javax/activation/javax.activation-api/1.2.0/javax.activation-api-1.2.0.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/classmate/1.5.1/classmate-1.5.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -455,7 +455,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/org/dom4j/dom4j/2.1.3/dom4j-2.1.3.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/javax/activation/javax.activation-api/1.2.0/javax.activation-api-1.2.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -464,7 +464,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/javax/xml/bind/jaxb-api/2.3.1/jaxb-api-2.3.1.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/dom4j/dom4j/2.1.3/dom4j-2.1.3.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -473,7 +473,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/org/glassfish/jaxb/jaxb-runtime/2.3.1/jaxb-runtime-2.3.1.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/javax/xml/bind/jaxb-api/2.3.1/jaxb-api-2.3.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -482,7 +482,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/org/glassfish/jaxb/txw2/2.3.1/txw2-2.3.1.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/glassfish/jaxb/jaxb-runtime/2.3.1/jaxb-runtime-2.3.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -491,7 +491,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/com/sun/istack/istack-commons-runtime/3.0.7/istack-commons-runtime-3.0.7.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/glassfish/jaxb/txw2/2.3.1/txw2-2.3.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -500,7 +500,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/org/jvnet/staxex/stax-ex/1.8/stax-ex-1.8.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/com/sun/istack/istack-commons-runtime/3.0.7/istack-commons-runtime-3.0.7.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -509,7 +509,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/com/sun/xml/fastinfoset/FastInfoset/1.2.15/FastInfoset-1.2.15.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/jvnet/staxex/stax-ex/1.8/stax-ex-1.8.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -518,7 +518,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/com/sparkjava/spark-template-handlebars/2.7.1/spark-template-handlebars-2.7.1.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/com/sun/xml/fastinfoset/FastInfoset/1.2.15/FastInfoset-1.2.15.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -527,7 +527,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/com/github/jknack/handlebars-guava-cache/4.0.6/handlebars-guava-cache-4.0.6.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/com/sparkjava/spark-template-handlebars/2.7.1/spark-template-handlebars-2.7.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -536,7 +536,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/com/squareup/retrofit2/converter-gson/2.5.0/converter-gson-2.5.0.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/com/github/jknack/handlebars-guava-cache/4.0.6/handlebars-guava-cache-4.0.6.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -545,7 +545,16 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/feer_/.m2/repository/com/google/code/gson/gson/2.8.2/gson-2.8.2.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/com/squareup/retrofit2/converter-gson/2.5.0/converter-gson-2.5.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MAVEN_REPOSITORY$/com/google/code/gson/gson/2.8.2/gson-2.8.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
