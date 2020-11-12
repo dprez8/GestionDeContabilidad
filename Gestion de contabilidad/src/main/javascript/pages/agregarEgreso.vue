@@ -463,7 +463,6 @@ export default {
                     console.log(data);
                 },
                 error: (error) => {
-                    console.log("oof");
                     console.log(error);
                 }
             });
@@ -543,7 +542,7 @@ export default {
                 //         this.falloCarga = true;
                 //     })
                 //     .then(() => {
-                //         // allways
+                //         // always
                 //     })
             } else {
                 this.crearEgresoAPI()
@@ -595,7 +594,7 @@ export default {
             //         this.falloCarga = true;
             //     })
             //     .then(() => {
-            //         // allways
+            //         // always
             //     })
         },
         crearPresupuestosAPI() {
@@ -652,7 +651,7 @@ export default {
                 //         this.falloCarga = true;
                 //     })
                 //     .then(() => {
-                //         // allways
+                //         // always
                 //     })
             } else {
                 this.asociarIngresoAPI();
@@ -707,7 +706,7 @@ export default {
                 //         this.falloCarga = true;
                 //     })
                 //     .then(() => {
-                //         // allways
+                //         // always
                 //     })
             } else {
                 this.$router.push('/operaciones/egreso');
@@ -726,7 +725,7 @@ export default {
                 error: (error) => {
                     this.errorHandling(error);
                 },
-                allways: () => {
+                always: () => {
                     this.proveedoresLoading = false;
                 }
             });
@@ -746,7 +745,7 @@ export default {
             //         this.errorHandling(error);
             //     })
             //     .then(() => {
-            //         // allways
+            //         // always
             //         this.proveedoresLoading = false;
             //     })
         },
@@ -769,8 +768,8 @@ export default {
                 error: (error) => {
                     this.errorHandling(error);
                 },
-                allways: () => {
-                    this.proveedoresLoading = false;
+                always: () => {
+                    this.mediosDePagoLoading = false;
                 }
             });
 
@@ -789,7 +788,7 @@ export default {
             //         this.errorHandling(error);
             //     })
             //     .then(() => {
-            //         // allways
+            //         // always
             //         this.mediosDePagoLoading = false;
             //     })
         },
@@ -806,8 +805,6 @@ export default {
         // Proveedores
         confirmarNuevoProveedor(data) {
             this.$bvModal.hide('modal-agregar-proveedor');
-            console.log(data);
-
             this.proveedorAAgregar = data;
             this.egreso.proveedor = "nuevoProveedor";
         },
@@ -817,8 +814,6 @@ export default {
         // Presupuestos
         confirmarNuevoPresupuesto(data) {
             this.$bvModal.hide('modal-agregar-presupuesto');
-            console.log(data);
-
             this.presupuestosAAgregar.push(data);
         },
         cancelarNuevoPresupuesto() {
@@ -830,8 +825,6 @@ export default {
         // Categorias
         confirmarAsociarCategorias(data) {
             this.$bvModal.hide('modal-asociar-categoria');
-            console.log(data);
-
             this.categoriasAAsociar = data;
         },
         cancelarAsociarCategorias() {
@@ -840,8 +833,6 @@ export default {
         // Ingreso
         confirmarAsociarIngreso(data) {
             this.$bvModal.hide('modal-asociar-ingreso');
-            console.log(data);
-
             this.ingresoAAsociar = data;
         },
         cancelarAsociarIngreso() {

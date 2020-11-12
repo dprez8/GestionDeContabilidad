@@ -117,7 +117,7 @@
 
 <script>
 import axios from 'axios'
-import {convertDate} from '../util/utils'
+import {convertDate, RequestHelper} from '../util/utils'
 import asociarCategoria from './asociarCategoria'
 import asociarIngreso from './asociarIngreso'
 
@@ -136,8 +136,14 @@ export default {
             showPresupuesto: false,
             campos_items: [
                 {
-                    key: 'producto',
-                    label: 'Producto',
+                    key: 'tipo',
+                    label: 'Tipo',
+                    tdClass: [],
+                    thClass: []
+                },
+                {
+                    key: 'descripcion',
+                    label: 'Descripcion',
                     tdClass: ['w-100'],
                     thClass: []
                 },
@@ -167,29 +173,47 @@ export default {
             if(id == undefined)
                 return;
 
-            axios
-                .get(`/api/operaciones/egreso/${id}`)
-                .then(response => {
-                    var data = response.data;
-                    console.log(data);
-                    if(data.code == 200) {
-                        this.egreso = data.egreso;
-                        this.egreso.items = data.egreso.items.map(this.itemEgresoAPIConverter);
-                    } else if (data.code == 403) {
-                        this.showLoginModal(true);
-                    }
-                })
-                .catch(error => {
+            RequestHelper.get(`/api/operaciones/egreso/${id}`, {
+                success: (data) => {
+                    this.egreso = data.egreso;
+                    this.egreso.items = data.egreso.items.map(this.itemEgresoAPIConverter);
+                },
+                notLoggedIn: () => {
+                    this.showLoginModal(true);
+                },
+                error: (error) => {
                     this.errorHandling(error);
-                })
-                .then(() => {
-                    // allways
+                },
+                always: () => {
                     this.egresoLoaded();
-                })
+                }
+            });
+
+            // axios
+            //     .get(`/api/operaciones/egreso/${id}`)
+            //     .then(response => {
+            //         var data = response.data;
+            //         console.log(data);
+            //         if(data.code == 200) {
+            //             this.egreso = data.egreso;
+            //             this.egreso.items = data.egreso.items.map(this.itemEgresoAPIConverter);
+            //         } else if (data.code == 403) {
+            //             this.showLoginModal(true);
+            //         }
+            //     })
+            //     .catch(error => {
+            //         this.errorHandling(error);
+            //     })
+            //     .then(() => {
+            //         // always
+            //         this.egresoLoaded();
+            //     })
         },
         itemEgresoAPIConverter(item) {
+            // Arreglar cuando se cambien los items en backend
             return {
-                producto: item.producto.nombreProducto,
+                tipo: item.tipo.id,
+                descripcion: item.tipo.nombre,
                 cantidad: item.cantidad,
                 precio: item.precio
             }
@@ -215,28 +239,48 @@ export default {
                 console.log("POST '/api/operaciones/asociarManualmente'");
                 console.log(JSON.stringify(request, null, 4));
 
-                axios
-                    .post(`/api/operaciones/asociarManualmente`, request)
-                    .then(response => {
-                        var data = response.data;
-                        console.log(data);
-                        if(data.code == 200) {
-                            this.cargarEgresoAPI();
-                        } else if (data.code == 403) {
-                            this.showLoginModal(true);
-                        } else if (data.code == 400) {
-                            this.falloCarga = true;
-                            this.falloCargaDetalles = data.message;
-                        }
-                    })
-                    .catch(error => {
+                RequestHelper.post(`/api/operaciones/asociarManualmente`, request, {
+                    success: (data) => {
+                        this.cargarEgresoAPI();
+                    },
+                    notLoggedIn: () => {
+                        this.showLoginModal(true);
+                    },
+                    failed: (data) => {
+                        this.falloCarga = true;
+                        this.falloCargaDetalles = data.message;
+                    },
+                    error: (error) => {
                         this.falloCarga = true;
                         this.errorHandling(error);
-                    })
-                    .then(() => {
-                        // allways
+                    },
+                    always: () => {
                         this.egresoLoading = false;
-                    })
+                    }
+                });
+
+                // axios
+                //     .post(`/api/operaciones/asociarManualmente`, request)
+                //     .then(response => {
+                //         var data = response.data;
+                //         console.log(data);
+                //         if(data.code == 200) {
+                //             this.cargarEgresoAPI();
+                //         } else if (data.code == 403) {
+                //             this.showLoginModal(true);
+                //         } else if (data.code == 400) {
+                //             this.falloCarga = true;
+                //             this.falloCargaDetalles = data.message;
+                //         }
+                //     })
+                //     .catch(error => {
+                //         this.falloCarga = true;
+                //         this.errorHandling(error);
+                //     })
+                //     .then(() => {
+                //         // always
+                //         this.egresoLoading = false;
+                //     })
             } 
 
         },
@@ -266,28 +310,48 @@ export default {
                 console.log("POST '/api/categorias/asociar'");
                 console.log(JSON.stringify(request, null, 4));
 
-                axios
-                    .post(`/api/categorias/asociar`, request)
-                    .then(response => {
-                        var data = response.data;
-                        console.log(data);
-                        if(data.code == 200) {
-                            this.cargarEgresoAPI();
-                        } else if (data.code == 403) {
-                            this.showLoginModal(true);
-                        } else if (data.code == 400) {
-                            this.falloCarga = true;
-                            this.falloAsociacionDetalles = data.message;
-                        }
-                    })
-                    .catch(error => {
+                RequestHelper.post(`/api/categorias/asociar`, request, {
+                    success: (data) => {
+                        this.cargarEgresoAPI();
+                    },
+                    notLoggedIn: () => {
+                        this.showLoginModal(true);
+                    },
+                    failed: (data) => {
+                        this.falloCarga = true;
+                        this.falloAsociacionDetalles = data.message;
+                    },
+                    error: (error) => {
                         this.falloCarga = true;
                         this.errorHandling(error);
-                    })
-                    .then(() => {
-                        // allways
+                    },
+                    always: () => {
                         this.egresoLoading = false;
-                    })
+                    }
+                });
+
+                // axios
+                //     .post(`/api/categorias/asociar`, request)
+                //     .then(response => {
+                //         var data = response.data;
+                //         console.log(data);
+                //         if(data.code == 200) {
+                //             this.cargarEgresoAPI();
+                //         } else if (data.code == 403) {
+                //             this.showLoginModal(true);
+                //         } else if (data.code == 400) {
+                //             this.falloCarga = true;
+                //             this.falloAsociacionDetalles = data.message;
+                //         }
+                //     })
+                //     .catch(error => {
+                //         this.falloCarga = true;
+                //         this.errorHandling(error);
+                //     })
+                //     .then(() => {
+                //         // always
+                //         this.egresoLoading = false;
+                //     })
             }
         },
         cancelarAsociarCategorias() {

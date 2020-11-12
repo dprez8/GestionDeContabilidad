@@ -1,5 +1,5 @@
 <template>
-    <div class="p-4 d-flex justify-content-center">
+    <div class="p-4 d-flex justify-content-center" style="background: #eee">
         <div class="w-100" style="max-width: 768px;">
             <b-card title="Datos personales" class="mb-4">
                 <div class="mt-2">Nombre</div>

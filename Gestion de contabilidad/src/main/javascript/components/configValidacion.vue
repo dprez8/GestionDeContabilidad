@@ -97,7 +97,7 @@ export default {
                     this.errorHandling(error);
                 })
                 .then(() => {
-                    // allways
+                    // always
                     this.loading = false;
                 });
         },
@@ -119,7 +119,7 @@ export default {
                     this.errorHandling(error);
                 })
                 .then(() => {
-                    // allways
+                    // always
                     this.loading = false;
                 });
         },

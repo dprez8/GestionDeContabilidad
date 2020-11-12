@@ -10,10 +10,8 @@
             <div class="col-sm-4 col-lg-3 text-sm-right py-2">
                 <span class="mr-2"><strong>Entidad</strong></span>
             </div>
-            <div class="col bg-light p-2">
-                <span class="ml-2">
-                    <b-select></b-select>
-                </span>
+            <div class="col">
+                <b-select :options="entidadesOptions" v-model="ingreso.organizacion_id"></b-select>
             </div>
             <div class="col-lg-1 col-xl-3"></div>
         </div>
@@ -94,6 +92,9 @@ export default {
                 descripcion: null,
                 montoTotal: null
             },
+            entidadesOptions: [
+                {text: "xd", value: 1}
+            ],
             falloInput: false,
             falloCargarIngreso: false,
             ingresoLoading: false

@@ -10,8 +10,8 @@ import operaciones from './pages/operaciones'
 import egresos from './components/egresos'
 import ingresos from './components/ingresos'
 import bandeja from './pages/bandeja'
-import configuracion from './pages/configuracion'
-import configUsuario from './components/configUsuario'
+import miCuenta from './pages/miCuenta'
+import adminPanel from './pages/adminPanel'
 import configValidacion from './components/configValidacion'
 import agregarEgreso from './pages/agregarEgreso'
 import agregarIngreso from './pages/agregarIngreso'
@@ -184,54 +184,46 @@ const routes = [
                 ]
             },
             {
-                name: 'configuracion',
-                path: 'configuracion',
-                component: configuracion,
+                name: 'cuenta',
+                path: 'cuenta',
+                component: miCuenta,
                 meta: {
                     breadcrumb: [{
-                        label: "Configuracion",
+                        label: "Mi Cuenta",
                         type: "fixed",
-                        path: "/configuracion",
+                        path: "/cuenta",
+                        active: true
+                    }]
+                }
+            },
+            {
+                name: 'panel',
+                path: 'panel',
+                component: adminPanel,
+                meta: {
+                    breadcrumb: [{
+                        label: "Admin Panel",
+                        type: "fixed",
+                        path: "/panel",
                         active: true
                     }]
                 },
                 children: [
                     {
-                        name: 'configUsuario',
-                        path: 'usuario',
-                        component: configUsuario,
-                        meta: {
-                            breadcrumb: [{
-                                    label: "Configuracion",
-                                    type: "fixed",
-                                    path: "/configuracion"
-                                },
-                                {
-                                    label: "Mi Usuario",
-                                    type: "fixed",
-                                    path: "/configuracion/usuario",
-                                    active: true
-                                }
-                            ]
-                        }
-                    },
-                    {
                         name: 'configValidacion',
-                        path: 'validacion',
+                        path: 'validaciones',
                         component: configValidacion,
                         meta: {
                             breadcrumb: [{
-                                    label: "Configuracion",
-                                    type: "fixed",
-                                    path: "/configuracion"
-                                },
-                                {
-                                    label: "Validacion de Egreso",
-                                    type: "fixed",
-                                    path: "/configuracion/validacion",
-                                    active: true
-                                }
-                            ]
+                                label: "Admin Panel",
+                                type: "fixed",
+                                path: "/panel"
+                            },{
+                                label: "Validacion de Egresos",
+                                type: "fixed",
+                                path: "/panel/validaciones",
+                                active: true
+                            }]
                         }
                     }
                 ]

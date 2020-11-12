@@ -49,8 +49,6 @@ export default {
         cargarIngresosAPI(){
             this.ingresosLoading = true;
 
-            console.log("something");
-
             RequestHelper.get('/api/operaciones/ingresos', {
                 success: (data) => {
                     this.ingresos = data.ingresos.map(this.ingresosAPIConverter);
@@ -61,7 +59,7 @@ export default {
                 error: (error) => {
                     this.errorHandling(error);
                 },
-                allways: () => {
+                always: () => {
                     this.ingresosLoading = false;
                 }
             });
@@ -82,7 +80,7 @@ export default {
             //         this.errorHandling(error);
             //     })
             //     .then(() => {
-            //         // allways
+            //         // always
             //         this.ingresosLoading = false;
             //     })
         },

@@ -69,9 +69,8 @@
             v-model="userPanelShow"
         >
             <b-list-group flush>
-                <b-list-group-item>{{userData.nombre}}</b-list-group-item>
-                <b-list-group-item to="/configuracion" @click="userPanelShow = false">
-                        <b-icon-gear-fill class="mr-2"></b-icon-gear-fill> Configuración
+                <b-list-group-item to="/cuenta" @click="userPanelShow = false">
+                        <b-icon-person-fill class="mr-2"></b-icon-person-fill> {{userData.nombre}}
                 </b-list-group-item>
                 <b-list-group-item to="#" @click="logout">
                     <b-icon-box-arrow-left class="mr-2"></b-icon-box-arrow-left> Cerrar sesión

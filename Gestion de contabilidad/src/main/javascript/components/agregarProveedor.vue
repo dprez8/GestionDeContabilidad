@@ -166,6 +166,7 @@
 
 <script>
 import axios from 'axios'
+import {RequestHelper} from '../util/utils.js'
 
 export default {
     props: {
@@ -223,30 +224,25 @@ export default {
             this.proveedor.provincia = null;
             this.proveedor.ciudad = null;
 
-            axios
-                .get('/api/pais')
-                .then(response => {
-                    var data = response.data;
-
-                    if(data.code == 200) {
-                        this.paises = data.data.map(function(unPais){
-                            return {
-                                value: unPais.clave,
-                                text: unPais.name
-                            }
-                        });
-                    } else if (data.code == 403) {
-                        this.showLoginModal(true);
-                    }
-                })
-                .catch(error => {
-                    console.log(error);
+            RequestHelper.get('/api/pais', {
+                success: (data) => {
+                    this.paises = data.data.map(function(unPais){
+                        return {
+                            value: unPais.clave,
+                            text: unPais.name
+                        }
+                    });
+                },
+                notLoggedIn: () => {
+                    this.showLoginModal(true);
+                },
+                error: (error) => {
                     this.errorHandling(error);
-                })
-                .then(() => {
-                    // allways
+                },
+                always: () => {
                     this.loadingPaises = false;
-                })
+                }
+            });
         },
         cargarProvinciasAPI() {
             this.provinciasLoading = true;
@@ -257,29 +253,25 @@ export default {
             if(paisID == null)
                 return;
 
-            axios
-                .get(`/api/pais/${paisID}/provincia`)
-                .then(response => {
-                    var data = response.data;
-
-                    if(data.code == 200) {
-                        this.provincias = data.data.map(function(unaProvincia){
-                            return {
-                                value: unaProvincia.clave,
-                                text: unaProvincia.name
-                            }
-                        });
-                    } else if (data.code == 403) {
-                        this.showLoginModal(true);
-                    }
-                })
-                .catch(error => {
+            RequestHelper.get(`/api/pais/${paisID}/provincia`, {
+                success: (data) => {
+                    this.provincias = data.data.map(function(unaProvincia){
+                        return {
+                            value: unaProvincia.clave,
+                            text: unaProvincia.name
+                        }
+                    });
+                },
+                notLoggedIn: () => {
+                    this.showLoginModal(true);
+                },
+                error: (error) => {
                     this.errorHandling(error);
-                })
-                .then(() => {
-                    // allways
+                },
+                always: () => {
                     this.provinciasLoading = false;
-                })
+                }
+            });
         },
         cargarCiudadesAPI() {
             this.proveedor.ciudad = null;
@@ -291,29 +283,25 @@ export default {
             if(paisID == null || provinciaID == null)
                 return;
 
-            axios
-                .get(`/api/pais/${paisID}/provincia/${provinciaID}/ciudad`)
-                .then(response => {
-                    var data = response.data;
-
-                    if(data.code == 200) {
-                        this.ciudades = data.data.map(function(unaCiudad){
-                            return {
-                                value: unaCiudad.clave,
-                                text: unaCiudad.name
-                            }
-                        });
-                    } else if (data.code == 403) {
-                        this.showLoginModal(true);
-                    }
-                })
-                .catch(error => {
+            RequestHelper.get(`/api/pais/${paisID}/provincia/${provinciaID}/ciudad`, {
+                success: (data) => {
+                    this.ciudades = data.data.map(function(unaCiudad){
+                        return {
+                            value: unaCiudad.clave,
+                            text: unaCiudad.name
+                        }
+                    });
+                },
+                notLoggedIn: () => {
+                    this.showLoginModal(true);
+                },
+                error: (error) => {
                     this.errorHandling(error);
-                })
-                .then(() => {
-                    // allways
+                },
+                always: () => {
                     this.ciudadesLoading = false;
-                })
+                }
+            });
         }
     },
     watch: {

@@ -83,7 +83,7 @@ export default {
                 error: (error) => {
                     this.errorHandling(error);
                 },
-                allways: () => {
+                always: () => {
                     this.egresosLoading = false;
                 }
             });

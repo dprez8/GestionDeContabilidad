@@ -75,7 +75,7 @@ export default {
                             appendToToast: true
                         });
                     },
-                    allways: () => {
+                    always: () => {
                         this.loginLoading = false;
                     }
                 });
