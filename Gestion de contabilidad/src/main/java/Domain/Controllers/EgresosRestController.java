@@ -55,16 +55,6 @@ public class EgresosRestController {
     }
 
 
-    public String procesarFicheroParte(File uploadDir, Part part) throws IOException {
-        String uploaded_file_name = getFileName(part);
-        // creo el fichero temporal, con un nombre generico generado y la extension del archivo que fue subido
-        Path tempFile = Files.createTempFile(uploadDir.toPath(), "", "." + getExtension(uploaded_file_name));
-        // copiar el stream de lo que me pasaron al fichero temporal
-        InputStream input = part.getInputStream();
-        Files.copy(input, tempFile, StandardCopyOption.REPLACE_EXISTING);
-        return tempFile.toAbsolutePath().toString();
-    }
-
     public String cargarArchivoDocumentoComercial(Request request, Response response) throws IOException, ServletException {
 
         response.type("application/json");
@@ -124,24 +114,10 @@ public class EgresosRestController {
         return response.body();
     }
 
-    private static String getFileName(Part part) {
-        for (String cd : part.getHeader("content-disposition").split(";")) {
-            if (cd.trim().startsWith("filename")) {
-                return cd.substring(cd.indexOf('=') + 1).trim().replace("\"", "");
-            }
-        }
-        return null;
-    }
 
     public String cargarNuevoEgreso(Request request, Response response) {
 
         String jsonResponse;
-
-        Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
-        if(usuario == null) {
-            return response.body();
-        }
-
         this.gson  = new GsonBuilder()
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())
                 .create();
@@ -253,6 +229,27 @@ public class EgresosRestController {
         return jsonResponse;
     }
 
+    public String procesarFicheroParte(File uploadDir, Part part) throws IOException {
+        String uploaded_file_name = getFileName(part);
+        // creo el fichero temporal, con un nombre generico generado y la extension del archivo que fue subido
+        Path tempFile = Files.createTempFile(uploadDir.toPath(), "", "." + getExtension(uploaded_file_name));
+        // copiar el stream de lo que me pasaron al fichero temporal
+        InputStream input = part.getInputStream();
+        Files.copy(input, tempFile, StandardCopyOption.REPLACE_EXISTING);
+        return tempFile.toAbsolutePath().toString();
+    }
+
+    /***************Private methods***************************************/
+
+    private static String getFileName(Part part) {
+        for (String cd : part.getHeader("content-disposition").split(";")) {
+            if (cd.trim().startsWith("filename")) {
+                return cd.substring(cd.indexOf('=') + 1).trim().replace("\"", "");
+            }
+        }
+        return null;
+    }
+
     private Egreso asignarEgresoDesde (EgresoRequest egresoRequest) {
         Proveedor proveedor;
         MedioDePago medioDePago;
@@ -296,7 +293,7 @@ public class EgresosRestController {
                                             .map(item->mapearItem(item))
                                             .collect(Collectors.toList());
 
-        Egreso egreso = null;
+        Egreso egreso;
         if(egresoRequest.organizacion_id!=0){
         	if(egresoRequest.tipo==0) {
         		EntidadJuridica entidadJuridica=repoEntidadJuridica.buscar(egresoRequest.organizacion_id);
@@ -325,12 +322,13 @@ public class EgresosRestController {
 
         	}
         }
-        
+        else
+            return null;
 
         Repositorio<Egreso> repoEgresos = new Repositorio<>(new DaoHibernate<>(Egreso.class));
 
         repoEgresos.agregar(egreso);
-            //Modificar items con el egreso, o sea linkearlos
+        //Modificar items con el egreso, o sea linkearlos
         relacionarItemsConEgreso(items,egreso);
 
         return egreso;
@@ -426,6 +424,7 @@ public class EgresosRestController {
                         .anyMatch(unRevisor->unRevisor.getId() == estandar.getId());
     }
 
+    /*********************DTOs(Inner Class)******************************/
     private class ArchivosSubidosResponse {
         public int code;
         public String message;
