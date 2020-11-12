@@ -13,7 +13,9 @@ import Domain.Entities.ApiPaises.Pais;
 import Domain.Entities.ApiPaises.Provincia;
 import Domain.Entities.CategorizadorDeEmpresas.Sector;
 import Domain.Entities.ClasesParciales.EntidadBaseDato;
-import Domain.Entities.ClasesParciales.OrganizacionDato;
+import Domain.Entities.ClasesParciales.EntidadBaseNueva;
+import Domain.Entities.ClasesParciales.EntidadJuridicaDato;
+import Domain.Entities.ClasesParciales.EntidadJuridicaNueva;
 import Domain.Entities.ClasesParciales.OrganizacionPropia;
 import Domain.Entities.ClasesParciales.SectorDato;
 import Domain.Entities.Organizacion.EntidadBase;
@@ -30,11 +32,25 @@ public class OrganizacionController {
 
 	private Repositorio<Sector> repoSector;
 	private Repositorio<EntidadJuridica> repoEntidad;
+	private Repositorio<EntidadBase> repoEntidadBase;
 	private Repositorio<Pais> repoPais;
 	private Repositorio<Provincia> repoProvincia;
 	private Repositorio<Ciudad> repoCiudad;
 	
 	
+	
+	
+	public OrganizacionController() {
+		this.repoSector = new Repositorio<Sector>(new DaoHibernate<Sector>(Sector.class));
+		this.repoEntidad = new Repositorio<EntidadJuridica>(new DaoHibernate<EntidadJuridica>(EntidadJuridica.class));
+		this.repoEntidadBase= new Repositorio<EntidadBase>(new DaoHibernate<EntidadBase>(EntidadBase.class));
+		this.repoPais = new Repositorio<Pais>(new DaoHibernate<Pais>(Pais.class));
+		this.repoProvincia = new Repositorio<Provincia>(new DaoHibernate<Provincia>(Provincia.class));
+		this.repoCiudad = new Repositorio<Ciudad>(new DaoHibernate<Ciudad>(Ciudad.class));
+		
+	      
+	}
+
 	public String listadoSectores(Request request, Response response){
 		
 		 	Gson gson = new Gson();
@@ -44,8 +60,7 @@ public class OrganizacionController {
 			if(usuario == null) {
 				return response.body();
 			}
-	   	 	this.repoSector = new Repositorio<Sector>(new DaoHibernate<Sector>(Sector.class));
-	      
+	   	 	
 	        try {
 		        listadoSectores= this.repoSector.buscarTodos();
 		        sectorRespuesta.code = 200;
@@ -76,7 +91,50 @@ public class OrganizacionController {
 	        return response.body();
 	}
 	
-	public String crearOrganizacion(Request request,Response response){
+	public String listadoJuridicas(Request request, Response response){
+		
+	 	Gson gson = new Gson();
+        List<EntidadJuridica> listadoJuridicas=new ArrayList<>();
+        JuridicaRespuesta juridicaRespuesta= new JuridicaRespuesta();
+		Administrador usuario = (Administrador) PermisosRestController.verificarSesion(request,response);
+		if(usuario == null) {
+			return response.body();
+		}
+   	 	
+        try {
+	        listadoJuridicas= this.repoEntidad.buscarTodos();
+	        juridicaRespuesta.code = 200;
+	        juridicaRespuesta.message = "Entidades juridicas cargadas exitosamente";
+	        
+	        List<EntidadJuridicaDato> juridicasAEnviar = listadoJuridicas.stream().map(this::mapJuridica).collect(Collectors.toList());      
+	        juridicaRespuesta.juridicas= juridicasAEnviar;
+	        response.status(200);
+        }
+        catch (NullPointerException ex){
+        	juridicaRespuesta.code=404;
+        	juridicaRespuesta.message="No se logró cargar las entidades";
+            response.status(404);
+         }
+        
+        catch(NoResultException nf){
+        	juridicaRespuesta.code=404;
+        	juridicaRespuesta.message="Ninguna entidad registrada, por favor crearla";
+            response.status(404);
+        }
+       
+       
+        String jsonJuridicas= gson.toJson(juridicaRespuesta);
+       
+        response.type("application/json");
+        response.body(jsonJuridicas);
+
+        return response.body();
+}
+	
+	
+	
+	
+	public String crearEntidadBase(Request request,Response response){
 		
 		Gson gson2 = new Gson();
 	
@@ -84,8 +142,39 @@ public class OrganizacionController {
 		if(usuario == null) {
 			return response.body();
 		}
-		this.repoEntidad= new Repositorio<EntidadJuridica>(new DaoHibernate<EntidadJuridica>(EntidadJuridica.class));
-		OrganizacionDato organizacionDato = gson2.fromJson(request.body(),OrganizacionDato.class);
+		EntidadBaseNueva entidadDato = gson2.fromJson(request.body(),EntidadBaseNueva.class);
+		EntidadBase entidad=null;
+		OrganizacionRespuesta organizacionCreada= new OrganizacionRespuesta();
+		try{
+			 entidad=mapEntidadBase(entidadDato);
+			 repoEntidadBase.agregar(entidad);
+             organizacionCreada.code = 200;
+             organizacionCreada.message = "Entidad Base Creada";
+             organizacionCreada.organizacionId=entidad.getId();
+		}
+        catch (NullPointerException ex){
+        	 organizacionCreada.code =  400;
+        	 organizacionCreada.message =  "No se logro crear la entidad base";
+        }
+		
+
+        String jsonOrganizacion = gson2.toJson(organizacionCreada);
+    	response.type("application/json");
+        response.body(jsonOrganizacion);
+
+        return response.body();
+	}
+	
+public String crearEntidadJuridica(Request request,Response response){
+		
+		Gson gson2 = new Gson();
+	
+		Administrador usuario = (Administrador) PermisosRestController.verificarSesion(request,response);
+		if(usuario == null) {
+			return response.body();
+		}
+		
+		EntidadJuridicaNueva organizacionDato = gson2.fromJson(request.body(),EntidadJuridicaNueva.class);
 		EntidadJuridica entidad=mapOrganizacion(organizacionDato);
 		OrganizacionRespuesta organizacionCreada= new OrganizacionRespuesta();
 		try{
@@ -151,18 +240,32 @@ public class OrganizacionController {
 		return base;
 	}
 	
-	public EntidadJuridica mapOrganizacion(OrganizacionDato organizacionDato){
+	public EntidadJuridicaDato mapJuridica(EntidadJuridica entidadJuridica){
+		EntidadJuridicaDato juridica= new EntidadJuridicaDato();
+		juridica.juridicaId=entidadJuridica.getId();
+		juridica.nombreFicticio=entidadJuridica.getNombre();
+		
+		return juridica;
+	}
+	
+	public EntidadBase mapEntidadBase(EntidadBaseNueva entidadBase){
+		EntidadBase base= new EntidadBase();
+		base.setNombre(entidadBase.nombre);
+		base.setDescripcion(entidadBase.descripcion);
+		EntidadJuridica juridica=repoEntidad.buscar(entidadBase.entidadJuridica);
+		base.setEntidadJuridica(juridica);
+		
+		return base;
+	}
+	
+	public EntidadJuridica mapOrganizacion(EntidadJuridicaNueva organizacionDato){
 		EntidadJuridica entidad= new EntidadJuridica();
         
 		entidad.setRazonSocial(organizacionDato.razonSocial);
         entidad.setCuit(organizacionDato.cuit);
         entidad.setNombre(organizacionDato.nombreFicticio);
         entidad.setCodigoDeInscripcionDefinitivaEnIGJ(organizacionDato.codigoDeInscripcionDefinitivaEnIGJ);
-    	
-        this.repoPais = new Repositorio<Pais>(new DaoHibernate<Pais>(Pais.class));
-		this.repoProvincia = new Repositorio<Provincia>(new DaoHibernate<Provincia>(Provincia.class));
-		this.repoCiudad = new Repositorio<Ciudad>(new DaoHibernate<Ciudad>(Ciudad.class));
-		
+    
 		Pais paisElegido = repoPais.buscar(organizacionDato.pais);
 		Provincia provinciaElegida = repoProvincia.buscar(organizacionDato.provincia);
 		
@@ -194,6 +297,13 @@ public class OrganizacionController {
 		public String message;
 		public List<SectorDato> sectores;
 	}
+	
+	public class JuridicaRespuesta{
+		public int code;
+		public String message;
+		public List<EntidadJuridicaDato> juridicas;
+	}
+	
 	
 	public class OrganizacionRespuesta{
 		public int code;

@@ -87,7 +87,8 @@ public class Router {
         Spark.post("/api/operaciones/asociarManualmente",asociacionOperacionesRestController::asociarManualmente);
         Spark.post("/api/categorias/asociar",categoriasController::asociarCategoriaEgreso);
         Spark.post("/api/operaciones/presupuesto", presupuestoRestController::cargarNuevoPresupuesto);
-        Spark.post("/api/organizacion",organizacionController::crearOrganizacion);
+        Spark.post("/api/entidadJuridica",organizacionController::crearEntidadJuridica);
+        Spark.post("/api/entidadBase",organizacionController::crearEntidadBase);
         Spark.get("/api/usuario/organizaciones",organizacionController::listarOrganizacionesPropias);
         Spark.post("/api/operaciones/egreso/cargarArchivos",egresosRestController::cargarArchivoDocumentoComercial);
 

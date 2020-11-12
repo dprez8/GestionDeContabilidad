@@ -304,6 +304,7 @@ public class EgresosRestController {
                 egreso = new BuilderEgresoConcreto()
                             .agregarFechaOperacion(egresoRequest.fechaOperacion)
                             .agregarDatosOrganizacion(entidadJuridica)
+                            .agregarCantidadPresupuestos(egresoRequest.cantidadPresupuestos)
                             .agregarProveedor(proveedor)
                             .agregarPago(pago)
                             .agregarDocumentoComercial(documentoComercial)
