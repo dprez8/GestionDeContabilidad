@@ -29,7 +29,7 @@
 
 <script>
 import axios from 'axios'
-import {convertDate} from '../util/utils'
+import {convertDate, RequestHelper} from '../util/utils'
 
 export default {
     data() {
@@ -49,25 +49,42 @@ export default {
         cargarIngresosAPI(){
             this.ingresosLoading = true;
 
-            axios
-                .get(`/api/operaciones/ingresos`)
-                .then(response => {
-                    var data = response.data;
-                    console.log(data);
+            console.log("something");
 
-                    if(data.code == 200) {
-                        this.ingresos = data.ingresos.map(this.ingresosAPIConverter);
-                    } else if (data.code == 403) {
-                        this.showLoginModal(true);
-                    }
-                })
-                .catch(error => {
+            RequestHelper.get('/api/operaciones/ingresos', {
+                success: (data) => {
+                    this.ingresos = data.ingresos.map(this.ingresosAPIConverter);
+                },
+                notLoggedIn: () => {
+                    this.showLoginModal(true);
+                },
+                error: (error) => {
                     this.errorHandling(error);
-                })
-                .then(() => {
-                    // allways
+                },
+                allways: () => {
                     this.ingresosLoading = false;
-                })
+                }
+            });
+
+            // axios
+            //     .get(`/api/operaciones/ingresos`)
+            //     .then(response => {
+            //         var data = response.data;
+            //         console.log(data);
+
+            //         if(data.code == 200) {
+            //             this.ingresos = data.ingresos.map(this.ingresosAPIConverter);
+            //         } else if (data.code == 403) {
+            //             this.showLoginModal(true);
+            //         }
+            //     })
+            //     .catch(error => {
+            //         this.errorHandling(error);
+            //     })
+            //     .then(() => {
+            //         // allways
+            //         this.ingresosLoading = false;
+            //     })
         },
         ingresosAPIConverter(ingresoAPI) {
             return {

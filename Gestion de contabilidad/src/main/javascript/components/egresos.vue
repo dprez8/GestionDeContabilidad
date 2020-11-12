@@ -44,7 +44,7 @@
 <script>
 import axios from 'axios'
 import egreso from '../components/egreso'
-import {convertDate} from '../util/utils'
+import {convertDate, RequestHelper} from '../util/utils'
 
 export default {
     data() {
@@ -73,24 +73,20 @@ export default {
         cargarEgresosAPI() {
             this.egresosLoading = true;
             
-            axios
-                .get('/api/operaciones/egresos')
-                .then(response => {
-                    var data = response.data;
-
-                    if(data.code == 200) {
-                        this.egresos = data.egresos.map(this.egresosAPIConverter);
-                    } else if (data.code == 403) {
-                        this.showLoginModal(true);
-                    }
-                })
-                .catch(error => {
+            RequestHelper.get('/api/operaciones/egresos', {
+                success: (data) => {
+                    this.egresos = data.egresos.map(this.egresosAPIConverter);
+                },
+                notLoggedIn: () => {
+                    this.showLoginModal(true);
+                },
+                error: (error) => {
                     this.errorHandling(error);
-                })
-                .then(() => {
-                    // allways
+                },
+                allways: () => {
                     this.egresosLoading = false;
-                })
+                }
+            });
         },
         egresosAPIConverter(egresoAPI) {
             return {

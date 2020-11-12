@@ -4,8 +4,8 @@
         <template #cell(tipoItem)="row">
             <b-form-select class="border-0 px-2 bg-transparent" v-model="row.item.tipoItem" @input="addItem">
                 <b-form-select-option :value="null">--Tipo--</b-form-select-option>
-                <b-form-select-option value="0">Producto</b-form-select-option>
-                <b-form-select-option value="1">Servicio</b-form-select-option>
+                <b-form-select-option value="1">Producto</b-form-select-option>
+                <b-form-select-option value="0">Servicio</b-form-select-option>
             </b-form-select>
         </template>
         <template #cell(descripcion)="row">

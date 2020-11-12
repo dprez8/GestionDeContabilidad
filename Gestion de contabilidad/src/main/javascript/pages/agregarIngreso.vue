@@ -144,29 +144,7 @@ export default {
                 always: () => {
                     this.ingresoLoading = false;
                 }
-            })
-
-            // axios
-            //     .post('/api/operaciones/ingreso', ingresoToSend)
-            //     .then(response => {
-            //         var data = response.data;
-
-            //         if(data.code == 200) {
-            //             this.createToast('Guardado exitoso', 'Se dio de alta el ingreso correctamente', 'success');
-            //             this.$router.push('/operaciones/ingreso');
-            //         } else if (data.code == 403) {
-            //             this.showLoginModal(true);
-            //         } else if (data.code == 400) {
-            //             this.falloCargarIngreso = true;
-            //         }
-            //     })
-            //     .catch(error => {
-            //         this.errorHandling(error);
-            //     })
-            //     .then(() => {
-            //         // allways
-            //         this.ingresoLoading = false;
-            //     })
+            });
         },
     }
 }

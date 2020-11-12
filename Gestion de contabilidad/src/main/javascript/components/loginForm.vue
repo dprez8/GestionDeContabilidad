@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import {capitalizeFirstLetter, getCookie} from '../util/utils.js'
+import {capitalizeFirstLetter, getCookie, RequestHelper} from '../util/utils.js'
 import axios from 'axios'
 
 export default {
@@ -52,22 +52,21 @@ export default {
             if(this.user != "" && this.pass != "") {
                 this.loginLoading = true;
 
-                axios
-                    .post('/api/login', {
-                        username: this.user,
-                        password: this.pass
-                    })
-                    .then(response => {
-                        var data = response.data;
-                        if(data.code == 200) {
-                            document.cookie = `username=${data.nombre}; path=/`;
-                            document.cookie = `organizacion=${data.organizacion.razonSocial}; path=/`;
-                            this.loginSuccess();
-                        } else if (data.code == 404) {
-                            this.loginState = false;
-                        }
-                    })
-                    .catch(error => {
+                var loginData = {
+                    username: this.user,
+                    password: this.pass
+                }
+
+                RequestHelper.post('/api/login', loginData, {
+                    success: (data) => {
+                        document.cookie = `username=${data.nombre}; path=/`;
+                        document.cookie = `organizacion=${data.organizacion.razonSocial}; path=/`;
+                        this.loginSuccess();
+                    },
+                    empty: () => {
+                        this.loginState = false;
+                    },
+                    error: (error) => {
                         this.$bvToast.toast(`Ocurrió un error al iniciar sesión`, {
                             title: 'Error',
                             variant: 'danger',
@@ -75,10 +74,11 @@ export default {
                             solid: true,
                             appendToToast: true
                         });
-                    })
-                    .then(() => {
+                    },
+                    allways: () => {
                         this.loginLoading = false;
-                    });
+                    }
+                });
             }
         },
         loginSuccess() {
