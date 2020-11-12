@@ -36,6 +36,12 @@ public class BuilderEgresoConcreto implements IBuilderEgreso {
     }
     
     @Override
+    public IBuilderEgreso agregarCantidadPresupuestos(int cantidad){
+    	this.egreso.setCantidadPresupuestos(cantidad);
+    	return this;
+    }
+    
+    @Override
     public IBuilderEgreso agregarDocumentoComercial(DocumentoComercial documentoComercial) {
         this.egreso.setDocumento(documentoComercial);
         return this;

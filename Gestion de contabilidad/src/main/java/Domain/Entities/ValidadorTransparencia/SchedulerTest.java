@@ -17,7 +17,7 @@ public class SchedulerTest {
     public static void main(String[] args) throws Exception {
 
         /**Creacion de los validadores*/
-        ValidarCantidadMinima validacionMinima = new ValidarCantidadMinima(1);
+        ValidarCantidadMinima validacionMinima = new ValidarCantidadMinima();
         ValidarConPresupuesto validacionPresupuesto = new ValidarConPresupuesto();
         ValidarMenorValor validacionMenorValor = new ValidarMenorValor();
 
@@ -63,6 +63,7 @@ public class SchedulerTest {
         Egreso unaCompra = egresoBuilder.agregarProveedor(lautaroIturregui)
                 .agregarFechaOperacion(LocalDate.now())
                 .agregarPago(unPago)
+                .agregarCantidadPresupuestos(1)
                 .agregarDocumentoComercial(unDocumento)
                 .agregarDatosOrganizacion(unaEntidad)
                 .agregarItems(RAMs, placasDeVideo)

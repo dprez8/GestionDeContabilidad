@@ -183,6 +183,7 @@ public class TestDominio {
         Egreso unaCompra = egresoBuilder.agregarProveedor(lautaroIturregui)
                 .agregarFechaOperacion(LocalDate.now())
                 .agregarPago(unPago)
+                .agregarCantidadPresupuestos(1)
                 .agregarDocumentoComercial(unDocumento)
                 .agregarDatosOrganizacion(pepsi)
                 .agregarItems(RAMs,placasDeVideo)
@@ -253,7 +254,7 @@ public class TestDominio {
         EntidadJuridica pepsi = this.repoEntidadJuridica.buscar(1);
 
         /**Creacion de los validadores*/
-        ValidarCantidadMinima validacionMinima = new ValidarCantidadMinima(1);
+        ValidarCantidadMinima validacionMinima = new ValidarCantidadMinima();
         ValidarConPresupuesto validacionPresupuesto = new ValidarConPresupuesto();
         ValidarMenorValor validacionMenorValor = new ValidarMenorValor();
 
