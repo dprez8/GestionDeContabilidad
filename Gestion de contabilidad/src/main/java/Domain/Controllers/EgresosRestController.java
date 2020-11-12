@@ -27,43 +27,36 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+import Domain.Controllers.Utils.FormFileManager;
 
 import static org.apache.commons.io.FilenameUtils.getExtension;
 
 /*****************************************************************/
-public class EgresosRestController {
+public class EgresosRestController extends GenericController {
     private Repositorio<EntidadJuridica> repoEntidadJuridica;
     private Repositorio<EntidadBase> repoEntidadBase;
     private List<Egreso> egresosMemo;
-    private Respuesta respuesta;
-    private Gson gson;
 
     public EgresosRestController(){
+        super();
         this.repoEntidadJuridica = new Repositorio<>(new DaoHibernate<>(EntidadJuridica.class));
         this.repoEntidadBase     = new Repositorio<>(new DaoHibernate<>(EntidadBase.class));
         this.egresosMemo         = new ArrayList<>();
-        this.respuesta           = new Respuesta();
     }
 
+    private static List<String> tiposDocumentoComercial = Arrays.asList("application/pdf",
+            "text/html",
+            "text/plain",
+            "image/jpeg",
+            "image/x-png",
+            "application/msword");
 
-    public String procesarFicheroParte(File uploadDir, Part part) throws IOException {
-        String uploaded_file_name = getFileName(part);
-        // creo el fichero temporal, con un nombre generico generado y la extension del archivo que fue subido
-        Path tempFile = Files.createTempFile(uploadDir.toPath(), "", "." + getExtension(uploaded_file_name));
-        // copiar el stream de lo que me pasaron al fichero temporal
-        InputStream input = part.getInputStream();
-        Files.copy(input, tempFile, StandardCopyOption.REPLACE_EXISTING);
-        return tempFile.toAbsolutePath().toString();
-    }
 
     public String cargarArchivoDocumentoComercial(Request request, Response response) throws IOException, ServletException {
 
@@ -75,8 +68,12 @@ public class EgresosRestController {
             return response.body();
         }
 
-        File uploadDir = new File("src/main/resources/public/upload");
-        uploadDir.mkdir(); // create the upload directory if it doesn't exist
+        File uploadDir = null;
+        try {
+            uploadDir = FormFileManager.crearDirectorio();
+        } catch (Exception exception) {
+            return error(response, "Error interno del servidor al crear directorio para la carga de ficheros");
+        }
 
         String location = "temp";          // the directory location where files will be stored temporarily
         long maxFileSize = 12000000;       // the maximum size allowed for uploaded files
@@ -91,26 +88,25 @@ public class EgresosRestController {
 
         HashMap<String, String> filePaths = new HashMap<>();
         for (Part part : request.raw().getParts()) {
-            if (part.getContentType().contains("text")){
-                // TODO: me mandaron un "texto" y no un archivo, corroborar que los .txt no terminan acá
-                this.respuesta.setCode(400);
-                this.respuesta.setMessage("No se pueden subir archivos de texto");
-                jsonResponse = this.gson.toJson(this.respuesta);
-                response.body(jsonResponse);
-                return response.body();
-            } else {
-                String path = procesarFicheroParte(uploadDir, part);
+            String contentType = part.getContentType();
+            if (tiposDocumentoComercial.contains(contentType)){
+                String path = "";
+                try {
+                    path = FormFileManager.procesarFicheroParte(part);
+                } catch (Exception exception) {
+                    return error(response, "Problema al procesar el fichero");
+                }
+
                 if (path != "") {
                     filePaths.put(part.getName(), path);
                 } else {
-                    this.respuesta.setCode(400);
-                    this.respuesta.setMessage("Problema al subir un fichero");
-                    jsonResponse = this.gson.toJson(this.respuesta);
-                    response.body(jsonResponse);
-                    return response.body();
+                    return error(response, "Problema al subir un fichero");
                 }
+            } else {
+                return error(response, "Se encontró un tipo de archivo no válido");
             }
         }
+
         this.respuesta.setCode(200);
         this.respuesta.setMessage("Se produjo exitosamente la carga de archivos.");
 
@@ -122,15 +118,6 @@ public class EgresosRestController {
         jsonResponse = this.gson.toJson(archivosSubidosResponse);
         response.body(jsonResponse);
         return response.body();
-    }
-
-    private static String getFileName(Part part) {
-        for (String cd : part.getHeader("content-disposition").split(";")) {
-            if (cd.trim().startsWith("filename")) {
-                return cd.substring(cd.indexOf('=') + 1).trim().replace("\"", "");
-            }
-        }
-        return null;
     }
 
     public String cargarNuevoEgreso(Request request, Response response) {
@@ -283,7 +270,8 @@ public class EgresosRestController {
         documentoComercial.setFechaDePedido(egresoRequest.documentoComercial.fechaDePedido);
         documentoComercial.setFechaDeEntrega(egresoRequest.documentoComercial.fechaDeEntrega);
         documentoComercial.setDescripcion(egresoRequest.documentoComercial.descripcion);
-        
+        documentoComercial.setPathAdjunto(FormFileManager.realPath(egresoRequest.documentoComercial.nombreFicheroDocumento));
+
 
         Repositorio<Pago> repoPagos = new Repositorio<>(new DaoHibernate<>(Pago.class));
         Repositorio<DocumentoComercial> repoDocumentos = new Repositorio<>(new DaoHibernate<>(DocumentoComercial.class));

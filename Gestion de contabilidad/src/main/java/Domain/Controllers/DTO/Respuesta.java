@@ -19,4 +19,11 @@ public class Respuesta {
      public void setMessage(String message) {
         this.message = message;
     }
+
+    public Respuesta() {}
+
+     public Respuesta(int code, String message) {
+         this.code = code;
+         this.message = message;
+     }
 }
