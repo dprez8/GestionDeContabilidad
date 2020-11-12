@@ -14,7 +14,7 @@ module.exports = {
         port: 9000,
         disableHostCheck: true,
         proxy: {
-            '^/*': {
+            '^/api': {
                 target: 'http://localhost:80',
                 changeOrigin: true
             },

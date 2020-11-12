@@ -8,5 +8,5 @@ public class DocumentoRequest {
     public LocalDate fechaDePedido;
     public LocalDate fechaDeEntrega;
     public String descripcion;
-    //public String imagenDelDocumento;
+    public String nombreFicheroDocumento;
 }

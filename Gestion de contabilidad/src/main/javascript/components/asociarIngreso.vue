@@ -24,6 +24,7 @@
 
 <script>
 import axios from 'axios'
+import {RequestHelper} from '../util/utils.js'
 
 export default {
     props: {
@@ -42,24 +43,38 @@ export default {
         cargarIngresosAPI(){            
             this.ingresosLoading = true;
 
-            axios
-                .get('/api/operaciones/ingresos')
-                .then(response => {
-                    var data = response.data;
-
-                    if(data.code == 200) {
-                        this.ingresosSelect = data.ingresos.map(this.ingresosAPIConverter);
-                    } else if (data.code == 403) {
-                        this.showLoginModal(true);
-                    }
-                })
-                .catch(error => {
+            RequestHelper.get('/api/operaciones/ingresos', {
+                success: (data) => {
+                    this.ingresosSelect = data.ingresos.map(this.ingresosAPIConverter);
+                },
+                notLoggedIn: () => {
+                    this.showLoginModal(true);
+                },
+                error: (error) => {
                     this.errorHandling(error);
-                })
-                .then(() => {
-                    // allways
+                },
+                always: () => {
                     this.ingresosLoading = false;
-                })
+                }
+            });
+            // axios
+            //     .get('/api/operaciones/ingresos')
+            //     .then(response => {
+            //         var data = response.data;
+
+            //         if(data.code == 200) {
+            //             this.ingresosSelect = data.ingresos.map(this.ingresosAPIConverter);
+            //         } else if (data.code == 403) {
+            //             this.showLoginModal(true);
+            //         }
+            //     })
+            //     .catch(error => {
+            //         this.errorHandling(error);
+            //     })
+            //     .then(() => {
+            //         // always
+            //         this.ingresosLoading = false;
+            //     })
         },
         ingresosAPIConverter(ingresoAPI) {
             return {
