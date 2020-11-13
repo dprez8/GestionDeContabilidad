@@ -34,9 +34,9 @@ class RequestHelper {
 	* @param {String} path The name to say hi to
 	* @param {Object} callback The name to say hi to
 	*/
-	static get(path, callback) {
+	static get(path, callback, config) {
 		axios
-			.get(path)
+			.get(path, config)
 			.then(response => {
 				var data = response.data;
 
@@ -77,9 +77,9 @@ class RequestHelper {
 	* @param {String} path The name to say hi to
 	* @param {Object} callback The name to say hi to
 	*/
-	static post(path, data, callback) {
+	static post(path, data, callback, config) {
 		axios
-			.post(path, data)
+			.post(path, data, config)
 			.then(response => {
 				var data = response.data;
 
