@@ -2,6 +2,9 @@
 package Server;
 
 import Domain.Controllers.*;
+import Domain.Controllers.jwt.AuthController;
+import Domain.Controllers.jwt.AuthFilter;
+import Domain.Controllers.jwt.TokenService;
 import Domain.Entities.Organizacion.Organizacion;
 import Domain.Entities.ValidadorTransparencia.*;
 import Domain.Repositories.Daos.DaoHibernate;
@@ -15,11 +18,15 @@ import spark.template.handlebars.HandlebarsTemplateEngine;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Router {
     private static HandlebarsTemplateEngine engine;
-
     private static Repositorio<Organizacion> repoOrganizaciones = new Repositorio<>(new DaoHibernate<>(Organizacion.class));
+    private static final ScheduledExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadScheduledExecutor();
+
 
     private static void initEngine(){
         Router.engine = HandlebarsTemplateEngineBuilder
@@ -41,9 +48,6 @@ public class Router {
     }
 
     private static void rutasVista() {
-        Spark.get("/upload/*", (req, res) -> {
-                    return "xd";
-                });
         Spark.get("/*", (req, res) ->
                         new ModelAndView(new HashMap(),
                                 "../public/index.html"),
@@ -51,20 +55,43 @@ public class Router {
     }
 
     private static void rutasApi() {
+        String SECRET_JWT = "secret_jwt";
+        String TOKEN_PREFIX = "Bearer";
+        TokenService tokenService = new TokenService(SECRET_JWT);
+        AuthFilter authFilter = new AuthFilter("/auth",tokenService);
+
+        AuthController authController           = new AuthController(tokenService);
         LoginRestController loginRestController = new LoginRestController();
+
         DireccionPostalController direccionController = new DireccionPostalController();
         ProveedorController proveedorController = new ProveedorController();
         MedioDePagoController medioController = new MedioDePagoController();
         BandejaDeMensajesRestController bandejaDeMensajesRestController= new BandejaDeMensajesRestController();
-        EgresosRestController egresosRestController = new EgresosRestController();
+        EgresosRestController egresosRestController = new EgresosRestController(tokenService,TOKEN_PREFIX);
         CriteriosCategoriasController categoriasController = new CriteriosCategoriasController();
         IngresosRestController ingresosRestController = new IngresosRestController();
         AsociacionOperacionesRestController asociacionOperacionesRestController = new AsociacionOperacionesRestController();
         PresupuestoRestController presupuestoRestController = new PresupuestoRestController();
         OrganizacionController organizacionController = new OrganizacionController();
-        
+
+        Spark.before("/api/*",authFilter);
+
+        Spark.post("/auth/logout", authController::logout);
+        Spark.post("/auth/login",authController::login );
+        Spark.get("/auth/me", authController::me);
+        Spark.post("/auth/token", authController::refresh);
+
+
+        // PERIODIC TOKENS CLEAN UP
+        EXECUTOR_SERVICE.scheduleAtFixedRate(() -> {
+            System.out.println("Removing expired tokens");
+            tokenService.removeExpired();
+        }, 60, 60, TimeUnit.SECONDS); // every minute
+
+
         Spark.post("/api/login",loginRestController::login);
         Spark.get("/api/login",loginRestController::sessionStatus);
+
         Spark.get("/api/pais",direccionController::listadoDePaises);
         Spark.get("/api/pais/:clavePais/provincia",direccionController::listadoDeProvincias);
         Spark.get("/api/pais/:clavePais/provincia/:claveProvincia/ciudad",direccionController::listadoDeCiudades);
@@ -98,10 +125,6 @@ public class Router {
             response.type("application/json");
         });
 
-
-        Spark.after("/api/bandeja/configurar",(request, response) -> {
-            response.type("application/json");
-        });
     }
     private static void verificarTareasProgramadas() {
         List<Organizacion> organizaciones = repoOrganizaciones.buscarTodos();

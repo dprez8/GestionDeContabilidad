@@ -108,7 +108,12 @@
 			<artifactId>handlebars-humanize</artifactId>
 			<version>4.2.0</version>
 		</dependency>
-
-    </dependencies>
+		<!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.1</version>
+		</dependency>
+	</dependencies>
 
 </project>
