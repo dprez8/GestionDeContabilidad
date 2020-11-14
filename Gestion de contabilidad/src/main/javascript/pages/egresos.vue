@@ -70,7 +70,7 @@ export default {
             this.seleccionarEgreso();
             this.egresoKey = !this.egresoKey;
         },
-        cargarEgresosAPI() {
+        cargarEgresosAPI(done) {
             this.egresosLoading = true;
             
             RequestHelper.get('/api/operaciones/egresos', {

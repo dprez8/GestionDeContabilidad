@@ -1,7 +1,23 @@
 <template>
     <!-- template para nuevo egreso -->
     <div class="pt-3">
-        <b-overlay spinner-variant="light" variant="primary" :show="egresoLoading && !falloCarga" no-wrap></b-overlay>
+        <b-overlay spinner-variant="light" variant="primary" :show="egresoLoading && !falloCarga" no-wrap>
+            <template #overlay>
+                <div>
+                    <div class="d-flex justify-content-center">
+                        <b-spinner variant="light" class="flex-shrink-0"></b-spinner>
+                    </div>
+                    <div class="mt-4" v-if="egreso.archivo">
+                        <p class="text-light">Subiendo archivo</p>
+                        <b-progress class="progress-min-width bg-transparent" variant="light"  max="100" height="2rem">
+                            <b-progress-bar :value="archivoProgress">
+                                <strong class="text-secondary">{{ archivoProgress }}%</strong>
+                            </b-progress-bar>
+                        </b-progress>
+                    </div>
+                </div>
+            </template>
+        </b-overlay>
         <div class="row mb-4 mx-2">
             <div class="col py-2 text-center">
                 <h2>Cargar nuevo egreso</h2>
@@ -328,8 +344,9 @@
         <b-modal id="modal-agregar-presupuesto" size="xl" hide-footer scrollable centered title="Crear nuevo Presupuesto">
             <agregar-presupuesto
                 ref="agregarPresupuesto"
-                v-bind:confirmarAccion="confirmarNuevoPresupuesto"
-                v-bind:cancelarAccion="cancelarNuevoPresupuesto"
+                :buscarEgresos="false"
+                :confirmarAccion="confirmarNuevoPresupuesto"
+                :cancelarAccion="cancelarNuevoPresupuesto"
             ></agregar-presupuesto>
         </b-modal>
     </div>
@@ -359,11 +376,10 @@ export default {
                     numeroDocumento: null,
                     fechaDePedido: null,
                     fechaDeEntrega: null,
-                    descripcion: null,
-                    imagenDelDocumento: null,
-                    archivo: null
+                    descripcion: null
                 },
-                items: []
+                items: [],
+                archivo: null
             },
             idEgreso: null,
             falloInput: false,
@@ -389,6 +405,7 @@ export default {
             proveedoresLoading: false,
             mediosDePagoLoading: false,
             egresoLoading: false,
+            archivoProgress: 0,
 
             suscribirse: false,
             proveedorAAgregar: null,
@@ -432,8 +449,8 @@ export default {
         'egreso.archivo'() {
             if(this.egreso.archivo) {
                 // Si es imagen mostrar la imagen
-                if( this.egreso.archivo.type == "image/png" ||
-                    this.egreso.archivo.type == "image/jpeg" ||
+                if( this.egreso.archivo.type == "image/png"   ||
+                    this.egreso.archivo.type == "image/jpeg"  ||
                     this.egreso.archivo.type == "image/gif") {
                         var reader = new FileReader();
                         reader.onload = () => {
@@ -453,19 +470,35 @@ export default {
             console.log(this.egreso.archivo);
 
             var request = new FormData();
-            request.append('fasdasdassadsad', this.egreso.archivo);
+            request.append('arhivo', this.egreso.archivo);
+
+            const config = {
+                onUploadProgress: (progressEvent) => {
+                var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                    this.archivoProgress = percentCompleted;
+                }
+            }
+
+            this.egresoLoading = true;
 
             RequestHelper.post('/api/operaciones/egreso/cargarArchivos', request, {
                 success: (data) => {
                     console.log(data);
+                },
+                notLoggedIn: (data) => {
+                    this.showLoginModal(false);
                 },
                 failed: (data) => {
                     console.log(data);
                 },
                 error: (error) => {
                     console.log(error);
+                },
+                always: () => {
+                    this.egresoLoading = false;
+                    this.archivoProgress = 0;
                 }
-            });
+            }, config);
 
         },
         confirmar() {
@@ -520,30 +553,6 @@ export default {
                         this.falloCarga = true;
                     }
                 });
-
-                // axios
-                //     .post('/api/proveedor', this.proveedorAAgregar)
-                //     .then(response => {
-                //         var data = response.data;
-
-                //         if(data.code == 200) {
-                //             this.egreso.proveedor = data.id;
-                //             this.crearEgresoAPI()
-                //         } else if (data.code == 403) {
-                //             this.showLoginModal(true);
-                //         } else if (data.code == 400) {
-                //             this.falloCarga = true;
-                //         } else {
-                //             this.falloCarga = true;
-                //         }
-                //     })
-                //     .catch(error => {
-                //         this.errorHandling(error);
-                //         this.falloCarga = true;
-                //     })
-                //     .then(() => {
-                //         // always
-                //     })
             } else {
                 this.crearEgresoAPI()
             }
@@ -572,30 +581,6 @@ export default {
                     this.falloCarga = true;
                 }
             });
-
-            // axios
-            //     .post('/api/operaciones/egreso', egresoToSend)
-            //     .then(response => {
-            //         var data = response.data;
-
-            //         if(data.code == 200) {
-            //             this.idEgreso = data.id;
-            //             this.crearPresupuestosAPI();
-            //         } else if (data.code == 403) {
-            //             this.showLoginModal(true);
-            //         } else if (data.code == 400) {
-            //             this.falloCarga = true;
-            //         } else {
-            //             this.falloCarga = true;
-            //         }
-            //     })
-            //     .catch(error => {
-            //         this.errorHandling(error);
-            //         this.falloCarga = true;
-            //     })
-            //     .then(() => {
-            //         // always
-            //     })
         },
         crearPresupuestosAPI() {
             // Proximamente
@@ -630,29 +615,6 @@ export default {
                         this.falloCarga = true;
                     }
                 });
-
-                // axios
-                //     .post('/api/categorias/asociar', request)
-                //     .then(response => {
-                //         var data = response.data;
-
-                //         if(data.code == 200) {
-                //             this.asociarIngresoAPI();
-                //         } else if (data.code == 403) {
-                //             this.showLoginModal(true);
-                //         } else if (data.code == 400) {
-                //             this.falloCarga = true;
-                //         } else {
-                //             this.falloCarga = true;
-                //         }
-                //     })
-                //     .catch(error => {
-                //         this.errorHandling(error);
-                //         this.falloCarga = true;
-                //     })
-                //     .then(() => {
-                //         // always
-                //     })
             } else {
                 this.asociarIngresoAPI();
             }
@@ -684,30 +646,6 @@ export default {
                         this.falloCarga = true;
                     }
                 });
-
-                // axios
-                //     .post('/api/operaciones/asociarManualmente', request)
-                //     .then(response => {
-                //         var data = response.data;
-
-                //         if(data.code == 200) {
-                //             this.createToast('Guardado exitoso', 'Se dio de alta el egreso correctamente', 'success');
-                //             this.$router.push('/operaciones/egreso');
-                //         } else if (data.code == 403) {
-                //             this.showLoginModal(true);
-                //         } else if (data.code == 400) {
-                //             this.falloCarga = true;
-                //         } else {
-                //             this.falloCarga = true;
-                //         }
-                //     })
-                //     .catch(error => {
-                //         this.errorHandling(error);
-                //         this.falloCarga = true;
-                //     })
-                //     .then(() => {
-                //         // always
-                //     })
             } else {
                 this.$router.push('/operaciones/egreso');
             }
@@ -729,25 +667,6 @@ export default {
                     this.proveedoresLoading = false;
                 }
             });
-
-            // axios
-            //     .get('/api/proveedores')
-            //     .then(response => {
-            //         var data = response.data;
-
-            //         if(data.code == 200) {
-            //             this.proveedoresSelect = data.data.map(this.proveedoresAPIConverter);
-            //         } else if (data.code == 403) {
-            //             this.showLoginModal(true);
-            //         }
-            //     })
-            //     .catch(error => {
-            //         this.errorHandling(error);
-            //     })
-            //     .then(() => {
-            //         // always
-            //         this.proveedoresLoading = false;
-            //     })
         },
         proveedoresAPIConverter(proveedor) {
             return {
@@ -772,25 +691,6 @@ export default {
                     this.mediosDePagoLoading = false;
                 }
             });
-
-            // axios
-            //     .get('/api/medios')
-            //     .then(response => {
-            //         var data = response.data;
-
-            //         if(data.code == 200) {
-            //             this.mediosDePagoSelect = data.data.map(this.mediosDePagoAPIConverter);
-            //         } else if (data.code == 403) {
-            //             this.showLoginModal(true);
-            //         }
-            //     })
-            //     .catch(error => {
-            //         this.errorHandling(error);
-            //     })
-            //     .then(() => {
-            //         // always
-            //         this.mediosDePagoLoading = false;
-            //     })
         },
         mediosDePagoAPIConverter(medioDePago) {
             return {
@@ -872,5 +772,8 @@ export default {
     .custom-file-label::after {
         display: none;
         content: "" !important;
+    }
+    .progress-min-width{
+        min-width: 50vw;
     }
 </style>
