@@ -23,22 +23,14 @@ import java.util.stream.Collectors;
 
 public class PresupuestoRestController {
     private Repositorio<Presupuesto> repoPresupuestos;
-    private Repositorio<Proveedor> repoProveedores;
-    private Repositorio<DocumentoComercial> repoDocumentos;
-    private Repositorio<TipoDocumento> repoTipoDocumento;
     private Repositorio<Egreso> repoEgresos;
-    private Repositorio<Producto> repoProductos;
     private Repositorio<ItemPresupuesto> repoItems;
     private Respuesta respuesta;
     private Gson gson;
 
     public PresupuestoRestController() {
         this.repoPresupuestos   = new Repositorio<>(new DaoHibernate<>(Presupuesto.class));
-        this.repoProveedores    = new Repositorio<>(new DaoHibernate<>(Proveedor.class));
-        this.repoDocumentos     = new Repositorio<>(new DaoHibernate<>(DocumentoComercial.class));
-        this.repoTipoDocumento  = new Repositorio<>(new DaoHibernate<>(TipoDocumento.class));
         this.repoEgresos        = new Repositorio<>(new DaoHibernate<>(Egreso.class));
-        this.repoProductos      = new Repositorio<>(new DaoHibernate<>(Producto.class));
         this.repoItems          = new Repositorio<>(new DaoHibernate<>(ItemPresupuesto.class));
         this.respuesta          = new Respuesta();
     }
@@ -95,50 +87,49 @@ public class PresupuestoRestController {
 
         List<ItemPresupuesto> items = presupuestoRequest.items
                 .stream()
-                .map(item->mapearItem(item))
+                .map(item->mapearItem(item,presupuesto))
                 .collect(Collectors.toList());
+        
+        for(ItemPresupuesto itemPresupuesto:items){
+        	presupuesto.addItems(itemPresupuesto);
+        }
 
         this.repoPresupuestos.agregar(presupuesto);
-        relacionarItemsConPresupuesto(items,presupuesto);
+        //relacionarItemsConPresupuesto(items,presupuesto);
         return presupuesto;
     }
 
-    private ItemPresupuesto mapearItem(ItemRequest itemRequest) {
+    private ItemPresupuesto mapearItem(ItemRequest itemRequest,Presupuesto presupuesto) {
         ItemPresupuesto itemPresupuesto = new ItemPresupuesto();
+        Item item=null;
         itemPresupuesto.setPrecio(itemRequest.precio);
         itemPresupuesto.setCantidad(itemRequest.cantidad);
+        Repositorio<Item> repoItem = new Repositorio<>(new DaoHibernate<>(Item.class));
+        Repositorio<TipoItem> repoTipoItem = new Repositorio<>(new DaoHibernate<>(TipoItem.class));
 
-        Producto producto = buscarProducto(itemRequest.nombreTipo.toLowerCase());
-        if (producto == null) {
-            producto = new Producto();
-            producto.setNombre(itemRequest.nombreTipo);
-
-            this.repoProductos.agregar(producto);
+        
+        if(itemRequest.itemId==0) {//si el item es nuevo
+        	TipoItem tipoItem=repoTipoItem.buscar(itemRequest.tipoItem);
+        	item=new Item(itemRequest.descripcion,tipoItem);
+        	repoItem.agregar(item);
         }
-        itemPresupuesto.setProducto(producto);
-
-        this.repoItems.agregar(itemPresupuesto);
+        else{//si eligio un item que ya se encontraba en la base de datos
+        	item=repoItem.buscar(itemRequest.itemId);
+        }
+        
+        itemPresupuesto.setItem(item);
+        itemPresupuesto.setPresupuesto(presupuesto);
+        itemPresupuesto.setItemEgresoAsociado(presupuesto.getEgresoAsociado().getItems().stream().filter(itemsEgreso -> itemsEgreso.getItem().equals(itemPresupuesto.getItem())).findFirst().get());
 
         return itemPresupuesto;
     }
 
-    private Producto buscarProducto(String nombreProducto) {
-        try {
-            Producto producto= (Producto) EntityManagerHelper
-                    .createQuery("from Producto where nombre_producto = :nombre")
-                    .setParameter("nombre",nombreProducto)
-                    .getSingleResult();
-            return producto;
-        }
-        catch (NoResultException ex) {
-            return null;
-        }
-    }
+
 
     private void relacionarItemsConPresupuesto(List<ItemPresupuesto> items, Presupuesto presupuesto) {
         items.forEach(unItemPresupuesto -> {
             unItemPresupuesto.setPresupuesto(presupuesto);
-            unItemPresupuesto.setItemEgresoAsociado(presupuesto.getEgresoAsociado().getItems().stream().filter(itemsEgreso -> itemsEgreso.getTipo().equals(unItemPresupuesto.getProducto())).findFirst().get());
+            unItemPresupuesto.setItemEgresoAsociado(presupuesto.getEgresoAsociado().getItems().stream().filter(itemsEgreso -> itemsEgreso.getItem().equals(unItemPresupuesto.getItem())).findFirst().get());
             this.repoItems.modificar(unItemPresupuesto);
         });
     }

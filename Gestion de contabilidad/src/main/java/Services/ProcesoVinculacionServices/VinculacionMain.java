@@ -1,8 +1,9 @@
 package Services.ProcesoVinculacionServices;
 
 
+import Domain.Entities.DatosDeOperaciones.Item;
 import Domain.Entities.DatosDeOperaciones.ItemEgreso;
-import Domain.Entities.DatosDeOperaciones.Producto;
+import Domain.Entities.DatosDeOperaciones.TipoItem;
 import Domain.Entities.Operaciones.Egreso.BuilderEgresoConcreto;
 import Domain.Entities.Operaciones.Egreso.Egreso;
 import Domain.Entities.Operaciones.Ingreso;
@@ -19,9 +20,10 @@ public class VinculacionMain {
     public static void main(String[] args) throws IOException {
         //PREPARACION DE EGRESOS E INGRESOS (ESTOS VENDRIAN DE ALGUNA PARTE DEL SISTEMA)
 
-        Producto ram = new Producto("4GB DDR4");
-        Producto placaDeVideo = new Producto("RTX 3090");
-        Producto monitor = new Producto("4k 144hz");
+    	TipoItem producto= new TipoItem("producto");
+        Item ram = new Item("4GB DDR4",producto);
+        Item placaDeVideo = new Item("RTX 3090",producto);
+        Item monitor = new Item("4k 144hz",producto);
         ItemEgreso rams = new ItemEgreso(ram, 1, 1000.0);
         ItemEgreso placasDeVideo = new ItemEgreso(placaDeVideo, 1, 2500.0);
         ItemEgreso monitores = new ItemEgreso(monitor, 1, 5000.0);

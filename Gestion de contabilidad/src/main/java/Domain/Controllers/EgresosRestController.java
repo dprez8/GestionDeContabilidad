@@ -261,6 +261,7 @@ public class EgresosRestController {
         Repositorio<Proveedor> repoProveedores   = new Repositorio<>(new DaoHibernate<>(Proveedor.class));
         Repositorio<TipoDocumento> repoTipoDocumento = new Repositorio<>(new DaoHibernate<>(TipoDocumento.class));
         Repositorio<MedioDePago> repoMediosDePagos = new Repositorio<>(new DaoHibernate<>(MedioDePago.class));
+        Repositorio<Egreso> repoEgresos = new Repositorio<>(new DaoHibernate<>(Egreso.class));
 
         try {
              proveedor     = repoProveedores.buscar(egresoRequest.proveedor);
@@ -285,121 +286,65 @@ public class EgresosRestController {
         documentoComercial.setDescripcion(egresoRequest.documentoComercial.descripcion);
         
 
-        Repositorio<Pago> repoPagos = new Repositorio<>(new DaoHibernate<>(Pago.class));
-        Repositorio<DocumentoComercial> repoDocumentos = new Repositorio<>(new DaoHibernate<>(DocumentoComercial.class));
+      
+        Egreso egreso = new BuilderEgresoConcreto()
+                .agregarFechaOperacion(egresoRequest.fechaOperacion)
+                .agregarCantidadPresupuestos(egresoRequest.cantidadPresupuestos)
+                .agregarProveedor(proveedor)
+                .agregarPago(pago)
+                .agregarDocumentoComercial(documentoComercial)
+                .build();
+       
 
-        repoPagos.agregar(pago);
-        repoDocumentos.agregar(documentoComercial);
-
-        List<ItemEgreso> items = egresoRequest.items
-                                            .stream()
-                                            .map(item->mapearItem(item))
-                                            .collect(Collectors.toList());
-
-        Egreso egreso = null;
         if(egresoRequest.organizacion_id!=0){
         	if(egresoRequest.tipo==0) {
         		EntidadJuridica entidadJuridica=repoEntidadJuridica.buscar(egresoRequest.organizacion_id);
-
-                egreso = new BuilderEgresoConcreto()
-                            .agregarFechaOperacion(egresoRequest.fechaOperacion)
-                            .agregarDatosOrganizacion(entidadJuridica)
-                            .agregarCantidadPresupuestos(egresoRequest.cantidadPresupuestos)
-                            .agregarProveedor(proveedor)
-                            .agregarPago(pago)
-                            .agregarDocumentoComercial(documentoComercial)
-                            .agregarItems(items)
-                            .build();
-
+        		egreso.setOrganizacion(entidadJuridica);
         	}
         	else {
         		EntidadBase entidadBase= repoEntidadBase.buscar(egresoRequest.organizacion_id);
-
-                egreso = new BuilderEgresoConcreto()
-                            .agregarFechaOperacion(egresoRequest.fechaOperacion)
-                            .agregarDatosOrganizacion(entidadBase)
-                            .agregarProveedor(proveedor)
-                            .agregarPago(pago)
-                            .agregarDocumentoComercial(documentoComercial)
-                            .agregarItems(items)
-                            .build();
-
+        		egreso.setOrganizacion(entidadBase);
         	}
         }
         
+        List<ItemEgreso> items = egresoRequest.items
+                .stream()
+                .map(item->mapearItem(item,egreso))
+                .collect(Collectors.toList());
 
-        Repositorio<Egreso> repoEgresos = new Repositorio<>(new DaoHibernate<>(Egreso.class));
-
+        egreso.agregarItems(items);
         repoEgresos.agregar(egreso);
             //Modificar items con el egreso, o sea linkearlos
-        relacionarItemsConEgreso(items,egreso);
+       // relacionarItemsConEgreso(items,egreso);
 
         return egreso;
     }
 
-    private ItemEgreso mapearItem(ItemRequest itemRequest) {
+    private ItemEgreso mapearItem(ItemRequest itemRequest,Egreso egreso) {
         ItemEgreso itemEgreso = new ItemEgreso();
+        Item item=null;
         itemEgreso.setPrecio(itemRequest.precio);
         itemEgreso.setCantidad(itemRequest.cantidad);
 
-        Repositorio<ItemEgreso> repoItems = new Repositorio<>(new DaoHibernate<>(ItemEgreso.class));
-        Repositorio<Producto> repoProductos = new Repositorio<>(new DaoHibernate<>(Producto.class));
-        Repositorio<Servicio> repoServicios = new Repositorio<>(new DaoHibernate<>(Servicio.class));
+        Repositorio<Item> repoItem = new Repositorio<>(new DaoHibernate<>(Item.class));
+        Repositorio<TipoItem> repoTipoItem = new Repositorio<>(new DaoHibernate<>(TipoItem.class));
 
-        if(itemRequest.tipoItem==1) {
-            Producto producto = buscarProducto(itemRequest.nombreTipo.toLowerCase());
-	        if (producto == null) {
-	            producto = new Producto();
-	            producto.setNombre(itemRequest.nombreTipo);
-	
-	            repoProductos.agregar(producto);
-	        
-	        } 
-	        itemEgreso.setTipo(producto);
+        
+        if(itemRequest.itemId==0) {//si el item es nuevo
+        	TipoItem tipoItem=repoTipoItem.buscar(itemRequest.tipoItem);
+        	item=new Item(itemRequest.descripcion,tipoItem);
+        	repoItem.agregar(item);
         }
-        else {
-            Servicio servicio = buscarServicio(itemRequest.nombreTipo.toLowerCase());
-    	        if (servicio == null) {
-    	            servicio = new Servicio();
-    	            servicio.setNombre(itemRequest.nombreTipo);
-    	
-    	            repoServicios.agregar(servicio);
-    	        
-    	        } 
-    	        itemEgreso.setTipo(servicio);
-            }
+        else{//si eligio un item que ya se encontraba en la base de datos
+        	item=repoItem.buscar(itemRequest.itemId);
+        }
        
-
-        repoItems.agregar(itemEgreso);
+        itemEgreso.setItem(item);
+        itemEgreso.setEgresoAsociado(egreso);
 
         return  itemEgreso;
     }
 
-    private Producto buscarProducto(String nombreProducto) {
-        try {
-            Producto producto= (Producto) EntityManagerHelper
-                        .createQuery("from Producto where nombre = :nombre")
-                        .setParameter("nombre",nombreProducto)
-                        .getSingleResult();
-            return producto;
-        }
-        catch (NoResultException ex) {
-            return null;
-        }
-    }
-   
-    private Servicio buscarServicio(String nombreServicio) {
-        try {
-           Servicio servicio= (Servicio) EntityManagerHelper
-                        .createQuery("from Servicio where nombre = :nombre")
-                        .setParameter("nombre",nombreServicio)
-                        .getSingleResult();
-            return servicio;
-        }
-        catch (NoResultException ex) {
-            return null;
-        }
-    }
 
     private void relacionarItemsConEgreso(List<ItemEgreso> items, Egreso egreso) {
         Repositorio<ItemEgreso> repoItems = new Repositorio<>(new DaoHibernate<>(ItemEgreso.class));

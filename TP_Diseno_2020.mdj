@@ -1838,7 +1838,7 @@
 											"top": 1478,
 											"width": 128.984375,
 											"height": 13,
-											"text": "-producto: Producto",
+											"text": "-tipoItem: Item",
 											"horizontalAlignment": 0
 										},
 										{
@@ -4216,7 +4216,7 @@
 											"top": 1703,
 											"width": 126.09619140625,
 											"height": 13,
-											"text": "TipoItem"
+											"text": "Item"
 										},
 										{
 											"_type": "LabelView",
@@ -7404,7 +7404,7 @@
 											"top": 1485,
 											"width": 199.79248046875,
 											"height": 13,
-											"text": "-producto: TipoItem",
+											"text": "-tipoItem: Item",
 											"horizontalAlignment": 0
 										},
 										{
@@ -23497,7 +23497,7 @@
 											"top": 1711,
 											"width": 110,
 											"height": 13,
-											"text": "Tipo"
+											"text": "TipoItem"
 										},
 										{
 											"_type": "LabelView",
@@ -31674,7 +31674,7 @@
 					"_parent": {
 						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
 					},
-					"name": "TipoItem",
+					"name": "Item",
 					"ownedElements": [
 						{
 							"_type": "UMLAssociation",
@@ -32417,7 +32417,7 @@
 							"_parent": {
 								"$ref": "AAAAAAFyWLHBVECHPj0="
 							},
-							"name": "producto",
+							"name": "tipoItem",
 							"visibility": "private",
 							"type": {
 								"$ref": "AAAAAAFxycwWDdDgXOc="
@@ -41793,7 +41793,7 @@
 					"_parent": {
 						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
 					},
-					"name": "Tipo",
+					"name": "TipoItem",
 					"attributes": [
 						{
 							"_type": "UMLAttribute",
@@ -41802,7 +41802,8 @@
 								"$ref": "AAAAAAF1oDG2XS1iVtY="
 							},
 							"name": "nombre",
-							"visibility": "private"
+							"visibility": "private",
+							"type": ""
 						}
 					]
 				}
@@ -63417,9 +63418,11 @@
 							"_parent": {
 								"$ref": "AAAAAAFxj4byOCRseK0="
 							},
-							"name": "producto",
+							"name": "tipoItem",
 							"visibility": "private",
-							"type": "Producto"
+							"type": {
+								"$ref": "AAAAAAFxycwWDdDgXOc="
+							}
 						},
 						{
 							"_type": "UMLAttribute",

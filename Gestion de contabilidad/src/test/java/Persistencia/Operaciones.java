@@ -11,12 +11,13 @@ import org.junit.Test;
 import Domain.Entities.ApiPaises.Moneda;
 import Domain.Entities.CategorizadorDeEmpresas.Sector;
 import Domain.Entities.DatosDeOperaciones.DocumentoComercial;
+import Domain.Entities.DatosDeOperaciones.Item;
 import Domain.Entities.DatosDeOperaciones.ItemEgreso;
 import Domain.Entities.DatosDeOperaciones.MedioDePago;
 import Domain.Entities.DatosDeOperaciones.Pago;
-import Domain.Entities.DatosDeOperaciones.Producto;
 import Domain.Entities.DatosDeOperaciones.Proveedor;
 import Domain.Entities.DatosDeOperaciones.TipoDocumento;
+import Domain.Entities.DatosDeOperaciones.TipoItem;
 import Domain.Entities.Operaciones.Ingreso;
 import Domain.Entities.Operaciones.Presupuesto;
 import Domain.Entities.Operaciones.Egreso.BuilderEgresoConcreto;
@@ -50,7 +51,8 @@ public class Operaciones {
     private MedioDePago rapiPago; 
     private Pago pago;
     private DocumentoComercial factura;
-    private Producto ram,placaDeVideo;
+    private TipoItem producto;
+    private Item ram,placaDeVideo;
     private ItemEgreso rams,placasDeVideo;
     private ValidadorDeContrasenia validadorDeContrasenia;
 

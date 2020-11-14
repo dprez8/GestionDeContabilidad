@@ -145,6 +145,13 @@ public class Egreso extends Operacion {
 	public void addItems (ItemEgreso ... unosItems) {
 		Collections.addAll(this.items, unosItems);
 	}
+	
+	public void agregarItems(List<ItemEgreso> items){
+		
+		for(ItemEgreso item:items) {
+			this.addItems(item);
+		}
+	}
 	public void addPresupuestos (Presupuesto ... presupuesto) {
 		Collections.addAll(this.presupuestos, presupuesto);
 	}

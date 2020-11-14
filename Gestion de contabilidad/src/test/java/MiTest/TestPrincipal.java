@@ -40,7 +40,8 @@ public class TestPrincipal {
     private MedioDePago rapiPago; 
     private Pago pago;
     private DocumentoComercial factura;
-    private Producto ram,placaDeVideo;
+    private Item ram,placaDeVideo;
+    private TipoItem producto;
     private ItemEgreso rams,placasDeVideo;
     private ValidadorDeContrasenia validadorDeContrasenia;
 
@@ -48,10 +49,11 @@ public class TestPrincipal {
     public void antesDeTestear() throws IOException, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, contraseniaCorta{
 
         /**Creacion de los datos de egreso*/
-        this.ram  = new Producto("4GB DDR3");
+       this.producto= new TipoItem("producto");
+    	this.ram  = new Item("4GB DDR3",this.producto);
         this.rams = new ItemEgreso(this.ram, 1, 3000);
 
-        this.placaDeVideo  = new Producto("4GB DDR5");
+        this.placaDeVideo  = new Item("4GB DDR5",this.producto);
         this.placasDeVideo = new ItemEgreso(this.placaDeVideo, 2, 5000);
 
         TipoDocumento facturaA = new TipoDocumento("Factura A");

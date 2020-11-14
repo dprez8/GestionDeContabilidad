@@ -24,10 +24,11 @@ public class SchedulerTest {
         ValidadorDeTransparencia validador = new ValidadorDeTransparencia(validacionMinima, validacionPresupuesto, validacionMenorValor);
 
         /**Creacion de los datos de egreso y sus presupuestos, ejemplo*/
-        Producto RAM = new Producto("Memoria RAM 4 gb DDR3");
+        TipoItem producto= new TipoItem("producto");
+        Item RAM = new Item("Ram",producto);
         ItemEgreso RAMs = new ItemEgreso(RAM, 1, 3000);
 
-        Producto placaDeVideo = new Producto("4GB DDR5");
+        Item placaDeVideo = new Item("4GB DDR5",producto);
         ItemEgreso placasDeVideo = new ItemEgreso(placaDeVideo, 2, 5000);
 
         TipoDocumento FacturaA = new TipoDocumento("Factura A");

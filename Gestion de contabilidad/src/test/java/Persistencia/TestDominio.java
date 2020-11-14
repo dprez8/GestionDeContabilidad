@@ -35,7 +35,8 @@ public class TestDominio {
     private Repositorio<Egreso> repoEgresos;
     private Repositorio<ItemEgreso> repoItems;
     private Repositorio<ItemPresupuesto> repoItemPresupuesto;
-    private Repositorio<Producto> repoProductos;
+    private Repositorio<Item> repoItem;
+    private Repositorio<TipoItem> repoTipoItem;
     private Repositorio<Pago> repoPagos;
     private Repositorio<MedioDePago> repoMedioDePagos;
     private Repositorio<Proveedor> repoProveedores;
@@ -54,7 +55,8 @@ public class TestDominio {
         this.repoUsuarios        = new Repositorio<>(new DaoHibernate<>(Usuario.class));
         this.repoEgresos         = new Repositorio<>(new DaoHibernate<>(Egreso.class));
         this.repoItems           = new Repositorio<>(new DaoHibernate<>(ItemEgreso.class));
-        this.repoProductos       = new Repositorio<>(new DaoHibernate<>(Producto.class));
+        this.repoItem       	 = new Repositorio<>(new DaoHibernate<>(Item.class));
+        this.repoTipoItem        = new Repositorio<>(new DaoHibernate<>(TipoItem.class));
         this.repoPagos           = new Repositorio<>(new DaoHibernate<>(Pago.class));
         this.repoMedioDePagos    = new Repositorio<>(new DaoHibernate<>(MedioDePago.class));
         this.repoItemPresupuesto = new Repositorio<>(new DaoHibernate<>(ItemPresupuesto.class));
@@ -69,6 +71,12 @@ public class TestDominio {
         this.repoValidaciones     = new Repositorio<>(new DaoHibernate<>(ValidacionDeTransparencia.class));
     }
 
+    @Before
+    public void antesTesteo(){
+    	TipoItem producto= new TipoItem("producto");
+    	repoTipoItem.agregar(producto);
+    }
+    
     @Test
     public void T1persistirUnaEntidadJuridica (){
 
@@ -119,27 +127,28 @@ public class TestDominio {
 
     @Test
     public void T5persistir2Productos() {
-        Producto RAM = new Producto("Memoria RAM 4GB DDR3");
+        TipoItem producto=repoTipoItem.buscar(0);
+    	Item RAM = new Item("Memoria RAM 4GB DDR3",producto);
 
-        Producto placaDeVideo = new Producto("Placa de video 4GB DDR5");
+        Item placaDeVideo = new Item("Placa de video 4GB DDR5",producto);
 
-        this.repoProductos.agregar(RAM);
-        this.repoProductos.agregar(placaDeVideo);
+        this.repoItem.agregar(RAM);
+        this.repoItem.agregar(placaDeVideo);
     }
 
     @Test
     public void T6persistirUnEgresoYDosPresupuestos () {
-        Producto producto1 = this.repoProductos.buscar(1);
+        Item producto1 = this.repoItem.buscar(1);
         ItemEgreso placasDeVideo = new ItemEgreso();
         placasDeVideo.setCantidad(2);
         placasDeVideo.setPrecio(5000);
-        placasDeVideo.setTipo(producto1);
+        placasDeVideo.setItem(producto1);
 
-        Producto producto2 = this.repoProductos.buscar(2);
+        Item producto2 = this.repoItem.buscar(2);
         ItemEgreso RAMs = new ItemEgreso();
         RAMs.setCantidad(1);
         RAMs.setPrecio(3000);
-        RAMs.setTipo(producto2);
+        RAMs.setItem(producto2);
 
         this.repoItems.agregar(RAMs);
         this.repoItems.agregar(placasDeVideo);
@@ -241,8 +250,8 @@ public class TestDominio {
         Assert.assertEquals(0,segundoPresupuesto.getEgresoAsociado().getId());
         Assert.assertEquals("Factura A",unaCompra.getDocumento().getTipo().getNombreTipoDeDocumento());
         Assert.assertEquals("razonSocial",pepsiCompra.getRazonSocial());
-        Assert.assertEquals("4GB DDR5",unaCompra.getItems().get(1).getTipo().getNombre());
-        Assert.assertEquals("Memoria RAM 4 gb DDR3",unaCompra.getItems().get(0).getTipo().getNombre());
+        Assert.assertEquals("4GB DDR5",unaCompra.getItems().get(1).getItem().getDescripcion());
+        Assert.assertEquals("Memoria RAM 4 gb DDR3",unaCompra.getItems().get(0).getItem().getDescripcion());
         Assert.assertEquals(2,unaCompra.getPresupuestos().get(0).getId());
         Assert.assertEquals(1,unaCompra.getPresupuestos().get(1).getId());
         Assert.assertEquals(1,unaCompra.getRevisores().get(0).getId());
