@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import Domain.Controllers.DTO.Respuesta;
 import Domain.Entities.ClasesParciales.ItemDato;
 import Domain.Entities.DatosDeOperaciones.Item;
+import Domain.Entities.DatosDeOperaciones.TipoItem;
 import Domain.Entities.Usuarios.Estandar;
 import Domain.Exceptions.contraseniaCorta;
 import Domain.Exceptions.contraseniaMuyComun;
@@ -22,6 +23,7 @@ import spark.Response;
 public class ItemsController {
 
 private Repositorio<Item> repoItem;
+private Repositorio<TipoItem> repoTipoItem;
 	
 	public String listadoDeItems(Request request, Response response) throws IOException, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, contraseniaCorta {
         Gson gson = new Gson();
@@ -62,11 +64,44 @@ private Repositorio<Item> repoItem;
         return response.body();
     }
 	
-	private class VinculadorItem{
-		int code;
-		String message;
-		List<ItemDato> items= new ArrayList<>();
-	}
+	public String listadoDeTipoItems(Request request, Response response) throws IOException, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, contraseniaCorta {
+        Gson gson = new Gson();
+        Respuesta respuesta=new Respuesta();
+        List<TipoItem> tipoItems;
+
+        Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
+        if(usuario == null) {
+            return response.body();
+        }
+
+   	 	this.repoItem = new Repositorio<Item>(new DaoHibernate<Item>(Item.class));
+       
+        VinculadorTipoItem vinculadorTipoItem = new VinculadorTipoItem();
+        
+        
+        try {
+        	tipoItems= this.repoTipoItem.buscarTodos();
+        	
+	        vinculadorTipoItem.code = 200;
+	        vinculadorTipoItem.message = "TipoItems cargados exitosamente";
+	        vinculadorTipoItem.tipoItems=tipoItems;
+	        response.status(200);
+        }
+        catch (NullPointerException ex){
+            respuesta.setCode(404);
+            respuesta.setMessage("No se logró cargar los TipoItems");
+            response.status(404);
+            }
+       
+       
+        String jsonTipoItems = gson.toJson(vinculadorTipoItem);
+       
+        response.type("application/json");
+        response.body(jsonTipoItems);
+
+        return response.body();
+    }
+
 	
 	public ItemDato mapItem(Item item) { 
         ItemDato itemDato=new ItemDato();
@@ -77,4 +112,16 @@ private Repositorio<Item> repoItem;
         
        return itemDato;
     }
+	
+	
+	private class VinculadorItem{
+		int code;
+		String message;
+		List<ItemDato> items= new ArrayList<>();
+	}
+	private class VinculadorTipoItem{
+		int code;
+		String message;
+		List<TipoItem> tipoItems= new ArrayList<>();
+	}
 }

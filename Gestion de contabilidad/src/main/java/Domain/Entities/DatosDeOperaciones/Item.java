@@ -19,7 +19,7 @@ public class Item extends EntidadPersistente{
 	    @Column(name="descripcion")
 	    private String descripcion;
 	 	@ManyToOne
-	 	@JoinColumn(name= "_id",referencedColumnName = "id")
+	 	@JoinColumn(name= "tipo_item_id",referencedColumnName = "id")
 	 	private TipoItem tipoItem;
 	 	
 	    public Item(String descripcion, TipoItem tipoItem) {
