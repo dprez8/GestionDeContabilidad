@@ -79,6 +79,7 @@ public class AuthController extends AbstractTokenController{
     public String logout(Request request, Response response) {
         String authorizationHeader = request.headers(AUTHORIZATION_HEADER);
         tokenService.revokeToken(authorizationHeader.replace(TOKEN_PREFIX, ""));
+
         return "";
     }
 
@@ -108,7 +109,6 @@ public class AuthController extends AbstractTokenController{
         String token = authorizationHeader.replace(TOKEN_PREFIX, "");
 
         Usuario user = getUserDesdeToken(request);
-
         tokenService.revokeToken(token);
         String refreshedToken = tokenService.newToken(user);
         response.header(AUTHORIZATION_HEADER, TOKEN_PREFIX + " " + refreshedToken);
