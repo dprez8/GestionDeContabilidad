@@ -4,6 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.google.gson.annotations.Expose;
@@ -12,12 +14,12 @@ import Domain.Entities.EntidadPersistente.EntidadPersistente;
 
 @Entity
 @Table(name = "item")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Item extends EntidadPersistente{
 	 	@Expose
 	    @Column(name="descripcion")
 	    private String descripcion;
-	 	
+	 	@ManyToOne
+	 	@JoinColumn(name= "_id",referencedColumnName = "id")
 	 	private TipoItem tipoItem;
 	 	
 	    public Item(String descripcion, TipoItem tipoItem) {
