@@ -1,9 +1,9 @@
 import VueRouter from 'vue-router'
-import axios from 'axios'
 import {RequestHelper} from './util/utils'
+import jwt_decode from "jwt-decode";
 
 import {  
-    panel, login, error404, error500, inicio,
+    panel, login, error404, error401, error500, inicio,
     operaciones, egresos, ingresos, presupuestos, agregarEgreso, agregarIngreso, bandeja, 
     miCuenta, configValidacion
 } from './pages'
@@ -260,13 +260,18 @@ const routes = [
         component: login
     },
     {
-        name: 'error404',
+        name: 'notFound',
         path: '/*',
         component: error404,
     },
     {
-        name: 'error500',
-        path: '/*',
+        name: 'unauthorized',
+        path: '',
+        component: error401,
+    },
+    {
+        name: 'serverError',
+        path: '',
         component: error500,
     }
 ];
@@ -277,44 +282,61 @@ var router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
+    var token = sessionStorage.getItem('token');
+    var tokenDecoded = jwt_decode(token);
+
     switch (to.matched[0].name) {
         case 'panel':
-            // Si no estoy logeado voy al 'login'
-            RequestHelper.post('/auth/token', {
-                success: (data) => {
-                    document.cookie = `username=${data.nombre}; path=/`;
-                    document.cookie = `organizacion=${data.organizacion.razonSocial}; path=/`;
-                    next();
-                },
-                notLoggedIn: () => {
-                    next('/login');
-                },
-                error: () => {
-                    next({name: 'error500'});
-                }
-            });
-            break;
+            // Si ya estaba navegando dentro de la app no me saques
+            if(from.matched.length && from.matched[0].name == 'panel') {
+                next();
+                break;
+            }
 
-        case 'login':
-            // Si ya estoy logeado me voy al 'panel'
-            RequestHelper.post('/auth/token', {
-                success: (data) => {
-                    document.cookie = `username=${data.nombre}; path=/`;
-                    document.cookie = `organizacion=${data.organizacion.razonSocial}; path=/`;
-                    next('/');
-                },
-                notLoggedIn: () => {
+            // Pero si estoy entrando desde 0...
+
+            // Si no tengo ningún token guardado mandame al login
+            if(token) {              
+                if(tokenDecoded.rol == "Estandar") {
                     next();
-                },
-                error: () => {
-                    next({name: 'error500'});
                 }
-            });
+                else {
+                    next({name: 'unauthorized'})
+                }
+            } else {
+                next('/login');
+            }
             break;
 
         case 'adminPanel':
-            // Chequear si soy admin
-            next();
+            // Si ya estaba navegando dentro de la app no me saques
+            if(from.matched.length && from.matched[0].name == 'adminPanel') {
+                next();
+                break;
+            }
+
+            // Pero si estoy entrando desde 0...
+
+            // Si no tengo ningún token guardado mandame al login
+            if(token) {
+                if(tokenDecoded.rol == "Admin") {
+                    next();
+                }
+                else {
+                    next({name: 'unauthorized'})
+                }
+            } else {
+                next('/login');
+            }
+            break;
+
+        case 'login':
+            // Si ya tengo un token, mandame al panel
+            if(token) {
+                next('/');
+            } else {
+                next();
+            }
             break;
     
         default:

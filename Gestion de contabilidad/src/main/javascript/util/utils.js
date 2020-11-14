@@ -113,6 +113,7 @@ class RequestHelper {
 			.then(response => {
 				var data = response.data;
 
+				// Si recibo un token por el header lo guardo
 				if(response.headers.authorization) {
 					sessionStorage.setItem('token', response.headers.authorization);
 				}

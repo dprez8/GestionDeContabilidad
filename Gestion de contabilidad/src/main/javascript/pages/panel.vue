@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- Navbar -->
-        <navbar @toggleSidebar="sidebarShow = !sidebarShow"/>
+        <navbar :userData="userData" @toggleSidebar="sidebarShow = !sidebarShow"/>
         <!-- /#navbar-wrapper -->
 
         <div class="d-flex" v-bind:class="{toggled: !sidebarShow}" id="wrapper">
@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import {capitalizeFirstLetter, getCookie} from '../util/utils'
+import {capitalizeFirstLetter, getCookie, RequestHelper} from '../util/utils'
 import axios from 'axios'
 import loginForm from '../components/loginForm'
 import breadcrumb from '../components/breadcrumb'
@@ -62,6 +62,10 @@ export default {
     },
     data() {
         return {
+            userData: {
+                nombre: "",
+                organizacion: ""
+            },
             sidebarShow: true,
             reloadPage: false,
             routerViewKey: 0,
@@ -75,6 +79,7 @@ export default {
             if(this.reloadPage)
                 this.softReloadPage();
 
+            this.getUserData();
             this.$bvModal.hide('login-modal');
         },
         softReloadPage() {
@@ -110,6 +115,23 @@ export default {
 				this.createToast('Error', 'Ha ocurrido un error, vuelva a intentarlo mas tarde', 'danger');
 			}
         },
+        getUserData() {
+            RequestHelper.get('/auth/me', {
+                success: (data) => {
+                    this.userData.nombre = data.nombre;
+                    this.userData.organizacion = data.organizacion.razonSocial;
+                },
+                notLoggedIn: (data) => {
+                    this.showLoginModal(true);
+                },
+                error: (error) => {
+                    this.errorHandling(error);
+                }
+            });
+        }
+    },
+    mounted() {
+        this.getUserData();
     },
     provide() {
         return {

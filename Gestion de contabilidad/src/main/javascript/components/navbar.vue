@@ -23,7 +23,7 @@
                 <b-list-group-item to="/cuenta" @click="userPanelShow = false">
                         <b-icon-person-fill class="mr-2"></b-icon-person-fill> {{userData.nombre}}
                 </b-list-group-item>
-                <b-list-group-item to="#" @click="logout">
+                <b-list-group-item button @click="logout">
                     <b-icon-box-arrow-left class="mr-2"></b-icon-box-arrow-left> Cerrar sesión
                 </b-list-group-item>
             </b-list-group>
@@ -35,12 +35,11 @@
 import {capitalizeFirstLetter, getCookie, RequestHelper} from '../util/utils'
 
 export default {
+    props: {
+        userData: Object
+    },
     data() {
         return {
-            userData: {
-                organizacion: "",
-                nombre: ""
-            },
             userPanelShow: false
         }
     },
@@ -52,15 +51,12 @@ export default {
         logout() {
             RequestHelper.post('/auth/logout', null, {
                 always: () => {
+                    sessionStorage.clear();
                     this.$router.push("/login");
                 }
             });
         }
-    },
-    mounted() {
-        this.userData.nombre = capitalizeFirstLetter(getCookie("username"));
-        this.userData.organizacion = getCookie("organizacion");
-    },
+    }
 }
 </script>
 

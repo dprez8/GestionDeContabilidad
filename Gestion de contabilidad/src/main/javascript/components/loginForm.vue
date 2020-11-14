@@ -44,7 +44,7 @@ export default {
 
             if(this.user == "") {
                 this.userState = false;
-            } 
+            }
             if(this.pass == "") {
                 this.passState = false;
             }

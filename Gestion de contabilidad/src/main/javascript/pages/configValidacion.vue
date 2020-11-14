@@ -56,6 +56,7 @@
 
 <script>
 import axios from 'axios'
+import { RequestHelper } from '../util/utils';
 
 export default {
     data() {
@@ -82,28 +83,67 @@ export default {
         cargarConfiguracionAPI() {
             this.loading = true;
 
-            axios
-                .get('/api/bandeja/configuracion')
-                .then(response => {
-                    var data = response.data;
-                    if(data.code == 200) {
-                        this.scheduler = data.schedulerInit;
-                        this.updateHoraYMinuto();
-                    } else if (data.code == 403) {
-                        this.showLoginModal(true);
-                    }
-                })
-                .catch(error => {
+            RequestHelper.get('/api/bandeja/configuracion', {
+                success: (data) => {
+                    this.scheduler = data.schedulerInit;
+                    this.updateHoraYMinuto();
+                },
+                notLoggedIn: () => {
+                    this.showLoginModal(false);
+                },
+                forbidden: () => {
+                    this.createToast("401 Forbidden", "No tienes acceso para realizar esa acción", "warning");
+                },
+                error: (error) => {
                     this.errorHandling(error);
-                })
-                .then(() => {
-                    // always
+                },
+                always: () => {
                     this.loading = false;
-                });
+                }
+            });
+
+            // axios
+            //     .get('/api/bandeja/configuracion')
+            //     .then(response => {
+            //         var data = response.data;
+            //         if(data.code == 200) {
+            //             this.scheduler = data.schedulerInit;
+            //             this.updateHoraYMinuto();
+            //         } else if (data.code == 403) {
+            //             this.showLoginModal(true);
+            //         }
+            //     })
+            //     .catch(error => {
+            //         this.errorHandling(error);
+            //     })
+            //     .then(() => {
+            //         // always
+            //         this.loading = false;
+            //     });
         },
         guardarConfiguracionAPI() {
             this.loading = true;
 
+            RequestHelper.post('/api/bandeja/configurar', this.scheduler, {
+                success: (data) => {
+                    this.createToast('Guardado exitoso', 'Se guardo la configuración correctamente', 'success');
+                    this.updateHoraYMinuto();
+                },
+                notLoggedIn: () => {
+                    this.showLoginModal(false);
+                },
+                forbidden: () => {
+                    this.createToast("401 Forbidden", "No tienes acceso para realizar esa acción", "warning");
+                },
+                error: (error) => {
+                    this.errorHandling(error);
+                },
+                always: () => {
+                    this.loading = false;
+                }
+            });
+
+            /*
             axios
                 .post('/api/bandeja/configurar', this.scheduler)
                 .then(response => {
@@ -114,6 +154,7 @@ export default {
                     } else if (data.code == 403) {
                         this.showLoginModal(false);
                     }
+                    console.log(response);
                 })
                 .catch(error => {
                     this.errorHandling(error);
@@ -122,6 +163,7 @@ export default {
                     // always
                     this.loading = false;
                 });
+                */
         },
         toggleDia(dia) {
             if(this.diaIsSelected(dia)) {
