@@ -4,13 +4,15 @@ import Domain.Controllers.AdaptersJson.LocalDateAdapter;
 import Domain.Controllers.DTO.EgresoRequest;
 import Domain.Controllers.DTO.EgresoResponse;
 import Domain.Controllers.DTO.ItemRequest;
-import Domain.Controllers.DTO.Respuesta;
+import Domain.Controllers.jwt.TokenService;
 import Domain.Entities.DatosDeOperaciones.*;
 import Domain.Entities.Operaciones.Egreso.BuilderEgresoConcreto;
 import Domain.Entities.Operaciones.Egreso.Egreso;
 import Domain.Entities.Organizacion.EntidadBase;
 import Domain.Entities.Organizacion.EntidadJuridica;
+import Domain.Entities.Organizacion.Organizacion;
 import Domain.Entities.Usuarios.Estandar;
+import Domain.Entities.Usuarios.Usuario;
 import Domain.Repositories.Daos.DaoHibernate;
 import Domain.Repositories.Repositorio;
 import com.google.gson.Gson;
@@ -28,26 +30,22 @@ import javax.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import Domain.Controllers.Utils.FormFileManager;
 
-import static org.apache.commons.io.FilenameUtils.getExtension;
-
 /*****************************************************************/
 public class EgresosRestController extends GenericController {
     private Repositorio<EntidadJuridica> repoEntidadJuridica;
     private Repositorio<EntidadBase> repoEntidadBase;
-    private List<Egreso> egresosMemo;
 
-    public EgresosRestController(){
-        super();
+    public EgresosRestController(TokenService tokenService,String tokenPrefix){
+        super(tokenService,tokenPrefix);
         this.repoEntidadJuridica = new Repositorio<>(new DaoHibernate<>(EntidadJuridica.class));
         this.repoEntidadBase     = new Repositorio<>(new DaoHibernate<>(EntidadBase.class));
-        this.egresosMemo         = new ArrayList<>();
+
     }
 
     private static List<String> tiposDocumentoComercial = Arrays.asList("application/pdf",
@@ -59,13 +57,14 @@ public class EgresosRestController extends GenericController {
 
 
     public String cargarArchivoDocumentoComercial(Request request, Response response) throws IOException, ServletException {
-
-        response.type("application/json");
         String jsonResponse;
 
-        Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request, response);
-        if(usuario == null) {
+        if(response.body() != null){
             return response.body();
+        }
+        Usuario user = getUsuarioDesdeRequest(request);
+        if(isAdmin(user)){
+            return respuesta(response,403,"No posees permisos de estandar");
         }
 
         File uploadDir = null;
@@ -120,9 +119,14 @@ public class EgresosRestController extends GenericController {
         return response.body();
     }
 
-
     public String cargarNuevoEgreso(Request request, Response response) {
-
+        if(response.body() != null){
+            return response.body();
+        }
+        Usuario user = getUsuarioDesdeRequest(request);
+        if(isAdmin(user)){
+            return respuesta(response,403,"No posees permisos de estandar");
+        }
         String jsonResponse;
         this.gson  = new GsonBuilder()
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())
@@ -142,13 +146,11 @@ public class EgresosRestController extends GenericController {
         this.respuesta.setCode(200);
         this.respuesta.setMessage("Egreso cargado exitosamente");
 
-        this.egresosMemo.add(egreso);
-
         CargaEgresoResponse cargaEgresoResponse = new CargaEgresoResponse();
 
         cargaEgresoResponse.code    = this.respuesta.getCode();
         cargaEgresoResponse.message = this.respuesta.getMessage();
-        cargaEgresoResponse.id = egreso.getId();
+        cargaEgresoResponse.id      = egreso.getId();
         jsonResponse = this.gson.toJson(cargaEgresoResponse);
         response.body(jsonResponse);
 
@@ -156,32 +158,33 @@ public class EgresosRestController extends GenericController {
     }
 
     public String listadoDeEgresos(Request request, Response response) {
-
-        Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
-        if(usuario == null) {
+        /*if(response.body() != null){
             return response.body();
+        }*/
+        Usuario user = getUsuarioDesdeRequest(request);
+        if(isAdmin(user)){
+            return respuesta(response,403,"No posees permisos de estandar");
         }
+        Estandar usuario = (Estandar) user;
 
         this.gson  = new GsonBuilder()
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())
                 .create();
 
-        EntidadJuridica entidadJuridica = this.repoEntidadJuridica.buscar(usuario.getMiOrganizacion().getId());
+        Organizacion organizacion = usuario.getMiOrganizacion();
         List<EgresoResponse> egresosAEnviar;
         String jsonResponse;
 
-        List<Egreso> egresosBD = entidadJuridica.getEgresos();
+        List<Egreso> egresosBD = organizacion.getEgresos();
         egresosAEnviar = egresosBD
                     .stream()
                     .map(this::mapearEgreso)
                     .collect(Collectors.toList());
 
         if (egresosAEnviar.isEmpty()) {
-            this.respuesta.setCode(404);
-            this.respuesta.setMessage("No hay egresos cargados");
             jsonResponse = this.gson.toJson(this.respuesta);
             response.body(jsonResponse);
-            return response.body();
+            return respuesta(response,404,"No hay egresos cargados");
         }
 
         ListadoEgresos listadoEgresos = new ListadoEgresos();
@@ -198,10 +201,15 @@ public class EgresosRestController extends GenericController {
 
     public String mostrarEgreso(Request request, Response response) {
 
-        Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
-        if(usuario == null) {
+        if(response.body() != null){
             return response.body();
         }
+        Usuario user = getUsuarioDesdeRequest(request);
+        if(isAdmin(user)){
+            return respuesta(response,403,"No posees permisos de estandar");
+        }
+
+        Estandar usuario = (Estandar) user;
         String jsonResponse;
         Egreso egreso;
 
@@ -235,26 +243,7 @@ public class EgresosRestController extends GenericController {
         return jsonResponse;
     }
 
-    public String procesarFicheroParte(File uploadDir, Part part) throws IOException {
-        String uploaded_file_name = getFileName(part);
-        // creo el fichero temporal, con un nombre generico generado y la extension del archivo que fue subido
-        Path tempFile = Files.createTempFile(uploadDir.toPath(), "", "." + getExtension(uploaded_file_name));
-        // copiar el stream de lo que me pasaron al fichero temporal
-        InputStream input = part.getInputStream();
-        Files.copy(input, tempFile, StandardCopyOption.REPLACE_EXISTING);
-        return tempFile.toAbsolutePath().toString();
-    }
-
     /***************Private methods***************************************/
-
-    private static String getFileName(Part part) {
-        for (String cd : part.getHeader("content-disposition").split(";")) {
-            if (cd.trim().startsWith("filename")) {
-                return cd.substring(cd.indexOf('=') + 1).trim().replace("\"", "");
-            }
-        }
-        return null;
-    }
 
     private Egreso asignarEgresoDesde (EgresoRequest egresoRequest) {
         Proveedor proveedor;

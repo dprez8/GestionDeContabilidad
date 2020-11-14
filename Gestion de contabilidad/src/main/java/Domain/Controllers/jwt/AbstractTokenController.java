@@ -1,5 +1,6 @@
 package Domain.Controllers.jwt;
 
+import Domain.Entities.Usuarios.Usuario;
 import spark.Request;
 
 public abstract class AbstractTokenController {
@@ -11,10 +12,10 @@ public abstract class AbstractTokenController {
         this.tokenService = tokenService;
     }
 
-    protected Integer getUserIdDesdeToken(Request request) {
+    protected Usuario getUserDesdeToken(Request request) {
         String authorizationHeader = request.headers("Authorization");
         String token = authorizationHeader.replace(TOKEN_PREFIX, "");
-        return new Integer(tokenService.getUserPrincipal(token));
+        return tokenService.getUser(token);
     }
 
     /*

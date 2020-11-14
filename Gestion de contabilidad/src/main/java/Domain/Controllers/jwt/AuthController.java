@@ -78,11 +78,8 @@ public class AuthController extends AbstractTokenController{
     }
 
     public String me(Request request, Response response) {
-        Integer userId = getUserIdDesdeToken(request);
+        Usuario user = getUserDesdeToken(request);
 
-        this.repoUsuarios = new Repositorio<>(new DaoHibernate<>(Usuario.class));
-
-        Usuario user = this.repoUsuarios.buscar(userId);
         JsonObject userJson = new JsonObject();
         userJson.addProperty(USER_NAME_PROPERTY, user.getId());
         userJson.addProperty(FIRST_NAME_PROPERTY, user.getNombre());
@@ -93,10 +90,8 @@ public class AuthController extends AbstractTokenController{
     public String refresh(Request request, Response response) {
         String authorizationHeader = request.headers(AUTHORIZATION_HEADER);
         String token = authorizationHeader.replace(TOKEN_PREFIX, "");
-        Integer userId = getUserIdDesdeToken(request);
 
-        this.repoUsuarios = new Repositorio<>(new DaoHibernate<>(Usuario.class));
-        Usuario user = this.repoUsuarios.buscar(userId);
+        Usuario user = getUserDesdeToken(request);
 
         tokenService.revokeToken(token);
         String refreshedToken = tokenService.newToken(user);

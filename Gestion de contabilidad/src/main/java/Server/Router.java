@@ -56,6 +56,7 @@ public class Router {
 
     private static void rutasApi() {
         String SECRET_JWT = "secret_jwt";
+        String TOKEN_PREFIX = "Bearer";
         TokenService tokenService = new TokenService(SECRET_JWT);
         AuthFilter authFilter = new AuthFilter("/auth",tokenService);
 
@@ -66,7 +67,7 @@ public class Router {
         ProveedorController proveedorController = new ProveedorController();
         MedioDePagoController medioController = new MedioDePagoController();
         BandejaDeMensajesRestController bandejaDeMensajesRestController= new BandejaDeMensajesRestController();
-        EgresosRestController egresosRestController = new EgresosRestController();
+        EgresosRestController egresosRestController = new EgresosRestController(tokenService,TOKEN_PREFIX);
         CriteriosCategoriasController categoriasController = new CriteriosCategoriasController();
         IngresosRestController ingresosRestController = new IngresosRestController();
         AsociacionOperacionesRestController asociacionOperacionesRestController = new AsociacionOperacionesRestController();
@@ -80,13 +81,13 @@ public class Router {
         Spark.get("/auth/me", authController::me);
         Spark.post("/auth/token", authController::refresh);
 
-        /*
+
         // PERIODIC TOKENS CLEAN UP
         EXECUTOR_SERVICE.scheduleAtFixedRate(() -> {
             System.out.println("Removing expired tokens");
             tokenService.removeExpired();
         }, 60, 60, TimeUnit.SECONDS); // every minute
-        */
+
 
         Spark.post("/api/login",loginRestController::login);
         Spark.get("/api/login",loginRestController::sessionStatus);
