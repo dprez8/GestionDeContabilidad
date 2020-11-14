@@ -1,11 +1,16 @@
 package Domain.Controllers.jwt;
 
 import Domain.Controllers.DTO.Respuesta;
+import Domain.Controllers.DTO.UsuarioResponse;
+import Domain.Controllers.LoginRestController;
+import Domain.Controllers.PermisosRestController;
+import Domain.Entities.Usuarios.Estandar;
 import Domain.Entities.Usuarios.Usuario;
 import Domain.Repositories.Daos.DaoHibernate;
 import Domain.Repositories.Repositorio;
 import com.google.common.hash.Hashing;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import db.EntityManagerHelper;
 import spark.Request;
@@ -80,11 +85,22 @@ public class AuthController extends AbstractTokenController{
     public String me(Request request, Response response) {
         Usuario user = getUserDesdeToken(request);
 
-        JsonObject userJson = new JsonObject();
-        userJson.addProperty(USER_NAME_PROPERTY, user.getId());
-        userJson.addProperty(FIRST_NAME_PROPERTY, user.getNombre());
-        userJson.addProperty(LAST_NAME_PROPERTY, user.getMail());
-        return userJson.toString();
+        Estandar usuario = (Estandar) user;
+
+        Gson gson = new GsonBuilder()
+                .excludeFieldsWithoutExposeAnnotation()
+                .serializeNulls()
+                .create();
+
+        UsuarioResponse usuarioResponse = new UsuarioResponse();
+        usuarioResponse.code            = 200;
+        usuarioResponse.message         = "Ok";
+        usuarioResponse.organizacion    = usuario.getMiOrganizacion();
+        usuarioResponse.nombre          = usuario.getNombre();
+        String jsonLogin = gson.toJson(usuarioResponse);
+
+        response.body(jsonLogin);
+        return response.body();
     }
 
     public String refresh(Request request, Response response) {

@@ -1,6 +1,7 @@
 package Domain.Controllers;
 
 import Domain.Controllers.DTO.Respuesta;
+import Domain.Controllers.DTO.UsuarioResponse;
 import Domain.Entities.Organizacion.Organizacion;
 import Domain.Entities.Usuarios.Estandar;
 import Domain.Entities.Usuarios.Usuario;
@@ -100,14 +101,4 @@ public class LoginRestController {
         public String password;
     }
 
-    private class UsuarioResponse {
-        @Expose
-        public Integer code;
-        @Expose
-        public String message;
-        @Expose
-        public Organizacion organizacion;
-        @Expose
-        public String nombre;
-    }
 }
