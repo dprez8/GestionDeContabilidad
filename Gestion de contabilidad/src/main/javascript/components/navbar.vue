@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import {capitalizeFirstLetter, getCookie} from '../util/utils'
+import {capitalizeFirstLetter, getCookie, RequestHelper} from '../util/utils'
 
 export default {
     data() {
@@ -44,16 +44,17 @@ export default {
             userPanelShow: false
         }
     },
+    inject: ['errorHandling'],
     methods: {
         toggleSidebar() {
             this.$emit('toggleSidebar');
         },
         logout() {
-            document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-            document.cookie = "organizacion=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-            document.cookie = "JSESSIONID=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-
-            this.$router.push("/login");
+            RequestHelper.post('/auth/logout', null, {
+                always: () => {
+                    this.$router.push("/login");
+                }
+            });
         }
     },
     mounted() {

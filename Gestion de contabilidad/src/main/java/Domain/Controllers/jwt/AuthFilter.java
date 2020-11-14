@@ -36,7 +36,7 @@ public class AuthFilter implements Filter {
             String authorizationHeader = request.headers("Authorization");
             response.type("application/json");
             if (authorizationHeader == null) {
-                this.respuesta.setCode(403);
+                this.respuesta.setCode(401);
                 this.respuesta.setMessage("Autorizacion de header perdido");
                 String jsonResponseError = gson.toJson(this.respuesta);
                 response.body(jsonResponseError);

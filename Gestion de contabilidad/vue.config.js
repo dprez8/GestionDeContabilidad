@@ -18,6 +18,10 @@ module.exports = {
                 target: 'http://localhost:80',
                 changeOrigin: true
             },
+            '^/auth': {
+                target: 'http://localhost:80',
+                changeOrigin: true
+            }
         }
     },
     pages: {

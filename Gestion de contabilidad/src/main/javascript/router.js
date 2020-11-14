@@ -280,7 +280,7 @@ router.beforeEach((to, from, next) => {
     switch (to.matched[0].name) {
         case 'panel':
             // Si no estoy logeado voy al 'login'
-            RequestHelper.get('/api/login', {
+            RequestHelper.post('/auth/token', {
                 success: (data) => {
                     document.cookie = `username=${data.nombre}; path=/`;
                     document.cookie = `organizacion=${data.organizacion.razonSocial}; path=/`;
@@ -297,7 +297,7 @@ router.beforeEach((to, from, next) => {
 
         case 'login':
             // Si ya estoy logeado me voy al 'panel'
-            RequestHelper.get('/api/login', {
+            RequestHelper.post('/auth/token', {
                 success: (data) => {
                     document.cookie = `username=${data.nombre}; path=/`;
                     document.cookie = `organizacion=${data.organizacion.razonSocial}; path=/`;
@@ -321,6 +321,6 @@ router.beforeEach((to, from, next) => {
             next();
             break;
     }
-})
+});
 
 export default router;
