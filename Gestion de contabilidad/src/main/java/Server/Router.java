@@ -75,6 +75,7 @@ public class Router {
         OrganizacionController organizacionController = new OrganizacionController();
 
         Spark.before("/api/*",authFilter);
+        Spark.before("/auth/*",authFilter);
 
         Spark.post("/auth/logout", authController::logout);
         Spark.post("/auth/login",authController::login );
