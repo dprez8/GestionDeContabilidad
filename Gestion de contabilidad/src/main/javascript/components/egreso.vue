@@ -188,26 +188,6 @@ export default {
                     this.egresoLoaded();
                 }
             });
-
-            // axios
-            //     .get(`/api/operaciones/egreso/${id}`)
-            //     .then(response => {
-            //         var data = response.data;
-            //         console.log(data);
-            //         if(data.code == 200) {
-            //             this.egreso = data.egreso;
-            //             this.egreso.items = data.egreso.items.map(this.itemEgresoAPIConverter);
-            //         } else if (data.code == 403) {
-            //             this.showLoginModal(true);
-            //         }
-            //     })
-            //     .catch(error => {
-            //         this.errorHandling(error);
-            //     })
-            //     .then(() => {
-            //         // always
-            //         this.egresoLoaded();
-            //     })
         },
         itemEgresoAPIConverter(item) {
             // Arreglar cuando se cambien los items en backend
@@ -258,29 +238,6 @@ export default {
                         this.egresoLoading = false;
                     }
                 });
-
-                // axios
-                //     .post(`/api/operaciones/asociarManualmente`, request)
-                //     .then(response => {
-                //         var data = response.data;
-                //         console.log(data);
-                //         if(data.code == 200) {
-                //             this.cargarEgresoAPI();
-                //         } else if (data.code == 403) {
-                //             this.showLoginModal(true);
-                //         } else if (data.code == 400) {
-                //             this.falloCarga = true;
-                //             this.falloCargaDetalles = data.message;
-                //         }
-                //     })
-                //     .catch(error => {
-                //         this.falloCarga = true;
-                //         this.errorHandling(error);
-                //     })
-                //     .then(() => {
-                //         // always
-                //         this.egresoLoading = false;
-                //     })
             } 
 
         },

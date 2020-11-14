@@ -1,51 +1,21 @@
 <template>
     <div>
         <!-- Navbar -->
-        <nav class="navbar navbar-expand-md navbar-dark d-flex bg-dark flex-nowrap">
-            <button class="navbar-toggler border-0 p-1 mr-2" data-toggle="collapse" v-on:click="sidebarShow = !sidebarShow">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <!-- Nombre de organizacion -->
-            <router-link id="navbar-organizacion" class="navbar-brand mr-2" to="/">
-                <img src="../assets/utn_logo.png" width="30" height="30" class="d-inline-block align-top" style="filter: invert(1)">
-                <span class="p-2">{{userData.organizacion}}</span>
-            </router-link>
-            <!-- Avatar -->
-            <div class="ml-auto user-panel-avatar" @click="userPanelShow = true">
-                <b-avatar variant="primary" :text="userData.nombre.substring(0,1)"></b-avatar>
-            </div>
-            <!-- Panel de opciones de usuario -->
-        </nav>
+        <navbar @toggleSidebar="sidebarShow = !sidebarShow"/>
         <!-- /#navbar-wrapper -->
 
         <div class="d-flex" v-bind:class="{toggled: !sidebarShow}" id="wrapper">
             <!-- Sidebar -->
-            <div id="sidebar-wrapper" class="border-right">
-                <b-list-group flush>
-                    <template v-for="(page, index) in sidebar">
-                        <b-list-group-item 
-                            :key=index
-                            :to="page.path" 
-                            @click.native="sidebarShow = true"
-                        >{{ page.label }}</b-list-group-item>
-                    </template>
-                </b-list-group>
-            </div>
+            <sidebar 
+                :sidebar="sidebar"
+                @closeSidebar="sidebarShow = true"
+            />
             <!-- /#sidebar-wrapper -->
 
             <!-- Rightside -->
             <div class="w-100 overflow-auto">
                 <!-- Breadcrum -->
-                <b-breadcrumb class="m-0 border-bottom bg-light" style="border-radius: 0;">
-                    <b-breadcrumb-item to="/">
-                        <b-icon-house></b-icon-house>
-                    </b-breadcrumb-item>
-                    <template v-for="(page, index) in breadcrumb">
-                        <b-breadcrumb-item :key=index v-bind:to="page.path" v-bind:active="page.active">
-                            {{ page.label }}
-                        </b-breadcrumb-item>
-                    </template>
-                </b-breadcrumb>
+                <breadcrumb/>
                 <!-- /$breadcrum-wrapper -->
 
                 <!-- Page Content -->
@@ -57,26 +27,8 @@
                 <!-- /#page-content-wrapper -->
             </div>
             <!-- /#rightside-wrapper -->
-
         </div>
         <!-- /#wrapper -->
-
-        <!-- Panel de opciones de usuario -->
-        <b-modal hide-footer hide-header hide-backdrop
-            body-class="p-0 rounded overflow-hidden"
-            dialog-class="user-panel"
-            content-class="shadow"
-            v-model="userPanelShow"
-        >
-            <b-list-group flush>
-                <b-list-group-item to="/cuenta" @click="userPanelShow = false">
-                        <b-icon-person-fill class="mr-2"></b-icon-person-fill> {{userData.nombre}}
-                </b-list-group-item>
-                <b-list-group-item to="#" @click="logout">
-                    <b-icon-box-arrow-left class="mr-2"></b-icon-box-arrow-left> Cerrar sesión
-                </b-list-group-item>
-            </b-list-group>
-        </b-modal>
 
         <b-modal id="login-modal" centered hide-footer hide-header no-close-on-esc no-close-on-backdrop size="sm">
             <div>
@@ -100,31 +52,17 @@
 import {capitalizeFirstLetter, getCookie} from '../util/utils'
 import axios from 'axios'
 import loginForm from '../components/loginForm'
+import breadcrumb from '../components/breadcrumb'
+import navbar from '../components/navbar'
+import sidebar from '../components/sidebar'
 
 export default {
+    props: {
+        sidebar: Array
+    },
     data() {
         return {
-            sidebar: [
-                {
-                    label: "Operaciones",
-                    path: '/operaciones',
-                },
-                {
-                    label: "Presupuestos",
-                    path: '/presupuestos'
-                },
-                {
-                    label: "Bandeja de mensajes",
-                    path: '/bandeja'
-                }
-            ],
-            userData: {
-                organizacion: "",
-                nombre: ""
-            },
-            userPanelShow: false,
             sidebarShow: true,
-            breadcrumb: [],
             reloadPage: false,
             routerViewKey: 0,
             loading: true,
@@ -133,47 +71,18 @@ export default {
         }
     },
     methods: {
-        updateBreadcrumb() {
-            
-            if(this.$route.meta.breadcrumb == undefined){
-                this.breadcrumb = [];
-                return;
-            }
-
-            var breadcrumb = JSON.parse(JSON.stringify(this.$route.meta.breadcrumb));
-
-            breadcrumb.forEach(crumb => {
-                if(crumb.type == "dynamic") {
-                    var key = crumb.dynamicText;
-                    var dynamicLabel = this.$route.params[key];
-
-                    if(dynamicLabel != undefined) {
-                        crumb.label = crumb.label.replace(key, dynamicLabel);
-                        crumb.path = crumb.path.replace(key, dynamicLabel);
-                    }
-                }
-            });
-            this.breadcrumb = breadcrumb;
-        },
-        logout() {
-            document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-            document.cookie = "organizacion=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-            document.cookie = "JSESSIONID=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-
-            this.$router.push("/login");
-        },
         loginSuccess() {
             if(this.reloadPage)
                 this.softReloadPage();
 
             this.$bvModal.hide('login-modal');
         },
+        softReloadPage() {
+            this.routerViewKey ? this.routerViewKey++ : this.routerViewKey--;
+        },
         showLoginModal(reload) {
             this.reloadPage = reload;
             this.$bvModal.show('login-modal');
-        },
-        softReloadPage() {
-            this.routerViewKey ? this.routerViewKey++ : this.routerViewKey--;
         },
         createToast(title, body, variant) {
 			this.$bvToast.toast(body, {
@@ -202,16 +111,6 @@ export default {
 			}
         },
     },
-    watch: {
-        $route(to, from) {
-            this.updateBreadcrumb();
-        }
-    },
-    mounted() {
-        this.updateBreadcrumb();
-        this.userData.nombre = capitalizeFirstLetter(getCookie("username"));
-        this.userData.organizacion = getCookie("organizacion");
-    },
     provide() {
         return {
             showLoginModal: this.showLoginModal,
@@ -220,7 +119,10 @@ export default {
         }
     },
     components: {
-        "loginForm": loginForm
+        "loginForm": loginForm,
+        "breadcrumb": breadcrumb,
+        "navbar": navbar,
+        "sidebar": sidebar
     }
 }
 </script>
@@ -254,52 +156,6 @@ export default {
 #navbar-organizacion{
     width: auto;
 }
-#wrapper {
-    overflow-x: hidden;
-}
 
-#sidebar-wrapper {
-    min-height: calc(100vh - 57px);
-    margin-left: -15rem;
-    -webkit-transition: margin .25s ease-out;
-    -moz-transition: margin .25s ease-out;
-    -o-transition: margin .25s ease-out;
-    transition: margin .25s ease-out;
-}
-
-#sidebar-wrapper .sidebar-heading {
-    padding: 0.875rem 1.25rem;
-    font-size: 1.2rem;
-}
-
-#sidebar-wrapper .list-group {
-    width: 15rem;
-}
-
-#page-content-wrapper {
-    min-width: 100vw;
-}
-
-#wrapper.toggled #sidebar-wrapper {
-    margin-left: 0;
-}
-
-@media (min-width: 768px) {
-    #sidebar-wrapper {
-        margin-left: 0;
-    }
-
-    #page-content-wrapper {
-        min-width: 0;
-        width: 100%;
-    }
-
-    #wrapper.toggled #sidebar-wrapper {
-        margin-left: -15rem;
-    }
-    #navbar-organizacion{
-        width: 14rem;
-    }
-}
 
 </style>

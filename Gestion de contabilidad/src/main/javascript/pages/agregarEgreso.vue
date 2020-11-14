@@ -344,8 +344,9 @@
         <b-modal id="modal-agregar-presupuesto" size="xl" hide-footer scrollable centered title="Crear nuevo Presupuesto">
             <agregar-presupuesto
                 ref="agregarPresupuesto"
-                v-bind:confirmarAccion="confirmarNuevoPresupuesto"
-                v-bind:cancelarAccion="cancelarNuevoPresupuesto"
+                :buscarEgresos="false"
+                :confirmarAccion="confirmarNuevoPresupuesto"
+                :cancelarAccion="cancelarNuevoPresupuesto"
             ></agregar-presupuesto>
         </b-modal>
     </div>
@@ -552,30 +553,6 @@ export default {
                         this.falloCarga = true;
                     }
                 });
-
-                // axios
-                //     .post('/api/proveedor', this.proveedorAAgregar)
-                //     .then(response => {
-                //         var data = response.data;
-
-                //         if(data.code == 200) {
-                //             this.egreso.proveedor = data.id;
-                //             this.crearEgresoAPI()
-                //         } else if (data.code == 403) {
-                //             this.showLoginModal(true);
-                //         } else if (data.code == 400) {
-                //             this.falloCarga = true;
-                //         } else {
-                //             this.falloCarga = true;
-                //         }
-                //     })
-                //     .catch(error => {
-                //         this.errorHandling(error);
-                //         this.falloCarga = true;
-                //     })
-                //     .then(() => {
-                //         // always
-                //     })
             } else {
                 this.crearEgresoAPI()
             }
@@ -604,30 +581,6 @@ export default {
                     this.falloCarga = true;
                 }
             });
-
-            // axios
-            //     .post('/api/operaciones/egreso', egresoToSend)
-            //     .then(response => {
-            //         var data = response.data;
-
-            //         if(data.code == 200) {
-            //             this.idEgreso = data.id;
-            //             this.crearPresupuestosAPI();
-            //         } else if (data.code == 403) {
-            //             this.showLoginModal(true);
-            //         } else if (data.code == 400) {
-            //             this.falloCarga = true;
-            //         } else {
-            //             this.falloCarga = true;
-            //         }
-            //     })
-            //     .catch(error => {
-            //         this.errorHandling(error);
-            //         this.falloCarga = true;
-            //     })
-            //     .then(() => {
-            //         // always
-            //     })
         },
         crearPresupuestosAPI() {
             // Proximamente
@@ -662,29 +615,6 @@ export default {
                         this.falloCarga = true;
                     }
                 });
-
-                // axios
-                //     .post('/api/categorias/asociar', request)
-                //     .then(response => {
-                //         var data = response.data;
-
-                //         if(data.code == 200) {
-                //             this.asociarIngresoAPI();
-                //         } else if (data.code == 403) {
-                //             this.showLoginModal(true);
-                //         } else if (data.code == 400) {
-                //             this.falloCarga = true;
-                //         } else {
-                //             this.falloCarga = true;
-                //         }
-                //     })
-                //     .catch(error => {
-                //         this.errorHandling(error);
-                //         this.falloCarga = true;
-                //     })
-                //     .then(() => {
-                //         // always
-                //     })
             } else {
                 this.asociarIngresoAPI();
             }
@@ -716,30 +646,6 @@ export default {
                         this.falloCarga = true;
                     }
                 });
-
-                // axios
-                //     .post('/api/operaciones/asociarManualmente', request)
-                //     .then(response => {
-                //         var data = response.data;
-
-                //         if(data.code == 200) {
-                //             this.createToast('Guardado exitoso', 'Se dio de alta el egreso correctamente', 'success');
-                //             this.$router.push('/operaciones/egreso');
-                //         } else if (data.code == 403) {
-                //             this.showLoginModal(true);
-                //         } else if (data.code == 400) {
-                //             this.falloCarga = true;
-                //         } else {
-                //             this.falloCarga = true;
-                //         }
-                //     })
-                //     .catch(error => {
-                //         this.errorHandling(error);
-                //         this.falloCarga = true;
-                //     })
-                //     .then(() => {
-                //         // always
-                //     })
             } else {
                 this.$router.push('/operaciones/egreso');
             }
@@ -761,25 +667,6 @@ export default {
                     this.proveedoresLoading = false;
                 }
             });
-
-            // axios
-            //     .get('/api/proveedores')
-            //     .then(response => {
-            //         var data = response.data;
-
-            //         if(data.code == 200) {
-            //             this.proveedoresSelect = data.data.map(this.proveedoresAPIConverter);
-            //         } else if (data.code == 403) {
-            //             this.showLoginModal(true);
-            //         }
-            //     })
-            //     .catch(error => {
-            //         this.errorHandling(error);
-            //     })
-            //     .then(() => {
-            //         // always
-            //         this.proveedoresLoading = false;
-            //     })
         },
         proveedoresAPIConverter(proveedor) {
             return {
@@ -804,25 +691,6 @@ export default {
                     this.mediosDePagoLoading = false;
                 }
             });
-
-            // axios
-            //     .get('/api/medios')
-            //     .then(response => {
-            //         var data = response.data;
-
-            //         if(data.code == 200) {
-            //             this.mediosDePagoSelect = data.data.map(this.mediosDePagoAPIConverter);
-            //         } else if (data.code == 403) {
-            //             this.showLoginModal(true);
-            //         }
-            //     })
-            //     .catch(error => {
-            //         this.errorHandling(error);
-            //     })
-            //     .then(() => {
-            //         // always
-            //         this.mediosDePagoLoading = false;
-            //     })
         },
         mediosDePagoAPIConverter(medioDePago) {
             return {

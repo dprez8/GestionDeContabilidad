@@ -1,25 +1,25 @@
 import VueRouter from 'vue-router'
 import axios from 'axios'
+import {RequestHelper} from './util/utils'
 
-import panel from './pages/panel'
-import login from './pages/login'
-import error404 from './pages/error404'
-import error500 from './pages/error500'
-import inicio from './pages/inicio'
-import operaciones from './pages/operaciones'
-import egresos from './components/egresos'
-import ingresos from './components/ingresos'
-import bandeja from './pages/bandeja'
-import miCuenta from './pages/miCuenta'
-import adminPanel from './pages/adminPanel'
-import configValidacion from './components/configValidacion'
-import agregarEgreso from './pages/agregarEgreso'
-import agregarIngreso from './pages/agregarIngreso'
+import {  
+    panel, login, error404, error500, inicio,
+    operaciones, egresos, ingresos, presupuestos, agregarEgreso, agregarIngreso, bandeja, 
+    miCuenta, configValidacion
+} from './pages'
 
 const routes = [
     {
+        name: 'panel',
         path: '/',
         component: panel,
+        props: {
+            sidebar: [
+                {text: 'Operaciones', icon: 'journal-check', to: '/operaciones'},
+                {text: 'Presupuestos', icon: 'journals', to: '/presupuestos'},
+                {text: 'Bandeja de Mensajes', icon: 'chat-left-text', to: '/bandeja'}
+            ]
+        },
         children: [
             {
                 name: "index",
@@ -150,6 +150,19 @@ const routes = [
                 ],
             },
             {
+                name: 'presupuestos',
+                path: 'presupuestos',
+                component: presupuestos,
+                meta: {
+                    breadcrumb: [{
+                        label: "Presupuestos",
+                        type: "fixed",
+                        path: "/presupuestos",
+                        active: true
+                    }]
+                }
+            },
+            {
                 name: 'bandeja',
                 path: 'bandeja',
                 component: bandeja,
@@ -157,7 +170,7 @@ const routes = [
                     breadcrumb: [{
                         label: "Bandeja de Mensajes",
                         type: "fixed",
-                        path: "/operaciones",
+                        path: "/bandeja",
                         active: true
                     }]
                 },
@@ -195,38 +208,49 @@ const routes = [
                         active: true
                     }]
                 }
-            },
+            }
+        ]
+    },
+    {
+        name: 'adminPanel',
+        path: '/admin',
+        component: panel,
+        props: {
+            sidebar: [
+                {text: 'Usuarios', icon: 'person-lines-fill', to: '/admin/usuarios'},
+                {text: 'Entidades', icon: 'bar-chart-fill', to: '/admin/entidades'},
+                {text: 'Criterios', icon: 'ui-checks', to: '/admin/criterios'},
+                {text: 'Vinculacion automática', icon: 'gear-wide-connected', to: '/admin/vinculacion'},
+                {text: 'Validacion de Egresos', icon: 'clock', to: '/admin/validaciones'}
+            ]
+        },
+        children: [
             {
-                name: 'panel',
-                path: 'panel',
-                component: adminPanel,
+                name: 'configValidacion',
+                path: 'validaciones',
+                component: configValidacion,
                 meta: {
-                    breadcrumb: [{
-                        label: "Admin Panel",
+                    breadcrumb: [
+                    {
+                        label: "Validacion de Egresos",
                         type: "fixed",
-                        path: "/panel",
+                        path: "/admin/validaciones",
                         active: true
                     }]
-                },
-                children: [
-                    {
-                        name: 'configValidacion',
-                        path: 'validaciones',
-                        component: configValidacion,
-                        meta: {
-                            breadcrumb: [{
-                                label: "Admin Panel",
-                                type: "fixed",
-                                path: "/panel"
-                            },{
-                                label: "Validacion de Egresos",
-                                type: "fixed",
-                                path: "/panel/validaciones",
-                                active: true
-                            }]
-                        }
-                    }
-                ]
+                }
+            },
+            {
+                name: 'cuenta',
+                path: 'cuenta',
+                component: miCuenta,
+                meta: {
+                    breadcrumb: [{
+                        label: "Mi Cuenta",
+                        type: "fixed",
+                        path: "/cuenta",
+                        active: true
+                    }]
+                }
             }
         ]
     },
@@ -253,38 +277,50 @@ var router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    if ((from.name == null || from.name == 'error404' || from.name == 'error500' || from.name == 'login') && to.name != 'error404' && to.name != 'error500' && to.name != 'login') {
-        axios
-            .get('/api/login')
-            .then(response => {
-                var data = response.data;
-                if(data.code == 200) {
+    switch (to.matched[0].name) {
+        case 'panel':
+            // Si no estoy logeado voy al 'login'
+            RequestHelper.get('/api/login', {
+                success: (data) => {
                     document.cookie = `username=${data.nombre}; path=/`;
                     document.cookie = `organizacion=${data.organizacion.razonSocial}; path=/`;
                     next();
-                } else if (data.code == 403) {
+                },
+                notLoggedIn: () => {
                     next('/login');
+                },
+                error: () => {
+                    next({name: 'error500'});
                 }
-            })
-            .catch(error => {
-                console.log('error500')
-                next({name: 'error500'});
             });
-    } else if (to.name == 'login') {
-        axios
-            .get('/api/login')
-            .then(response => {
-                var data = response.data;
-                if(data.code == 200) {
+            break;
+
+        case 'login':
+            // Si ya estoy logeado me voy al 'panel'
+            RequestHelper.get('/api/login', {
+                success: (data) => {
                     document.cookie = `username=${data.nombre}; path=/`;
                     document.cookie = `organizacion=${data.organizacion.razonSocial}; path=/`;
                     next('/');
-                } else if (data.code == 403) {
+                },
+                notLoggedIn: () => {
                     next();
+                },
+                error: () => {
+                    next({name: 'error500'});
                 }
             });
-    } 
-    else next()
+            break;
+
+        case 'adminPanel':
+            // Chequear si soy admin
+            next();
+            break;
+    
+        default:
+            next();
+            break;
+    }
 })
 
 export default router;
