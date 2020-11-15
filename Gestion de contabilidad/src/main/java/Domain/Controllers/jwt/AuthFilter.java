@@ -54,9 +54,10 @@ public class AuthFilter implements Filter {
                 Spark.halt(200,response.body());
             }
             String token = authorizationHeader.replace(TOKEN_PREFIX, "");
-
+            if(isAuthRequest(request))
+                return;
             if(isEstandar(token)) {
-                if(     !isProveedorRequest(request) && !isMensajesRequest(request) && !isOperacionesRequest(request) &&
+                if(!isProveedorRequest(request) && !isMensajesRequest(request) && !isOperacionesRequest(request) &&
                         !isCriteriosCategoriasRequest(request) && !isPresupuestoRequest(request)) {
                     this.respuesta.setCode(403);
                     this.respuesta.setMessage("No posees permisos de administrador");
@@ -125,6 +126,12 @@ public class AuthFilter implements Filter {
 
     private boolean isPresupuestoRequest(Request request) {
         return request.uri().equals("/api/operaciones/presupuesto") && request.requestMethod().equals(HTTP_POST);
+    }
+
+    private boolean isAuthRequest(Request request) {
+        return  request.uri().equals(authEndpointPrefix + "/me") && request.requestMethod().equals(HTTP_GET) ||
+                request.uri().equals(authEndpointPrefix + "/token") && request.requestMethod().equals(HTTP_POST) ||
+                request.uri().equals(authEndpointPrefix + "/logout") && request.requestMethod().equals(HTTP_POST);
     }
 
 }
