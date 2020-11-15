@@ -112,10 +112,6 @@ public class EgresosRestController extends GenericController {
     }
 
     public String cargarNuevoEgreso(Request request, Response response) {
-        Usuario usuario = getUsuarioDesdeRequest(request);
-        if(!isAdmin(usuario))
-            return respuesta(response,403,"No posees permisos de estandar");
-
         String jsonResponse;
         this.gson  = new GsonBuilder()
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())
@@ -183,8 +179,9 @@ public class EgresosRestController extends GenericController {
     }
 
     public String mostrarEgreso(Request request, Response response) {
-
         Estandar usuario = (Estandar) getUsuarioDesdeRequest(request);
+        if(isAdmin(usuario))
+            return respuesta(response,403,"No posees permisos de estandar");
         String jsonResponse;
         Egreso egreso;
 
