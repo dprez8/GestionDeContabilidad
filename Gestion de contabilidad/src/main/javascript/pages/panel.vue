@@ -127,7 +127,7 @@ export default {
                 switch(error.code) {
                     case 403:
                         this.alert.show = true;
-                        this.alert.message = `Error 403, no tienes permiso para realizar esta acción`;
+                        this.alert.message = `Error 403, ${error.message}`;
                         this.alert.variant = "warning";
                         break;
 
@@ -135,7 +135,7 @@ export default {
             }
         },
         getUserData() {
-            RequestHelper.get('/auth/me', {
+            RequestHelper.get('/api/auth/me', {
                 success: (data) => {
                     this.userData.nombre = data.nombre;
                     this.userData.organizacion = data.organizacion.razonSocial;
@@ -144,6 +144,7 @@ export default {
                     this.showLoginModal(true);
                 },
                 forbidden: (error) => {
+                    console.log("asd");
                     this.errorHandling(error);
                 },
                 error: (error) => {

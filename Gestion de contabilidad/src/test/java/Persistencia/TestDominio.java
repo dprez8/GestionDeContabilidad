@@ -344,7 +344,7 @@ public class TestDominio {
     }
 
     @Test
-    public void T3persistirAUnUsuarioAdministrador () throws contraseniaCorta, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, IOException {
+    public void T99persistirAUnUsuarioAdministrador () throws contraseniaCorta, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, IOException {
         EntidadJuridica entidadJuridica = repoEntidadJuridica.buscar(1);
         Administrador usuario = new Administrador();
         usuario.setNombre("Fernando");

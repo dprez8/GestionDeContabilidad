@@ -354,7 +354,7 @@ router.beforeEach((to, from, next) => {
 
     function authorized(goingTo, tokenDecoded) {
         return  (goingTo == 'panel' && tokenDecoded.rol == 'Estandar') || 
-                (goingTo == 'adminPanel' && tokenDecoded.rol == 'Estandar');
+                (goingTo == 'adminPanel' && tokenDecoded.rol == 'Administrador');
     }
 
 });
