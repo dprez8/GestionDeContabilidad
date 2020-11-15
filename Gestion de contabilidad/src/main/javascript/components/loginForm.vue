@@ -57,7 +57,7 @@ export default {
                     password: this.pass
                 }
 
-                RequestHelper.post('/auth/login', loginData, {
+                RequestHelper.post('/api/auth/login', loginData, {
                     success: (data) => {
                         this.$emit('loginSuccess');
                     },

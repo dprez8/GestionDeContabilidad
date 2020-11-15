@@ -49,7 +49,7 @@ export default {
             this.$emit('toggleSidebar');
         },
         logout() {
-            RequestHelper.post('/auth/logout', null, {
+            RequestHelper.post('/api/auth/logout', null, {
                 always: () => {
                     sessionStorage.clear();
                     this.$router.push("/login");

@@ -105,7 +105,7 @@ export default {
         guardarConfiguracionAPI() {
             this.loading = true;
 
-            RequestHelper.post('/api/bandeja/configurar', this.scheduler, {
+            RequestHelper.post('/api/admin/bandeja/configurar', this.scheduler, {
                 success: (data) => {
                     this.createToast('Guardado exitoso', 'Se guardo la configuración correctamente', 'success');
                     this.updateHoraYMinuto();
