@@ -57,8 +57,7 @@ public class AuthFilter implements Filter {
             if(isAuthRequest(request))
                 return;
             if(isEstandar(token)) {
-                if(!isProveedorRequest(request) && !isMensajesRequest(request) && !isOperacionesRequest(request) &&
-                        !isCriteriosCategoriasRequest(request) && !isPresupuestoRequest(request)) {
+                if(isAdminRequests(request)){
                     this.respuesta.setCode(403);
                     this.respuesta.setMessage("No posees permisos de administrador");
                     String jsonResponseError = gson.toJson(this.respuesta);
@@ -101,6 +100,12 @@ public class AuthFilter implements Filter {
                 request.uri().equals(PREFIX_ADMIN+"/criterio") && request.requestMethod().equals(HTTP_POST) ;
     }
 
+    private boolean isEstandarRequest(Request request) {
+        return  isProveedorRequest(request) || isCriteriosCategoriasRequest(request) ||
+                isPresupuestoRequest(request) || isMensajesRequest(request) ||
+                isOperacionesRequest(request) ;
+    }
+
     private boolean isProveedorRequest(Request request) {
         return  request.uri().equals("/api/proveedor") && request.requestMethod().equals(HTTP_POST) ||
                 request.uri().equals("/api/proveedores") && request.requestMethod().equals(HTTP_GET);
@@ -113,6 +118,7 @@ public class AuthFilter implements Filter {
 
     private boolean isOperacionesRequest(Request request) {
         return  request.uri().equals("/api/operaciones/egreso") && request.requestMethod().equals(HTTP_POST) ||
+                request.uri().equals("/api/operaciones/egreso/") && request.requestMethod().equals(HTTP_GET) ||
                 request.uri().equals("/api/operaciones/egresos") && request.requestMethod().equals(HTTP_GET) ||
                 request.uri().equals("/api/operaciones/ingresos") && request.requestMethod().equals(HTTP_GET)||
                 request.uri().equals("/api/operaciones/ingreso") && request.requestMethod().equals(HTTP_POST)||
