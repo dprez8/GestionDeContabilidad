@@ -35,6 +35,19 @@ class RequestHelper {
 	* @param {Object} callback The name to say hi to
 	*/
 	static get(path, callback, config) {
+		var token = sessionStorage.getItem('token');
+		if(token) {
+			if(config) {
+				config.headers = {
+					Authorization: token
+				}
+			} else {
+				config = {
+					headers: {Authorization: token}
+				}
+			}
+		}
+
 		axios
 			.get(path, config)
 			.then(response => {
@@ -49,9 +62,13 @@ class RequestHelper {
 						if (callback.failed)
 							callback.failed(data);
 						break;
-					case 403:
+					case 401:
 						if (callback.notLoggedIn)
 							callback.notLoggedIn(data);
+						break;
+					case 403:
+						if (callback.forbidden)
+							callback.forbidden(data);
 						break;
 					case 404:
 						if (callback.empty)
@@ -78,10 +95,28 @@ class RequestHelper {
 	* @param {Object} callback The name to say hi to
 	*/
 	static post(path, data, callback, config) {
+		var token = sessionStorage.getItem('token');
+		if(token) {
+			if(config) {
+				config.headers = {
+					Authorization: token
+				}
+			} else {
+				config = {
+					headers: {Authorization: token}
+				}
+			}
+		}
+		
 		axios
 			.post(path, data, config)
 			.then(response => {
 				var data = response.data;
+
+				// Si recibo un token por el header lo guardo
+				if(response.headers.authorization) {
+					sessionStorage.setItem('token', response.headers.authorization);
+				}
 
 				switch (data.code) {
 					case 200:
@@ -92,9 +127,13 @@ class RequestHelper {
 						if (callback.failed)
 							callback.failed(data);
 						break;
-					case 403:
+					case 401:
 						if (callback.notLoggedIn)
 							callback.notLoggedIn(data);
+						break;
+					case 403:
+						if (callback.forbidden)
+							callback.forbidden(data);
 						break;
 					case 404:
 						if (callback.empty)

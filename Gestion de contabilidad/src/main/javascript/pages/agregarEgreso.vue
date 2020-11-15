@@ -343,8 +343,6 @@
 
         <b-modal id="modal-agregar-presupuesto" size="xl" hide-footer scrollable centered title="Crear nuevo Presupuesto">
             <agregar-presupuesto
-                ref="agregarPresupuesto"
-                :buscarEgresos="false"
                 :confirmarAccion="confirmarNuevoPresupuesto"
                 :cancelarAccion="cancelarNuevoPresupuesto"
             ></agregar-presupuesto>
@@ -466,6 +464,7 @@ export default {
     },
     methods: {
         getCookie: getCookie,
+        convertDate: convertDate,
         uploadFileTest() {
             console.log(this.egreso.archivo);
 
@@ -491,8 +490,11 @@ export default {
                 failed: (data) => {
                     console.log(data);
                 },
+                forbidden: (error) => {
+                    this.errorHandling(error);
+                },
                 error: (error) => {
-                    console.log(error);
+                    this.errorHandling(error);
                 },
                 always: () => {
                     this.egresoLoading = false;
@@ -548,6 +550,10 @@ export default {
                     failed: () => {
                         this.falloCarga = true;
                     },
+                    forbidden: (error) => {
+                        this.errorHandling(error);
+                        this.falloCarga = true;
+                    },
                     error: (error) => {
                         this.errorHandling(error);
                         this.falloCarga = true;
@@ -576,6 +582,10 @@ export default {
                 failed: () => {
                     this.falloCarga = true;
                 },
+                forbidden: (error) => {
+                    this.errorHandling(error);
+                    this.falloCarga = true;
+                },
                 error: (error) => {
                     this.errorHandling(error);
                     this.falloCarga = true;
@@ -584,7 +594,6 @@ export default {
         },
         crearPresupuestosAPI() {
             // Proximamente
-            this.$refs.agregarPresupuesto.crearPresupuestosAPI();
             this.asociarCategoriasAPI();
         },
         asociarCategoriasAPI() {
@@ -608,6 +617,10 @@ export default {
                         this.showLoginModal(true);
                     },
                     failed: () => {
+                        this.falloCarga = true;
+                    },
+                    forbidden: (error) => {
+                        this.errorHandling(error);
                         this.falloCarga = true;
                     },
                     error: (error) => {
@@ -641,6 +654,10 @@ export default {
                     failed: () => {
                         this.falloCarga = true;
                     },
+                    forbidden: (error) => {
+                        this.errorHandling(error);
+                        this.falloCarga = true;
+                    },
                     error: (error) => {
                         this.errorHandling(error);
                         this.falloCarga = true;
@@ -659,6 +676,9 @@ export default {
                 },
                 notLoggedIn: () => {
                     this.showLoginModal(true);
+                },
+                forbidden: (error) => {
+                    this.errorHandling(error);
                 },
                 error: (error) => {
                     this.errorHandling(error);
@@ -683,6 +703,9 @@ export default {
                 },
                 notLoggedIn: () => {
                     this.showLoginModal(true);
+                },
+                forbidden: (error) => {
+                    this.errorHandling(error);
                 },
                 error: (error) => {
                     this.errorHandling(error);

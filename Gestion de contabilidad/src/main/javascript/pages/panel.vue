@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- Navbar -->
-        <navbar @toggleSidebar="sidebarShow = !sidebarShow"/>
+        <navbar :userData="userData" @toggleSidebar="sidebarShow = !sidebarShow"/>
         <!-- /#navbar-wrapper -->
 
         <div class="d-flex" v-bind:class="{toggled: !sidebarShow}" id="wrapper">
@@ -44,12 +44,19 @@
             </iframe>
         </b-modal>
 
+        <b-alert
+            v-model="alert.show"
+            :variant="alert.variant"
+            class="position-fixed fixed-bottom m-0 rounded-0"
+            style="z-index: 2000;"
+            dismissible
+        >{{alert.message}}</b-alert>
     </div>
     <!-- /#panel-wrapper -->
 </template>
 
 <script>
-import {capitalizeFirstLetter, getCookie} from '../util/utils'
+import {capitalizeFirstLetter, getCookie, RequestHelper} from '../util/utils'
 import axios from 'axios'
 import loginForm from '../components/loginForm'
 import breadcrumb from '../components/breadcrumb'
@@ -62,12 +69,22 @@ export default {
     },
     data() {
         return {
+            userData: {
+                nombre: "",
+                organizacion: ""
+            },
             sidebarShow: true,
             reloadPage: false,
             routerViewKey: 0,
             loading: true,
 
-            debugSparkModalHTML: ""
+            debugSparkModalHTML: "",
+
+            alert: {
+                show: false,
+                message: "",
+                variant: ""
+            }
         }
     },
     methods: {
@@ -75,6 +92,7 @@ export default {
             if(this.reloadPage)
                 this.softReloadPage();
 
+            this.getUserData();
             this.$bvModal.hide('login-modal');
         },
         softReloadPage() {
@@ -84,18 +102,16 @@ export default {
             this.reloadPage = reload;
             this.$bvModal.show('login-modal');
         },
-        createToast(title, body, variant) {
+        createToast(title, body, variant, appendToToast) {
 			this.$bvToast.toast(body, {
 				title: title,
 				variant: variant,
 				toaster: 'b-toaster-bottom-right',
 				solid: true,
-				appendToToast: true
+				appendToToast: (appendToToast != undefined) ? appendToToast : true
 			});
 		},
 		errorHandling(error) {
-            console.log(error);
-
 			if(error.response) {
 				switch(error.response.status) {
                     case 500 : 
@@ -106,10 +122,38 @@ export default {
 					default :
 						this.createToast('Error', 'Ha ocurrido un error, vuelva a intentarlo mas tarde', 'danger');
 				}
-			} else {
-				this.createToast('Error', 'Ha ocurrido un error, vuelva a intentarlo mas tarde', 'danger');
-			}
+            } 
+            else if(error.code) {
+                switch(error.code) {
+                    case 403:
+                        this.alert.show = true;
+                        this.alert.message = `Error 403, no tienes permiso para realizar esta acción`;
+                        this.alert.variant = "warning";
+                        break;
+
+                }
+            }
         },
+        getUserData() {
+            RequestHelper.get('/auth/me', {
+                success: (data) => {
+                    this.userData.nombre = data.nombre;
+                    this.userData.organizacion = data.organizacion.razonSocial;
+                },
+                notLoggedIn: (data) => {
+                    this.showLoginModal(true);
+                },
+                forbidden: (error) => {
+                    this.errorHandling(error);
+                },
+                error: (error) => {
+                    this.errorHandling(error);
+                }
+            });
+        }
+    },
+    mounted() {
+        this.getUserData();
     },
     provide() {
         return {

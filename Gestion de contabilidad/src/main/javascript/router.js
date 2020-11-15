@@ -1,11 +1,11 @@
 import VueRouter from 'vue-router'
-import axios from 'axios'
 import {RequestHelper} from './util/utils'
+import jwt_decode from "jwt-decode";
 
 import {  
-    panel, login, error404, error500, inicio,
-    operaciones, egresos, ingresos, presupuestos, agregarEgreso, agregarIngreso, bandeja, 
-    miCuenta, configValidacion
+    panel, login, error404, error401, error500, inicio,
+    operaciones, egresos, ingresos, agregarEgreso, agregarIngreso, bandeja, 
+    miCuenta, configValidacion, configCriterios, configUsuarios, configEntidades, configVinculacion
 } from './pages'
 
 const routes = [
@@ -16,8 +16,8 @@ const routes = [
         props: {
             sidebar: [
                 {text: 'Operaciones', icon: 'journal-check', to: '/operaciones'},
-                {text: 'Presupuestos', icon: 'journals', to: '/presupuestos'},
-                {text: 'Bandeja de Mensajes', icon: 'chat-left-text', to: '/bandeja'}
+                {text: 'Bandeja de Mensajes', icon: 'chat-left-text', to: '/bandeja', bandeja: true},
+                {text: 'Mi Cuenta', icon: 'person', to: '/cuenta'}
             ]
         },
         children: [
@@ -150,19 +150,6 @@ const routes = [
                 ],
             },
             {
-                name: 'presupuestos',
-                path: 'presupuestos',
-                component: presupuestos,
-                meta: {
-                    breadcrumb: [{
-                        label: "Presupuestos",
-                        type: "fixed",
-                        path: "/presupuestos",
-                        active: true
-                    }]
-                }
-            },
-            {
                 name: 'bandeja',
                 path: 'bandeja',
                 component: bandeja,
@@ -220,11 +207,64 @@ const routes = [
                 {text: 'Usuarios', icon: 'person-lines-fill', to: '/admin/usuarios'},
                 {text: 'Entidades', icon: 'bar-chart-fill', to: '/admin/entidades'},
                 {text: 'Criterios', icon: 'ui-checks', to: '/admin/criterios'},
-                {text: 'Vinculacion automática', icon: 'gear-wide-connected', to: '/admin/vinculacion'},
-                {text: 'Validacion de Egresos', icon: 'clock', to: '/admin/validaciones'}
+                {text: 'Vinculación automática', icon: 'gear-wide-connected', to: '/admin/vinculacion'},
+                {text: 'Validación de Egresos', icon: 'clock', to: '/admin/validaciones'}
             ]
         },
         children: [
+            {
+                name: 'configUsuarios',
+                path: 'usuarios',
+                component: configUsuarios,
+                meta: {
+                    breadcrumb: [{
+                        label: "Usuarios",
+                        type: "fixed",
+                        path: "/admin/usuarios",
+                        active: true
+                    }]
+                }
+            },
+            {
+                name: 'configEntidades',
+                path: 'entidades',
+                component: configEntidades,
+                meta: {
+                    breadcrumb: [{
+                        label: "Entidades",
+                        type: "fixed",
+                        path: "/admin/entidades",
+                        active: true
+                    }]
+                }
+            },
+            {
+                name: 'configCriterios',
+                path: 'criterios',
+                component: configCriterios,
+                meta: {
+                    breadcrumb: [{
+                        label: "Criterios",
+                        type: "fixed",
+                        path: "/admin/criterios",
+                        active: true
+                    }]
+                }
+            },
+            {
+                name: 'configVinculacion',
+                path: 'vinculacion',
+                component: configVinculacion,
+                meta: {
+                    breadcrumb: [
+                    {
+                        label: "Vinculación automática",
+                        type: "fixed",
+                        path: "/admin/vinculacion",
+                        active: true
+                    }]
+                }
+            },
             {
                 name: 'configValidacion',
                 path: 'validaciones',
@@ -232,7 +272,7 @@ const routes = [
                 meta: {
                     breadcrumb: [
                     {
-                        label: "Validacion de Egresos",
+                        label: "Validación de Egresos",
                         type: "fixed",
                         path: "/admin/validaciones",
                         active: true
@@ -240,7 +280,7 @@ const routes = [
                 }
             },
             {
-                name: 'cuenta',
+                name: 'adminCuenta',
                 path: 'cuenta',
                 component: miCuenta,
                 meta: {
@@ -260,13 +300,18 @@ const routes = [
         component: login
     },
     {
-        name: 'error404',
+        name: 'notFound',
         path: '/*',
         component: error404,
     },
     {
-        name: 'error500',
-        path: '/*',
+        name: 'unauthorized',
+        path: '',
+        component: error401,
+    },
+    {
+        name: 'serverError',
+        path: '',
         component: error500,
     }
 ];
@@ -277,50 +322,41 @@ var router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    switch (to.matched[0].name) {
-        case 'panel':
-            // Si no estoy logeado voy al 'login'
-            RequestHelper.get('/api/login', {
-                success: (data) => {
-                    document.cookie = `username=${data.nombre}; path=/`;
-                    document.cookie = `organizacion=${data.organizacion.razonSocial}; path=/`;
-                    next();
-                },
-                notLoggedIn: () => {
-                    next('/login');
-                },
-                error: () => {
-                    next({name: 'error500'});
-                }
-            });
-            break;
-
-        case 'login':
-            // Si ya estoy logeado me voy al 'panel'
-            RequestHelper.get('/api/login', {
-                success: (data) => {
-                    document.cookie = `username=${data.nombre}; path=/`;
-                    document.cookie = `organizacion=${data.organizacion.razonSocial}; path=/`;
-                    next('/');
-                },
-                notLoggedIn: () => {
-                    next();
-                },
-                error: () => {
-                    next({name: 'error500'});
-                }
-            });
-            break;
-
-        case 'adminPanel':
-            // Chequear si soy admin
-            next();
-            break;
-    
-        default:
-            next();
-            break;
+    if(to.name == 'unauthorized' || to.name == 'notFound' || to.name == 'serverError' || to.name == 'login') {
+        next();
+        return;
     }
-})
+
+    var token = sessionStorage.getItem('token');
+    var tokenDecoded = null;
+
+    if(token)
+        tokenDecoded = jwt_decode(token);
+    else {
+        next('/login');
+        return;
+    }
+
+    var goingTo = to.matched[0].name;
+    var comingFrom = null;
+
+    if(from.matched.length)
+        comingFrom = from.matched[0].name;
+
+    // Si ya estaba navegando en la misma página dejame seguir navegando
+    if(goingTo == comingFrom) {
+        next();
+    } else if(authorized(goingTo, tokenDecoded)) {
+        next();
+    } else {
+        next({name: 'unauthorized'});
+    }
+
+    function authorized(goingTo, tokenDecoded) {
+        return  (goingTo == 'panel' && tokenDecoded.rol == 'Estandar') || 
+                (goingTo == 'adminPanel' && tokenDecoded.rol == 'Estandar');
+    }
+
+});
 
 export default router;

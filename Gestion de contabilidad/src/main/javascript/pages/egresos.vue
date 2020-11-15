@@ -80,6 +80,9 @@ export default {
                 notLoggedIn: () => {
                     this.showLoginModal(true);
                 },
+                forbidden: (error) => {
+                    this.errorHandling(error);
+                },
                 error: (error) => {
                     this.errorHandling(error);
                 },

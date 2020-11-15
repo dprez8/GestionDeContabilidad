@@ -1,6 +1,6 @@
 <template>
     <b-overlay class="w-100 h-100" spinner-variant="light" variant="primary" :show="loading">
-        <div class="text-center p-2">
+        <div class="text-center p-2" style="background: #eee; min-height: 100%">
             <div>
                 <p class="mt-4 mb-2">Días en los que se ejecutará la validación de egresos</p>
                 <div class="d-flex justify-content-center">
@@ -20,7 +20,7 @@
                             <b-button @click="scheduler.horaInicio++">
                                 <b-icon-chevron-compact-up></b-icon-chevron-compact-up>
                             </b-button>
-                            <b-form-input class="bg-secondary text-light border-0 rounded-0 text-center"
+                            <b-form-input class="bg-secondary text-light border-secondary rounded-0 text-center"
                             style="font-size: 2rem; width: 70px" 
                             v-model="scheduler.horaInicio" 
                             lazy></b-form-input>
@@ -36,7 +36,7 @@
                             <b-button @click="scheduler.minutoInicio++">
                                 <b-icon-chevron-compact-up></b-icon-chevron-compact-up>
                             </b-button>
-                            <b-form-input class="bg-secondary text-light border-0 rounded-0 text-center"
+                            <b-form-input class="bg-secondary text-light border-secondary rounded-0 text-center"
                             style="font-size: 2rem; width: 70px" 
                             v-model="scheduler.minutoInicio"
                             lazy></b-form-input>
@@ -56,6 +56,7 @@
 
 <script>
 import axios from 'axios'
+import { RequestHelper } from '../util/utils';
 
 export default {
     data() {
@@ -82,28 +83,48 @@ export default {
         cargarConfiguracionAPI() {
             this.loading = true;
 
-            axios
-                .get('/api/bandeja/configuracion')
-                .then(response => {
-                    var data = response.data;
-                    if(data.code == 200) {
-                        this.scheduler = data.schedulerInit;
-                        this.updateHoraYMinuto();
-                    } else if (data.code == 403) {
-                        this.showLoginModal(true);
-                    }
-                })
-                .catch(error => {
+            RequestHelper.get('/api/bandeja/configuracion', {
+                success: (data) => {
+                    this.scheduler = data.schedulerInit;
+                    this.updateHoraYMinuto();
+                },
+                notLoggedIn: () => {
+                    this.showLoginModal(true);
+                },
+                forbidden: (error) => {
                     this.errorHandling(error);
-                })
-                .then(() => {
-                    // always
+                },
+                error: (error) => {
+                    this.errorHandling(error);
+                },
+                always: () => {
                     this.loading = false;
-                });
+                }
+            });
         },
         guardarConfiguracionAPI() {
             this.loading = true;
 
+            RequestHelper.post('/api/bandeja/configurar', this.scheduler, {
+                success: (data) => {
+                    this.createToast('Guardado exitoso', 'Se guardo la configuración correctamente', 'success');
+                    this.updateHoraYMinuto();
+                },
+                notLoggedIn: () => {
+                    this.showLoginModal(false);
+                },
+                forbidden: (error) => {
+                    this.errorHandling(error);
+                },
+                error: (error) => {
+                    this.errorHandling(error);
+                },
+                always: () => {
+                    this.loading = false;
+                }
+            });
+
+            /*
             axios
                 .post('/api/bandeja/configurar', this.scheduler)
                 .then(response => {
@@ -114,6 +135,7 @@ export default {
                     } else if (data.code == 403) {
                         this.showLoginModal(false);
                     }
+                    console.log(response);
                 })
                 .catch(error => {
                     this.errorHandling(error);
@@ -122,6 +144,7 @@ export default {
                     // always
                     this.loading = false;
                 });
+                */
         },
         toggleDia(dia) {
             if(this.diaIsSelected(dia)) {

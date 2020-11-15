@@ -23,7 +23,7 @@
                 <b-list-group-item to="/cuenta" @click="userPanelShow = false">
                         <b-icon-person-fill class="mr-2"></b-icon-person-fill> {{userData.nombre}}
                 </b-list-group-item>
-                <b-list-group-item to="#" @click="logout">
+                <b-list-group-item button @click="logout">
                     <b-icon-box-arrow-left class="mr-2"></b-icon-box-arrow-left> Cerrar sesión
                 </b-list-group-item>
             </b-list-group>
@@ -32,34 +32,31 @@
 </template>
 
 <script>
-import {capitalizeFirstLetter, getCookie} from '../util/utils'
+import {capitalizeFirstLetter, getCookie, RequestHelper} from '../util/utils'
 
 export default {
+    props: {
+        userData: Object
+    },
     data() {
         return {
-            userData: {
-                organizacion: "",
-                nombre: ""
-            },
             userPanelShow: false
         }
     },
+    inject: ['errorHandling'],
     methods: {
         toggleSidebar() {
             this.$emit('toggleSidebar');
         },
         logout() {
-            document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-            document.cookie = "organizacion=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-            document.cookie = "JSESSIONID=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-
-            this.$router.push("/login");
+            RequestHelper.post('/auth/logout', null, {
+                always: () => {
+                    sessionStorage.clear();
+                    this.$router.push("/login");
+                }
+            });
         }
-    },
-    mounted() {
-        this.userData.nombre = capitalizeFirstLetter(getCookie("username"));
-        this.userData.organizacion = getCookie("organizacion");
-    },
+    }
 }
 </script>
 

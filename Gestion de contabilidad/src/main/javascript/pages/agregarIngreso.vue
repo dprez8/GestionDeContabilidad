@@ -139,6 +139,9 @@ export default {
                 failed: () => {
                     this.falloCargarIngreso = true;
                 },
+                forbidden: (error) => {
+                    this.errorHandling(error);
+                },
                 error: (error) => {
                     this.errorHandling(error);
                 },

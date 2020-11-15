@@ -56,6 +56,9 @@ export default {
                 notLoggedIn: () => {
                     this.showLoginModal(true);
                 },
+                forbidden: (error) => {
+                    this.errorHandling(error);
+                },
                 error: (error) => {
                     this.errorHandling(error);
                 },
@@ -63,26 +66,6 @@ export default {
                     this.ingresosLoading = false;
                 }
             });
-
-            // axios
-            //     .get(`/api/operaciones/ingresos`)
-            //     .then(response => {
-            //         var data = response.data;
-            //         console.log(data);
-
-            //         if(data.code == 200) {
-            //             this.ingresos = data.ingresos.map(this.ingresosAPIConverter);
-            //         } else if (data.code == 403) {
-            //             this.showLoginModal(true);
-            //         }
-            //     })
-            //     .catch(error => {
-            //         this.errorHandling(error);
-            //     })
-            //     .then(() => {
-            //         // always
-            //         this.ingresosLoading = false;
-            //     })
         },
         ingresosAPIConverter(ingresoAPI) {
             return {

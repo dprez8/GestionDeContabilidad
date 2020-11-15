@@ -44,7 +44,7 @@ export default {
 
             if(this.user == "") {
                 this.userState = false;
-            } 
+            }
             if(this.pass == "") {
                 this.passState = false;
             }
@@ -57,11 +57,9 @@ export default {
                     password: this.pass
                 }
 
-                RequestHelper.post('/api/login', loginData, {
+                RequestHelper.post('/auth/login', loginData, {
                     success: (data) => {
-                        document.cookie = `username=${data.nombre}; path=/`;
-                        document.cookie = `organizacion=${data.organizacion.razonSocial}; path=/`;
-                        this.loginSuccess();
+                        this.$emit('loginSuccess');
                     },
                     empty: () => {
                         this.loginState = false;
@@ -80,9 +78,6 @@ export default {
                     }
                 });
             }
-        },
-        loginSuccess() {
-            this.$emit('loginSuccess');
         }
     }
 }

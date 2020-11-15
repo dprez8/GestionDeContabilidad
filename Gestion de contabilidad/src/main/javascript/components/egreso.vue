@@ -81,10 +81,7 @@
                             <template v-if="!egreso.categorias.length">
                                 <b-button v-b-modal.modal-asociar-categoria variant="outline-secondary">Asociar a categorias</b-button>
                             </template>
-                            <!--
-                            <b-button>Ver Presupuestos asociados</b-button>
-                            <b-button variant="danger">Suscribirse</b-button>
-                            -->
+                            <b-button v-b-modal.modal-agregar-presupuesto variant="outline-secondary">Agregar Presupuesto</b-button>
                         </b-button-group>
                     </b-button-toolbar>
                 </div>
@@ -112,6 +109,14 @@
                 v-bind:cancelarAccion="cancelarAsociarCategorias"
             ></asociar-categoria>
         </b-modal>
+
+        <b-modal id="modal-agregar-presupuesto" size="xl" hide-footer scrollable centered title="Crear nuevo Presupuesto">
+            <agregar-presupuesto
+                :buscarEgresos="false"
+                :confirmarAccion="confirmarNuevoPresupuesto"
+                :cancelarAccion="cancelarNuevoPresupuesto"
+            ></agregar-presupuesto>
+        </b-modal>
     </div>
 </template>
 
@@ -120,6 +125,7 @@ import axios from 'axios'
 import {convertDate, RequestHelper} from '../util/utils'
 import asociarCategoria from './asociarCategoria'
 import asociarIngreso from './asociarIngreso'
+import agregarPresupuesto from './agregarPresupuesto'
 
 export default {
     props: {
@@ -130,6 +136,7 @@ export default {
         return {
             egreso: null,
             ingresos: [],
+            presupuestos: [],
             showDatosProveedor: false,
             showDatosFactura: false,
             showIngreso: false,
@@ -175,11 +182,15 @@ export default {
 
             RequestHelper.get(`/api/operaciones/egreso/${id}`, {
                 success: (data) => {
+                    console.log(data.egreso);
                     this.egreso = data.egreso;
                     this.egreso.items = data.egreso.items.map(this.itemEgresoAPIConverter);
                 },
                 notLoggedIn: () => {
                     this.showLoginModal(true);
+                },
+                forbidden: (error) => {
+                    this.errorHandling(error);
                 },
                 error: (error) => {
                     this.errorHandling(error);
@@ -197,6 +208,14 @@ export default {
                 cantidad: item.cantidad,
                 precio: item.precio
             }
+        },
+        // Cargar presupuestos
+        cargarPresupuestosAPI() {
+            if(!this.egreso.presupuestos.length)
+                return;
+            
+            // Falta una ruta para cargar un presupuesto o una ruta para cargar todos los presupuestos de un egreso
+            // O que nos devuelvan mas datos sobre los presupuestos cuando nos envian el egreso
         },
         // Ingreso
         confirmarAsociarIngreso(data) {
@@ -229,6 +248,10 @@ export default {
                     failed: (data) => {
                         this.falloCarga = true;
                         this.falloCargaDetalles = data.message;
+                    },
+                    forbidden: (error) => {
+                        this.falloCarga = true;
+                        this.errorHandling(error);
                     },
                     error: (error) => {
                         this.falloCarga = true;
@@ -278,6 +301,10 @@ export default {
                         this.falloCarga = true;
                         this.falloAsociacionDetalles = data.message;
                     },
+                    forbidden: (error) => {
+                        this.falloCarga = true;
+                        this.errorHandling(error);
+                    },
                     error: (error) => {
                         this.falloCarga = true;
                         this.errorHandling(error);
@@ -286,41 +313,27 @@ export default {
                         this.egresoLoading = false;
                     }
                 });
-
-                // axios
-                //     .post(`/api/categorias/asociar`, request)
-                //     .then(response => {
-                //         var data = response.data;
-                //         console.log(data);
-                //         if(data.code == 200) {
-                //             this.cargarEgresoAPI();
-                //         } else if (data.code == 403) {
-                //             this.showLoginModal(true);
-                //         } else if (data.code == 400) {
-                //             this.falloCarga = true;
-                //             this.falloAsociacionDetalles = data.message;
-                //         }
-                //     })
-                //     .catch(error => {
-                //         this.falloCarga = true;
-                //         this.errorHandling(error);
-                //     })
-                //     .then(() => {
-                //         // always
-                //         this.egresoLoading = false;
-                //     })
             }
         },
         cancelarAsociarCategorias() {
             this.$bvModal.hide('modal-asociar-categoria');
         },
+        confirmarNuevoPresupuesto(data) {
+            this.$bvModal.hide('modal-agregar-presupuesto');
+            console.log(data);
+            // PROXIMAMENTE
+        },
+        cancelarNuevoPresupuesto() {
+            this.$bvModal.hide('modal-agregar-presupuesto');
+        }
     },
     mounted() {
         this.cargarEgresoAPI();
     },
     components: {
         'asociar-ingreso': asociarIngreso,
-        'asociar-categoria': asociarCategoria
+        'asociar-categoria': asociarCategoria,
+        'agregar-presupuesto': agregarPresupuesto
     }
 }
 </script>
