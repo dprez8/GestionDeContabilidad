@@ -84,7 +84,7 @@ public class SchedulerTest {
         segundoPresupuesto.addItems(placaVide2Presupuesto, RAM2presupuesto);
 
         /**Creacion de un usuario, el cual sera revisor*/
-        Estandar unUsuario = new Estandar(unaEntidad, "Lautaro", "1234", "lautaro@robles.com");
+        Estandar unUsuario = new Estandar(unaEntidad, "Lauta","Lautaro","Robles", "1234", "lautaro@robles.com");
 
         /**Configuracion del egreso para pruebas*/
         unaEntidad.addOperaciones(unaCompra);

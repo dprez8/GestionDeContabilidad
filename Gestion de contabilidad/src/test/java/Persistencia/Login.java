@@ -43,12 +43,12 @@ public class Login {
 
         ValidadorDeContrasenia.addValidaciones(validarLongitudCorta,validarTop10k,validarIgualAMailOUsuario);
 		this.pepsi = new EntidadJuridica();
-        this.elPepe = new Estandar(this.pepsi, "elPepe", "456pepe", "elPepe@gmail.com");
+        this.elPepe = new Estandar(this.pepsi, "elPepe","Giusepe","Rios", "456pepe", "elPepe@gmail.com");
     }
 	 @Test
 	 public void crearUsuario() throws IOException, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, contraseniaCorta{
 		 EntidadJuridica coca= new EntidadJuridica();
-		 Estandar eteSech = new Estandar(coca, "eteSech", "1234compa", "eteSech@gmail.com");
+		 Estandar eteSech = new Estandar(coca, "eteSech","Sech" ,"xD","1234compa", "eteSech@gmail.com");
 
 		 repoUsuarios.agregar(elPepe);
 		 repoUsuarios.agregar(eteSech);

@@ -32,29 +32,14 @@ public class Estandar extends Usuario {
 		this.bandejaDeMensajes = new BandejaDeMensajes(this);
 	}
 
-	public Estandar(EntidadJuridica unaOrganizacion,String nombre,String contrasenia, String mail) throws IOException, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, contraseniaCorta{
-		this.nombre = nombre;
-		this.contrasenia = contrasenia;
-		this.mail = mail;
+	public Estandar(EntidadJuridica unaOrganizacion,String username, String nombre,String apellido,String contrasenia, String mail) throws IOException, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, contraseniaCorta{
+		super(username,nombre,apellido,contrasenia,mail);
 		this.miOrganizacion = unaOrganizacion;
 		this.bandejaDeMensajes = new BandejaDeMensajes(this);
-		this.verificarContrasenia(contrasenia);
 	}
 
 	public BandejaDeMensajes getBandejaDeMensajes() {
 		return bandejaDeMensajes;
-	}
-	
-	public void HashearPassword(String contrasenia){
-		this.hashedPassword = Hashing.sha256()
-				  .hashString(contrasenia, StandardCharsets.UTF_8)
-				  .toString();
-	}
-	
-	public void verificarContrasenia(String contrasenia) throws IOException, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, contraseniaCorta{
-		
-		if(ValidadorDeContrasenia.validarContrasenia(this)){
-			this.HashearPassword(contrasenia);}
 	}
 
 	public EntidadJuridica getMiOrganizacion() {
