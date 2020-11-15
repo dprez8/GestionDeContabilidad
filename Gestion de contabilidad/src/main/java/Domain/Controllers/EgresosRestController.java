@@ -59,14 +59,6 @@ public class EgresosRestController extends GenericController {
     public String cargarArchivoDocumentoComercial(Request request, Response response) throws IOException, ServletException {
         String jsonResponse;
 
-        if(response.body() != null){
-            return response.body();
-        }
-        Usuario user = getUsuarioDesdeRequest(request);
-        if(isAdmin(user)){
-            return respuesta(response,403,"No posees permisos de estandar");
-        }
-
         File uploadDir = null;
         try {
             uploadDir = FormFileManager.crearDirectorio();
@@ -120,13 +112,7 @@ public class EgresosRestController extends GenericController {
     }
 
     public String cargarNuevoEgreso(Request request, Response response) {
-        if(response.body() != null){
-            return response.body();
-        }
-        Usuario user = getUsuarioDesdeRequest(request);
-        if(isAdmin(user)){
-            return respuesta(response,403,"No posees permisos de estandar");
-        }
+
         String jsonResponse;
         this.gson  = new GsonBuilder()
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())
@@ -158,14 +144,8 @@ public class EgresosRestController extends GenericController {
     }
 
     public String listadoDeEgresos(Request request, Response response) {
-        /*if(response.body() != null){
-            return response.body();
-        }*/
-        Usuario user = getUsuarioDesdeRequest(request);
-        if(isAdmin(user)){
-            return respuesta(response,403,"No posees permisos de estandar");
-        }
-        Estandar usuario = (Estandar) user;
+
+        Estandar usuario = (Estandar) getUsuarioDesdeRequest(request);
 
         this.gson  = new GsonBuilder()
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())
@@ -201,15 +181,7 @@ public class EgresosRestController extends GenericController {
 
     public String mostrarEgreso(Request request, Response response) {
 
-        if(response.body() != null){
-            return response.body();
-        }
-        Usuario user = getUsuarioDesdeRequest(request);
-        if(isAdmin(user)){
-            return respuesta(response,403,"No posees permisos de estandar");
-        }
-
-        Estandar usuario = (Estandar) user;
+        Estandar usuario = (Estandar) getUsuarioDesdeRequest(request);
         String jsonResponse;
         Egreso egreso;
 

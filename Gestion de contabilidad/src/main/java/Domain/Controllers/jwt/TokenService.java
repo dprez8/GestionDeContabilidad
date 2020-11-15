@@ -64,7 +64,7 @@ public class TokenService {
      * throws ExpiredJwtException if token has expired
      *
      * @param token
-     * @return
+     * @return Usuario or null
      */
     public final Usuario getUser(String token) {
         try {
@@ -74,9 +74,22 @@ public class TokenService {
                     .getBody();
             Usuario usuario = this.repoUsuarios.buscar(new Integer(claims.getSubject()));
             return usuario;
-        }catch (ExpiredJwtException ex) {
+        }catch (Exception ex) {
             return null;
         }
+    }
+    /**
+     * throws ExpiredJwtException if token has expired
+     *
+     * @param token
+     * @return String
+     */
+    public final String getRol(String token) {
+        Claims claims = Jwts.parser()
+                    .setSigningKey(jwtSecretKey)
+                    .parseClaimsJws(token)
+                    .getBody();
+        return (String) claims.get(ROL);
     }
 
     public final boolean isTokenBlacklisted(String token) {

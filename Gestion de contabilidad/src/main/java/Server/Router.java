@@ -58,7 +58,7 @@ public class Router {
         String SECRET_JWT = "secret_jwt";
         String TOKEN_PREFIX = "Bearer";
         TokenService tokenService = new TokenService(SECRET_JWT);
-        AuthFilter authFilter = new AuthFilter("/auth",tokenService);
+        AuthFilter authFilter = new AuthFilter("/api/auth",tokenService);
 
         AuthController authController           = new AuthController(tokenService);
         LoginRestController loginRestController = new LoginRestController();
@@ -75,12 +75,11 @@ public class Router {
         OrganizacionController organizacionController = new OrganizacionController();
 
         Spark.before("/api/*",authFilter);
-        Spark.before("/auth/*",authFilter);
 
-        Spark.post("/auth/logout", authController::logout);
-        Spark.post("/auth/login",authController::login );
-        Spark.get("/auth/me", authController::me);
-        Spark.post("/auth/token", authController::refresh);
+        Spark.post("/api/auth/logout", authController::logout);
+        Spark.post("/api/auth/login",authController::login );
+        Spark.get("/api/auth/me", authController::me);
+        Spark.post("/api/auth/token", authController::refresh);
 
 
         // PERIODIC TOKENS CLEAN UP
@@ -96,17 +95,17 @@ public class Router {
         Spark.get("/api/pais",direccionController::listadoDePaises);
         Spark.get("/api/pais/:clavePais/provincia",direccionController::listadoDeProvincias);
         Spark.get("/api/pais/:clavePais/provincia/:claveProvincia/ciudad",direccionController::listadoDeCiudades);
-        Spark.get("/api/proveedor",proveedorController::crearProveedor);
+        Spark.post("/api/proveedor",proveedorController::crearProveedor);
         Spark.get("/api/proveedores",proveedorController::listadoProveedores);
         Spark.get("/api/medios",medioController::listadoMediosDePago);
         Spark.get("/api/bandeja",bandejaDeMensajesRestController::mostrarMensajes);
         Spark.get("/api/bandeja/configuracion",bandejaDeMensajesRestController::mostrarConfiguracion);
-        Spark.post("/api/bandeja/configurar", bandejaDeMensajesRestController::configurar);
+        Spark.post("/api/admin/bandeja/configurar", bandejaDeMensajesRestController::configurar);
         Spark.post("/api/bandeja/visto", bandejaDeMensajesRestController::mensajeVisto);
-        //Spark.get("/api/bandeja/:usuarioId",bandejaDeMensajesRestController::mostrarMensajes);
-        Spark.get("/api/categorias",categoriasController::listadoCriterios);
-        Spark.post("/api/categorias",categoriasController::crearCategoria);
-        Spark.post("/api/categorias",categoriasController::crearCriterio);    
+        Spark.get("/api/criterios",categoriasController::listadoCriterios);
+        Spark.post("/api/categoria",categoriasController::crearCategoria);
+        Spark.post("/api/criterio",categoriasController::crearCriterio);
+        //Spark.post("/api/admin/darJerarquiaCriterio",categoriasController::darJerarquiaACriterio);
         Spark.post("/api/operaciones/egreso", egresosRestController::cargarNuevoEgreso);
         Spark.get("/api/operaciones/egresos", egresosRestController::listadoDeEgresos);
         Spark.get("/api/operaciones/egreso/:egresoId", egresosRestController::mostrarEgreso);
@@ -115,7 +114,7 @@ public class Router {
         Spark.post("/api/operaciones/asociarManualmente",asociacionOperacionesRestController::asociarManualmente);
         Spark.post("/api/categorias/asociar",categoriasController::asociarCategoriaEgreso);
         Spark.post("/api/operaciones/presupuesto", presupuestoRestController::cargarNuevoPresupuesto);
-        Spark.post("/api/organizacion",organizacionController::crearOrganizacion);
+        Spark.post("/api/admin/organizacion",organizacionController::crearOrganizacion);
         Spark.get("/api/usuario/organizaciones",organizacionController::listarOrganizacionesPropias);
         Spark.post("/api/operaciones/egreso/cargarArchivos",egresosRestController::cargarArchivoDocumentoComercial);
 
@@ -123,7 +122,6 @@ public class Router {
              if(EntityManagerHelper.getEntityManagerRecent() != null && EntityManagerHelper.getEntityManagerRecent().isOpen()){
                 EntityManagerHelper.closeEntityManager();
              }
-            response.type("application/json");
         });
 
     }

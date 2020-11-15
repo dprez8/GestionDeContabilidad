@@ -33,15 +33,11 @@ public class ProveedorController {
 	
 	
 	public String listadoProveedores(Request request, Response response){
-			response.type("application/json");
+
 		 	Gson gson = new Gson();
 	        List<Proveedor> proveedores =new ArrayList<>();
 	        ProveedorResponse proveedorRespuesta= new ProveedorResponse();
 
-			Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
-			if(usuario == null) {
-				return response.body();
-			}
 	   	 	this.repoProveedor = new Repositorio<Proveedor>(new DaoHibernate<Proveedor>(Proveedor.class));
 	   	 
 	   	 	
@@ -92,12 +88,8 @@ public class ProveedorController {
 	public String crearProveedor(Request request,Response response){
 		
 		Gson gson2 = new Gson();
-		response.type("application/json");
 		//Proveedor proveedor= new Proveedor();
-		Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
-		if(usuario == null) {
-			return response.body();
-		}
+
 		this.repoProveedor = new Repositorio<Proveedor>(new DaoHibernate<Proveedor>(Proveedor.class));
 		ProveedorNuevo proveedorNuevo = gson2.fromJson(request.body(),ProveedorNuevo.class);
 		Proveedor proveedor=mapProveedor(proveedorNuevo);

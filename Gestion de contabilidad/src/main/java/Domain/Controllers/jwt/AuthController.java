@@ -79,7 +79,6 @@ public class AuthController extends AbstractTokenController{
     public String logout(Request request, Response response) {
         String authorizationHeader = request.headers(AUTHORIZATION_HEADER);
         tokenService.revokeToken(authorizationHeader.replace(TOKEN_PREFIX, ""));
-
         return "";
     }
 
