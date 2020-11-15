@@ -7,15 +7,16 @@ import inicio from './inicio'
 import operaciones from './operaciones'
 import egresos from './egresos'
 import ingresos from './ingresos'
-import presupuestos from './presupuestos'
 import bandeja from './bandeja'
 import miCuenta from './miCuenta'
+import configUsuarios from './configUsuarios'
 import configValidacion from './configValidacion'
+import configCriterios from './configCriterios'
 import agregarEgreso from './agregarEgreso'
 import agregarIngreso from './agregarIngreso'
 
 export {
     panel, login, error404, error401, error500, inicio,
-    operaciones, egresos, ingresos, presupuestos, agregarEgreso, agregarIngreso, bandeja, 
-    miCuenta, configValidacion
+    operaciones, egresos, ingresos, agregarEgreso, agregarIngreso, bandeja, 
+    miCuenta, configValidacion, configCriterios, configUsuarios
 }

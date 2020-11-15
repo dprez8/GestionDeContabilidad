@@ -1,37 +1,26 @@
 <template>
-    <div>
-        <b-overlay spinner-variant="light" variant="primary" :show="categoriasLoading" no-wrap></b-overlay>
-        <p>Seleccione categorias para asociar al egreso</p>
-        <ul class="list-group">
-            <criterio
-                v-for="(criterio, index) in criterios"
-                :key="index"
-                :criterio="criterio"
-                :selecciono-categoria="seleccionoCategoria"
-            ></criterio>
-        </ul>
-        <div class="pt-2" v-if="categoriasSeleccionadas.length">
-            <span>Categorias seleccionadas: </span>
-            <template
-                v-for="(categoria, index) in categoriasSeleccionadas"
-            >
-                <b-badge :key="index" class="mr-1">{{ categoria.name }}</b-badge>
-            </template>
-        </div>
-        <div class="row pt-4">
-            <div class="col d-flex justify-content-between">
-                <b-button-group>
-                    <b-button variant="primary" @click="confirmarAccion(categoriasSeleccionadas)">Confirmar</b-button>
-                    <b-button variant="outline-dark" @click="cancelarAccion">Cancelar</b-button>
-                </b-button-group>
+    <b-overlay class="w-100 h-100" spinner-variant="light" variant="primary" :show="loading">
+        <div class="p-4 d-flex justify-content-center" style="background: #eee; min-height: 100%">
+            <div class="w-100" style="max-width: 768px;">
+                <b-card header="Agregar, editar y eliminar criterios y categorías de Egresos" class="mb-4">
+                    <ul class="list-group">
+                        <criterio
+                            v-for="(criterio, index) in criterios"
+                            :key="index"
+                            :criterio="criterio"
+                            :edit="true"
+                            :selecciono-categoria="seleccionoCategoria"
+                        ></criterio>
+                    </ul>
+                </b-card>
             </div>
         </div>
-    </div>
+    </b-overlay>
 </template>
 
 <script>
 import { RequestHelper } from '../util/utils.js'
-import criterio from './criterio'
+import criterio from '../components/criterio'
 
 export default {
     props: {
@@ -42,14 +31,13 @@ export default {
         return {
             criterios: [],
             criteriosAPI: [],
-            categoriasSeleccionadas: [],
-            categoriasLoading: false
+            loading: false
         }
     },
     inject: ['showLoginModal', 'errorHandling'],
     methods: {
         cargarCriteriosAPI() {
-            this.categoriasLoading = true;
+            this.loading = true;
 
             RequestHelper.get(`/api/categorias`, {
                 success: (data) => {
@@ -63,7 +51,7 @@ export default {
                     this.errorHandling(error);
                 },
                 always: () => {
-                    this.categoriasLoading = false;
+                    this.loading = false;
                 }
             });
         },

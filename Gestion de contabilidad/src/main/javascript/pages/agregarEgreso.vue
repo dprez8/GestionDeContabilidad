@@ -343,7 +343,6 @@
 
         <b-modal id="modal-agregar-presupuesto" size="xl" hide-footer scrollable centered title="Crear nuevo Presupuesto">
             <agregar-presupuesto
-                ref="agregarPresupuesto"
                 :buscarEgresos="false"
                 :confirmarAccion="confirmarNuevoPresupuesto"
                 :cancelarAccion="cancelarNuevoPresupuesto"
@@ -584,7 +583,6 @@ export default {
         },
         crearPresupuestosAPI() {
             // Proximamente
-            this.$refs.agregarPresupuesto.crearPresupuestosAPI();
             this.asociarCategoriasAPI();
         },
         asociarCategoriasAPI() {

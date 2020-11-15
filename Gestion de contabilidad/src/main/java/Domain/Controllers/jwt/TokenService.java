@@ -74,7 +74,7 @@ public class TokenService {
                     .getBody();
             Usuario usuario = this.repoUsuarios.buscar(new Integer(claims.getSubject()));
             return usuario;
-        }catch (ExpiredJwtException ex) {
+        }catch (Exception ex) {
             return null;
         }
     }

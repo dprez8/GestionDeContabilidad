@@ -4,8 +4,8 @@ import jwt_decode from "jwt-decode";
 
 import {  
     panel, login, error404, error401, error500, inicio,
-    operaciones, egresos, ingresos, presupuestos, agregarEgreso, agregarIngreso, bandeja, 
-    miCuenta, configValidacion
+    operaciones, egresos, ingresos, agregarEgreso, agregarIngreso, bandeja, 
+    miCuenta, configValidacion, configCriterios, configUsuarios
 } from './pages'
 
 const routes = [
@@ -16,7 +16,6 @@ const routes = [
         props: {
             sidebar: [
                 {text: 'Operaciones', icon: 'journal-check', to: '/operaciones'},
-                {text: 'Presupuestos', icon: 'journals', to: '/presupuestos'},
                 {text: 'Bandeja de Mensajes', icon: 'chat-left-text', to: '/bandeja'}
             ]
         },
@@ -150,19 +149,6 @@ const routes = [
                 ],
             },
             {
-                name: 'presupuestos',
-                path: 'presupuestos',
-                component: presupuestos,
-                meta: {
-                    breadcrumb: [{
-                        label: "Presupuestos",
-                        type: "fixed",
-                        path: "/presupuestos",
-                        active: true
-                    }]
-                }
-            },
-            {
                 name: 'bandeja',
                 path: 'bandeja',
                 component: bandeja,
@@ -226,6 +212,32 @@ const routes = [
         },
         children: [
             {
+                name: 'configUsuarios',
+                path: 'usuarios',
+                component: configUsuarios,
+                meta: {
+                    breadcrumb: [{
+                        label: "Usuarios",
+                        type: "fixed",
+                        path: "/usuarios",
+                        active: true
+                    }]
+                }
+            },
+            {
+                name: 'configCriterios',
+                path: 'criterios',
+                component: configCriterios,
+                meta: {
+                    breadcrumb: [{
+                        label: "Criterios",
+                        type: "fixed",
+                        path: "/criterios",
+                        active: true
+                    }]
+                }
+            },
+            {
                 name: 'configValidacion',
                 path: 'validaciones',
                 component: configValidacion,
@@ -240,7 +252,7 @@ const routes = [
                 }
             },
             {
-                name: 'cuenta',
+                name: 'adminCuenta',
                 path: 'cuenta',
                 component: miCuenta,
                 meta: {
@@ -282,67 +294,41 @@ var router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    var token = sessionStorage.getItem('token');
-    var tokenDecoded = jwt_decode(token);
-
-    switch (to.matched[0].name) {
-        case 'panel':
-            // Si ya estaba navegando dentro de la app no me saques
-            if(from.matched.length && from.matched[0].name == 'panel') {
-                next();
-                break;
-            }
-
-            // Pero si estoy entrando desde 0...
-
-            // Si no tengo ningún token guardado mandame al login
-            if(token) {              
-                if(tokenDecoded.rol == "Estandar") {
-                    next();
-                }
-                else {
-                    next({name: 'unauthorized'})
-                }
-            } else {
-                next('/login');
-            }
-            break;
-
-        case 'adminPanel':
-            // Si ya estaba navegando dentro de la app no me saques
-            if(from.matched.length && from.matched[0].name == 'adminPanel') {
-                next();
-                break;
-            }
-
-            // Pero si estoy entrando desde 0...
-
-            // Si no tengo ningún token guardado mandame al login
-            if(token) {
-                if(tokenDecoded.rol == "Admin") {
-                    next();
-                }
-                else {
-                    next({name: 'unauthorized'})
-                }
-            } else {
-                next('/login');
-            }
-            break;
-
-        case 'login':
-            // Si ya tengo un token, mandame al panel
-            if(token) {
-                next('/');
-            } else {
-                next();
-            }
-            break;
-    
-        default:
-            next();
-            break;
+    if(to.name == 'unauthorized' || to.name == 'notFound' || to.name == 'serverError' || to.name == 'login') {
+        next();
+        return;
     }
+
+    var token = sessionStorage.getItem('token');
+    var tokenDecoded = null;
+
+    if(token)
+        tokenDecoded = jwt_decode(token);
+    else {
+        next('/login');
+        return;
+    }
+
+    var goingTo = to.matched[0].name;
+    var comingFrom = null;
+
+    if(from.matched.length)
+        comingFrom = from.matched[0].name;
+
+    // Si ya estaba navegando en la misma página dejame seguir navegando
+    if(goingTo == comingFrom) {
+        next();
+    } else if(authorized(goingTo, tokenDecoded)) {
+        next();
+    } else {
+        next({name: 'unauthorized'});
+    }
+
+    function authorized(goingTo, tokenDecoded) {
+        return  (goingTo == 'panel' && tokenDecoded.rol == 'Estandar') || 
+                (goingTo == 'adminPanel' && tokenDecoded.rol == 'Estandar');
+    }
+
 });
 
 export default router;

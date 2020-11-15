@@ -96,7 +96,7 @@ public class Router {
         Spark.get("/api/pais",direccionController::listadoDePaises);
         Spark.get("/api/pais/:clavePais/provincia",direccionController::listadoDeProvincias);
         Spark.get("/api/pais/:clavePais/provincia/:claveProvincia/ciudad",direccionController::listadoDeCiudades);
-        Spark.get("/api/proveedor",proveedorController::crearProveedor);
+        Spark.post("/api/proveedor",proveedorController::crearProveedor);
         Spark.get("/api/proveedores",proveedorController::listadoProveedores);
         Spark.get("/api/medios",medioController::listadoMediosDePago);
         Spark.get("/api/bandeja",bandejaDeMensajesRestController::mostrarMensajes);
@@ -106,7 +106,7 @@ public class Router {
         //Spark.get("/api/bandeja/:usuarioId",bandejaDeMensajesRestController::mostrarMensajes);
         Spark.get("/api/categorias",categoriasController::listadoCriterios);
         Spark.post("/api/categorias",categoriasController::crearCategoria);
-        Spark.post("/api/categorias",categoriasController::crearCriterio);    
+        Spark.post("/api/categorias",categoriasController::crearCriterio);
         Spark.post("/api/operaciones/egreso", egresosRestController::cargarNuevoEgreso);
         Spark.get("/api/operaciones/egresos", egresosRestController::listadoDeEgresos);
         Spark.get("/api/operaciones/egreso/:egresoId", egresosRestController::mostrarEgreso);

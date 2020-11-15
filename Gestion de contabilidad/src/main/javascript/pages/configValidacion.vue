@@ -101,25 +101,6 @@ export default {
                     this.loading = false;
                 }
             });
-
-            // axios
-            //     .get('/api/bandeja/configuracion')
-            //     .then(response => {
-            //         var data = response.data;
-            //         if(data.code == 200) {
-            //             this.scheduler = data.schedulerInit;
-            //             this.updateHoraYMinuto();
-            //         } else if (data.code == 403) {
-            //             this.showLoginModal(true);
-            //         }
-            //     })
-            //     .catch(error => {
-            //         this.errorHandling(error);
-            //     })
-            //     .then(() => {
-            //         // always
-            //         this.loading = false;
-            //     });
         },
         guardarConfiguracionAPI() {
             this.loading = true;
