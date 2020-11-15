@@ -46,13 +46,8 @@ public class PresupuestoRestController {
     /*FALTA LISTADO PARA EL GET*/
 
     public String cargarNuevoPresupuesto(Request request, Response response) {
-        response.type("application/json");
-        String jsonResponse;
 
-        Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
-        if(usuario == null) {
-            return response.body();
-        }
+        String jsonResponse;
 
         this.gson  = new GsonBuilder()
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())

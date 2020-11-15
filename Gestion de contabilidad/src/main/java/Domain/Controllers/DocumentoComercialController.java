@@ -1,15 +1,11 @@
 package Domain.Controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.NoResultException;
 
-import Domain.Entities.Usuarios.Estandar;
 import com.google.gson.Gson;
 
-import Domain.Controllers.MedioDePagoController.MedioDePagoRespuesta;
-import Domain.Entities.DatosDeOperaciones.MedioDePago;
 import Domain.Entities.DatosDeOperaciones.TipoDocumento;
 import Domain.Repositories.Repositorio;
 import Domain.Repositories.Daos.DaoHibernate;
@@ -22,12 +18,9 @@ public class DocumentoComercialController {
 	public String listadoTiposDocumento(Request request, Response response){
 		
 		 	Gson gson = new Gson();
-	        List<TipoDocumento> tiposDocumento=new ArrayList<>();
+	        List<TipoDocumento> tiposDocumento;
 	        TipoDocumentoRespuesta tipoRespuesta = new TipoDocumentoRespuesta();
-			Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
-			if(usuario == null) {
-				return response.body();
-			}
+
 	   	 	this.repoTipo = new Repositorio<TipoDocumento>(new DaoHibernate<TipoDocumento>(TipoDocumento.class));
 	      
 	        try {
@@ -51,8 +44,6 @@ public class DocumentoComercialController {
 	       
 	       
 	        String jsonTiposDocumento = gson.toJson(tipoRespuesta);
-	       
-	        response.type("application/json");
 	        response.body(jsonTiposDocumento);
 
 	        return response.body();

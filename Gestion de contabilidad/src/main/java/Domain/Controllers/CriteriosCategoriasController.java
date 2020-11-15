@@ -8,14 +8,11 @@ import javax.persistence.NoResultException;
 
 import com.google.gson.Gson;
 
-import Domain.Controllers.MedioDePagoController.MedioDePagoRespuesta;
+
 import Domain.Controllers.DTO.Respuesta;
-import Domain.Entities.ApiPaises.Ciudad;
+
 import Domain.Entities.ClasesParciales.CategoriaDato;
 import Domain.Entities.ClasesParciales.CriterioDato;
-import Domain.Entities.ClasesParciales.ProveedorDato;
-import Domain.Entities.ClasesParciales.ProveedorNuevo;
-import Domain.Entities.DatosDeOperaciones.MedioDePago;
 import Domain.Entities.Operaciones.CategoriaOperacion;
 import Domain.Entities.Operaciones.CriterioOperacion;
 import Domain.Entities.Operaciones.Presupuesto;
@@ -118,7 +115,7 @@ public class CriteriosCategoriasController {
         return response.body();
 	}
 	
-public String crearCategoria(Request request, Response response){
+	public String crearCategoria(Request request, Response response){
 		
 	 	Gson gson = new Gson();     
         CategoriaNueva categoriaRequest= new CategoriaNueva();
@@ -157,7 +154,7 @@ public String crearCategoria(Request request, Response response){
    	 return response.body();
 }	
 
-public String crearCriterio(Request request, Response response){
+	public String crearCriterio(Request request, Response response){
 	
  	Gson gson = new Gson();     
     CriterioNuevo criterioRequest= new CriterioNuevo();
@@ -188,9 +185,10 @@ public String crearCriterio(Request request, Response response){
         response.body(jsonCriterio);
 	 	
 	 return response.body();
-}	
-   		@SuppressWarnings("unchecked")
-   		public CriterioDato mapCriterio(CriterioOperacion criterio){
+	}
+
+	@SuppressWarnings("unchecked")
+	public CriterioDato mapCriterio(CriterioOperacion criterio){
    			
    			CriterioDato criterioDato= new CriterioDato();
    			

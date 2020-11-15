@@ -15,6 +15,7 @@ public class AuthFilter implements Filter {
     private static final String TOKEN_PREFIX = "Bearer";
     private static final String LOGIN_ENDPOINT = "/login";
     private static final String REGISTRATION_ENDPOINT = "/registration";
+    private static final String PREFIX_ADMIN = "/api/admin";
     private static final String HTTP_POST = "POST";
     private static final String HTTP_GET = "GET";
     private static final String ESTANDAR  = "Estandar";
@@ -55,7 +56,8 @@ public class AuthFilter implements Filter {
             String token = authorizationHeader.replace(TOKEN_PREFIX, "");
 
             if(isEstandar(token)) {
-                if(!isProveedorRequest(request) && !isMensajesRequest(request) && !isOperacionesRequest(request) && isAdminRequests(request)){
+                if(     !isProveedorRequest(request) && !isMensajesRequest(request) && !isOperacionesRequest(request) &&
+                        !isCriteriosCategoriasRequest(request) && !isPresupuestoRequest(request)) {
                     this.respuesta.setCode(403);
                     this.respuesta.setMessage("No posees permisos de administrador");
                     String jsonResponseError = gson.toJson(this.respuesta);
@@ -92,8 +94,10 @@ public class AuthFilter implements Filter {
     }
 
     private boolean isAdminRequests(Request request) {
-        return  request.uri().equals("/api/admin/bandeja/configurar") && request.requestMethod().equals(HTTP_POST) ||
-                request.uri().equals("/api/admin/organizacion") && request.requestMethod().equals(HTTP_POST);
+        return  request.uri().equals(PREFIX_ADMIN+"/bandeja/configurar") && request.requestMethod().equals(HTTP_POST) ||
+                request.uri().equals(PREFIX_ADMIN+"/organizacion") && request.requestMethod().equals(HTTP_POST) ||
+                request.uri().equals(PREFIX_ADMIN+"/categoria") && request.requestMethod().equals(HTTP_POST) ||
+                request.uri().equals(PREFIX_ADMIN+"/criterio") && request.requestMethod().equals(HTTP_POST) ;
     }
 
     private boolean isProveedorRequest(Request request) {
@@ -113,6 +117,14 @@ public class AuthFilter implements Filter {
                 request.uri().equals("/api/operaciones/ingreso") && request.requestMethod().equals(HTTP_POST)||
                 request.uri().equals("/api/operaciones/asociarManualmente") && request.requestMethod().equals(HTTP_POST)||
                 request.uri().equals("/api/operaciones/egreso/cargarArchivos") && request.requestMethod().equals(HTTP_POST);
+    }
+
+    private boolean isCriteriosCategoriasRequest(Request request) {
+        return request.uri().equals("/api/categorias/asociar") && request.requestMethod().equals(HTTP_POST);
+    }
+
+    private boolean isPresupuestoRequest(Request request) {
+        return request.uri().equals("/api/operaciones/presupuesto") && request.requestMethod().equals(HTTP_POST);
     }
 
 }

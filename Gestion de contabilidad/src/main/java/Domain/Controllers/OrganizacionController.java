@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import javax.persistence.NoResultException;
 
+import Domain.Controllers.jwt.TokenService;
 import com.google.gson.Gson;
 
 import Domain.Entities.ApiPaises.Ciudad;
@@ -26,14 +27,17 @@ import db.EntityManagerHelper;
 import spark.Request;
 import spark.Response;
 
-public class OrganizacionController {
+public class OrganizacionController extends GenericController{
 
 	private Repositorio<Sector> repoSector;
 	private Repositorio<EntidadJuridica> repoEntidad;
 	private Repositorio<Pais> repoPais;
 	private Repositorio<Provincia> repoProvincia;
 	private Repositorio<Ciudad> repoCiudad;
-	
+
+	public OrganizacionController(TokenService tokenService, String tokenPrefix) {
+		super(tokenService,tokenPrefix);
+	}
 	
 	public String listadoSectores(Request request, Response response){
 		
@@ -79,11 +83,7 @@ public class OrganizacionController {
 	public String crearOrganizacion(Request request,Response response){
 		
 		Gson gson2 = new Gson();
-	
-		Administrador usuario = (Administrador) PermisosRestController.verificarSesion(request,response);
-		if(usuario == null) {
-			return response.body();
-		}
+
 		this.repoEntidad= new Repositorio<EntidadJuridica>(new DaoHibernate<EntidadJuridica>(EntidadJuridica.class));
 		OrganizacionDato organizacionDato = gson2.fromJson(request.body(),OrganizacionDato.class);
 		EntidadJuridica entidad=mapOrganizacion(organizacionDato);
@@ -101,7 +101,6 @@ public class OrganizacionController {
 		
 
         String jsonOrganizacion = gson2.toJson(organizacionCreada);
-    	response.type("application/json");
         response.body(jsonOrganizacion);
 
         return response.body();
@@ -114,13 +113,9 @@ public class OrganizacionController {
 		List<EntidadBase> entidadesBase= new ArrayList<>();
 		
 		Gson gson2 = new Gson();
-	
-		Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
-		if(usuario == null) {
-			return response.body();
-		}
-		OrganizacionPropia organizacionPropia= new OrganizacionPropia();
 
+		OrganizacionPropia organizacionPropia= new OrganizacionPropia();
+		Estandar usuario = (Estandar) getUsuarioDesdeRequest(request);
 		EntidadJuridica entidadJuridica=usuario.getMiOrganizacion();
 		
 		organizacionPropia.juridica_id=entidadJuridica.getId();

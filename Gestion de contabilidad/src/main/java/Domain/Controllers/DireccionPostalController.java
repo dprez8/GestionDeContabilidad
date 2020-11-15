@@ -34,11 +34,6 @@ public class DireccionPostalController {
         Respuesta respuesta=new Respuesta();
         List<Pais> paises;
 
-        Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
-        if(usuario == null) {
-            return response.body();
-        }
-
    	 	this.repoPais = new Repositorio<Pais>(new DaoHibernate<Pais>(Pais.class));
         paises= this.repoPais.buscarTodos();
         VinculadorPais vinculadorPais = new VinculadorPais();
@@ -61,8 +56,7 @@ public class DireccionPostalController {
        
        
         String jsonPaises = gson.toJson(vinculadorPais);
-       
-        response.type("application/json");
+
         response.body(jsonPaises);
 
         return response.body();
@@ -70,7 +64,7 @@ public class DireccionPostalController {
 	@SuppressWarnings("unchecked")
 	public String listadoDeProvincias(Request request, Response response){
 		Gson gson2 = new Gson();
-		Pais paisBuscado= new Pais();
+		Pais paisBuscado;
 		this.repoPais = new Repositorio<Pais>(new DaoHibernate<Pais>(Pais.class));
 		
 		VinculadorProvincia vinculadorProvincia = new VinculadorProvincia();
@@ -78,7 +72,7 @@ public class DireccionPostalController {
 		try{
 			
 			paisBuscado = repoPais.buscar(new Integer(request.params("clavePais")));
-			List<Provincia> provincias= new ArrayList<>();
+			List<Provincia> provincias;
 			provincias = EntityManagerHelper.createQuery("SELECT c FROM Provincia c WHERE c.pais.clave= :code")
 			        .setParameter("code",paisBuscado.getClave()).getResultList();
 	      
@@ -138,9 +132,7 @@ public class DireccionPostalController {
 		
 
         String jsonCiudades = gson2.toJson(vinculadorCiudad);
-       
-        response.type("application/json");
-        response.body(jsonCiudades);
+		response.body(jsonCiudades);
 
         return response.body();
 	}

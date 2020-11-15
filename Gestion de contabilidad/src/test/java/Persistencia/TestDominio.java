@@ -9,6 +9,7 @@ import Domain.Entities.Operaciones.Ingreso;
 import Domain.Entities.Operaciones.Presupuesto;
 import Domain.Entities.Organizacion.Empresa;
 import Domain.Entities.Organizacion.EntidadJuridica;
+import Domain.Entities.Usuarios.Administrador;
 import Domain.Entities.Usuarios.Estandar;
 import Domain.Entities.Usuarios.Usuario;
 import Domain.Entities.ValidadorTransparencia.*;
@@ -104,7 +105,7 @@ public class TestDominio {
     }
 
     @Test
-    public void T3persistirAUnUsuario () throws contraseniaCorta, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, IOException {
+    public void T3persistirAUnUsuarioEstandar () throws contraseniaCorta, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, IOException {
         EntidadJuridica entidadJuridica = repoEntidadJuridica.buscar(1);
         Estandar usuario = new Estandar(entidadJuridica, "javier", "una_contrasenia_segura", "javier@gmail.com");
         repoUsuarios.agregar(usuario);
@@ -340,5 +341,15 @@ public class TestDominio {
         this.repoCategorias.agregar(inter3);
         this.repoCategorias.agregar(inter4);
         this.repoCategorias.agregar(inter5);
+    }
+
+    @Test
+    public void T3persistirAUnUsuarioAdministrador () throws contraseniaCorta, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, IOException {
+        EntidadJuridica entidadJuridica = repoEntidadJuridica.buscar(1);
+        Administrador usuario = new Administrador();
+        usuario.setNombre("Fernando");
+        usuario.setContrasenia("una_contrasenia_insegura");
+        usuario.setMail("feer@gmail.com");
+        repoUsuarios.agregar(usuario);
     }
 }

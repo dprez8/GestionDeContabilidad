@@ -112,6 +112,9 @@ public class EgresosRestController extends GenericController {
     }
 
     public String cargarNuevoEgreso(Request request, Response response) {
+        Usuario usuario = getUsuarioDesdeRequest(request);
+        if(!isAdmin(usuario))
+            return respuesta(response,403,"No posees permisos de estandar");
 
         String jsonResponse;
         this.gson  = new GsonBuilder()
@@ -234,7 +237,7 @@ public class EgresosRestController extends GenericController {
                 return null;
              }
         }
-        catch (NoResultException ex){
+        catch (Exception ex){
             return null;
         }
         Pago pago = new Pago();
