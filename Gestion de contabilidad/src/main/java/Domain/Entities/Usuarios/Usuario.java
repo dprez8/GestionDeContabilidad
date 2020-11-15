@@ -13,6 +13,9 @@ public abstract class Usuario extends EntidadPersistente {
 
 	@Column
 	protected String nombre;
+	
+	@Column
+	protected String apellido;
 
 	@Transient
 	protected String contrasenia;

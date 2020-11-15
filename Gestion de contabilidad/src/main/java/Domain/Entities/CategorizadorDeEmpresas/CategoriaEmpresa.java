@@ -41,7 +41,7 @@ public class CategoriaEmpresa {
     public void addCategoriasPorSector(CategoriaPorSector... categoria_sector){
     	for(CategoriaPorSector categoriaSector: categoria_sector) {
     		categoriaSector.setCategoriaEmpresa(this);}
-    	Collections.addAll(this.categoriasPorSector, categoria_sector);
+    	//Collections.addAll(this.categoriasPorSector, categoria_sector);
     }
 }
 

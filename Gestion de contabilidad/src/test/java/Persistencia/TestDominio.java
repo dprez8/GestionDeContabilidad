@@ -77,6 +77,8 @@ public class TestDominio {
     	repoTipoItem.agregar(producto);
     }
     
+    
+    
     @Test
     public void T1persistirUnaEntidadJuridica (){
 
@@ -126,7 +128,7 @@ public class TestDominio {
     }
 
     @Test
-    public void T5persistir2Productos() {
+    public void T5persistir2Items() {
         TipoItem producto=repoTipoItem.buscar(0);
     	Item RAM = new Item("Memoria RAM 4GB DDR3",producto);
 
