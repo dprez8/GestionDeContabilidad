@@ -16,7 +16,8 @@ const routes = [
         props: {
             sidebar: [
                 {text: 'Operaciones', icon: 'journal-check', to: '/operaciones'},
-                {text: 'Bandeja de Mensajes', icon: 'chat-left-text', to: '/bandeja'}
+                {text: 'Bandeja de Mensajes', icon: 'chat-left-text', to: '/bandeja', bandeja: true},
+                {text: 'Mi Cuenta', icon: 'person', to: '/cuenta'}
             ]
         },
         children: [

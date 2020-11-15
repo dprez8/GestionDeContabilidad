@@ -2,6 +2,9 @@
     <b-overlay class="w-100 h-100" spinner-variant="light" variant="primary" :show="loading">
         <div class="p-4 d-flex justify-content-center" style="background: #eee; min-height: 100%">
             <div class="w-100" style="max-width: 768px;">
+                <b-card no-body class="mb-2">
+                    <b-card-body class="py-2">Datos personales</b-card-body>
+                </b-card>
                 <b-card no-body class="overflow-hidden mb-4">
                     <b-row no-gutters>
                         <b-col md="2" class="d-flex justify-content-center align-items-center p-2 user-card-skew">
@@ -11,11 +14,13 @@
                             <b-card-body :title="`${usuario.nombre} ${usuario.apellido}`">
                                 <b-card-text>
                                     <div><b-icon-person class="mr-2"/>{{usuario.username}}</div>
-                                    <div><b-icon-lock class="mr-2"/><b-link>cambiar contraseña</b-link></div>
                                 </b-card-text>
                             </b-card-body>
                         </b-col>
                     </b-row>
+                </b-card>
+                <b-card no-body class="mb-2">
+                    <b-card-body class="py-2">Entidades</b-card-body>
                 </b-card>
                 <b-card no-body class="overflow-hidden mb-4">
                     <b-row no-gutters>
@@ -129,8 +134,8 @@ export default {
                 notLoggedIn: () => {
                     this.showLoginModal(true);
                 },
-                forbidden: () => {
-                    this.createToast("401 Forbidden", "No tienes acceso para realizar esa acción", "warning");
+                forbidden: (error) => {
+                    this.errorHandling(error);
                 },
                 error: (error) => {
                     this.errorHandling(error);

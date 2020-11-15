@@ -107,6 +107,9 @@ export default {
                 error: (error) => {
                     this.errorHandling(error);
                 },
+                forbidden: (error) => {
+                    this.errorHandling(error);
+                },
                 always: () => {
                     this.egresosLoading = false;
                 }

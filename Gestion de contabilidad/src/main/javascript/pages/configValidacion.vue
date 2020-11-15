@@ -91,8 +91,8 @@ export default {
                 notLoggedIn: () => {
                     this.showLoginModal(true);
                 },
-                forbidden: () => {
-                    this.createToast("401 Forbidden", "No tienes acceso para realizar esa acción", "warning");
+                forbidden: (error) => {
+                    this.errorHandling(error);
                 },
                 error: (error) => {
                     this.errorHandling(error);
@@ -113,8 +113,8 @@ export default {
                 notLoggedIn: () => {
                     this.showLoginModal(false);
                 },
-                forbidden: () => {
-                    this.createToast("401 Forbidden", "No tienes acceso para realizar esa acción", "warning");
+                forbidden: (error) => {
+                    this.errorHandling(error);
                 },
                 error: (error) => {
                     this.errorHandling(error);

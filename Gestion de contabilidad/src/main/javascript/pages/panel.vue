@@ -44,6 +44,13 @@
             </iframe>
         </b-modal>
 
+        <b-alert
+            v-model="alert.show"
+            :variant="alert.variant"
+            class="position-fixed fixed-bottom m-0 rounded-0"
+            style="z-index: 2000;"
+            dismissible
+        >{{alert.message}}</b-alert>
     </div>
     <!-- /#panel-wrapper -->
 </template>
@@ -71,7 +78,13 @@ export default {
             routerViewKey: 0,
             loading: true,
 
-            debugSparkModalHTML: ""
+            debugSparkModalHTML: "",
+
+            alert: {
+                show: false,
+                message: "",
+                variant: ""
+            }
         }
     },
     methods: {
@@ -89,18 +102,16 @@ export default {
             this.reloadPage = reload;
             this.$bvModal.show('login-modal');
         },
-        createToast(title, body, variant) {
+        createToast(title, body, variant, appendToToast) {
 			this.$bvToast.toast(body, {
 				title: title,
 				variant: variant,
 				toaster: 'b-toaster-bottom-right',
 				solid: true,
-				appendToToast: true
+				appendToToast: (appendToToast != undefined) ? appendToToast : true
 			});
 		},
 		errorHandling(error) {
-            console.log(error);
-
 			if(error.response) {
 				switch(error.response.status) {
                     case 500 : 
@@ -111,9 +122,17 @@ export default {
 					default :
 						this.createToast('Error', 'Ha ocurrido un error, vuelva a intentarlo mas tarde', 'danger');
 				}
-			} else {
-				this.createToast('Error', 'Ha ocurrido un error, vuelva a intentarlo mas tarde', 'danger');
-			}
+            } 
+            else if(error.code) {
+                switch(error.code) {
+                    case 403:
+                        this.alert.show = true;
+                        this.alert.message = `Error 403, no tienes permiso para realizar esta acción`;
+                        this.alert.variant = "warning";
+                        break;
+
+                }
+            }
         },
         getUserData() {
             RequestHelper.get('/auth/me', {
@@ -123,6 +142,9 @@ export default {
                 },
                 notLoggedIn: (data) => {
                     this.showLoginModal(true);
+                },
+                forbidden: (error) => {
+                    this.errorHandling(error);
                 },
                 error: (error) => {
                     this.errorHandling(error);

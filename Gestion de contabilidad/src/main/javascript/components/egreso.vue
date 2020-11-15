@@ -189,6 +189,9 @@ export default {
                 notLoggedIn: () => {
                     this.showLoginModal(true);
                 },
+                forbidden: (error) => {
+                    this.errorHandling(error);
+                },
                 error: (error) => {
                     this.errorHandling(error);
                 },
@@ -246,6 +249,10 @@ export default {
                         this.falloCarga = true;
                         this.falloCargaDetalles = data.message;
                     },
+                    forbidden: (error) => {
+                        this.falloCarga = true;
+                        this.errorHandling(error);
+                    },
                     error: (error) => {
                         this.falloCarga = true;
                         this.errorHandling(error);
@@ -293,6 +300,10 @@ export default {
                     failed: (data) => {
                         this.falloCarga = true;
                         this.falloAsociacionDetalles = data.message;
+                    },
+                    forbidden: (error) => {
+                        this.falloCarga = true;
+                        this.errorHandling(error);
                     },
                     error: (error) => {
                         this.falloCarga = true;

@@ -8,7 +8,9 @@
                     :to="item.to" 
                     :active="active(item)"
                 >
-                    <b-icon class="mr-2" :icon="item.icon"></b-icon>{{item.text}}
+                    <b-icon class="mr-2" :icon="item.icon"></b-icon>
+                    <span>{{item.text}}</span>
+                    <b-badge class="ml-auto" variant="success" pill v-if="item.bandeja && mensajesCount">{{mensajesCount}}</b-badge>
                 </b-list-group-item>
             </template>
         </b-list-group>
@@ -16,10 +18,21 @@
 </template>
 
 <script>
+import {RequestHelper} from '../util/utils'
+
 export default {
     props: {
         sidebar: Array
     },
+    data() {
+        return {
+            update: true,
+            updating: false,
+            updateSpeed: 20000, // 20s
+            mensajesCount: 0
+        }
+    },
+    inject: ["showLoginModal", "errorHandling", "createToast"],
     methods: {
         closeSidebar() {
             this.$emit('closeSidebar');
@@ -29,10 +42,36 @@ export default {
                 return this.$route.meta.breadcrumb[0].label == item.text;
             } else {
                 return this.$route.name == item.routeName;
+            } 
+        },
+        cargarMensajesAPI() {
+            RequestHelper.get('/api/bandeja', {
+                success: (data) => {
+                    this.mensajesCount = data.mensajes.length;
+                    console.log(data);
+                },
+                notLoggedIn: () => {
+                    this.showLoginModal(true);
+                },
+                forbidden: (error) => {
+                    this.errorHandling(error);
+                },
+                empty: () => {
+                    this.mensajes = [];
+                },
+                error: (error) => {
+                    this.errorHandling(error);
+                }
+            });
+            if(this.update && !this.updating) {
+                this.updating = true;
+                setTimeout(() => {this.updating = false; this.cargarMensajesAPI()}, this.updateSpeed);
             }
-            
-        }
+        },
     },
+    mounted() {
+        this.cargarMensajesAPI();
+    }
 }
 </script>
 
@@ -43,7 +82,7 @@ export default {
 
 #sidebar-wrapper {
     min-height: calc(100vh - 57px);
-    margin-left: -15rem;
+    margin-left: -16rem;
     -webkit-transition: margin .25s ease-out;
     -moz-transition: margin .25s ease-out;
     -o-transition: margin .25s ease-out;
@@ -56,7 +95,7 @@ export default {
 }
 
 #sidebar-wrapper .list-group {
-    width: 15rem;
+    width: 16rem;
 }
 
 #page-content-wrapper {
@@ -78,7 +117,7 @@ export default {
     }
 
     #wrapper.toggled #sidebar-wrapper {
-        margin-left: -15rem;
+        margin-left: -16rem;
     }
     #navbar-organizacion{
         width: 14rem;
