@@ -3,7 +3,7 @@ package Domain.Entities.ClasesParciales;
 public class EntidadJuridicaNueva {
 	public String nombreFicticio;
 	public String razonSocial;
-	public int cuit;
+	public String cuit;
 	public int codigoDeInscripcionDefinitivaEnIGJ;
 	public int pais;
     public int provincia;

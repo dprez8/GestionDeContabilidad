@@ -72,13 +72,11 @@ public class TestDominio {
         this.repoValidaciones     = new Repositorio<>(new DaoHibernate<>(ValidacionDeTransparencia.class));
     }
 
-    @Before
-    public void antesTesteo(){
+    @Test
+    public void T0cargarTipoItem(){
     	TipoItem producto= new TipoItem("producto");
     	repoTipoItem.agregar(producto);
     }
-    
-    
     
     @Test
     public void T1persistirUnaEntidadJuridica (){
@@ -89,7 +87,7 @@ public class TestDominio {
         pyme.setActividad("Construcciones");
 
         EntidadJuridica entidadJuridica = new EntidadJuridica();
-        entidadJuridica.setCuit(1234);
+        entidadJuridica.setCuit("1234");
         entidadJuridica.setAltura(1234);
         entidadJuridica.setRazonSocial("Entidad Juridica");
         entidadJuridica.setTipoEntidadJuridica(pyme);
@@ -248,13 +246,13 @@ public class TestDominio {
 
         EntidadJuridica pepsiCompra = (EntidadJuridica) unaCompra.getOrganizacion();
 
-        Assert.assertEquals(0,unaCompra.getId());
-        Assert.assertEquals(0,primerPresupuesto.getEgresoAsociado().getId());
-        Assert.assertEquals(0,segundoPresupuesto.getEgresoAsociado().getId());
+        Assert.assertEquals(1,unaCompra.getId());
+        Assert.assertEquals(1,primerPresupuesto.getEgresoAsociado().getId());
+        Assert.assertEquals(1,segundoPresupuesto.getEgresoAsociado().getId());
         Assert.assertEquals("Factura A",unaCompra.getDocumento().getTipo().getNombreTipoDeDocumento());
-        Assert.assertEquals("razonSocial",pepsiCompra.getRazonSocial());
-        Assert.assertEquals("4GB DDR5",unaCompra.getItems().get(1).getItem().getDescripcion());
-        Assert.assertEquals("Memoria RAM 4 gb DDR3",unaCompra.getItems().get(0).getItem().getDescripcion());
+        Assert.assertEquals("Entidad Juridica",pepsiCompra.getRazonSocial());
+        Assert.assertEquals("Placa de video 4GB DDR5",unaCompra.getItems().get(1).getItem().getDescripcion());
+        Assert.assertEquals("Memoria RAM 4GB DDR3",unaCompra.getItems().get(0).getItem().getDescripcion());
         Assert.assertEquals(2,unaCompra.getPresupuestos().get(0).getId());
         Assert.assertEquals(1,unaCompra.getPresupuestos().get(1).getId());
         Assert.assertEquals(1,unaCompra.getRevisores().get(0).getId());
@@ -363,5 +361,6 @@ public class TestDominio {
         usuario.setContrasenia("una_contrasenia_insegura");
         usuario.setMail("feer@gmail.com");
         repoUsuarios.agregar(usuario);
+        repoEntidadJuridica.modificar(entidadJuridica);
     }
 }

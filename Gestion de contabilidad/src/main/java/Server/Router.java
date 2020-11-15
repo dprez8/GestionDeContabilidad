@@ -74,6 +74,7 @@ public class Router {
 
         CriteriosCategoriasController categoriasController = new CriteriosCategoriasController();
         PresupuestoRestController presupuestoRestController = new PresupuestoRestController();
+        ItemsController itemsController = new ItemsController();
 
         /****  Verificacion de credenciales  ******/
         Spark.before("/api/*",authFilter);

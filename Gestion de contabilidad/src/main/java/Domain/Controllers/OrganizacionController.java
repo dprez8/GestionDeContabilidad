@@ -40,19 +40,12 @@ public class OrganizacionController extends GenericController{
 
 	public OrganizacionController(TokenService tokenService, String tokenPrefix) {
 		super(tokenService,tokenPrefix);
-	}
-	
-	
-	
-	public OrganizacionController() {
 		this.repoSector = new Repositorio<Sector>(new DaoHibernate<Sector>(Sector.class));
 		this.repoEntidad = new Repositorio<EntidadJuridica>(new DaoHibernate<EntidadJuridica>(EntidadJuridica.class));
 		this.repoEntidadBase= new Repositorio<EntidadBase>(new DaoHibernate<EntidadBase>(EntidadBase.class));
 		this.repoPais = new Repositorio<Pais>(new DaoHibernate<Pais>(Pais.class));
 		this.repoProvincia = new Repositorio<Provincia>(new DaoHibernate<Provincia>(Provincia.class));
 		this.repoCiudad = new Repositorio<Ciudad>(new DaoHibernate<Ciudad>(Ciudad.class));
-		
-	      
 	}
 
 	public String listadoSectores(Request request, Response response){
@@ -174,7 +167,7 @@ public String crearEntidadJuridica(Request request,Response response){
 		Gson gson2 = new Gson();
 
 		this.repoEntidad= new Repositorio<EntidadJuridica>(new DaoHibernate<EntidadJuridica>(EntidadJuridica.class));
-		OrganizacionDato organizacionDato = gson2.fromJson(request.body(),OrganizacionDato.class);
+		EntidadJuridicaNueva organizacionDato = gson2.fromJson(request.body(),EntidadJuridicaNueva.class);
 		EntidadJuridica entidad=mapOrganizacion(organizacionDato);
 		OrganizacionRespuesta organizacionCreada= new OrganizacionRespuesta();
 		try{

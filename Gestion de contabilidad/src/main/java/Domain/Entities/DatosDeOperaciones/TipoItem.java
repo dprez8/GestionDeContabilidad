@@ -13,6 +13,10 @@ public class TipoItem extends EntidadPersistente {
 	@Column
 	public String nombre;
 
+	public TipoItem() {
+		super();
+	}
+
 	public TipoItem(String nombre) {
 		super();
 		this.nombre = nombre;

@@ -16,13 +16,14 @@ import javax.persistence.*;
 @Table(name = "entidad_juridica")
 @PrimaryKeyJoinColumn(name = "id")
 public class EntidadJuridica extends Organizacion {
+
 	@Expose
 	@Column(name = "nombre_ficticio")
 	private String nombreFicticio;
 
 	@ManyToOne
-	@JoinColumn(name = "administrador_id",referencedColumnName = "administrador_id")
-	Administrador administrador;
+	@JoinColumn(name = "administrador_id",referencedColumnName = "id")
+	private Administrador administrador;
 	
 	@Expose
 	@Column(name = "razon_social")
@@ -30,7 +31,7 @@ public class EntidadJuridica extends Organizacion {
 
 	@Expose
 	@Column(name = "cuit")
-    private int cuit;
+    private String cuit;
 
 	@Expose
 	@Column(name = "codigo_igj")
@@ -92,11 +93,11 @@ public class EntidadJuridica extends Organizacion {
 		this.razonSocial = razonSocial;
 	}
 
-	public int getCuit() {
+	public String getCuit() {
 		return cuit;
 	}
 
-	public void setCuit(int cuit) {
+	public void setCuit(String cuit) {
 		this.cuit = cuit;
 	}
 
@@ -119,6 +120,22 @@ public class EntidadJuridica extends Organizacion {
 	public CategoriaEntidadJuridica getTipoEntidadJuridica() {
 		return tipoEntidadJuridica;
 	}
+
+	public Administrador getAdministrador() {
+		return administrador;
+	}
+
+	public void setAdministrador(Administrador administrador) {
+		this.administrador = administrador;
+	}
+	public String getNombreFicticio() {
+		return nombreFicticio;
+	}
+
+	public void setNombreFicticio(String nombreFicticio) {
+		this.nombreFicticio = nombreFicticio;
+	}
+
     public Pais getPais() {
 		return pais;
 	}

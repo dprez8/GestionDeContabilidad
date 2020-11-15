@@ -21,7 +21,9 @@ public class Item extends EntidadPersistente{
 	 	@ManyToOne
 	 	@JoinColumn(name= "tipo_item_id",referencedColumnName = "id")
 	 	private TipoItem tipoItem;
-	 	
+
+	 	public Item() {}
+
 	    public Item(String descripcion, TipoItem tipoItem) {
 			this.descripcion = descripcion;
 			this.tipoItem = tipoItem;
