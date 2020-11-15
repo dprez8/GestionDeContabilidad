@@ -14,6 +14,10 @@
                                         <div><b-icon-person class="mr-2"/>{{usuario.username}}</div>
                                         <div><b-icon-lock class="mr-2"/><b-link>cambiar contraseña</b-link></div>
                                     </b-card-text>
+                                </b-card-body>
+                            </b-col>
+                            <b-col>
+                                <b-card-body class="d-flex h-100 justify-content-end align-items-end">
                                     <b-button variant="primary" size="sm" class="mr-2"><b-icon-pencil class="mr-2"/>Editar</b-button>
                                     <b-button variant="danger" size="sm"><b-icon-x class="mr-2"/>Borrar</b-button>
                                 </b-card-body>
@@ -68,7 +72,16 @@ export default {
     width: 100%;
     height: 100%;
     background: var(--primary);
-    clip-path: polygon(0% 0%, 100% 0%, 0% 100%, 0% 100%);
+    clip-path: polygon(0% 0%, 75% 0%, 25% 100%, 0% 100%);
     transition: all .2s;
+    animation: .5s intro-user;
+}
+@keyframes intro-user {
+    from {
+        clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+    }
+    to {
+        clip-path: polygon(0% 0%, 75% 0%, 25% 100%, 0% 100%);
+    }
 }
 </style>

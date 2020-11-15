@@ -206,8 +206,8 @@ const routes = [
                 {text: 'Usuarios', icon: 'person-lines-fill', to: '/admin/usuarios'},
                 {text: 'Entidades', icon: 'bar-chart-fill', to: '/admin/entidades'},
                 {text: 'Criterios', icon: 'ui-checks', to: '/admin/criterios'},
-                {text: 'Vinculacion automática', icon: 'gear-wide-connected', to: '/admin/vinculacion'},
-                {text: 'Validacion de Egresos', icon: 'clock', to: '/admin/validaciones'}
+                {text: 'Vinculación automática', icon: 'gear-wide-connected', to: '/admin/vinculacion'},
+                {text: 'Validación de Egresos', icon: 'clock', to: '/admin/validaciones'}
             ]
         },
         children: [

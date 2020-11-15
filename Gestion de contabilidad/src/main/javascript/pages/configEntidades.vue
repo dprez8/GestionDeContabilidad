@@ -20,7 +20,7 @@
                                                 </div>
                                                 <div class="text-truncate">
                                                     <span v-b-tooltip.html :title="`CUIT<br><em>${entidad.cuit}`">
-                                                        <b-icon-flag class="mr-2"/>{{entidad.cuit}}
+                                                        <b-icon-credit-card2-front class="mr-2"/>{{entidad.cuit}}
                                                     </span>
                                                 </div>
                                             </b-card-text>
@@ -54,6 +54,10 @@
                                             </b-card-text>
                                         </b-col>
                                     </b-row>
+                                </b-card-body>
+                            </b-col>
+                            <b-col>
+                                <b-card-body class="d-flex h-100 justify-content-end align-items-end">
                                     <b-button variant="primary" size="sm" class="mr-2"><b-icon-pencil class="mr-2"/>Editar</b-button>
                                     <b-button variant="danger" size="sm"><b-icon-x class="mr-2"/>Borrar</b-button>
                                 </b-card-body>
@@ -103,7 +107,16 @@ export default {
     width: 100%;
     height: 100%;
     background: var(--success);
-    clip-path: polygon(0% 0%, 100% 0%, 0% 100%, 0% 100%);
+    clip-path: polygon(0% 0%, 75% 0%, 25% 100%, 0% 100%);
     transition: all .2s;
+    animation: .5s intro-entity;
+}
+@keyframes intro-entity {
+    from {
+        clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+    }
+    to {
+        clip-path: polygon(0% 0%, 75% 0%, 25% 100%, 0% 100%);
+    }
 }
 </style>
