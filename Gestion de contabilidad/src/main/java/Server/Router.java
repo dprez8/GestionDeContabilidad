@@ -63,14 +63,16 @@ public class Router {
         AuthController authController           = new AuthController(tokenService);
         LoginRestController loginRestController = new LoginRestController();
 
+        EgresosRestController egresosRestController = new EgresosRestController(tokenService,TOKEN_PREFIX);
+        IngresosRestController ingresosRestController = new IngresosRestController(tokenService,TOKEN_PREFIX);
+        AsociacionOperacionesRestController asociacionOperacionesRestController = new AsociacionOperacionesRestController(tokenService,TOKEN_PREFIX);
+        BandejaDeMensajesRestController bandejaDeMensajesRestController= new BandejaDeMensajesRestController(tokenService,TOKEN_PREFIX);
+
         DireccionPostalController direccionController = new DireccionPostalController();
         ProveedorController proveedorController = new ProveedorController();
         MedioDePagoController medioController = new MedioDePagoController();
-        BandejaDeMensajesRestController bandejaDeMensajesRestController= new BandejaDeMensajesRestController();
-        EgresosRestController egresosRestController = new EgresosRestController(tokenService,TOKEN_PREFIX);
+
         CriteriosCategoriasController categoriasController = new CriteriosCategoriasController();
-        IngresosRestController ingresosRestController = new IngresosRestController();
-        AsociacionOperacionesRestController asociacionOperacionesRestController = new AsociacionOperacionesRestController();
         PresupuestoRestController presupuestoRestController = new PresupuestoRestController();
         OrganizacionController organizacionController = new OrganizacionController();
 

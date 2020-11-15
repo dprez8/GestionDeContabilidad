@@ -1,11 +1,11 @@
 package Domain.Controllers;
 
-
-import Domain.Controllers.AdaptersJson.LocalDateAdapter;
 import Domain.Controllers.AdaptersJson.LocalDateTimeAdapter;
 import Domain.Controllers.DTO.ConfigSchedulerRequest;
 import Domain.Controllers.DTO.Respuesta;
+import Domain.Controllers.jwt.TokenService;
 import Domain.Entities.BandejaDeMensajes.Mensaje;
+import Domain.Entities.Usuarios.Administrador;
 import Domain.Entities.Usuarios.Estandar;
 import Domain.Entities.Usuarios.Usuario;
 import Domain.Entities.ValidadorTransparencia.Tarea;
@@ -19,7 +19,7 @@ import spark.Request;
 import spark.Response;
 
 import javax.persistence.NoResultException;
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -27,15 +27,14 @@ import java.util.Timer;
 import java.util.stream.Collectors;
 
 
-public class BandejaDeMensajesRestController {
-    private Repositorio<Usuario> repoUsuarios;
+public class BandejaDeMensajesRestController extends GenericController{
     private Repositorio<Mensaje> repoMensajes;
     private Repositorio<SchedulerInit> repoScheduler;
     private Respuesta codeResponse;
     private String jsonResponse;
 
-    public BandejaDeMensajesRestController() {
-        this.repoUsuarios = new Repositorio<>(new DaoHibernate<Usuario>(Usuario.class));
+    public BandejaDeMensajesRestController(TokenService tokenService, String tokenPrefix) {
+        super(tokenService,tokenPrefix);
         this.repoMensajes = new Repositorio<>(new DaoHibernate<Mensaje>(Mensaje.class));
         this.repoScheduler= new Repositorio<>(new DaoHibernate<>(SchedulerInit.class));
         this.codeResponse = new Respuesta();
@@ -48,12 +47,7 @@ public class BandejaDeMensajesRestController {
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter().nullSafe())
                 .create();
 
-        response.type("application/json");
-
-        Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
-        if(usuario == null) {
-            return response.body();
-        }
+        Estandar usuario = (Estandar) getUsuarioDesdeRequest(request);
         BandejaResponse bandejaResponse;
         //Estandar usuario = (Estandar) asignarUsuarioPorRequestParams(request);
 
@@ -67,11 +61,8 @@ public class BandejaDeMensajesRestController {
     }
 
     public String configurar(Request request, Response response) {
-        Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
-        if(usuario == null) {
-            return response.body();
-        }
-
+        //Administrador usuario = (Administrador) getUsuarioDesdeRequest(request);
+        Estandar usuario = (Estandar) getUsuarioDesdeRequest(request);
         Gson gson = new Gson();
         ConfigSchedulerRequest configSchedulerRequest = gson.fromJson(request.body(),ConfigSchedulerRequest.class);
 
@@ -102,10 +93,8 @@ public class BandejaDeMensajesRestController {
     }
 
     public String mostrarConfiguracion(Request request, Response response) {
-        Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
-        if(usuario == null) {
-            return response.body();
-        }
+        //Usuario usuario = getUsuarioDesdeRequest(request);
+        Estandar usuario = (Estandar) getUsuarioDesdeRequest(request);
         Gson gson = new GsonBuilder()
                 .excludeFieldsWithoutExposeAnnotation()
                 .create();
@@ -123,10 +112,6 @@ public class BandejaDeMensajesRestController {
     }
 
     public String mensajeVisto(Request request, Response response) {
-        Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
-        if(usuario == null) {
-            return response.body();
-        }
         Gson gson = new Gson();
         MensajeId idMensaje = gson.fromJson(request.body(),MensajeId.class);
 
@@ -172,16 +157,6 @@ public class BandejaDeMensajesRestController {
         bandejaResponse.usuarioId   = estandar.getId();
         bandejaResponse.mensajes    = estandar.getBandejaDeMensajes().getMensajes();
         return bandejaResponse;
-    }
-
-    private Usuario asignarUsuarioPorRequestParams(Request request) {
-        try {
-            Usuario usuario =  this.repoUsuarios.buscar(new Integer(request.params("usuarioId")));
-            return usuario;
-        }
-        catch (NullPointerException ex) {
-            return null;
-        }
     }
 
     private boolean configuracionExistosa(ConfigSchedulerRequest configSchedulerRequest, SchedulerInit schedulerInit) {

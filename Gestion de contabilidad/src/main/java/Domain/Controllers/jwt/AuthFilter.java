@@ -55,7 +55,7 @@ public class AuthFilter implements Filter {
             String token = authorizationHeader.replace(TOKEN_PREFIX, "");
 
             if(isEstandar(token)) {
-                if(!isProveedorRequest(request) && !isMensajesRequest(request) && isAdminRequests(request)){
+                if(!isProveedorRequest(request) && !isMensajesRequest(request) && !isOperacionesRequest(request) && isAdminRequests(request)){
                     this.respuesta.setCode(403);
                     this.respuesta.setMessage("No posees permisos de administrador");
                     String jsonResponseError = gson.toJson(this.respuesta);
@@ -84,11 +84,11 @@ public class AuthFilter implements Filter {
     }
 
     private boolean isEstandar(String token) {
-        return tokenService.getRol(token) == ESTANDAR;
+        return tokenService.getRol(token).equals(ESTANDAR);
     }
 
     private boolean isAdmin(String token) {
-        return tokenService.getRol(token) == ADMIN;
+        return tokenService.getRol(token).equals(ADMIN);
     }
 
     private boolean isAdminRequests(Request request) {
@@ -104,6 +104,15 @@ public class AuthFilter implements Filter {
     private boolean isMensajesRequest(Request request) {
         return  request.uri().equals("/api/bandeja") && request.requestMethod().equals(HTTP_GET) ||
                 request.uri().equals("/api/bandeja/visto") && request.requestMethod().equals(HTTP_POST);
+    }
+
+    private boolean isOperacionesRequest(Request request) {
+        return  request.uri().equals("/api/operaciones/egreso") && request.requestMethod().equals(HTTP_POST) ||
+                request.uri().equals("/api/operaciones/egresos") && request.requestMethod().equals(HTTP_GET) ||
+                request.uri().equals("/api/operaciones/ingresos") && request.requestMethod().equals(HTTP_GET)||
+                request.uri().equals("/api/operaciones/ingreso") && request.requestMethod().equals(HTTP_POST)||
+                request.uri().equals("/api/operaciones/asociarManualmente") && request.requestMethod().equals(HTTP_POST)||
+                request.uri().equals("/api/operaciones/egreso/cargarArchivos") && request.requestMethod().equals(HTTP_POST);
     }
 
 }

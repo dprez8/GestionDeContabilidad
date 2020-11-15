@@ -1,38 +1,31 @@
 package Domain.Controllers;
 
 import Domain.Controllers.DTO.Respuesta;
+import Domain.Controllers.jwt.TokenService;
 import Domain.Entities.Operaciones.Egreso.Egreso;
 import Domain.Entities.Operaciones.Ingreso;
-import Domain.Entities.Organizacion.EntidadJuridica;
-import Domain.Entities.Usuarios.Estandar;
 import Domain.Repositories.Daos.DaoHibernate;
 import Domain.Repositories.Repositorio;
 import com.google.gson.Gson;
 import spark.Request;
 import spark.Response;
 
-import javax.persistence.NoResultException;
-import java.sql.Timestamp;
 
-public class AsociacionOperacionesRestController {
+public class AsociacionOperacionesRestController extends GenericController{
     private Repositorio<Ingreso> repoIngresos;
     private Repositorio<Egreso> repoEgresos;
     private Respuesta respuesta;
     private Gson gson;
     private String jsonRespose;
 
-    public AsociacionOperacionesRestController() {
+    public AsociacionOperacionesRestController(TokenService tokenService, String tokenPrefix) {
+        super(tokenService,tokenPrefix);
         this.repoIngresos        = new Repositorio<>(new DaoHibernate<>(Ingreso.class));
         this.repoEgresos         = new Repositorio<>(new DaoHibernate<>(Egreso.class));
         this.respuesta           = new Respuesta();
     }
 
     public String asociarManualmente(Request request, Response response) {
-        response.type("application/json");
-        Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
-        if(usuario == null) {
-            return response.body();
-        }
         this.gson = new Gson();
         AsociacionRequest asociacionRequest = gson.fromJson(request.body(),AsociacionRequest.class);
         Ingreso ingreso;

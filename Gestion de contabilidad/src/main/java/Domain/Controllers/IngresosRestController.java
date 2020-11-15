@@ -5,6 +5,7 @@ import Domain.Controllers.AdaptersJson.LocalDateTimeAdapter;
 import Domain.Controllers.DTO.IngresoRequest;
 import Domain.Controllers.DTO.IngresoResponse;
 import Domain.Controllers.DTO.Respuesta;
+import Domain.Controllers.jwt.TokenService;
 import Domain.Entities.ApiPaises.Moneda;
 import Domain.Entities.Operaciones.Ingreso;
 import Domain.Entities.Organizacion.EntidadBase;
@@ -22,7 +23,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class IngresosRestController {
+public class IngresosRestController extends GenericController{
     private Repositorio<Ingreso> repoIngresos;
     private Repositorio<EntidadJuridica> repoEntidadJuridica;
     private Repositorio<EntidadBase> repoEntidadBase;
@@ -31,7 +32,8 @@ public class IngresosRestController {
     private Respuesta respuesta;
     private Gson gson;
 
-    public IngresosRestController() {
+    public IngresosRestController(TokenService tokenService, String tokenPrefix) {
+        super(tokenService,tokenPrefix);
         this.repoIngresos        = new Repositorio<>(new DaoHibernate<>(Ingreso.class));
         this.repoEntidadJuridica = new Repositorio<>(new DaoHibernate<>(EntidadJuridica.class));
         this.repoEntidadBase     = new Repositorio<>(new DaoHibernate<>(EntidadBase.class));
@@ -40,11 +42,7 @@ public class IngresosRestController {
     }
 
     public String listadoDeIngresos(Request request, Response response) {
-        response.type("application/json");
-        Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
-        if(usuario == null) {
-            return response.body();
-        }
+        Estandar usuario = (Estandar) getUsuarioDesdeRequest(request);
         this.gson  = new GsonBuilder()
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter().nullSafe())
@@ -77,11 +75,7 @@ public class IngresosRestController {
     }
 
     public String cargarNuevoIngreso(Request request, Response response) {
-        response.type("application/json");
-        Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
-        if(usuario == null) {
-            return response.body();
-        }
+
         this.gson  = new GsonBuilder()
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())
                 .create();
