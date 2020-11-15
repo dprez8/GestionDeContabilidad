@@ -41,7 +41,7 @@ export default {
         cargarCriteriosAPI() {
             this.loading = true;
 
-            RequestHelper.get(`/api/categorias`, {
+            RequestHelper.get(`/api/criterios`, {
                 success: (data) => {
                     this.criteriosAPI = data.criterios;
                     this.procesarCriterios();

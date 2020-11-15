@@ -85,6 +85,7 @@ export default {
             ]
         }
     },
+    inject: ["errorHandling", "showLoginModal"],
     methods: {
         checkIfAddItem() {
             var items = this.items;
@@ -127,10 +128,21 @@ export default {
             return precio;
         },
         searchItemAPI() {
-            console.log("asd");
             RequestHelper.get('/api/items', {
-                default: (data) => {
+                success: (data) => {
                     console.log(data);
+                },
+                notLoggedIn: () => {
+                    this.showLoginModal(true);
+                },
+                error: (error) => {
+                    this.errorHandling(error);
+                },
+                forbidden: (error) => {
+                    this.errorHandling(error);
+                },
+                always: () => {
+                    //this.egresosLoading = false;
                 }
             });
         }

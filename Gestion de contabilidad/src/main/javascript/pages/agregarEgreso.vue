@@ -466,7 +466,6 @@ export default {
         getCookie: getCookie,
         convertDate: convertDate,
         uploadFileTest() {
-            console.log(this.egreso.archivo);
 
             var request = new FormData();
             request.append('arhivo', this.egreso.archivo);
@@ -499,6 +498,9 @@ export default {
                 always: () => {
                     this.egresoLoading = false;
                     this.archivoProgress = 0;
+                },
+                default: (data) => {
+                    console.log(data);
                 }
             }, config);
 

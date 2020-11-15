@@ -47,8 +47,8 @@ export default {
         cargarMensajesAPI() {
             RequestHelper.get('/api/bandeja', {
                 success: (data) => {
-                    this.mensajesCount = data.mensajes.length;
-                    console.log(data);
+                    this.mensajesCount = data.mensajes.map((unMensaje) => unMensaje.leido ? 0 : 1);
+                    this.mensajesCount = this.mensajesCount.reduce((valorAnterior, valorActual) => valorAnterior + valorActual);
                 },
                 notLoggedIn: () => {
                     this.showLoginModal(true);

@@ -104,6 +104,9 @@ export default {
                 success: (data) => {
                     this.egresosSelect = data.egresos.map(this.egresosAPIConverter);
                 },
+                notLoggedIn: () => {
+                    this.showLoginModal(false);
+                },
                 error: (error) => {
                     this.errorHandling(error);
                 },
