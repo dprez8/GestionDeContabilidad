@@ -89,7 +89,7 @@ export default {
                     this.updateHoraYMinuto();
                 },
                 notLoggedIn: () => {
-                    this.showLoginModal(false);
+                    this.showLoginModal(true);
                 },
                 forbidden: () => {
                     this.createToast("401 Forbidden", "No tienes acceso para realizar esa acción", "warning");
