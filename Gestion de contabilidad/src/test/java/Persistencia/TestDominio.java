@@ -117,7 +117,7 @@ public class TestDominio {
     @Test
     public void T3persistirAUnUsuarioEstandar () throws contraseniaCorta, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, IOException {
         EntidadJuridica entidadJuridica = repoEntidadJuridica.buscar(1);
-        Estandar usuario = new Estandar(entidadJuridica, "javier", "una_contrasenia_segura", "javier@gmail.com");
+        Estandar usuario = new Estandar(entidadJuridica,"javier","javier","King","una_contrasenia_segura", "javier@gmail.com");
         repoUsuarios.agregar(usuario);
     }
 
@@ -358,10 +358,7 @@ public class TestDominio {
     @Test
     public void T99persistirAUnUsuarioAdministrador () throws contraseniaCorta, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, IOException {
         EntidadJuridica entidadJuridica = repoEntidadJuridica.buscar(1);
-        Administrador usuario = new Administrador();
-        usuario.setNombre("Fernando");
-        usuario.setContrasenia("una_contrasenia_insegura");
-        usuario.setMail("feer@gmail.com");
+        Administrador usuario = new Administrador("Fer","Fernando","Herbas","una_contrasenia_insegura","feer@gmail.com",entidadJuridica);
         repoUsuarios.agregar(usuario);
         repoEntidadJuridica.modificar(entidadJuridica);
     }
