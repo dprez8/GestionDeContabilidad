@@ -1,6 +1,6 @@
 <template>
     <b-overlay class="w-100 h-100" spinner-variant="light" variant="primary" :show="loading">
-        <div class="text-center p-2">
+        <div class="text-center p-2" style="background: #eee; min-height: 100%">
             <div>
                 <p class="mt-4 mb-2">Días en los que se ejecutará la validación de egresos</p>
                 <div class="d-flex justify-content-center">
@@ -20,7 +20,7 @@
                             <b-button @click="scheduler.horaInicio++">
                                 <b-icon-chevron-compact-up></b-icon-chevron-compact-up>
                             </b-button>
-                            <b-form-input class="bg-secondary text-light border-0 rounded-0 text-center"
+                            <b-form-input class="bg-secondary text-light border-secondary rounded-0 text-center"
                             style="font-size: 2rem; width: 70px" 
                             v-model="scheduler.horaInicio" 
                             lazy></b-form-input>
@@ -36,7 +36,7 @@
                             <b-button @click="scheduler.minutoInicio++">
                                 <b-icon-chevron-compact-up></b-icon-chevron-compact-up>
                             </b-button>
-                            <b-form-input class="bg-secondary text-light border-0 rounded-0 text-center"
+                            <b-form-input class="bg-secondary text-light border-secondary rounded-0 text-center"
                             style="font-size: 2rem; width: 70px" 
                             v-model="scheduler.minutoInicio"
                             lazy></b-form-input>

@@ -5,7 +5,7 @@ import jwt_decode from "jwt-decode";
 import {  
     panel, login, error404, error401, error500, inicio,
     operaciones, egresos, ingresos, agregarEgreso, agregarIngreso, bandeja, 
-    miCuenta, configValidacion, configCriterios, configUsuarios
+    miCuenta, configValidacion, configCriterios, configUsuarios, configEntidades, configVinculacion
 } from './pages'
 
 const routes = [
@@ -219,7 +219,20 @@ const routes = [
                     breadcrumb: [{
                         label: "Usuarios",
                         type: "fixed",
-                        path: "/usuarios",
+                        path: "/admin/usuarios",
+                        active: true
+                    }]
+                }
+            },
+            {
+                name: 'configEntidades',
+                path: 'entidades',
+                component: configEntidades,
+                meta: {
+                    breadcrumb: [{
+                        label: "Entidades",
+                        type: "fixed",
+                        path: "/admin/entidades",
                         active: true
                     }]
                 }
@@ -232,7 +245,21 @@ const routes = [
                     breadcrumb: [{
                         label: "Criterios",
                         type: "fixed",
-                        path: "/criterios",
+                        path: "/admin/criterios",
+                        active: true
+                    }]
+                }
+            },
+            {
+                name: 'configVinculacion',
+                path: 'vinculacion',
+                component: configVinculacion,
+                meta: {
+                    breadcrumb: [
+                    {
+                        label: "Vinculación automática",
+                        type: "fixed",
+                        path: "/admin/vinculacion",
                         active: true
                     }]
                 }
@@ -244,7 +271,7 @@ const routes = [
                 meta: {
                     breadcrumb: [
                     {
-                        label: "Validacion de Egresos",
+                        label: "Validación de Egresos",
                         type: "fixed",
                         path: "/admin/validaciones",
                         active: true

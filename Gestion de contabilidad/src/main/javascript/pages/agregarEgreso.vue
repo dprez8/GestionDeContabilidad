@@ -343,7 +343,6 @@
 
         <b-modal id="modal-agregar-presupuesto" size="xl" hide-footer scrollable centered title="Crear nuevo Presupuesto">
             <agregar-presupuesto
-                :buscarEgresos="false"
                 :confirmarAccion="confirmarNuevoPresupuesto"
                 :cancelarAccion="cancelarNuevoPresupuesto"
             ></agregar-presupuesto>
@@ -465,6 +464,7 @@ export default {
     },
     methods: {
         getCookie: getCookie,
+        convertDate: convertDate,
         uploadFileTest() {
             console.log(this.egreso.archivo);
 

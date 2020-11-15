@@ -2,8 +2,10 @@
     <b-overlay class="w-100 h-100" spinner-variant="light" variant="primary" :show="loading">
         <div class="p-4 d-flex justify-content-center" style="background: #eee; min-height: 100%">
             <div class="w-100" style="max-width: 768px;">
-                <b-card header="Agregar, editar y eliminar criterios y categorías de Egresos" class="mb-4">
-                    <ul class="list-group">
+                <b-card 
+                    title="Criterios y Categorías"
+                    sub-title="Agregar, editar y eliminar criterios y categorías de Egresos" class="mb-4">
+                    <ul class="list-group pt-2">
                         <criterio
                             v-for="(criterio, index) in criterios"
                             :key="index"

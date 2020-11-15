@@ -10,13 +10,15 @@ import ingresos from './ingresos'
 import bandeja from './bandeja'
 import miCuenta from './miCuenta'
 import configUsuarios from './configUsuarios'
-import configValidacion from './configValidacion'
+import configEntidades from './configEntidades'
 import configCriterios from './configCriterios'
+import configVinculacion from './configVinculacion'
+import configValidacion from './configValidacion'
 import agregarEgreso from './agregarEgreso'
 import agregarIngreso from './agregarIngreso'
 
 export {
     panel, login, error404, error401, error500, inicio,
     operaciones, egresos, ingresos, agregarEgreso, agregarIngreso, bandeja, 
-    miCuenta, configValidacion, configCriterios, configUsuarios
+    miCuenta, configValidacion, configCriterios, configUsuarios, configEntidades, configVinculacion
 }
