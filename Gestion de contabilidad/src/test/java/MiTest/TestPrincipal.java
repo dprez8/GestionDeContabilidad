@@ -32,7 +32,7 @@ public class TestPrincipal {
     private Repositorio<Egreso> repoEgresos;
     private Presupuesto primerPresupuesto;
     private Presupuesto segundoPresupuesto;
-    private Sector construccion;
+    private Sector construccion, industria, servicios, agropecuaria, comercio;
     private Empresa miPyme;
     private EntidadJuridica pymeJuridica;
     private Estandar fernando;
@@ -40,7 +40,9 @@ public class TestPrincipal {
     private MedioDePago rapiPago; 
     private Pago pago;
     private DocumentoComercial factura;
-    private Producto ram,placaDeVideo;
+    private Item ram,placaDeVideo;
+    private TipoItem producto;
+    private TipoItem servicio;
     private ItemEgreso rams,placasDeVideo;
     private ValidadorDeContrasenia validadorDeContrasenia;
 
@@ -48,10 +50,12 @@ public class TestPrincipal {
     public void antesDeTestear() throws IOException, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, contraseniaCorta{
 
         /**Creacion de los datos de egreso*/
-        this.ram  = new Producto("4GB DDR3");
+        this.producto= new TipoItem("producto");
+        this.servicio= new TipoItem("servicio");
+    	this.ram  = new Item("4GB DDR3",this.producto);
         this.rams = new ItemEgreso(this.ram, 1, 3000);
 
-        this.placaDeVideo  = new Producto("4GB DDR5");
+        this.placaDeVideo  = new Item("4GB DDR5",this.producto);
         this.placasDeVideo = new ItemEgreso(this.placaDeVideo, 2, 5000);
 
         TipoDocumento facturaA = new TipoDocumento("Factura A");
@@ -117,7 +121,8 @@ public class TestPrincipal {
         CategoriaPorSector pequeniaConstruccion  = new CategoriaPorSector(19450000.0,115370000.0,12,45);
         CategoriaPorSector medianaT1Construccion = new CategoriaPorSector(115370000.0,643710000.0,45,200);
         CategoriaPorSector medianaT2Construccion = new CategoriaPorSector(643710000.0,965460000.0,200,590);
-       
+        
+  
         micro.addCategoriasPorSector(microConstruccion);
         pequenia.addCategoriasPorSector(pequeniaConstruccion);
         medianaT1.addCategoriasPorSector(medianaT1Construccion);

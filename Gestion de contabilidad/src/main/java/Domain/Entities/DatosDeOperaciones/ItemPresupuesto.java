@@ -9,8 +9,8 @@ import javax.persistence.*;
 public class ItemPresupuesto extends EntidadPersistente {
 
 	@ManyToOne
-    @JoinColumn(name="producto_id", referencedColumnName = "id")
-	private Producto producto;
+    @JoinColumn(name="item_id", referencedColumnName = "id")
+	private Item item;
 
 	@Column
 	private int cantidad;
@@ -26,16 +26,16 @@ public class ItemPresupuesto extends EntidadPersistente {
     public ItemPresupuesto(){
     }
 
-    public ItemPresupuesto(Producto unProducto,ItemEgreso unItem, int cantidad, double precio, Presupuesto presupuesto){
-        this.producto = unProducto;
+    public ItemPresupuesto(Item item,ItemEgreso unItem, int cantidad, double precio, Presupuesto presupuesto){
+        this.item = item;
         this.itemEgresoAsociado = unItem;
         this.cantidad = cantidad;
         this.precio = precio;
         this.presupuesto= presupuesto;
     }
     
-    public ItemPresupuesto(Producto unProducto,ItemEgreso unItem, int cantidad, double precio){
-        this.producto = unProducto;
+    public ItemPresupuesto(Item item,ItemEgreso unItem, int cantidad, double precio){
+        this.item = item;
         this.itemEgresoAsociado = unItem;
         this.cantidad = cantidad;
         this.precio = precio;
@@ -50,15 +50,15 @@ public class ItemPresupuesto extends EntidadPersistente {
 	public double getPrecio() {
 		return precio;
 	}
-	public Producto getProducto() {
-		return producto;
+	public Item getItem() {
+		return item;
 	}
     public ItemEgreso getItemEgresoAsociado() {
         return itemEgresoAsociado;
     }
 
-    public void setProducto(Producto producto) {
-        this.producto = producto;
+    public void setProducto(Item item) {
+        this.item = item;
     }
 
     public void setCantidad(int cantidad) {
@@ -80,5 +80,11 @@ public class ItemPresupuesto extends EntidadPersistente {
     public void setPresupuesto(Presupuesto presupuesto) {
         this.presupuesto = presupuesto;
     }
+
+	public void setItem(Item item) {
+		this.item = item;
+	}
+    
+    
     /**********************/
 }

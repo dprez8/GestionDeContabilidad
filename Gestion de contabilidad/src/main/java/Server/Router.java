@@ -92,6 +92,7 @@ public class Router {
         Spark.get("/api/pais",direccionController::listadoDePaises);
         Spark.get("/api/pais/:clavePais/provincia",direccionController::listadoDeProvincias);
         Spark.get("/api/pais/:clavePais/provincia/:claveProvincia/ciudad",direccionController::listadoDeCiudades);
+        Spark.get("/api/monedas",direccionController::listadoDeMonedas);
 
         /****  ProveedorController     ********/
         Spark.post("/api/proveedor",proveedorController::crearProveedor);
@@ -124,13 +125,15 @@ public class Router {
         Spark.post("/api/operaciones/ingreso",ingresosRestController::cargarNuevoIngreso);
 
         /****  AsociacionRestController    ********/
+        Spark.get("/api/items",itemsController::listadoDeItems);
         Spark.post("/api/operaciones/asociarManualmente",asociacionOperacionesRestController::asociarManualmente);
 
         /****  PresupuestoRestController    ********/
         Spark.post("/api/operaciones/presupuesto", presupuestoRestController::cargarNuevoPresupuesto);
 
         /****  OrganizacionController    ********/
-        Spark.post("/api/admin/organizacion",organizacionController::crearOrganizacion);
+        Spark.post("/api/admin/entidadJuridica",organizacionController::crearEntidadJuridica);
+        Spark.post("/api/admin/entidadBase",organizacionController::crearEntidadBase);
         Spark.get("/api/usuario/organizaciones",organizacionController::listarOrganizacionesPropias);
 
         /**** Cierre de entityManager    ********/

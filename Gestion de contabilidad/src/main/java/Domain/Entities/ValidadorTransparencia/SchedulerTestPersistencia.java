@@ -12,7 +12,7 @@ public class SchedulerTestPersistencia {
         SchedulerInit schedulerInit = pepsi.getSchedulerInit();
 
         /**Creacion de los validadores*/
-        ValidarCantidadMinima validacionMinima = new ValidarCantidadMinima(1);
+        ValidarCantidadMinima validacionMinima = new ValidarCantidadMinima();
         ValidarConPresupuesto validacionPresupuesto = new ValidarConPresupuesto();
         ValidarMenorValor validacionMenorValor = new ValidarMenorValor();
 

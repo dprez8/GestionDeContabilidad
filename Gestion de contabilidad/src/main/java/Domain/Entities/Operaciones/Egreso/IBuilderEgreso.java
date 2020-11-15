@@ -18,6 +18,7 @@ public interface IBuilderEgreso {
     public IBuilderEgreso agregarDatosOrganizacion(Organizacion organizacion);
     public IBuilderEgreso agregarItems(ItemEgreso ... unosItems);
     public IBuilderEgreso agregarItems(List<ItemEgreso> items);
+    public IBuilderEgreso agregarCantidadPresupuestos(int cantidad);
     public Egreso build();
     public void reset();
 

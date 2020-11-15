@@ -1,6 +1,6 @@
 package Domain.Entities.ClasesParciales;
 
-public class OrganizacionDato {
+public class EntidadJuridicaNueva {
 	public String nombreFicticio;
 	public String razonSocial;
 	public int cuit;

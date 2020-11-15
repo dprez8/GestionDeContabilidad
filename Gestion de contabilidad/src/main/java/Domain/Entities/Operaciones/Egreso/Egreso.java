@@ -67,6 +67,10 @@ public class Egreso extends Operacion {
 	@Expose
 	@Column
 	private double valorTotal;
+	
+	@Expose
+	@Column
+	private int cantidadPresupuestos;
 
 	public Egreso() {
 		this.items = new ArrayList<>();
@@ -74,11 +78,16 @@ public class Egreso extends Operacion {
 		this.revisores = new ArrayList<>();
 		this.categorias = new ArrayList<>();
 		this.validado = false;
+		this.cantidadPresupuestos=0;
 	}
 
 	/**Getters*/
 	public List<Presupuesto> getPresupuestos() {
 		return presupuestos;
+	}
+
+	public int getCantidadPresupuestos() {
+		return cantidadPresupuestos;
 	}
 
 	public Pago getPago(){
@@ -126,6 +135,7 @@ public class Egreso extends Operacion {
 	public void setItems(List<ItemEgreso> items) {
 		this.items = items;
 	}
+
 	public void setPresupuestos(List<Presupuesto> presupuestos) {
 		this.presupuestos = presupuestos;
 	}
@@ -134,6 +144,13 @@ public class Egreso extends Operacion {
 	}
 	public void addItems (ItemEgreso ... unosItems) {
 		Collections.addAll(this.items, unosItems);
+	}
+	
+	public void agregarItems(List<ItemEgreso> items){
+		
+		for(ItemEgreso item:items) {
+			this.addItems(item);
+		}
 	}
 	public void addPresupuestos (Presupuesto ... presupuesto) {
 		Collections.addAll(this.presupuestos, presupuesto);
@@ -144,6 +161,11 @@ public class Egreso extends Operacion {
 	public void setValorTotal(double valorTotal) {
 		this.valorTotal = valorTotal;
 	}
+	
+	public void setCantidadPresupuestos(int cantidadPresupuestos) {
+		this.cantidadPresupuestos = cantidadPresupuestos;
+	}
+
 
 	/************************************************/
 	public double calcularValorTotal () {

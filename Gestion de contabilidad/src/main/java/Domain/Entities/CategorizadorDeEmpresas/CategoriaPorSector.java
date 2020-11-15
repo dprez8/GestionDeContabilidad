@@ -3,23 +3,24 @@ package Domain.Entities.CategorizadorDeEmpresas;
 
 import javax.persistence.*;
 
+import Domain.Entities.EntidadPersistente.EntidadPersistente;
 import Domain.Entities.Organizacion.Empresa;
 
 @Entity
 @Table(name="categoria_x_sector")
-public class CategoriaPorSector{
+public class CategoriaPorSector extends EntidadPersistente{
     
-	@EmbeddedId
-	CategoriaSectorKey id=new CategoriaSectorKey();
+	//@EmbeddedId
+	//CategoriaSectorKey id=new CategoriaSectorKey();
 	
 	@ManyToOne
-	@MapsId("categoriaId")
-	@JoinColumn(name="categoria_id")
+	//@MapsId("categoriaId")
+	@JoinColumn(name="categoria_id",referencedColumnName = "categoria_id")
     public CategoriaEmpresa categoriaEmpresa;
  
 	@ManyToOne
-	@MapsId("sectorId")
-    @JoinColumn(name = "sector_id")
+	//@MapsId("sectorId")
+    @JoinColumn(name = "sector_id",referencedColumnName = "sector_id")
     public Sector sector;
 
 	@Column(name="monto_min")

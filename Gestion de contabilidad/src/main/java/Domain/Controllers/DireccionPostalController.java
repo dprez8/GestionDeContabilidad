@@ -10,9 +10,11 @@ import Domain.Entities.Usuarios.Estandar;
 import com.google.gson.Gson;
 
 import Domain.Entities.ApiPaises.Ciudad;
+import Domain.Entities.ApiPaises.Moneda;
 import Domain.Entities.ApiPaises.Pais;
 import Domain.Entities.ApiPaises.Provincia;
 import Domain.Entities.ClasesParciales.CiudadDato;
+import Domain.Entities.ClasesParciales.MonedaDato;
 import Domain.Entities.ClasesParciales.PaisDato;
 import Domain.Entities.ClasesParciales.ProvinciaDato;
 import Domain.Exceptions.contraseniaCorta;
@@ -28,6 +30,7 @@ public class DireccionPostalController {
 
 	private Repositorio<Pais> repoPais;
 	private Repositorio<Provincia> repoProvincia;
+	private Repositorio<Moneda> repoMonedas;
 	
 	public String listadoDePaises(Request request, Response response) throws IOException, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, contraseniaCorta {
         Gson gson = new Gson();
@@ -35,18 +38,20 @@ public class DireccionPostalController {
         List<Pais> paises;
 
    	 	this.repoPais = new Repositorio<Pais>(new DaoHibernate<Pais>(Pais.class));
-        paises= this.repoPais.buscarTodos();
+       
         VinculadorPais vinculadorPais = new VinculadorPais();
         
         
         try {
-        List<PaisDato> paisesAEnviar = paises.stream().map(this::mapPais).collect(Collectors.toList());
-       
-        vinculadorPais.data=paisesAEnviar;
-        
-        vinculadorPais.code = 200;
-        vinculadorPais.message = "Paises cargados exitosamente";
-        response.status(200);
+	        
+	        paises= this.repoPais.buscarTodos();
+	        List<PaisDato> paisesAEnviar = paises.stream().map(this::mapPais).collect(Collectors.toList());
+	       
+	        
+	        vinculadorPais.code = 200;
+	        vinculadorPais.message = "Paises cargados exitosamente";
+	        vinculadorPais.data=paisesAEnviar;
+	        response.status(200);
         }
         catch (NullPointerException ex){
             respuesta.setCode(404);
@@ -77,12 +82,11 @@ public class DireccionPostalController {
 			        .setParameter("code",paisBuscado.getClave()).getResultList();
 	      
              List<ProvinciaDato> provinciasAEnviar = provincias.stream().map(this::mapProvincia).collect(Collectors.toList());
-            
-             vinculadorProvincia.data=provinciasAEnviar;
-             
+      
 
              vinculadorProvincia.code = 200;
              vinculadorProvincia.message = "Provincias cargadas";
+             vinculadorProvincia.data=provinciasAEnviar;
              response.status(200);
 		}
         catch (NullPointerException ex){
@@ -117,11 +121,9 @@ public class DireccionPostalController {
 	      
              List<CiudadDato> ciudadesAEnviar = ciudades.stream().map(this::mapCiudad).collect(Collectors.toList());
             
-             vinculadorCiudad.data=ciudadesAEnviar;
-             
-
              vinculadorCiudad.code = 200;
              vinculadorCiudad.message = "Ciudades cargadas";
+             vinculadorCiudad.data=ciudadesAEnviar;
              response.status(200);
 		}
         catch (NullPointerException ex){
@@ -136,6 +138,44 @@ public class DireccionPostalController {
 
         return response.body();
 	}
+	
+	public String listadoDeMonedas(Request request, Response response) throws IOException, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, contraseniaCorta {
+        Gson gson = new Gson();
+        Respuesta respuesta=new Respuesta();
+        List<Moneda> monedas;
+        this.repoMonedas = new Repositorio<Moneda>(new DaoHibernate<Moneda>(Moneda.class));
+        Estandar usuario = (Estandar) PermisosRestController.verificarSesion(request,response);
+        if(usuario == null) {
+            return response.body();
+        }
+
+      
+        VinculadorMoneda vinculadorMoneda = new VinculadorMoneda();
+        
+        
+        try {
+	        monedas= this.repoMonedas.buscarTodos();
+	        List<MonedaDato> monedasAEnviar = monedas.stream().map(this::mapMoneda).collect(Collectors.toList());
+	          
+	        vinculadorMoneda.code = 200;
+	        vinculadorMoneda.message = "Monedas cargados exitosamente";
+	        vinculadorMoneda.data=monedasAEnviar;
+	        response.status(200);
+        }
+        catch (NullPointerException ex){
+            respuesta.setCode(404);
+            respuesta.setMessage("No se logró cargar las monedas");
+            response.status(404);
+            }
+       
+       
+        String jsonMonedas = gson.toJson(vinculadorMoneda);
+       
+        response.type("application/json");
+        response.body(jsonMonedas);
+
+        return response.body();
+    }
 
 
 	public PaisDato mapPais(Pais pais) { 
@@ -161,6 +201,13 @@ public class DireccionPostalController {
         
        return ciudadDato;
     }
+	public MonedaDato mapMoneda(Moneda moneda) { 
+        MonedaDato monedaDato=new MonedaDato();
+		monedaDato.clave = moneda.getClave();
+        monedaDato.name = moneda.getDescription();
+        
+       return monedaDato;
+    }
 	
 	
 	private class VinculadorPais{
@@ -177,5 +224,10 @@ public class DireccionPostalController {
 		int code;
 		String message;
 		List<CiudadDato> data= new ArrayList<>();
+	}
+	private class VinculadorMoneda{
+		int code;
+		String message;
+		List<MonedaDato> data= new ArrayList<>();
 	}
 }

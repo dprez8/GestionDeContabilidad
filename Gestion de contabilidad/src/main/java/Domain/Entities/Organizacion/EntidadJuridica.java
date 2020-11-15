@@ -6,6 +6,7 @@ import java.util.List;
 import Domain.Entities.ApiPaises.Ciudad;
 import Domain.Entities.ApiPaises.Pais;
 import Domain.Entities.ApiPaises.Provincia;
+import Domain.Entities.Usuarios.Administrador;
 import Domain.Entities.Usuarios.Estandar;
 import com.google.gson.annotations.Expose;
 
@@ -19,6 +20,10 @@ public class EntidadJuridica extends Organizacion {
 	@Column(name = "nombre_ficticio")
 	private String nombreFicticio;
 
+	@ManyToOne
+	@JoinColumn(name = "administrador_id",referencedColumnName = "administrador_id")
+	Administrador administrador;
+	
 	@Expose
 	@Column(name = "razon_social")
     private String razonSocial;
