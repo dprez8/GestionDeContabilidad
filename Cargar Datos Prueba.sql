@@ -1,4 +1,30 @@
 USE gestiondecontabilidad;
+
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE ingreso;
+TRUNCATE TABLE item_presupuesto;
+TRUNCATE TABLE presupuesto;
+TRUNCATE TABLE item_egreso;
+TRUNCATE TABLE tipo_item;
+TRUNCATE TABLE egreso_categoria_operacion;
+TRUNCATE TABLE categoria_operacion;
+TRUNCATE TABLE criterio_operacion;
+TRUNCATE TABLE egreso;
+TRUNCATE TABLE proveedor;
+TRUNCATE TABLE pago;
+TRUNCATE TABLE medio_de_pago;
+TRUNCATE TABLE usuario;
+TRUNCATE TABLE entidad_base;
+TRUNCATE TABLE categoria_juridica;
+TRUNCATE TABLE entidad_juridica;
+TRUNCATE TABLE organizacion;
+TRUNCATE TABLE categoria_x_sector;
+TRUNCATE TABLE categoria_empresa;
+TRUNCATE TABLE sector;
+SET FOREIGN_KEY_CHECKS = 1;
+
+START TRANSACTION;
+
 INSERT INTO sector (sector_id, nombre) VALUES
 ('1', 'Construcción'),
 ('2', 'Servicios'),
@@ -13,15 +39,28 @@ INSERT INTO categoria_empresa (categoria_id, nombre) VALUES
 ('4', 'Mediana - Tramo 2');
 
 INSERT INTO pais (pais_id, pais_code, name, moneda_id) VALUES
-('25', 'EEUU', 'Estados Unidos', '7');
+('25', 'EEUU', 'Estados Unidos', '7')
+AS insertado
+ON DUPLICATE KEY UPDATE
+pais_code = insertado.pais_code,
+name = insertado.name,
+moneda_id = insertado.moneda_id;
 
 INSERT INTO provincia (provincia_id, name, pais_id) VALUES
 ('411','Nueva York', '25'),
-('412', 'Ciudad de México', '13');
+('412', 'Ciudad de México', '13')
+AS insertado
+ON DUPLICATE KEY UPDATE
+name = insertado.name,
+pais_id = insertado.pais_id;
 
-INSERT INTO ciudad (name, provincia_id) VALUES
+INSERT INTO ciudad (ciudad_id, name, provincia_id) VALUES
 ('16447', 'Brooklyn', '411'),
-('16448', 'Ciudad de México', '412');
+('16448', 'Ciudad de México', '412')
+AS insertado
+ON DUPLICATE KEY UPDATE
+name = insertado.name,
+provincia_id = insertado.provincia_id;
 
 INSERT INTO categoria_x_sector (categoria_id, sector_id, monto_max, monto_min, personal_max, personal_min) VALUES
 ('3', '1', '643710000.0', '115370000.0', '200', '45'),
@@ -33,8 +72,7 @@ INSERT INTO organizacion (id, nombre) VALUES
 ('1', 'Equipo Argentino de Antropología Forense - EAAF'), 
 ('2', 'Equipo Argentino de Antropología Forense - EAAF'), 
 ('3', 'Equipo Argentino de Antropología Forense - EAAF'), 
-('4', 'Colectivo de Derechos de Infancia y Adolescencia - CDIA'),
-('5', 'Colectivo de Derechos de Infancia y Adolescencia - CDIA');
+('4', 'Colectivo de Derechos de Infancia y Adolescencia - CDIA');
 
 /*Entidad Juridica, falta agregar localidad, nombre de la entidad(la agregue pero no en el get ni en el post), hay ciudades/paises/provincias que no estan en la lista traida de la pagina de mercado libre*/
 INSERT INTO entidad_juridica (nombre_ficticio, altura, calle, /*codigo_igj,*/ cuit, /*piso,*/ razon_social, /*zipcode,*/ id, ciudad_id, pais_id, provincia_id, tipo_entidad_id) VALUES 
@@ -53,8 +91,165 @@ INSERT INTO categoria_juridica (tipo_juridica, id, /*codigo_osc,*/ actividad, ca
 INSERT INTO entidad_base (nombre_ficticio, /*descripcion,*/ id, juridica_id) VALUES
 ('Andhes' , '1', '4');
 
-/*Falta la columna REVISOR y USERNAME, y no hay mail en los datos de prueba, el usuario esta asociado a una entidad juridica*/
-INSERT INTO usuario (tipo_usuario, id, contrasenia, /*mail,*/ nombre, organizacion_id) VALUES
-('estandar', '1', 'd254a492d8dc4e91cacd0152269012c6b6179fda56d7d4194bf26f6016f8e27e', 'Roco, Alejandro', '1'),
-('estandar', '2', 'e90e5d79e28558d4aa5e6e8b77359a9dbe257f30c250f6600c40ab846d07da8b', 'Rojas, Rocío', '1'),
-('estandar', '3', 'd6ff9b6954cda745c1dcfbd06a94435023ea022633a6c4129ce0d452278aa7fe', 'Azul, Julieta', '4');
+/*Falta la columna REVISOR y USERNAME(temporalmente lo cargo en mail), y no hay mail en los datos de prueba, el usuario esta asociado a una entidad juridica*/
+INSERT INTO usuario (tipo_usuario, id, contrasenia, mail, nombre, organizacion_id) VALUES
+('estandar', '1', 'd254a492d8dc4e91cacd0152269012c6b6179fda56d7d4194bf26f6016f8e27e', 'aroco', 'Roco, Alejandro', '1'),
+('estandar', '2', 'e90e5d79e28558d4aa5e6e8b77359a9dbe257f30c250f6600c40ab846d07da8b', 'rrojas', 'Rojas, Rocío', '1'),
+('estandar', '3', 'd6ff9b6954cda745c1dcfbd06a94435023ea022633a6c4129ce0d452278aa7fe', 'jazul', 'Azul, Julieta', '4');
+
+INSERT INTO medio_de_pago (id, medio_de_pago) VALUES
+('1', 'Efectivo'),
+('2', 'Tarjeta de Crédito - 3 pagos s/i'),
+('3', 'Tarjeta de Débito');
+
+INSERT INTO pago (id, codigo_asociado, medio_id) VALUES
+('1', '4509 9535 6623 3704', '2'),
+('2', null, '1'),
+('3', null, '1'),
+('4', '5031 7557 3453 0604', '3'),
+('5', null, '1'),
+('6', null, '1'),
+('7', null, '1'),
+('8', null, '1'),
+('9', null, '1'),
+('10', null, '1');
+
+INSERT INTO proveedor (proveedor_id, /*altura, calle, documento_proveedor,*/ nombre/*, piso, zipcode, ciudad_id, pais_id, provincia_id*/) VALUES
+('1', 'Pinturerías Serrentino'),
+('2', 'Edesur'),
+('3', 'Metrogas'),
+('4', 'Mitoas SA'),
+('5', 'Ingeniería Comercial SRL'),
+('6', 'Corralón Laprida SRL'),
+('7', 'Telas ZN'),
+('8', 'Pinturerías REX'),
+('9', 'Pinturerías San Jorge'),
+('10', 'La casa del Audio'),
+('11', 'Garbarino'),
+('12', 'Corralón San Juan SRL');
+
+/*FALTAN DATOS DE DE PRUEBA*/
+INSERT INTO egreso (id, fecha_carga, fecha_operacion, organizacion_id, /*validado,*/ valorTotal, /*documento_comercial_id, ingreso_asociado,*/ pago_id, proveedor_id) VALUES
+('1', '2020-03-10 00:00:00', '2020-03-10', '1', '19952.69', '1', '1'),
+('2', '2020-07-08 00:00:00', '2020-07-08', '1', '2100.00', '2', '2'),
+('3', '2020-07-09 00:00:00', '2020-07-09', '1', '3500.00', '3', '3'),
+('4', '2020-03-08 00:00:00', '2020-03-08', '1', '10800.00', '4', '4'),
+('5', '2020-09-27 00:00:00', '2020-09-27', '1', '8500.00', '5', '5'),
+('6', '2020-10-01 00:00:00', '2020-10-01', '1', '4922.40', '6', '6'),
+('7', '2020-10-05 00:00:00', '2020-10-05', '1', '250.00', '7', '6'),
+('8', '2020-07-10 00:00:00', '2020-07-10', '4', '1100.00', '8', '2'),
+('9', '2020-07-10 00:00:00', '2020-07-10', '4', '800.00', '9', '3'),
+('10', '2020-09-25 00:00:00', '2020-09-25', '4', '4200.00', '10', '7');
+
+INSERT INTO criterio_operacion (id, descripcion, criterio_padre_id) VALUES
+('1', 'Gastos de mantenimiento', null),
+('2', 'Lugar de aplicación', '1'),
+('3', 'Causante', null),
+('4', 'Gastos generales', null),
+('5', 'Elementos de oficina', null),
+('6', 'Momento de utilización', null),
+('7', 'Tipo de producto', null),
+('8', 'Lugar de aplicación', '1'),
+('9', 'Tamaño del gasto', null),
+('10', 'Servicios', null),
+('11', 'Elementos de uso interno', null);
+
+INSERT INTO categoria_operacion (id, descripcion, criterio_id) VALUES
+('1', 'Fachada', '1'),
+('2', 'Interior', '2'),
+('3', 'Humedad', '3'),
+('4', 'Servicios generales', '4'),
+('5', 'Muebles y últiles', '5'),
+('6', 'Coffe Break', '6'),
+('7', 'Electrónicos ', '7'),
+('8', 'Exterior', '8'),
+('9', 'Grande', '9'),
+('10', 'Servicios de Luz', '10'),
+('11', 'Servicios de Gas', '10'),
+('12', 'Necesarios', '11');
+
+INSERT INTO egreso_categoria_operacion (Egreso_id, categorias_id) VALUES 
+('1', '1'),
+('1', '2'),
+('1', '3'),
+('2', '4'),
+('3', '4'),
+('4', '5'),
+('4', '6'),
+('5', '5'),
+('5', '7'),
+('6', '1'),
+('6', '8'),
+('6', '9'),
+('7', '1'),
+('8', '10'),
+('9', '11'),
+('10', '12');
+
+/*Que es DTYPE?*/
+INSERT INTO tipo_item (/*DTYPE,*/ id, nombre) VALUES
+('1', 'Producto'),
+('2', 'Servicio');
+
+
+INSERT INTO item_egreso (id, cantidad, precio, egreso_id, tipo_id) VALUES
+('1', '1', '9625.00', '1', '1'),
+('2', '1', '6589.40', '1', '1'),
+('3', '1', '3738.29', '1', '1'),
+('4', '1', '2100.00', '2', '2'),
+('5', '1', '3500.00', '3', '2'),
+('6', '3', '4500.00', '4', '1'),
+('7', '2', '6300.00', '4', '1'),
+('8', '2', '8500.00', '5', '1'),
+('9', '10', '704.40', '6', '1'),
+('10', '5', '3100.00', '6', '1'),
+('11', '4', '891.00', '6', '1'),
+('12', '800', '227.00', '6', '1'),
+('13', '800', '250.00', '7', '1'),
+('14', '1', '1100.00', '8', '2'),
+('15', '1', '800.00', '9', '2'),
+('16', '5', '4200.00', '10', '1');
+
+
+INSERT INTO presupuesto (id, fecha_vigente, /*operacion_numero,*/ valor_total, /*documento_comercial_id,*/ egreso_asociado, proveedor_id) VALUES
+('1', '2020-02-25', '21451.60', '1', '8'),
+('2', '2020-02-26', '20300.80', '1', '9'),
+('3', '2020-02-27', '19952.69', '1', '1'),
+('4', '2020-09-10', '8950.00', '1', '10'),
+('5', '2020-09-11', '8830.00', '1', '11'),
+('6', '2020-09-12', '8500.00', '1', '5'),
+('7', '2020-09-15', '4980.00', '1', '12'),
+('8', '2020-09-15', '4922.40', '1', '6');
+
+
+/*Cambiar nombre del campo producto_id a tipo_id*/
+INSERT INTO item_presupuesto (id, cantidad, precio, /*item_egreso_id,*/ presupuesto_id, producto_id) VALUES
+('1', '1', '9900.80', '1', '1'),
+('2', '1', '7200.00', '1', '1'),
+('3', '1', '4350.80', '1', '1'),
+('4', '1', '9610.50', '1', '2'),
+('5', '1', '6590.30', '1', '2'),
+('6', '1', '4100.00', '1', '2'),
+('7', '1', '9625.00', '1', '3'),
+('8', '1', '6589.40', '1', '3'),
+('9', '1', '3738.29', '1', '3'),
+('10', '2', '8950.00', '1', '4'),
+('11', '2', '8830.00', '1', '5'),
+('12', '2', '8500.00', '1', '6'),
+('13', '10', '715.00', '1', '7'),
+('14', '5', '3150.00', '1', '7'),
+('15', '4', '880.00', '1', '7'),
+('16', '800', '235.00', '1', '7'),
+('17', '10', '704.40', '1', '8'),
+('18', '5', '3100.00', '1', '8'),
+('19', '4', '891.00', '1', '8'),
+('20', '800', '227.00', '1', '8');
+
+
+INSERT INTO ingreso (id, fecha_carga, fecha_operacion, organizacion_id, descripcion, fecha_acep_egreso, montoTotal, moneda_id) VALUES
+('1', '2020-02-25 00:00:00', '2020-02-25', '1', 'Donación de terceros', '2020-03-20', '20000.00', '1'),
+('2', '2020-05-02 00:00:00', '2020-05-02', '1', 'Donación de Rimoli SA', '2020-08-03', '10000.00', '1'),
+('3', '2020-08-03 00:00:00', '2020-08-03', '1', 'Donación de Gran Imperio', '2020-10-01', '980000.00', '1'),
+('4', '2020-05-01 00:00:00', '2020-05-01', '4', 'Donación Gabino SRL', '2020-10-01', '10000.00', '4');
+
+COMMIT;
