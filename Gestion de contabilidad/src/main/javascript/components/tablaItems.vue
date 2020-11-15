@@ -9,7 +9,7 @@
             </b-form-select>
         </template>
         <template #cell(descripcion)="row">
-            <b-form-input class="border-0 px-2 bg-transparent" v-model="row.item.nombreProducto" @input="addItem"></b-form-input>
+            <b-form-input class="border-0 px-2 bg-transparent" v-model="row.item.descripcion" debounce="500" @input="addItem(); searchItemAPI();"></b-form-input>
         </template>
         <template #cell(precio)="row">
             <b-form-input class="border-0 px-2 bg-transparent text-center" v-model="row.item.precio" @input="addItem"></b-form-input>
@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import { RequestHelper } from '../util/utils';
 export default {
     props: {
         actualizarItems: Function
@@ -49,7 +50,7 @@ export default {
             items: [
                 {
                     tipoItem: 0,
-                    nombreProducto: "",
+                    descripcion: "",
                     cantidad: "",
                     precio: ""
                 }
@@ -124,6 +125,14 @@ export default {
                     precio += itemPrecio * itemCantidad;
             });
             return precio;
+        },
+        searchItemAPI() {
+            console.log("asd");
+            RequestHelper.get('/api/items', {
+                default: (data) => {
+                    console.log(data);
+                }
+            });
         }
     }
 }

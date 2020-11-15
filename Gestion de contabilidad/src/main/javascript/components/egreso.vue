@@ -203,8 +203,8 @@ export default {
         itemEgresoAPIConverter(item) {
             // Arreglar cuando se cambien los items en backend
             return {
-                tipo: item.tipo.id,
-                descripcion: item.tipo.nombre,
+                tipo: item.item.tipoItem.nombre,
+                descripcion: item.item.descripcion,
                 cantidad: item.cantidad,
                 precio: item.precio
             }

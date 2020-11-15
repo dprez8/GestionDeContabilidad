@@ -18,6 +18,7 @@ public class Item extends EntidadPersistente{
 	 	@Expose
 	    @Column(name="descripcion")
 	    private String descripcion;
+	 	@Expose
 	 	@ManyToOne
 	 	@JoinColumn(name= "tipo_item_id",referencedColumnName = "id")
 	 	private TipoItem tipoItem;

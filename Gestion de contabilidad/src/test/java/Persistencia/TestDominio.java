@@ -74,8 +74,10 @@ public class TestDominio {
 
     @Test
     public void T0cargarTipoItem(){
-    	TipoItem producto= new TipoItem("producto");
+    	TipoItem producto= new TipoItem("Producto");
+        TipoItem servicio= new TipoItem("Servicio");
     	repoTipoItem.agregar(producto);
+        repoTipoItem.agregar(servicio);
     }
     
     @Test
@@ -128,7 +130,7 @@ public class TestDominio {
 
     @Test
     public void T5persistir2Items() {
-        TipoItem producto=repoTipoItem.buscar(0);
+        TipoItem producto=repoTipoItem.buscar(1);
     	Item RAM = new Item("Memoria RAM 4GB DDR3",producto);
 
         Item placaDeVideo = new Item("Placa de video 4GB DDR5",producto);
