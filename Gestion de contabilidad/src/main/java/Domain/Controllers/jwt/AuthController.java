@@ -19,18 +19,20 @@ import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
 public class AuthController extends AbstractTokenController{
-    private static final String ROLE_PROPERTY = "role";
     private static final String TOKEN_PREFIX = "Bearer";
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String USER_NAME_PROPERTY = "username";
-    private static final String FIRST_NAME_PROPERTY = "firstName";
-    private static final String LAST_NAME_PROPERTY = "lastName";
     private static final String PASSWORD_PROPERTY = "password";
 
     private Gson gson;
     private TokenService tokenService;
     private Respuesta respuesta;
     private Repositorio<Usuario> repoUsuarios;
+
+    /*
+    private static final String FIRST_NAME_PROPERTY = "firstName";
+    private static final String LAST_NAME_PROPERTY = "lastName";
+    private static final String ROLE_PROPERTY = "role";*/
 
     public AuthController(TokenService tokenService) {
         super(tokenService);
@@ -51,7 +53,7 @@ public class AuthController extends AbstractTokenController{
         if (validatePost(jsonRequest)) {
             try {
                 usuario = (Usuario) EntityManagerHelper
-                        .createQuery("from Usuario where nombre = :username and contrasenia = :password")
+                        .createQuery("from Usuario where username = :username and contrasenia = :password")
                         .setParameter("username", jsonRequest.get(USER_NAME_PROPERTY).getAsString())
                         .setParameter("password", passwordHash)
                         .getSingleResult();
@@ -92,7 +94,7 @@ public class AuthController extends AbstractTokenController{
         usuarioResponse.nombre          = user.getNombre();
         usuarioResponse.username        = user.getUsername();
         usuarioResponse.apellido        = user.getApellido();
-        usuarioResponse.gmail           = user.getMail();
+        usuarioResponse.email           = user.getMail();
 
         String jsonLogin = gson.toJson(usuarioResponse);
 

@@ -14,5 +14,5 @@ public class UsuarioResponse {
         @Expose
         public String apellido;
         @Expose
-        public String gmail;
+        public String email;
 }

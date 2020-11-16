@@ -18,8 +18,7 @@ public abstract class ValidacionDeTransparencia extends EntidadPersistente {
 
 	protected boolean validarPresupuesto(Egreso egreso, Presupuesto presupuesto) {
 	if (coincideProveedor(egreso, presupuesto) &&
-			coincideItems(egreso, presupuesto) &&
-			coincideDocumentoComercial(egreso, presupuesto))
+			coincideItems(egreso, presupuesto))
 		{
 			return true;
 		}
@@ -44,8 +43,5 @@ public abstract class ValidacionDeTransparencia extends EntidadPersistente {
 				&& itemPresupuesto.getItem().equals(item.getItem());
 	}
 
-	private boolean coincideDocumentoComercial(Egreso egreso, Presupuesto presupuesto) {
-		return egreso.getDocumento().equals(presupuesto.getDocumento());
-	}
 }
 

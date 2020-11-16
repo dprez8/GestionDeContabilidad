@@ -2,23 +2,31 @@ package Domain.Entities.DatosDeOperaciones;
 
 import Domain.Entities.EntidadPersistente.EntidadPersistente;
 import Domain.Entities.Operaciones.Presupuesto;
+import com.google.gson.annotations.Expose;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name="item_presupuesto")
 public class ItemPresupuesto extends EntidadPersistente {
 
+    @Expose
 	@ManyToOne
     @JoinColumn(name="item_id", referencedColumnName = "id")
 	private Item item;
 
+	@Expose
 	@Column
 	private int cantidad;
+
+	@Expose
 	@Column
 	private double precio;
+
 	@ManyToOne
     @JoinColumn(name="item_egreso_id", referencedColumnName = "id")
     private ItemEgreso itemEgresoAsociado;
+
 	@ManyToOne
     @JoinColumn(name = "presupuesto_id", referencedColumnName = "id")
     private Presupuesto presupuesto;
