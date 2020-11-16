@@ -55,7 +55,6 @@ public class Egreso extends Operacion {
 	@ManyToOne
 	@JoinColumn(name = "ingreso_asociado", referencedColumnName = "id")
 	private Ingreso ingresoAsociado;
-
 	@Expose
 	@ManyToMany
 	private List<CategoriaOperacion> categorias;
@@ -111,6 +110,7 @@ public class Egreso extends Operacion {
 	}
 	public List<Estandar> getRevisores(){ return this.revisores;}
 	public Ingreso getIngresoAsociado() { return this.ingresoAsociado; }
+	public List<CategoriaOperacion> getCategorias() { return categorias; }
 
 	/**Setters*/
 	public void setDocumento(DocumentoComercial documento) {

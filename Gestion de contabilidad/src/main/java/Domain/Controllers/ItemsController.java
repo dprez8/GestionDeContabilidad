@@ -53,7 +53,7 @@ private Repositorio<TipoItem> repoTipoItem;
             respuesta.setCode(404);
             respuesta.setMessage("No se logró cargar los Items");
             response.status(404);
-            }
+        }
        
        
         String jsonItems = gson.toJson(vinculadorItem);

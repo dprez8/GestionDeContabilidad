@@ -1,12 +1,16 @@
 package Domain.Controllers;
 
+import Domain.Controllers.AdaptersJson.LocalDateAdapter;
 import Domain.Controllers.DTO.Respuesta;
 import Domain.Controllers.jwt.TokenService;
 import Domain.Entities.Usuarios.Administrador;
 import Domain.Entities.Usuarios.Usuario;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import spark.Request;
 import spark.Response;
+
+import java.time.LocalDate;
 
 public abstract class GenericController {
 
@@ -15,8 +19,9 @@ public abstract class GenericController {
     protected Respuesta respuesta;
     protected Gson gson;
     protected TokenService tokenService;
+    protected String jsonResponse;
 
-    public String respuesta(Response response, int opCode, String mensaje) {
+    protected String respuesta(Response response, int opCode, String mensaje) {
         this.respuesta.setCode(opCode);
         this.respuesta.setMessage(mensaje);
         String jsonResponse;
@@ -25,7 +30,7 @@ public abstract class GenericController {
         return response.body();
     }
 
-    public String error(Response response, String mensajeError) {
+    protected String error(Response response, String mensajeError) {
         this.respuesta.setCode(400);
         this.respuesta.setMessage(mensajeError);
         String jsonResponse;
@@ -43,6 +48,12 @@ public abstract class GenericController {
 
     protected boolean isAdmin(Usuario usuario) {
         return usuario.getClass().equals(Administrador.class);
+    }
+
+    protected String toJson(Response response, Object respuesta) {
+        jsonResponse = this.gson.toJson(respuesta);
+        response.body(jsonResponse);
+        return response.body();
     }
 
     public GenericController (TokenService tokenService, String tokenPrefix) {

@@ -12,7 +12,6 @@ import Domain.Entities.Organizacion.EntidadBase;
 import Domain.Entities.Organizacion.EntidadJuridica;
 import Domain.Entities.Organizacion.Organizacion;
 import Domain.Entities.Usuarios.Estandar;
-import Domain.Entities.Usuarios.Usuario;
 import Domain.Repositories.Daos.DaoHibernate;
 import Domain.Repositories.Repositorio;
 import com.google.gson.Gson;

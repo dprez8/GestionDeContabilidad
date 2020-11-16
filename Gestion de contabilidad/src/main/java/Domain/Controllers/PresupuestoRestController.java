@@ -1,13 +1,15 @@
 package Domain.Controllers;
 
 import Domain.Controllers.AdaptersJson.LocalDateAdapter;
+import Domain.Controllers.DTO.ItemPresupuestoRequest;
 import Domain.Controllers.DTO.ItemRequest;
 import Domain.Controllers.DTO.PresupuestoRequest;
 import Domain.Controllers.DTO.Respuesta;
+import Domain.Controllers.Utils.FormFileManager;
+import Domain.Controllers.jwt.TokenService;
 import Domain.Entities.DatosDeOperaciones.*;
 import Domain.Entities.Operaciones.Egreso.Egreso;
 import Domain.Entities.Operaciones.Presupuesto;
-import Domain.Entities.Usuarios.Estandar;
 import Domain.Repositories.Daos.DaoHibernate;
 import Domain.Repositories.Repositorio;
 import com.google.gson.Gson;
@@ -19,44 +21,50 @@ import spark.Response;
 import javax.persistence.NoResultException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class PresupuestoRestController {
+public class PresupuestoRestController extends GenericController {
     private Repositorio<Presupuesto> repoPresupuestos;
     private Repositorio<Egreso> repoEgresos;
     private Repositorio<ItemPresupuesto> repoItems;
+    private Repositorio<ItemEgreso> repoItemsEgreso;
+    private Repositorio<Proveedor> repoProveedor;
+    Repositorio<TipoDocumento> repoTipoDocumento;
     private Respuesta respuesta;
     private Gson gson;
 
-    public PresupuestoRestController() {
+    public PresupuestoRestController(TokenService tokenService, String tokenPrefix) {
+        super(tokenService, tokenPrefix);
         this.repoPresupuestos   = new Repositorio<>(new DaoHibernate<>(Presupuesto.class));
         this.repoEgresos        = new Repositorio<>(new DaoHibernate<>(Egreso.class));
         this.repoItems          = new Repositorio<>(new DaoHibernate<>(ItemPresupuesto.class));
+        this.repoItemsEgreso    = new Repositorio<>(new DaoHibernate<>(ItemEgreso.class));
+        this.repoProveedor      = new Repositorio<>(new DaoHibernate<>(Proveedor.class));
+        this.repoTipoDocumento  = new Repositorio<>(new DaoHibernate<>(TipoDocumento.class));
         this.respuesta          = new Respuesta();
     }
 
     /*FALTA LISTADO PARA EL GET*/
 
     public String cargarNuevoPresupuesto(Request request, Response response) {
-
-        String jsonResponse;
-
-        this.gson  = new GsonBuilder()
+        this.gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())
                 .create();
+        PresupuestoRequest presupuestoRequest = null;
+        try {
+            presupuestoRequest = gson.fromJson(request.body(), PresupuestoRequest.class);
+        } catch (Exception exception) {
+            return error(response, "Error en los datos esperados enviados");
+        }
 
-        PresupuestoRequest presupuestoRequest = this.gson.fromJson(request.body(),PresupuestoRequest.class);
-
-        Egreso egreso= this.repoEgresos.buscar(presupuestoRequest.egresoId);
+        Egreso egreso = this.repoEgresos.buscar(presupuestoRequest.egreso);
 
         Presupuesto presupuesto = asignarPresupuestoDesde(presupuestoRequest, egreso);
 
-        if(presupuesto == null) {
-            this.respuesta.setCode(400);
-            this.respuesta.setMessage("Problema al cargar el presupuesto");
-            jsonResponse = this.gson.toJson(this.respuesta);
-            response.body(jsonResponse);
-            return response.body();
+        if (presupuesto == null) {
+            return error(response, "Problema al cargar el presupuesto");
         }
         this.respuesta.setCode(200);
         this.respuesta.setMessage("Presupuesto cargado exitosamente");
@@ -67,9 +75,7 @@ public class PresupuestoRestController {
         cargaPresupuestoResponse.message = this.respuesta.getMessage();
         cargaPresupuestoResponse.id = egreso.getId();
 
-        jsonResponse = this.gson.toJson(cargaPresupuestoResponse);
-        response.body(jsonResponse);
-        return response.body();
+        return toJson(response, cargaPresupuestoResponse);
     }
 
     private Presupuesto asignarPresupuestoDesde(PresupuestoRequest presupuestoRequest, Egreso egreso) {
@@ -78,11 +84,21 @@ public class PresupuestoRestController {
         }
         Presupuesto presupuesto = new Presupuesto(presupuestoRequest.numeroOperacion, egreso);
         presupuesto.setFechaVigente(presupuestoRequest.fechaVigente);
-        /*FALTA QUE ME MANDEN MAS DATOS DEL PRESUPUESTO, COMO DOCUMENTO COMERCIAL, PROVEEDOR Y CATEGORIA*/
+        // FIXME: explota hibernate con esto
+        //presupuesto.setCategorias(egreso.getCategorias());
+
+        Proveedor proveedor;
+        try {
+            proveedor = repoProveedor.buscar(presupuestoRequest.proveedor);
+        }
+        catch (Exception ex){
+            return null;
+        }
+        presupuesto.setProveedor(proveedor);
 
         List<ItemPresupuesto> items = presupuestoRequest.items
                 .stream()
-                .map(item->mapearItem(item,presupuesto))
+                .map(item->mapearItem(item, presupuesto))
                 .collect(Collectors.toList());
         
         for(ItemPresupuesto itemPresupuesto:items){
@@ -94,27 +110,22 @@ public class PresupuestoRestController {
         return presupuesto;
     }
 
-    private ItemPresupuesto mapearItem(ItemRequest itemRequest,Presupuesto presupuesto) {
-        ItemPresupuesto itemPresupuesto = new ItemPresupuesto();
-        Item item=null;
-        itemPresupuesto.setPrecio(itemRequest.precio);
-        itemPresupuesto.setCantidad(itemRequest.cantidad);
-        Repositorio<Item> repoItem = new Repositorio<>(new DaoHibernate<>(Item.class));
-        Repositorio<TipoItem> repoTipoItem = new Repositorio<>(new DaoHibernate<>(TipoItem.class));
+    private ItemPresupuesto mapearItem(ItemPresupuestoRequest itemPresupuestoRequest, Presupuesto presupuesto) {
 
-        
-        if(itemRequest.itemId==0) {//si el item es nuevo
-        	TipoItem tipoItem=repoTipoItem.buscar(itemRequest.tipoItem);
-        	item=new Item(itemRequest.descripcion,tipoItem);
-        	repoItem.agregar(item);
+        ItemEgreso itemEgreso = null;
+        try {
+            itemEgreso = repoItemsEgreso.buscar(itemPresupuestoRequest.itemEgreso);
         }
-        else{//si eligio un item que ya se encontraba en la base de datos
-        	item=repoItem.buscar(itemRequest.itemId);
+        catch (Exception ex){
+            return null;
         }
-        
-        itemPresupuesto.setItem(item);
+
+        ItemPresupuesto itemPresupuesto = new ItemPresupuesto();
+        itemPresupuesto.setItemEgresoAsociado(itemEgreso);
+        itemPresupuesto.setItem(itemEgreso.getItem());
+        itemPresupuesto.setPrecio(itemPresupuestoRequest.precio);
+        itemPresupuesto.setCantidad(itemEgreso.getCantidad());
         itemPresupuesto.setPresupuesto(presupuesto);
-        itemPresupuesto.setItemEgresoAsociado(presupuesto.getEgresoAsociado().getItems().stream().filter(itemsEgreso -> itemsEgreso.getItem().equals(itemPresupuesto.getItem())).findFirst().get());
 
         return itemPresupuesto;
     }
