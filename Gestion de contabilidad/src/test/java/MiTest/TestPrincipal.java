@@ -3,6 +3,7 @@ package MiTest;
 import Domain.Entities.CategorizadorDeEmpresas.CategorizadorDeEmpresas;
 import Domain.Entities.CategorizadorDeEmpresas.*;
 import Domain.Entities.DatosDeOperaciones.*;
+import Domain.Exceptions.ExcepcionCreacionEgreso;
 import Domain.Exceptions.contraseniaCorta;
 import Domain.Exceptions.contraseniaMuyComun;
 import Domain.Exceptions.repiteContraseniaEnMailOUsuario;
@@ -88,7 +89,7 @@ public class TestPrincipal {
     }
 
     @Test
-    public void creacionEgresoValida() {
+    public void creacionEgresoValida() throws ExcepcionCreacionEgreso {
         BuilderEgresoConcreto egresoBuilder = new BuilderEgresoConcreto();
 
         Egreso compra = egresoBuilder.agregarProveedor(this.lautaroIturregui)

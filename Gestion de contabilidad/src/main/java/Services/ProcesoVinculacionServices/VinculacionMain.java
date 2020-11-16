@@ -10,6 +10,7 @@ import Domain.Entities.Operaciones.Egreso.Egreso;
 import Domain.Entities.Operaciones.Ingreso;
 import Domain.Entities.Organizacion.Empresa;
 import Domain.Entities.Organizacion.EntidadJuridica;
+import Domain.Exceptions.ExcepcionCreacionEgreso;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -20,7 +21,7 @@ import java.util.List;
 import java.util.Properties;
 
 public class VinculacionMain {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ExcepcionCreacionEgreso {
         //PREPARACION DE EGRESOS E INGRESOS (ESTOS VENDRIAN DE ALGUNA PARTE DEL SISTEMA)
 
         /**Creacion de una organizacion ejemplo*/

@@ -5,11 +5,13 @@ import Domain.Entities.Operaciones.Presupuesto;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 
 @Entity
 @DiscriminatorValue("validacion_con_presupuesto")
 public class ValidarConPresupuesto extends ValidacionDeTransparencia {
-
+	@Transient
+	private Presupuesto presupuestoElegido;
 	@Override
 	public String validarEgreso(Egreso egreso) {
 		String cuerpo;
@@ -24,10 +26,14 @@ public class ValidarConPresupuesto extends ValidacionDeTransparencia {
 
 		if (presupuestoElegido != null){
 			cuerpo = "Se validó el egreso con uno de los presupuestos.";
-			}
+			this.presupuestoElegido = presupuestoElegido;
+		}
 		else 
 			cuerpo = "No se validó el egreso con alguno de los presupuesto.";
 		
 		return cuerpo;
 	}
+
+	public Presupuesto getPresupuestoElegido() { return presupuestoElegido;	}
+
 }

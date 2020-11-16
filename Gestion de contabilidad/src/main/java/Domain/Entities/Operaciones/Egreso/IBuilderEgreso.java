@@ -5,6 +5,7 @@ import Domain.Entities.DatosDeOperaciones.ItemEgreso;
 import Domain.Entities.DatosDeOperaciones.Pago;
 import Domain.Entities.DatosDeOperaciones.Proveedor;
 import Domain.Entities.Organizacion.Organizacion;
+import Domain.Exceptions.ExcepcionCreacionEgreso;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,9 +18,9 @@ public interface IBuilderEgreso {
     public IBuilderEgreso agregarDocumentoComercial(DocumentoComercial documentoComercial);
     public IBuilderEgreso agregarDatosOrganizacion(Organizacion organizacion);
     public IBuilderEgreso agregarItems(ItemEgreso ... unosItems);
-    public IBuilderEgreso agregarItems(List<ItemEgreso> items);
+    public IBuilderEgreso agregarItems(List<ItemEgreso> items) throws ExcepcionCreacionEgreso;
     public IBuilderEgreso agregarCantidadPresupuestos(int cantidad);
-    public Egreso build();
+    public Egreso build() throws ExcepcionCreacionEgreso;
     public void reset();
 
 }

@@ -15,6 +15,7 @@ import Domain.Entities.Usuarios.Administrador;
 import Domain.Entities.Usuarios.Estandar;
 import Domain.Entities.Usuarios.Usuario;
 import Domain.Entities.ValidadorTransparencia.*;
+import Domain.Exceptions.ExcepcionCreacionEgreso;
 import Domain.Exceptions.contraseniaCorta;
 import Domain.Exceptions.contraseniaMuyComun;
 import Domain.Exceptions.repiteContraseniaEnMailOUsuario;
@@ -217,7 +218,7 @@ public class TestDominio {
     }
 
     @Test
-    public void T6persistirUnEgresoYDosPresupuestos () {
+    public void T6persistirUnEgresoYDosPresupuestos () throws ExcepcionCreacionEgreso {
         Item producto1 = this.repoItem.buscar(1);
         ItemEgreso placasDeVideo = new ItemEgreso();
         placasDeVideo.setCantidad(2);
