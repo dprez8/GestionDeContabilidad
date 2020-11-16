@@ -12,6 +12,7 @@ import Domain.Entities.Organizacion.EntidadBase;
 import Domain.Entities.Organizacion.EntidadJuridica;
 import Domain.Entities.Organizacion.Organizacion;
 import Domain.Entities.Usuarios.Estandar;
+import Domain.Exceptions.ExcepcionCreacionEgreso;
 import Domain.Repositories.Daos.DaoHibernate;
 import Domain.Repositories.Repositorio;
 import com.google.gson.Gson;
@@ -265,35 +266,38 @@ public class EgresosRestController extends GenericController {
         documentoComercial.setDescripcion(egresoRequest.documentoComercial.descripcion);
         documentoComercial.setPathAdjunto(FormFileManager.realPath(egresoRequest.documentoComercial.nombreFicheroDocumento));
 
-
-      
-        Egreso egreso = new BuilderEgresoConcreto()
-                .agregarFechaOperacion(egresoRequest.fechaOperacion)
-                .agregarCantidadPresupuestos(egresoRequest.cantidadPresupuestos)
-                .agregarProveedor(proveedor)
-                .agregarPago(pago)
-                .agregarDocumentoComercial(documentoComercial)
-                .build();
-
         Estandar usuario = (Estandar) getUsuarioDesdeRequest(request);
         Organizacion organizacion = usuario.getMiOrganizacion();
-        egreso.setOrganizacion(organizacion);
-        
+
         List<ItemEgreso> items = egresoRequest.items
                 .stream()
-                .map(item->mapearItem(item, egreso, organizacion))
+                .map(item->mapearItem(item, organizacion))
                 .collect(Collectors.toList());
+        Egreso egreso;
+        try {
+             egreso = new BuilderEgresoConcreto()
+                    .agregarFechaOperacion(egresoRequest.fechaOperacion)
+                    .agregarCantidadPresupuestos(egresoRequest.cantidadPresupuestos)
+                    .agregarDatosOrganizacion(organizacion)
+                    .agregarProveedor(proveedor)
+                    .agregarPago(pago)
+                    .agregarDocumentoComercial(documentoComercial)
+                    .agregarItems(items)
+                    .build();
+        }catch (ExcepcionCreacionEgreso ex) {
+            return null;
+        }
 
-        egreso.agregarItems(items);
+
         repoEgresos.agregar(egreso);
         
         //Modificar items con el egreso, o sea linkearlos
-        // relacionarItemsConEgreso(items,egreso);
+        relacionarItemsConEgreso(items,egreso);
 
         return egreso;
     }
 
-    private ItemEgreso mapearItem(ItemRequest itemRequest,Egreso egreso, Organizacion organizacion) {
+    private ItemEgreso mapearItem(ItemRequest itemRequest, Organizacion organizacion) {
         ItemEgreso itemEgreso = new ItemEgreso();
         Item item=null;
         itemEgreso.setPrecio(itemRequest.precio);
@@ -325,7 +329,6 @@ public class EgresosRestController extends GenericController {
         }
        
         itemEgreso.setItem(item);
-        itemEgreso.setEgresoAsociado(egreso);
 
         return  itemEgreso;
     }

@@ -5,6 +5,8 @@ import Domain.Entities.DatosDeOperaciones.ItemEgreso;
 import Domain.Entities.DatosDeOperaciones.Pago;
 import Domain.Entities.DatosDeOperaciones.Proveedor;
 import Domain.Entities.Organizacion.Organizacion;
+import Domain.Exceptions.ExcepcionCreacionEgreso;
+import Domain.Exceptions.contraseniaCorta;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -60,13 +62,17 @@ public class BuilderEgresoConcreto implements IBuilderEgreso {
     }
 
     @Override
-    public IBuilderEgreso agregarItems(List<ItemEgreso> items) {
+    public IBuilderEgreso agregarItems(List<ItemEgreso> items) throws ExcepcionCreacionEgreso {
+        if(items.isEmpty())
+            throw new ExcepcionCreacionEgreso("Falta agregar items al egreso");
         this.egreso.setItems(items);
         return this;
     }
     
     @Override
-    public Egreso build() {
+    public Egreso build() throws ExcepcionCreacionEgreso {
+        if(this.egreso.getItems().isEmpty())
+            throw new ExcepcionCreacionEgreso("Falta agregar items al egreso");
         Double valorTotal = this.egreso.calcularValorTotal();
         this.egreso.setValorTotal(valorTotal);
         this.egreso.setFechaCarga();
