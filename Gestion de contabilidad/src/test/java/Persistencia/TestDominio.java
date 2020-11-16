@@ -128,7 +128,13 @@ public class TestDominio {
         SchedulerInit schedulerInit = new SchedulerInit();
         schedulerInit.setOrganizacion(entidadJuridica);
         entidadJuridica.setSchedulerInit(schedulerInit);
+
+        SchedulerInit schedulerInit2 = new SchedulerInit();
+        schedulerInit2.setOrganizacion(entidadJuridica2);
+        entidadJuridica2.setSchedulerInit(schedulerInit2);
+
         this.repoEntidadJuridica.modificar(entidadJuridica);
+        this.repoEntidadJuridica.modificar(entidadJuridica2);
         System.out.println("Numero " + entidadJuridica.getId());
     }
 
