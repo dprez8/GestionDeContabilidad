@@ -60,22 +60,25 @@ public class Router {
         AuthFilter authFilter = new AuthFilter("/api/auth",tokenService);
 
         AuthController authController           = new AuthController(tokenService);
-        LoginRestController loginRestController = new LoginRestController();
 
         EgresosRestController egresosRestController = new EgresosRestController(tokenService,TOKEN_PREFIX);
         IngresosRestController ingresosRestController = new IngresosRestController(tokenService,TOKEN_PREFIX);
         AsociacionOperacionesRestController asociacionOperacionesRestController = new AsociacionOperacionesRestController(tokenService,TOKEN_PREFIX);
         BandejaDeMensajesRestController bandejaDeMensajesRestController= new BandejaDeMensajesRestController(tokenService,TOKEN_PREFIX);
         OrganizacionController organizacionController = new OrganizacionController(tokenService,TOKEN_PREFIX);
-
+        CategoriasEgresosController categoriasEgresosController = new CategoriasEgresosController(tokenService,TOKEN_PREFIX);
+        CriteriosCategoriasController criteriosCategoriasController = new CriteriosCategoriasController();
+        EntidadRestController entidadRestController = new EntidadRestController(tokenService,TOKEN_PREFIX);
         DireccionPostalController direccionController = new DireccionPostalController();
-        ProveedorController proveedorController = new ProveedorController();
+        ProveedorController proveedorController = new ProveedorController(tokenService, TOKEN_PREFIX);
         MedioDePagoController medioController = new MedioDePagoController();
         DocumentoComercialController documentoController = new DocumentoComercialController();
-        
-        CriteriosCategoriasController categoriasController = new CriteriosCategoriasController();
-        PresupuestoRestController presupuestoRestController = new PresupuestoRestController();
-        ItemsController itemsController = new ItemsController();
+
+        PresupuestoRestController presupuestoRestController = new PresupuestoRestController(tokenService, TOKEN_PREFIX);
+        ItemsController itemsController = new ItemsController(tokenService, TOKEN_PREFIX);
+
+        FilesController filesController = new FilesController(tokenService, TOKEN_PREFIX);
+
 
         /****  Verificacion de credenciales  ******/
         Spark.before("/api/*",authFilter);
@@ -85,10 +88,6 @@ public class Router {
         Spark.post("/api/auth/login",authController::login );
         Spark.get("/api/auth/me", authController::me);
         Spark.post("/api/auth/token", authController::refresh);
-
-        /****  Deprecated               ********/
-        Spark.post("/api/login",loginRestController::login);
-        Spark.get("/api/login",loginRestController::sessionStatus);
 
         /****  DireccionPostalController *******/
         Spark.get("/api/pais",direccionController::listadoDePaises);
@@ -109,29 +108,35 @@ public class Router {
 
         /****  BandejaDeMensajeController *******/
         Spark.get("/api/bandeja",bandejaDeMensajesRestController::mostrarMensajes);
-        Spark.get("/api/bandeja/configuracion",bandejaDeMensajesRestController::mostrarConfiguracion);
+        Spark.get("/api/bandeja/configuracion/:organizacionId",bandejaDeMensajesRestController::mostrarConfiguracion);
         Spark.post("/api/admin/bandeja/configurar", bandejaDeMensajesRestController::configurar);
         Spark.post("/api/bandeja/visto", bandejaDeMensajesRestController::mensajeVisto);
 
         /****  CriteriosCategoriasController  ******/
-        Spark.get("/api/criterios",categoriasController::listadoCriterios);
-        Spark.post("/api/admin/categoria",categoriasController::crearCategoria);
-        Spark.post("/api/admin/criterio",categoriasController::crearCriterio);
-        Spark.post("/api/categorias/asociar",categoriasController::asociarCategoriaEgreso);
+        Spark.get("/api/criterios",criteriosCategoriasController::listadoCriterios);
+        Spark.post("/api/admin/criterio",criteriosCategoriasController::crearCriterio);
         //Spark.post("/api/admin/darJerarquiaCriterio",categoriasController::darJerarquiaACriterio);
+
+        /**** CategoriasEgresosController  ******/
+        Spark.post("/api/admin/categoria",categoriasEgresosController::crearCategoria);
+        Spark.post("/api/categorias/asociar",categoriasEgresosController::asociarCategoriaEgreso);
 
         /****  EgresosRestController       ********/
         Spark.post("/api/operaciones/egreso", egresosRestController::cargarNuevoEgreso);
         Spark.get("/api/operaciones/egresos", egresosRestController::listadoDeEgresos);
         Spark.get("/api/operaciones/egreso/:egresoId", egresosRestController::mostrarEgreso);
         Spark.post("/api/operaciones/egreso/cargarArchivos",egresosRestController::cargarArchivoDocumentoComercial);
+        Spark.post("/api/operaciones/egreso/suscribirse",egresosRestController::suscribirse);
+
+        /****  ItemsController    ********/
+        Spark.get("/api/items",itemsController::listadoDeItems);
+        Spark.get("/api/tipoItems",itemsController::listadoDeTipoItems);
 
         /****  IngresosRestController     ********/
         Spark.get("/api/operaciones/ingresos",ingresosRestController::listadoDeIngresos);
         Spark.post("/api/operaciones/ingreso",ingresosRestController::cargarNuevoIngreso);
 
         /****  AsociacionRestController    ********/
-        Spark.get("/api/items",itemsController::listadoDeItems);
         Spark.post("/api/operaciones/asociarManualmente",asociacionOperacionesRestController::asociarManualmente);
 
         /****  PresupuestoRestController    ********/
@@ -141,7 +146,10 @@ public class Router {
         Spark.post("/api/admin/entidadJuridica/osc",organizacionController::crearEntidadJuridicaOsc);
         Spark.post("/api/admin/entidadJuridica/empresa",organizacionController::crearEntidadJuridicaEmpresa);
         Spark.post("/api/admin/entidadBase",organizacionController::crearEntidadBase);
-        Spark.get("/api/usuario/organizaciones",organizacionController::listarOrganizacionesPropias);
+        /****  EntidadBaseRestController ********/
+        Spark.get("/api/entidades", entidadRestController::listarEntidades);
+        /*** Descargar archivos               ***/
+        Spark.get("/files/:filename", filesController::descargarArchivo);
 
         /**** Cierre de entityManager    ********/
         Spark.after("/api/*",(request, response) -> {

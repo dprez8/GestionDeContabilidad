@@ -114,6 +114,7 @@
                                 <b-badge variant="danger">Ingrese altura</b-badge>
                             </b-collapse>
                             <b-form-input placeholder="Ingrese altura" 
+                                type="number"
                                 :state="(!proveedor.altura && falloInput) ? false : null"
                                 v-model="proveedor.altura"></b-form-input>
                         </div>
@@ -123,11 +124,8 @@
                             <span class="mr-2"><strong>Piso</strong></span>
                         </div>
                         <div class="col">
-                            <b-collapse :visible="(!proveedor.piso && falloInput)">
-                                <b-badge variant="danger">Ingrese piso</b-badge>
-                            </b-collapse>
                             <b-form-input placeholder="Ingrese piso" 
-                                :state="(!proveedor.piso && falloInput) ? false : null"
+                                type="number"
                                 v-model="proveedor.piso"></b-form-input>
                         </div>
                     </div>
@@ -140,6 +138,7 @@
                                 <b-badge variant="danger">Ingrese codigo postal</b-badge>
                             </b-collapse>
                             <b-form-input placeholder="Ingrese codigo postal" 
+                                type="number"
                                 :state="(!proveedor.codigoPostal && falloInput) ? false : null"
                                 v-model="proveedor.codigoPostal"></b-form-input>
                         </div>
@@ -206,7 +205,6 @@ export default {
                 this.proveedor.ciudad           &&
                 this.proveedor.calle            &&
                 this.proveedor.altura           &&
-                this.proveedor.piso             &&
                 this.proveedor.codigoPostal;
 
             this.falloInput = !todosLosCamposRellenos;

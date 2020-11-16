@@ -5,6 +5,7 @@ import javax.persistence.*;
 import Domain.Entities.ApiPaises.Ciudad;
 import Domain.Entities.ApiPaises.Pais;
 import Domain.Entities.ApiPaises.Provincia;
+import Domain.Entities.Organizacion.Organizacion;
 import com.google.gson.annotations.Expose;
 
 @Entity
@@ -55,12 +56,17 @@ public class Proveedor {
 	@Column
 	private int zipcode;
 
+	@ManyToOne
+	@JoinColumn(name = "organizacion_id", referencedColumnName = "id")
+	protected Organizacion organizacion;
+
 	protected Proveedor() {
 	}
 
-	public Proveedor(String nombre, int documento) {
+	public Proveedor(String nombre, int documento, Organizacion organizacion) {
 		this.nombre = nombre;
 		this.documento = documento;
+		this.organizacion = organizacion;
 	}
 
 	/**Setters & Getters*/
@@ -144,5 +150,9 @@ public class Proveedor {
 	public void setProveedorId(int proveedorId) {
 		this.proveedorId = proveedorId;
 	}
+
+	public Organizacion getOrganizacion() {	return organizacion; }
+
+	public void setOrganizacion(Organizacion organizacion) { this.organizacion = organizacion;	}
 }
 

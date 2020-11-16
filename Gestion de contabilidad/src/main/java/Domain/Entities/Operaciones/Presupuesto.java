@@ -22,6 +22,7 @@ public class Presupuesto extends EntidadPersistente {
     @Column(name="operacion_numero")
     private int operacionNumero;
 
+    @Expose
     @OneToMany(mappedBy = "presupuesto",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<ItemPresupuesto> items;
 
@@ -29,20 +30,19 @@ public class Presupuesto extends EntidadPersistente {
     @JoinColumn(name="egreso_asociado", referencedColumnName = "id")
     private Egreso egresoAsociado;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="documento_comercial_id", referencedColumnName = "id")
-    private DocumentoComercial documento;
-
+    @Expose
     @Column(name="fecha_vigente", columnDefinition = "DATE")
     private LocalDate fechaVigente;
 
     @ManyToMany
     private List<CategoriaOperacion> categorias;
 
+    @Expose
     @ManyToOne
     @JoinColumn(name="proveedor_id", referencedColumnName = "proveedor_id")
     private Proveedor proveedor;
 
+    @Expose
     @Column(name="valor_total")
     private Double valorTotal;
 
@@ -57,9 +57,6 @@ public class Presupuesto extends EntidadPersistente {
     /**Getters*/
     public List<ItemPresupuesto> getItems() {
 		return items;
-	}
-	public DocumentoComercial getDocumento() {
-		return documento;
 	}
     public Proveedor getProveedor() {
         return proveedor;
@@ -88,10 +85,6 @@ public class Presupuesto extends EntidadPersistente {
 	public void addItems (ItemPresupuesto ... unosItems) {
         Collections.addAll(this.items, unosItems);
         this.valorTotal = calcularValorTotal();
-    }
-
-    public void setDocumento(DocumentoComercial documento) {
-        this.documento = documento;
     }
 
     public void setFechaVigente(LocalDate fechaVigente) {

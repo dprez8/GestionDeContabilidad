@@ -1,6 +1,7 @@
 package Domain.Entities.Organizacion;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import Domain.Entities.ApiPaises.Ciudad;
@@ -37,8 +38,14 @@ public class EntidadJuridica extends Organizacion {
 	@Column(name = "codigo_igj")
     private int codigoDeInscripcionDefinitivaEnIGJ;
 
+	@Expose
 	@OneToMany(mappedBy = "entidadJuridica",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<EntidadBase> entidadesBase;
+
+	@Expose
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "tipo_entidad_id")
+    private CategoriaEntidadJuridica tipoEntidadJuridica;
 
 	@Expose
 	@ManyToOne
@@ -108,6 +115,14 @@ public class EntidadJuridica extends Organizacion {
 
 	public void setEntidadesBase(List<EntidadBase> entidadesBase) {
 		this.entidadesBase = entidadesBase;
+	}
+
+	public void addEntidadesBase(EntidadBase ...entidadesBase) {
+		Collections.addAll(this.entidadesBase, entidadesBase);
+	}
+
+	public CategoriaEntidadJuridica getTipoEntidadJuridica() {
+		return tipoEntidadJuridica;
 	}
 
 	public Administrador getAdministrador() {
@@ -181,5 +196,10 @@ public class EntidadJuridica extends Organizacion {
 		this.zipcode = zipcode;
 	}
 
+	public void setTipoEntidadJuridica(CategoriaEntidadJuridica tipoEntidadJuridica) {
+		this.tipoEntidadJuridica = tipoEntidadJuridica;
+	}
+
+	
 }
 

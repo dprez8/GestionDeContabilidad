@@ -208,7 +208,8 @@ const routes = [
                 {text: 'Entidades', icon: 'bar-chart-fill', to: '/admin/entidades'},
                 {text: 'Criterios', icon: 'ui-checks', to: '/admin/criterios'},
                 {text: 'Vinculación automática', icon: 'gear-wide-connected', to: '/admin/vinculacion'},
-                {text: 'Validación de Egresos', icon: 'clock', to: '/admin/validaciones'}
+                {text: 'Validación de Egresos', icon: 'clock', to: '/admin/validaciones'},
+                {text: 'Mi Cuenta', icon: 'person', to: '/admin/cuenta'}
             ]
         },
         children: [

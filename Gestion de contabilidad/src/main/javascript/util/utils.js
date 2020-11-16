@@ -1,4 +1,5 @@
 import axios from 'axios'
+import jwtDecode from 'jwt-decode';
 export {convertDate, getCookie, capitalizeFirstLetter, RequestHelper};
 
 function convertDate(date) {
@@ -116,6 +117,7 @@ class RequestHelper {
 				// Si recibo un token por el header lo guardo
 				if(response.headers.authorization) {
 					sessionStorage.setItem('token', response.headers.authorization);
+					sessionStorage.setItem('authRol', jwtDecode(response.headers.authorization).rol);
 				}
 
 				switch (data.code) {

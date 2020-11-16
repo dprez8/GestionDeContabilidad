@@ -10,6 +10,7 @@ import Domain.Entities.ApiPaises.Moneda;
 import Domain.Entities.Operaciones.Ingreso;
 import Domain.Entities.Organizacion.EntidadBase;
 import Domain.Entities.Organizacion.EntidadJuridica;
+import Domain.Entities.Organizacion.Organizacion;
 import Domain.Entities.Usuarios.Estandar;
 import Domain.Repositories.Daos.DaoHibernate;
 import Domain.Repositories.Repositorio;
@@ -23,10 +24,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class IngresosRestController extends GenericController{
+public class IngresosRestController extends GenericController {
     private Repositorio<Ingreso> repoIngresos;
-    private Repositorio<EntidadJuridica> repoEntidadJuridica;
-    private Repositorio<EntidadBase> repoEntidadBase;
 
     private Repositorio<Moneda> repoMoneda;
     private Respuesta respuesta;
@@ -35,8 +34,6 @@ public class IngresosRestController extends GenericController{
     public IngresosRestController(TokenService tokenService, String tokenPrefix) {
         super(tokenService,tokenPrefix);
         this.repoIngresos        = new Repositorio<>(new DaoHibernate<>(Ingreso.class));
-        this.repoEntidadJuridica = new Repositorio<>(new DaoHibernate<>(EntidadJuridica.class));
-        this.repoEntidadBase     = new Repositorio<>(new DaoHibernate<>(EntidadBase.class));
         this.repoMoneda       	 = new Repositorio<>(new DaoHibernate<>(Moneda.class));
         this.respuesta           = new Respuesta();
     }
@@ -47,21 +44,17 @@ public class IngresosRestController extends GenericController{
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter().nullSafe())
                 .create();
-        EntidadJuridica entidadJuridica= this.repoEntidadJuridica.buscar(usuario.getMiOrganizacion().getId());
+        Organizacion organizacion = usuario.getMiOrganizacion();
         List<IngresoResponse> ingresosAEnviar;
         String jsonResponse;
 
-        ingresosAEnviar = entidadJuridica.getIngresos()
+        ingresosAEnviar = organizacion.getIngresos()
                 .stream()
                 .map(this::mapearIngresos)
                 .collect(Collectors.toList());
 
         if (ingresosAEnviar.isEmpty()) {
-            this.respuesta.setCode(404);
-            this.respuesta.setMessage("No hay ingresos cargados");
-            jsonResponse = this.gson.toJson(this.respuesta);
-            response.body(jsonResponse);
-            return response.body();
+            return error(response, "No hay ingresos cargados");
         }
 
         ListadoIngresos listadoIngresos = new ListadoIngresos();
@@ -69,9 +62,7 @@ public class IngresosRestController extends GenericController{
         listadoIngresos.message = "Ok";
         listadoIngresos.ingresos = ingresosAEnviar;
 
-        jsonResponse = this.gson.toJson(listadoIngresos);
-        response.body(jsonResponse);
-        return response.body();
+        return toJson(response, listadoIngresos);
     }
 
     public String cargarNuevoIngreso(Request request, Response response) {
@@ -79,27 +70,21 @@ public class IngresosRestController extends GenericController{
         this.gson  = new GsonBuilder()
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())
                 .create();
-        String jsonResponse;
 
-        IngresoRequest ingresoRequest    = this.gson.fromJson(request.body(),IngresoRequest.class);
+        IngresoRequest ingresoRequest    = this.gson.fromJson(request.body(), IngresoRequest.class);
 
-        Ingreso ingreso = asignarIngresoDesde(ingresoRequest);
+        Ingreso ingreso = asignarIngresoDesde(request, ingresoRequest);
 
         if(ingreso == null) {
-            this.respuesta.setCode(400);
-            this.respuesta.setMessage("Problema al cargar el ingreso");
-            jsonResponse = this.gson.toJson(this.respuesta);
-            response.body(jsonResponse);
-            return response.body();
+            return error(response, "Problema al cargar el ingreso");
         }
+
         CargaIngresoResponse cargaIngresoResponse = new CargaIngresoResponse();
         cargaIngresoResponse.code                 = 200;
         cargaIngresoResponse.message              = "Ok";
         cargaIngresoResponse.id                   = ingreso.getId();
 
-        jsonResponse = this.gson.toJson(cargaIngresoResponse);
-        response.body(jsonResponse);
-        return response.body();
+        return toJson(response, cargaIngresoResponse);
     }
 
     private IngresoResponse mapearIngresos(Ingreso ingreso) {
@@ -116,7 +101,7 @@ public class IngresosRestController extends GenericController{
         return ingresoAEnviar;
     }
 
-    private Ingreso asignarIngresoDesde(IngresoRequest ingresoRequest) {
+    private Ingreso asignarIngresoDesde(Request request, IngresoRequest ingresoRequest) {
         if(ingresoRequest.descripcion == null || ingresoRequest.fechaOperacion == null || ingresoRequest.montoTotal == null){
             return null;
         }
@@ -125,19 +110,12 @@ public class IngresosRestController extends GenericController{
         ingreso.setFechaOperacion(ingresoRequest.fechaOperacion);
         ingreso.setFechaAceptacionEgreso(ingresoRequest.fechaAceptacionEgresos);
         ingreso.setMontoTotal(ingresoRequest.montoTotal);
-        if(ingresoRequest.organizacion_id!=0){
-        	if(ingresoRequest.tipo==0) {
-        		EntidadJuridica entidadJuridica=repoEntidadJuridica.buscar(ingresoRequest.organizacion_id);
-        		ingreso.setOrganizacion(entidadJuridica);
-        	}
-        	else {
-        		EntidadBase entidadBase= repoEntidadBase.buscar(ingresoRequest.organizacion_id);
-        		ingreso.setOrganizacion(entidadBase);
-        	}
-        }
+
+        Estandar usuario = (Estandar) getUsuarioDesdeRequest(request);
+        ingreso.setOrganizacion(usuario.getMiOrganizacion());
         
         if(ingresoRequest.moneda_id!=0) {
-        Moneda moneda=repoMoneda.buscar(ingresoRequest.moneda_id);
+            Moneda moneda=repoMoneda.buscar(ingresoRequest.moneda_id);
         	ingreso.setMoneda(moneda);
         }
 

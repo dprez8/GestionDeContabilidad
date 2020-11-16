@@ -6,4 +6,5 @@ public class ConfigSchedulerRequest {
     public Integer horaInicio;
     public Integer minutoInicio;
     public List<Integer> dias;
+    //public int organizacionId;
 }

@@ -23,6 +23,7 @@ public class Empresa extends CategoriaEntidadJuridica{
     @Column
     private String actividad;
 
+    @Expose
     @ManyToOne
     @JoinColumn(name="categoria_id", referencedColumnName = "categoria_id")
     private CategoriaEmpresa categoriaEmpresa;
@@ -33,6 +34,7 @@ public class Empresa extends CategoriaEntidadJuridica{
     private Sector sector;
 
     /*******************Setters & Getters******************/
+
     public void setCantidadDePersonal(int cantidadDePersonal) {
         this.cantidadDePersonal = cantidadDePersonal;
     }

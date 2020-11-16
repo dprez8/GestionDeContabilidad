@@ -8,9 +8,10 @@ import java.util.List;
 
 public class PresupuestoRequest {
     public LocalDate fechaVigente;
+    public int proveedor;
     public int numeroOperacion;
-    public int egresoId;
-    public List<ItemRequest> items;
+    public int egreso;
+    public List<ItemPresupuestoRequest> items;
 
     public PresupuestoRequest() {
         this.items = new ArrayList<>();

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Month;
 
+import Domain.Exceptions.ExcepcionCreacionEgreso;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -74,7 +75,7 @@ public class Operaciones {
     }
 
     @Test
-    public void creacionEgresoValida() {
+    public void creacionEgresoValida() throws ExcepcionCreacionEgreso {
         
     	BuilderEgresoConcreto egresoBuilder = new BuilderEgresoConcreto();
 

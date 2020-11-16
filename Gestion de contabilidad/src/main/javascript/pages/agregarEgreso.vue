@@ -25,15 +25,6 @@
         </div>
         <div class="row mb-4 mx-2">
             <div class="col-sm-4 col-lg-3 text-sm-right py-2">
-                <span class="mr-2"><strong>Organización</strong></span>
-            </div>
-            <div class="col bg-light p-2">
-                <span class="ml-2">{{getCookie("organizacion")}}</span>
-            </div>
-            <div class="col-lg-1 col-xl-3"></div>
-        </div>
-        <div class="row mb-4 mx-2">
-            <div class="col-sm-4 col-lg-3 text-sm-right py-2">
                 <span class="mr-2"><strong>Fecha Operación</strong></span>
             </div>
             <div class="col">
@@ -105,7 +96,7 @@
                     <b-collapse :visible="(!egreso.medioDePago.dato && falloInput)">
                         <b-badge variant="danger">Ingrese el número de pago</b-badge>
                     </b-collapse>
-                    <b-form-input placeholder="Ingrese número de pago" 
+                    <b-form-input placeholder="Ingrese número de pago"
                         :state="(!egreso.medioDePago.dato && falloInput) ? false : null"
                         v-model="egreso.medioDePago.dato"
                     ></b-form-input>
@@ -146,6 +137,7 @@
                                 <b-badge variant="danger">Ingrese el número de documento</b-badge>
                             </b-collapse>
                             <b-form-input placeholder="Ingrese número de documento" 
+                                type="number"
                                 :state="(!egreso.documentoComercial.numeroDocumento && falloInput) ? false : null"
                                 v-model="egreso.documentoComercial.numeroDocumento"
                             ></b-form-input>
@@ -240,10 +232,16 @@
                 <span class="mr-2"><strong>Presupuestos</strong></span>
             </div>
             <div class="col">
-                <b-button variant="outline-primary" v-b-modal.modal-agregar-presupuesto>
-                    <b-icon-plus></b-icon-plus>
-                    Cargar Presupuestos
-                </b-button>
+                <div class="d-flex w-100 align-items-center">
+                    <div class="p-2 w-100">
+                        <b-form-checkbox v-model="requierePresupuestos" @change="!requierePresupuestos ? egreso.presupuestosMinimos = '' : true" switch>
+                            Requiere presupuestos
+                        </b-form-checkbox>
+                    </div>
+                    <transition name="fade">
+                        <b-form-input type="number" class="w-50" v-if="requierePresupuestos" v-model="egreso.presupuestosMinimos" placeholder="Presupuestos mínimos"></b-form-input>
+                    </transition>
+                </div>
                 <div class="pt-2" v-if="presupuestosAAgregar.length">
                     <p>Al egreso se le asociaran los siguientes presupuestos: </p>
                     <b-table small class="mb-0 rounded" :fields="presupuestosAAgregarCampos" :items="presupuestosAAgregar">
@@ -310,7 +308,7 @@
                     <b-badge variant="danger">Hay problemas en los campos</b-badge>
                 </b-collapse>
                 <b-collapse :visible="(falloCarga)">
-                    <b-badge variant="danger">Hubo un problema al cargar el egreso</b-badge>
+                    <b-badge variant="danger">{{falloCargaDetalles}}</b-badge>
                 </b-collapse>
                 <b-button-group>
                     <b-button variant="primary" @click="confirmar">Confirmar</b-button>
@@ -343,6 +341,7 @@
 
         <b-modal id="modal-agregar-presupuesto" size="xl" hide-footer scrollable centered title="Crear nuevo Presupuesto">
             <agregar-presupuesto
+                :itemsReadOnly="itemsReadOnlyMap(egreso.items)"
                 :confirmarAccion="confirmarNuevoPresupuesto"
                 :cancelarAccion="cancelarNuevoPresupuesto"
             ></agregar-presupuesto>
@@ -377,11 +376,14 @@ export default {
                     descripcion: null
                 },
                 items: [],
+                presupuestosMinimos: null,
                 archivo: null
             },
+            requierePresupuestos: false,
             idEgreso: null,
             falloInput: false,
             falloCarga: false,
+            falloCargaDetalles: "Hubo un problema al cargar el egreso",
             proveedoresSelect: [],
             mediosDePagoSelect: [],
             mediosDePagoType: {
@@ -465,8 +467,18 @@ export default {
     methods: {
         getCookie: getCookie,
         convertDate: convertDate,
+        itemsReadOnlyMap(items) {
+            var nuevosItems = JSON.parse(JSON.stringify(items));
+            nuevosItems.map((unItem) => {
+                if(unItem.tipoItem)
+                    unItem.tipoItem = unItem.tipoItem.nombre;
+                return unItem;
+            })
+            nuevosItems.pop();
+
+            return nuevosItems;
+        },
         uploadFileTest() {
-            console.log(this.egreso.archivo);
 
             var request = new FormData();
             request.append('arhivo', this.egreso.archivo);
@@ -499,6 +511,9 @@ export default {
                 always: () => {
                     this.egresoLoading = false;
                     this.archivoProgress = 0;
+                },
+                default: (data) => {
+                    console.log(data);
                 }
             }, config);
 
@@ -547,7 +562,8 @@ export default {
                     notLoggedIn: () => {
                         this.showLoginModal(true);
                     },
-                    failed: () => {
+                    failed: (data) => {
+                        this.falloCargaDetalles = data;
                         this.falloCarga = true;
                     },
                     forbidden: (error) => {
@@ -566,6 +582,10 @@ export default {
         crearEgresoAPI() {
             var egresoToSend = JSON.parse(JSON.stringify(this.egreso));
             egresoToSend.items.pop();
+            egresoToSend.items.map((unItem) => {
+                unItem.tipoItem = unItem.tipoItem.id;
+                return unItem;
+            })
 
             console.log("POST '/api/operaciones/egreso'");
             console.log(JSON.stringify(egresoToSend, null, 4));
@@ -579,7 +599,8 @@ export default {
                 notLoggedIn: () => {
                     this.showLoginModal(true);
                 },
-                failed: () => {
+                failed: (data) => {
+                    this.falloCargaDetalles = data.message;
                     this.falloCarga = true;
                 },
                 forbidden: (error) => {
@@ -593,8 +614,47 @@ export default {
             });
         },
         crearPresupuestosAPI() {
-            // Proximamente
+            // Se hace muy complicado crear los presupuestos ni bien se carga un Egreso: 
+            // Los presupuestos ahora se tienen que cargar luego de haber cargado un Egreso.
+
             this.asociarCategoriasAPI();
+
+            // if (this.presupuestosAAgregar != null && this.presupuestosAAgregar.length) {
+
+            //     this.presupuestosAAgregar.forEach((presupuesto) => {
+
+            //         presupuesto.egreso = this.idEgreso;
+                    
+            //         console.log("POST '/api/operaciones/presupuesto'");
+            //         console.log(JSON.stringify(presupuesto, null, 4));
+
+            //         RequestHelper.post(`/api/operaciones/presupuesto`, presupuesto, {
+            //             success: (data) => {
+            //                 this.createToast('Guardado exitoso', 'Se creó el presupuesto correctamente', 'success');
+            //             },
+            //             notLoggedIn: () => {
+            //                 this.showLoginModal(true);
+            //             },
+            //             failed: (data) => {
+            //                 this.falloCarga = true;
+            //                 this.falloCargaDetalles = data.message;
+            //             },
+            //             forbidden: (error) => {
+            //                 this.falloCarga = true;
+            //                 this.errorHandling(error);
+            //             },
+            //             error: (error) => {
+            //                 this.errorHandling(error);
+            //                 this.falloCarga = true;
+            //             }
+            //         });
+            //     });
+                
+            //     this.asociarCategoriasAPI();
+
+            // } else {
+            //     this.asociarCategoriasAPI();
+            // }
         },
         asociarCategoriasAPI() {
             if(this.categoriasAAsociar.length) {
@@ -667,11 +727,43 @@ export default {
                 this.$router.push('/operaciones/egreso');
             }
         },
+        cargarEntidadesAPI() {
+            this.entidadesLoading = true;
+
+            RequestHelper.get('/api/entidades', {
+                success: (data) => {
+                    console.log(data);
+                    this.entidadesOptions = [{
+                        text: `${data.organizacion.razonSocial} - Entidad Jurídica`,
+                        value: data.organizacion.id,
+                    }];
+                    data.organizacion.entidadesBase.forEach((base) => {
+                        this.entidadesOptions.push({
+                            text: `${base.nombreFicticio} - Entidad Base`,
+                            value: base.id
+                        })
+                    })
+                },
+                notLoggedIn: () => {
+                    this.showLoginModal(true);
+                },
+                forbidden: (error) => {
+                    this.errorHandling(error);
+                },
+                error: (error) => {
+                    this.errorHandling(error);
+                },
+                always: () => {
+                    this.entidadesLoading = false;
+                }
+            });
+        },
         cargarProveedoresAPI() {
             this.proveedoresLoading = true;
 
             RequestHelper.get('/api/proveedores', {
                 success: (data) => {
+                    console.log(data);
                     this.proveedoresSelect = data.data.map(this.proveedoresAPIConverter);
                 },
                 notLoggedIn: () => {
@@ -723,6 +815,7 @@ export default {
             }
         },
         actualizarItems(items) {
+            console.log(items);
             this.egreso.items = items;
         },
         // Proveedores
@@ -738,6 +831,7 @@ export default {
         confirmarNuevoPresupuesto(data) {
             this.$bvModal.hide('modal-agregar-presupuesto');
             this.presupuestosAAgregar.push(data);
+            console.log(data);
         },
         cancelarNuevoPresupuesto() {
             this.$bvModal.hide('modal-agregar-presupuesto');

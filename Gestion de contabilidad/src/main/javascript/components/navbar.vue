@@ -20,8 +20,8 @@
             v-model="userPanelShow"
         >
             <b-list-group flush>
-                <b-list-group-item to="/cuenta" @click="userPanelShow = false">
-                        <b-icon-person-fill class="mr-2"></b-icon-person-fill> {{userData.nombre}}
+                <b-list-group-item :to="miCuenta()" @click="userPanelShow = false">
+                    <b-icon-person-fill class="mr-2"></b-icon-person-fill> {{userData.nombre}} {{userData.apellido}}
                 </b-list-group-item>
                 <b-list-group-item button @click="logout">
                     <b-icon-box-arrow-left class="mr-2"></b-icon-box-arrow-left> Cerrar sesión
@@ -55,6 +55,12 @@ export default {
                     this.$router.push("/login");
                 }
             });
+        },
+        miCuenta() {
+            if(sessionStorage.getItem('authRol') == "Administrador")
+                return "/admin/cuenta";
+            else
+                return "/cuenta";
         }
     }
 }

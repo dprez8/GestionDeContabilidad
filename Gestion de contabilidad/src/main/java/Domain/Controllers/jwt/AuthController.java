@@ -2,11 +2,8 @@ package Domain.Controllers.jwt;
 
 import Domain.Controllers.DTO.Respuesta;
 import Domain.Controllers.DTO.UsuarioResponse;
-import Domain.Controllers.LoginRestController;
-import Domain.Controllers.PermisosRestController;
-import Domain.Entities.Usuarios.Estandar;
+import Domain.Entities.Usuarios.Administrador;
 import Domain.Entities.Usuarios.Usuario;
-import Domain.Repositories.Daos.DaoHibernate;
 import Domain.Repositories.Repositorio;
 import com.google.common.hash.Hashing;
 import com.google.gson.Gson;
@@ -22,18 +19,20 @@ import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
 public class AuthController extends AbstractTokenController{
-    private static final String ROLE_PROPERTY = "role";
     private static final String TOKEN_PREFIX = "Bearer";
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String USER_NAME_PROPERTY = "username";
-    private static final String FIRST_NAME_PROPERTY = "firstName";
-    private static final String LAST_NAME_PROPERTY = "lastName";
     private static final String PASSWORD_PROPERTY = "password";
 
     private Gson gson;
     private TokenService tokenService;
     private Respuesta respuesta;
     private Repositorio<Usuario> repoUsuarios;
+
+    /*
+    private static final String FIRST_NAME_PROPERTY = "firstName";
+    private static final String LAST_NAME_PROPERTY = "lastName";
+    private static final String ROLE_PROPERTY = "role";*/
 
     public AuthController(TokenService tokenService) {
         super(tokenService);
@@ -54,7 +53,7 @@ public class AuthController extends AbstractTokenController{
         if (validatePost(jsonRequest)) {
             try {
                 usuario = (Usuario) EntityManagerHelper
-                        .createQuery("from Usuario where nombre = :username and contrasenia = :password")
+                        .createQuery("from Usuario where username = :username and contrasenia = :password")
                         .setParameter("username", jsonRequest.get(USER_NAME_PROPERTY).getAsString())
                         .setParameter("password", passwordHash)
                         .getSingleResult();
@@ -84,9 +83,6 @@ public class AuthController extends AbstractTokenController{
 
     public String me(Request request, Response response) {
         Usuario user = getUserDesdeToken(request);
-
-        Estandar usuario = (Estandar) user;
-
         Gson gson = new GsonBuilder()
                 .excludeFieldsWithoutExposeAnnotation()
                 .serializeNulls()
@@ -95,8 +91,11 @@ public class AuthController extends AbstractTokenController{
         UsuarioResponse usuarioResponse = new UsuarioResponse();
         usuarioResponse.code            = 200;
         usuarioResponse.message         = "Ok";
-        usuarioResponse.organizacion    = usuario.getMiOrganizacion();
-        usuarioResponse.nombre          = usuario.getNombre();
+        usuarioResponse.nombre          = user.getNombre();
+        usuarioResponse.username        = user.getUsername();
+        usuarioResponse.apellido        = user.getApellido();
+        usuarioResponse.email           = user.getMail();
+
         String jsonLogin = gson.toJson(usuarioResponse);
 
         response.body(jsonLogin);
@@ -113,6 +112,44 @@ public class AuthController extends AbstractTokenController{
         response.header(AUTHORIZATION_HEADER, TOKEN_PREFIX + " " + refreshedToken);
         return "";
     }
+
+    private boolean isAdmin(Usuario usuario) {
+        return usuario.getClass().equals(Administrador.class);
+    }
+
+    /*
+    private void mostrarDatosDeEstandar(Response response,Estandar estandar) {
+        Gson gson = new GsonBuilder()
+                .excludeFieldsWithoutExposeAnnotation()
+                .serializeNulls()
+                .create();
+
+        UsuarioResponse usuarioResponse = new UsuarioResponse();
+        usuarioResponse.code            = 200;
+        usuarioResponse.message         = "Ok";
+        usuarioResponse.organizacion    = estandar.getMiOrganizacion();
+        usuarioResponse.nombre          = estandar.getNombre();
+        String jsonLogin = gson.toJson(usuarioResponse);
+
+        response.body(jsonLogin);
+    }
+
+    private void mostrarDatosDeAdministrador(Response response, Administrador administrador) {
+        Gson gson = new GsonBuilder()
+                .excludeFieldsWithoutExposeAnnotation()
+                .serializeNulls()
+                .create();
+
+        UsuarioResponse usuarioResponse = new UsuarioResponse();
+        usuarioResponse.code            = 200;
+        usuarioResponse.message         = "Ok";
+        usuarioResponse.organizacion    = estandar.getMiOrganizacion();
+        usuarioResponse.nombre          = estandar.getNombre();
+        String jsonLogin = gson.toJson(usuarioResponse);
+
+        response.body(jsonLogin);
+    }
+
 
 
     //public void init() {

@@ -5,11 +5,13 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import Domain.Entities.EntidadPersistente.EntidadPersistente;
+import com.google.gson.annotations.Expose;
 
 @Entity
 @Table(name = "tipo_item")
 public class TipoItem extends EntidadPersistente {
-	
+
+	@Expose
 	@Column
 	public String nombre;
 

@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import javax.persistence.NoResultException;
 
+import Domain.Controllers.jwt.TokenService;
+import Domain.Entities.Organizacion.Organizacion;
 import Domain.Entities.Usuarios.Estandar;
 import com.google.gson.Gson;
 
@@ -24,30 +26,36 @@ import Domain.Repositories.Daos.DaoHibernate;
 import spark.Request;
 import spark.Response;
 
-public class ProveedorController {
+public class ProveedorController extends GenericController {
 	
 	private Repositorio<Proveedor> repoProveedor;
 	private Repositorio<Pais> repoPais;
 	private Repositorio<Provincia> repoProvincia;
 	private Repositorio<Ciudad> repoCiudad;
-	
+
+	public ProveedorController(TokenService tokenService, String tokenPrefix) {
+		super(tokenService, tokenPrefix);
+	}
 	
 	public String listadoProveedores(Request request, Response response){
 
 		 	Gson gson = new Gson();
-	        List<Proveedor> proveedores =new ArrayList<>();
+	        List<Proveedor> todosLosProveedores = new ArrayList<>();
+			List<Proveedor> proveedores = new ArrayList<>();
 	        ProveedorResponse proveedorRespuesta= new ProveedorResponse();
 
 	   	 	this.repoProveedor = new Repositorio<Proveedor>(new DaoHibernate<Proveedor>(Proveedor.class));
-	   	 
-	   	 	
+
+			Estandar usuario = (Estandar) getUsuarioDesdeRequest(request);
+			Organizacion organizacion = usuario.getMiOrganizacion();
 	        try {
-		        proveedores= this.repoProveedor.buscarTodos();
-		        
+		        todosLosProveedores = this.repoProveedor.buscarTodos();
+				proveedores = todosLosProveedores.stream().filter(proveedor -> proveedor.getOrganizacion().equals(organizacion)).collect(Collectors.toList());
+
 		        List<ProveedorDato> proveedoresAEnviar = proveedores.stream().map(this::mapProveedor).collect(Collectors.toList());
 		        proveedorRespuesta.code = 200;
 		        proveedorRespuesta.message = "Proveedorescargados exitosamente";
-		        proveedorRespuesta.data= proveedoresAEnviar;
+		        proveedorRespuesta.data = proveedoresAEnviar;
 		        response.status(200);
 	        }
 	        catch (NullPointerException ex){
@@ -92,7 +100,7 @@ public class ProveedorController {
 
 		this.repoProveedor = new Repositorio<Proveedor>(new DaoHibernate<Proveedor>(Proveedor.class));
 		ProveedorNuevo proveedorNuevo = gson2.fromJson(request.body(),ProveedorNuevo.class);
-		Proveedor proveedor=mapProveedor(proveedorNuevo);
+		Proveedor proveedor = mapProveedor(request, proveedorNuevo);
 		ProveedorRespuesta proveedorCreado= new ProveedorRespuesta();
 		try{
 	
@@ -112,7 +120,7 @@ public class ProveedorController {
 
         return response.body();
 	}
-	public Proveedor mapProveedor(ProveedorNuevo proveedorNuevo) {
+	public Proveedor mapProveedor(Request request, ProveedorNuevo proveedorNuevo) {
 		this.repoPais = new Repositorio<Pais>(new DaoHibernate<Pais>(Pais.class));
 		this.repoProvincia = new Repositorio<Provincia>(new DaoHibernate<Provincia>(Provincia.class));
 		this.repoCiudad = new Repositorio<Ciudad>(new DaoHibernate<Ciudad>(Ciudad.class));
@@ -120,9 +128,10 @@ public class ProveedorController {
 		Pais paisElegido = repoPais.buscar(proveedorNuevo.pais);
 		Provincia provinciaElegida = repoProvincia.buscar(proveedorNuevo.provincia);
 		Ciudad ciudadElegida = repoCiudad.buscar(proveedorNuevo.ciudad);
-		
 
-		Proveedor proveedor= new Proveedor(proveedorNuevo.nombre,proveedorNuevo.documento);
+		Estandar usuario = (Estandar) getUsuarioDesdeRequest(request);
+		Organizacion organizacion = usuario.getMiOrganizacion();
+		Proveedor proveedor = new Proveedor(proveedorNuevo.nombre, proveedorNuevo.documento, organizacion);
 		
 		proveedor.setPais(paisElegido);
 		proveedor.setProvincia(provinciaElegida);

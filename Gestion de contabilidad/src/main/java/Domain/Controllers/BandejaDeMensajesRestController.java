@@ -49,7 +49,6 @@ public class BandejaDeMensajesRestController extends GenericController{
 
         Estandar usuario = (Estandar) getUsuarioDesdeRequest(request);
         BandejaResponse bandejaResponse;
-        //Estandar usuario = (Estandar) asignarUsuarioPorRequestParams(request);
 
         filtrarMensajesDeUsuario(usuario);
         bandejaResponse  = asignarDatosABandejaResponse(usuario);
@@ -61,12 +60,12 @@ public class BandejaDeMensajesRestController extends GenericController{
     }
 
     public String configurar(Request request, Response response) {
-        //Administrador usuario = (Administrador) getUsuarioDesdeRequest(request);
-        Estandar usuario = (Estandar) getUsuarioDesdeRequest(request);
+        Administrador usuario = (Administrador) getUsuarioDesdeRequest(request);
+        //Estandar usuario = (Estandar) getUsuarioDesdeRequest(request);
         Gson gson = new Gson();
         ConfigSchedulerRequest configSchedulerRequest = gson.fromJson(request.body(),ConfigSchedulerRequest.class);
 
-        SchedulerInit schedulerInit = this.repoScheduler.buscar(usuario.getMiOrganizacion().getSchedulerInit().getId());
+        SchedulerInit schedulerInit = this.repoScheduler.buscar(1);
 
         if(!configuracionExistosa(configSchedulerRequest, schedulerInit)) {
             this.codeResponse.setCode(400);

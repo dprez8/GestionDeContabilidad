@@ -44,28 +44,34 @@ export default {
                 return this.$route.name == item.routeName;
             } 
         },
+        hasBandeja() {
+            return this.sidebar.find((item) => item.bandeja) ? true : false
+        },
         cargarMensajesAPI() {
-            RequestHelper.get('/api/bandeja', {
-                success: (data) => {
-                    this.mensajesCount = data.mensajes.length;
-                    console.log(data);
-                },
-                notLoggedIn: () => {
-                    this.showLoginModal(true);
-                },
-                forbidden: (error) => {
-                    this.errorHandling(error);
-                },
-                empty: () => {
-                    this.mensajes = [];
-                },
-                error: (error) => {
-                    this.errorHandling(error);
+            if(this.hasBandeja())
+            {
+                RequestHelper.get('/api/bandeja', {
+                    success: (data) => {
+                        this.mensajesCount = data.mensajes.map((unMensaje) => unMensaje.leido ? 0 : 1);
+                        this.mensajesCount = this.mensajesCount.reduce((valorAnterior, valorActual) => valorAnterior + valorActual);
+                    },
+                    notLoggedIn: () => {
+                        this.showLoginModal(true);
+                    },
+                    forbidden: (error) => {
+                        this.errorHandling(error);
+                    },
+                    empty: () => {
+                        this.mensajes = [];
+                    },
+                    error: (error) => {
+                        this.errorHandling(error);
+                    }
+                });
+                if(this.update && !this.updating) {
+                    this.updating = true;
+                    setTimeout(() => {this.updating = false; this.cargarMensajesAPI()}, this.updateSpeed);
                 }
-            });
-            if(this.update && !this.updating) {
-                this.updating = true;
-                setTimeout(() => {this.updating = false; this.cargarMensajesAPI()}, this.updateSpeed);
             }
         },
     },

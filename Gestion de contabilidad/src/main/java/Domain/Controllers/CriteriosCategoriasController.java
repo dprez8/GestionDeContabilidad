@@ -35,9 +35,9 @@ public class CriteriosCategoriasController {
 	public String listadoCriterios(Request request, Response response){
 		
 		 	Gson gson = new Gson();
-	        List<CriterioOperacion> criterios=new ArrayList<>();
+	        List<CriterioOperacion> criterios;
 	        CriterioRespuesta criterioRespuesta= new CriterioRespuesta();
-	   	 	this.repoCriterio = new Repositorio<CriterioOperacion>(new DaoHibernate<CriterioOperacion>(CriterioOperacion.class));
+	   	 	this.repoCriterio = new Repositorio<>(new DaoHibernate<>(CriterioOperacion.class));
 	   	 	
 	        try {
 		        criterios= this.repoCriterio.buscarTodos();
@@ -47,144 +47,52 @@ public class CriteriosCategoriasController {
 		        criterioRespuesta.code = 200;
 		        criterioRespuesta.message = "Criterios y categorias cargados exitosamente";
 		        criterioRespuesta.criterios= criteriosAEnviar;
-		        response.status(200);
 	        }
 	        catch (NullPointerException ex){
 	            criterioRespuesta.code=404;
 	            criterioRespuesta.message="No se logró cargar los criterios";
-	            response.status(404);
 	         }
 	        
 	        catch(NoResultException nf){
 	        	criterioRespuesta.code=404;
 	            criterioRespuesta.message="Ninguna categoria registradoa, por favor crearla";
-	            response.status(404);
 	        }
 	       
 	       
 	        String jsonCriterios = gson.toJson(criterioRespuesta);
-	       
-	        response.type("application/json");
+
 	        response.body(jsonCriterios);
 
 	        return response.body();
 	}
 
-	
-	public String asociarCategoriaEgreso(Request request, Response response){
-		
-	 	Gson gson = new Gson();
-        Respuesta respuesta= new Respuesta();        
-        CategoriaRequest categoriaRequest= new CategoriaRequest();
-        categoriaRequest = gson.fromJson(request.body(),CategoriaRequest.class);
-   	 	this.repoCategoria = new Repositorio<CategoriaOperacion>(new DaoHibernate<CategoriaOperacion>(CategoriaOperacion.class));
-   	 	
-   	 	
-   	 	try {
-	       Egreso egreso= this.repoEgreso.buscar(categoriaRequest.id);
-	       
-	       if(!categoriaRequest.categorias.isEmpty()) {
-		       for(Integer categoriaId: categoriaRequest.categorias){
-		    	  CategoriaOperacion categoria = this.repoCategoria.buscar(categoriaId);
-		    	  egreso.addCategorias(categoria);
-		       }
-	       }
-	       
-	        respuesta.setCode(200);
-	        respuesta.setMessage("Categorias asociadas exitosamente");
-	        response.status(200);
-        }
-        catch (NullPointerException ex){
-        	respuesta.setCode(200);
-	        respuesta.setMessage("Categorias no pudiron cargarse");
-            response.status(404);
-         }
-        
-        catch(NoResultException nf){
-        	respuesta.setCode(200);
-	        respuesta.setMessage("Categorias no pudiron cargarse");
-            response.status(404);
-        }
-       
-       
-        String jsonCategorias = gson.toJson(respuesta);
-       
-        response.type("application/json");
-        response.body(jsonCategorias);
-
-        return response.body();
-	}
-	
-	public String crearCategoria(Request request, Response response){
-		
-	 	Gson gson = new Gson();     
-        CategoriaNueva categoriaRequest= new CategoriaNueva();
-        categoriaRequest = gson.fromJson(request.body(),CategoriaNueva.class);
-   	 	this.repoCategoria = new Repositorio<CategoriaOperacion>(new DaoHibernate<CategoriaOperacion>(CategoriaOperacion.class));
-   	 	
-   	 	CategoriaResponse catResponse= new CategoriaResponse();
-   	 	
-   	 	try {
-	       CriterioOperacion criterio= this.repoCriterio.buscar(categoriaRequest.criterioId);
-	       
-	       CategoriaOperacion categoria = new CategoriaOperacion();
-	       
-	       categoria.setCriterio(criterio);
-	       categoria.setDescripcion(categoriaRequest.nombre);
-	       
-	       repoCategoria.agregar(categoria);
-	       
-	        catResponse.code=200;
-	        catResponse.message="Categoria creada exitosamente";
-	        catResponse.categoriaId= categoria.getId();
-	        response.status(200);
-        }
-        catch (NullPointerException ex){
-        	catResponse.code=404;
-	        catResponse.message="Error al crear la Categoria";
-            response.status(404);
-         }
-        
-
-        String jsonCategoria = gson.toJson(catResponse);
-       
-        response.type("application/json");
-        response.body(jsonCategoria);
-        
-   	 return response.body();
-}	
-
 	public String crearCriterio(Request request, Response response){
 	
- 	Gson gson = new Gson();     
-    CriterioNuevo criterioRequest= new CriterioNuevo();
-    criterioRequest = gson.fromJson(request.body(),CriterioNuevo.class);
-	 	this.repoCriterio = new Repositorio<CriterioOperacion>(new DaoHibernate<CriterioOperacion>(CriterioOperacion.class));
+ 		Gson gson = new Gson();
+    	CriterioNuevo criterioRequest;
+    	criterioRequest = gson.fromJson(request.body(),CriterioNuevo.class);
+	 	this.repoCriterio = new Repositorio<>(new DaoHibernate<>(CriterioOperacion.class));
 	 	
 	 	CriterioResponse criResponse= new CriterioResponse();
 	 	
 	 	try {
-       CriterioOperacion criterio=mapCriterioNuevo(criterioRequest);
+       		CriterioOperacion criterio=mapCriterioNuevo(criterioRequest);
   
-       repoCriterio.agregar(criterio);
+      		repoCriterio.agregar(criterio);
        
-        criResponse.code=200;
-        criResponse.message="Criterio creado exitosamente";
-        criResponse.criterioId= criterio.getId();
-        response.status(200);
-    }
-    catch (NullPointerException ex){
-    	criResponse.code=404;
-        criResponse.message="Error al crear el Criterio";
-        response.status(404);
-     }
+        	criResponse.code=200;
+        	criResponse.message="Criterio creado exitosamente";
+        	criResponse.criterioId= criterio.getId();
+    	}
+    	catch (Exception ex) {
+    		criResponse.code=404;
+    	    criResponse.message="Error al crear el Criterio";
+     	}
 
         String jsonCriterio = gson.toJson(criResponse);
-       
-        response.type("application/json");
         response.body(jsonCriterio);
 	 	
-	 return response.body();
+	 	return response.body();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -223,34 +131,16 @@ public class CriteriosCategoriasController {
 		
 	public CriterioOperacion mapCriterioNuevo(CriterioNuevo criterioNuevo){
 		CriterioOperacion criterio= new CriterioOperacion();
-		CriterioOperacion criterioPadre= new CriterioOperacion();
+		CriterioOperacion criterioPadre;
 	
 		if(criterioNuevo.criterioPadreId!= 0) {
-			
 			criterioPadre= repoCriterio.buscar(criterioNuevo.criterioPadreId);
 			criterio.setCriterioPadre(criterioPadre);
 		}
 		criterio.setDescripcion(criterioNuevo.nombre);
 		return criterio;
-		}
-   		
-   	 	
-	public class CategoriaRequest{
-		public int id;
-		public List<Integer> categorias;
 	}
-	
-	public class CategoriaNueva{
-		public int criterioId;
-		public  String nombre;
-	}
-	
-	public class CategoriaResponse{
-		public int code;
-		public String message;
-		public int categoriaId;
-	}
-	
+
 	public class CriterioRespuesta{
 		public int code;
 		public String message;
