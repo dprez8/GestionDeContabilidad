@@ -11,7 +11,7 @@ import javax.persistence.Transient;
 @DiscriminatorValue("validacion_con_presupuesto")
 public class ValidarConPresupuesto extends ValidacionDeTransparencia {
 	@Transient
-	private Presupuesto presupuestoElegido;
+	private Presupuesto presupuestoElegido = null;
 	@Override
 	public String validarEgreso(Egreso egreso) {
 		String cuerpo;
