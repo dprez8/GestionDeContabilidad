@@ -34,7 +34,7 @@ public class FilesController extends GenericController {
             raw.getOutputStream().write(bytes);
             raw.getOutputStream().flush();
             raw.getOutputStream().close();
-            String extension = FormFileManager.getExtension(filename);
+            String extension = FormFileManager.getExtensionLocal(filename);
 
             response.header("Content-Disposition", "attachment; filename="+filename);
             if (tiposImagenes.contains(extension)){

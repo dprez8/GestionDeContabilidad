@@ -56,6 +56,7 @@ public class EgresosRestController extends GenericController {
 
 
     public String cargarArchivoDocumentoComercial(Request request, Response response) throws IOException, ServletException {
+        this.gson  = new GsonBuilder().create();
         String jsonResponse;
 
         File uploadDir = null;
@@ -263,7 +264,7 @@ public class EgresosRestController extends GenericController {
         documentoComercial.setFechaDePedido(egresoRequest.documentoComercial.fechaDePedido);
         documentoComercial.setFechaDeEntrega(egresoRequest.documentoComercial.fechaDeEntrega);
         documentoComercial.setDescripcion(egresoRequest.documentoComercial.descripcion);
-        documentoComercial.setPathAdjunto(FormFileManager.realPath(egresoRequest.documentoComercial.nombreFicheroDocumento));
+        documentoComercial.setPathAdjunto(egresoRequest.documentoComercial.nombreFicheroDocumento);
 
 
       
