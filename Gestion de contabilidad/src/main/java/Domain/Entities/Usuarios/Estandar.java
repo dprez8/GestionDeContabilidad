@@ -32,7 +32,7 @@ public class Estandar extends Usuario {
 		this.bandejaDeMensajes = new BandejaDeMensajes(this);
 	}
 
-	public Estandar(EntidadJuridica unaOrganizacion,String username, String nombre,String apellido,String contrasenia, String mail) throws IOException, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, contraseniaCorta{
+	public Estandar(Organizacion unaOrganizacion,String username, String nombre,String apellido,String contrasenia, String mail) throws IOException, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, contraseniaCorta{
 		super(username,nombre,apellido,contrasenia,mail);
 		this.miOrganizacion = unaOrganizacion;
 		this.bandejaDeMensajes = new BandejaDeMensajes(this);

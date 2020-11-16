@@ -28,11 +28,13 @@ import org.junit.runners.MethodSorters;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.List;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestDominio {
 
     private Repositorio<EntidadJuridica> repoEntidadJuridica;
+    private Repositorio<EntidadBase> repoEntidadBase;
     private Repositorio<Usuario> repoUsuarios;
     private Repositorio<Egreso> repoEgresos;
     private Repositorio<ItemEgreso> repoItems;
@@ -54,6 +56,7 @@ public class TestDominio {
     @Before
     public void antesDePersistir() {
         this.repoEntidadJuridica = new Repositorio<EntidadJuridica>(new DaoHibernate<EntidadJuridica>(EntidadJuridica.class));
+        this.repoEntidadBase     = new Repositorio<EntidadBase>(new DaoHibernate<EntidadBase>(EntidadBase.class));
         this.repoUsuarios        = new Repositorio<>(new DaoHibernate<>(Usuario.class));
         this.repoEgresos         = new Repositorio<>(new DaoHibernate<>(Egreso.class));
         this.repoItems           = new Repositorio<>(new DaoHibernate<>(ItemEgreso.class));
@@ -124,10 +127,30 @@ public class TestDominio {
     }
 
     @Test
-    public void T3persistirAUnUsuarioEstandar () throws contraseniaCorta, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, IOException {
-        EntidadJuridica entidadJuridica = repoEntidadJuridica.buscar(1);
-        Estandar usuario = new Estandar(entidadJuridica,"javier","javier","King","una_contrasenia_segura", "javier@gmail.com");
-        repoUsuarios.agregar(usuario);
+    public void T3persistirAUnUsuarioEstandarConEntidadJuridica () throws contraseniaCorta, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, IOException {
+        //EntidadJuridica entidadJuridica = repoEntidadJuridica.buscar(1);
+        List<EntidadJuridica> entidadesJuridicas = repoEntidadJuridica.buscarTodos();
+        EntidadJuridica entidadJuridica = null;
+        try {
+            entidadJuridica = entidadesJuridicas.get(0);
+            Estandar usuario = new Estandar(entidadJuridica,"javier","javier","King","una_contrasenia_segura", "javier@gmail.com");
+            repoUsuarios.agregar(usuario);
+        } catch (Exception ex) {
+            System.out.println("no se encontro ninguna entidad juridica :I");
+        }
+    }
+
+    @Test
+    public void T3persistirAUnUsuarioEstandarConEntidadBase () throws contraseniaCorta, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, IOException {
+        List<EntidadBase> entidadesBase = repoEntidadBase.buscarTodos();
+        EntidadBase entidadBase = null;
+        try {
+            entidadBase = entidadesBase.get(0);
+            Estandar usuario = new Estandar(entidadBase,"julian","julian","joestar","12345678", "julian@gmail.com");
+            repoUsuarios.agregar(usuario);
+        } catch (Exception ex) {
+            System.out.println("no se encontro ninguna entidad juridica :I");
+        }
     }
 
     @Test
