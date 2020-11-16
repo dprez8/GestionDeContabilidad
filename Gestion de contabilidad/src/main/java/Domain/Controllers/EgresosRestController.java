@@ -214,6 +214,7 @@ public class EgresosRestController extends GenericController {
     }
 
     public String suscribirse(Request request, Response response) {
+        this.gson = new Gson();
         JsonObject jsonRequest = gson.fromJson(request.body(), JsonObject.class);
         Estandar estandar = (Estandar) getUsuarioDesdeRequest(request);
         try {

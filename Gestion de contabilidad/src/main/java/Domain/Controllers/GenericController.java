@@ -6,7 +6,6 @@ import Domain.Controllers.jwt.TokenService;
 import Domain.Entities.Usuarios.Administrador;
 import Domain.Entities.Usuarios.Usuario;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import spark.Request;
 import spark.Response;
 
