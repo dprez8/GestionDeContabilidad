@@ -20,6 +20,8 @@ public class CargaInicial {
     private Repositorio<Sector> repoSector;
     private Repositorio<CategoriaEmpresa> repoCategoria;
     private Repositorio<CategoriaPorSector> repoCategoriaSector;
+    private Repositorio<TipoItem> repoTipoItem;
+
 
     @Before
     public void antesDePersistir() {
@@ -28,7 +30,9 @@ public class CargaInicial {
         this.repoSector  		 = new Repositorio<>(new DaoHibernate<>(Sector.class));
         this.repoCategoria   	 = new Repositorio<>(new DaoHibernate<>(CategoriaEmpresa.class));
         this.repoCategoriaSector = new Repositorio<>(new DaoHibernate<>(CategoriaPorSector.class));
-        
+        this.repoTipoItem        = new Repositorio<>(new DaoHibernate<>(TipoItem.class));
+
+
     }
 
     @Test
@@ -149,5 +153,12 @@ public class CargaInicial {
           
      
           
+    }
+    @Test
+    public void T4cargarTipoItem(){
+        TipoItem producto= new TipoItem("Producto");
+        TipoItem servicio= new TipoItem("Servicio");
+        repoTipoItem.agregar(producto);
+        repoTipoItem.agregar(servicio);
     }
 }

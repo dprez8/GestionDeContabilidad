@@ -21,7 +21,7 @@ public class FilesController extends GenericController {
 
         HttpServletResponse raw = response.raw();
 
-        String filename = request.params("egresoId");
+        String filename = request.params("filename");
 
         byte[] bytes = null;
         try {

@@ -37,6 +37,7 @@ public class TestDominio {
 
     private Repositorio<EntidadJuridica> repoEntidadJuridica;
     private Repositorio<EntidadBase> repoEntidadBase;
+    private Repositorio<Organizacion> repoOrganizacion;
     private Repositorio<Usuario> repoUsuarios;
     private Repositorio<Egreso> repoEgresos;
     private Repositorio<ItemEgreso> repoItems;
@@ -54,11 +55,13 @@ public class TestDominio {
     private Repositorio<CategoriaOperacion> repoCategorias;
     private Repositorio<ValidadorDeTransparencia> repoValidadores;
     private Repositorio<ValidacionDeTransparencia> repoValidaciones;
+    private Repositorio<SchedulerInit> repoScheduler;
 
     @Before
     public void antesDePersistir() {
         this.repoEntidadJuridica = new Repositorio<>(new DaoHibernate<>(EntidadJuridica.class));
         this.repoEntidadBase     = new Repositorio<>(new DaoHibernate<>(EntidadBase.class));
+        this.repoOrganizacion    = new Repositorio<>(new DaoHibernate<>(Organizacion.class));
         this.repoUsuarios        = new Repositorio<>(new DaoHibernate<>(Usuario.class));
         this.repoEgresos         = new Repositorio<>(new DaoHibernate<>(Egreso.class));
         this.repoItems           = new Repositorio<>(new DaoHibernate<>(ItemEgreso.class));
@@ -76,24 +79,26 @@ public class TestDominio {
         this.repoCategorias       = new Repositorio<>(new DaoHibernate<>(CategoriaOperacion.class));
         this.repoValidadores      = new Repositorio<>(new DaoHibernate<>(ValidadorDeTransparencia.class));
         this.repoValidaciones     = new Repositorio<>(new DaoHibernate<>(ValidacionDeTransparencia.class));
-    }
-
-    @Test
-    public void T0cargarTipoItem(){
-    	TipoItem producto= new TipoItem("Producto");
-        TipoItem servicio= new TipoItem("Servicio");
-    	repoTipoItem.agregar(producto);
-        repoTipoItem.agregar(servicio);
+        this.repoScheduler       = new Repositorio<>(new DaoHibernate<>(SchedulerInit.class));
     }
     
     @Test
     public void T1persistirDosEntidadesJuridicasConCadaBase (){
+        /**Creacion de los validadores*/
+        ValidarCantidadMinima validacionMinima = new ValidarCantidadMinima();
+        ValidarConPresupuesto validacionPresupuesto = new ValidarConPresupuesto();
+        ValidarMenorValor validacionMenorValor = new ValidarMenorValor();
 
+        ValidadorDeTransparencia validador = new ValidadorDeTransparencia(validacionMinima,validacionPresupuesto,validacionMenorValor);
+        this.repoValidadores.agregar(validador);
+
+        /***********Empresa *********************/
         Empresa pyme = new Empresa();
         pyme.setCantidadDePersonal(8);
         pyme.setVentasAnuales(8000000);
         pyme.setActividad("Servicio de Alojamiento");
 
+        /***********Primera entidad juridica****************/
         EntidadJuridica entidadJuridica = new EntidadJuridica();
         entidadJuridica.setNombreFicticio("Surcos");
         entidadJuridica.setRazonSocial("Surcos CS");
@@ -102,13 +107,25 @@ public class TestDominio {
         entidadJuridica.setAltura(2800);
         entidadJuridica.setTipoEntidadJuridica(pyme);
         entidadJuridica.setNombre("Colectivo de Derechos de Infancia y Adolescencia - CDIA");
+        this.repoOrganizacion.agregar(entidadJuridica);
+        SchedulerInit schedulerJuridica1 = new SchedulerInit();
+        schedulerJuridica1.setOrganizacion(entidadJuridica);
+        schedulerJuridica1.setValidadorDeTransparencia(validador);
+        entidadJuridica.setSchedulerInit(schedulerJuridica1);
 
+        /************Creacion de una entidad base para una juridica ********************/
         EntidadBase entidadBase = new EntidadBase();
-        entidadBase.setEntidadJuridica(entidadJuridica);
         entidadBase.setNombreFicticio("Andhes");
+        entidadBase.setNombre("Colectivo de Derechos de Infancia y Adolescencia - CDIA");
+        SchedulerInit schedulerBase1 = new SchedulerInit();
+        entidadBase.setEntidadJuridica(entidadJuridica);
+        entidadBase.setSchedulerInit(schedulerBase1);
+        schedulerBase1.setOrganizacion(entidadBase);
+        schedulerBase1.setValidadorDeTransparencia(validador);
 
         entidadJuridica.addEntidadesBase(entidadBase);
-
+        this.repoOrganizacion.modificar(entidadJuridica);
+        /************ Creacion de una segunda entidad juridica ************************/
         EntidadJuridica entidadJuridica2 = new EntidadJuridica();
         entidadJuridica2.setNombreFicticio("Ardor");
         entidadJuridica2.setRazonSocial("Ardor sa");
@@ -117,27 +134,27 @@ public class TestDominio {
         entidadJuridica2.setAltura(280);
         entidadJuridica2.setTipoEntidadJuridica(pyme);
         entidadJuridica2.setNombre("Esther piscore y asociados - COMPANIA");
+        this.repoOrganizacion.agregar(entidadJuridica2);
+        SchedulerInit schedulerJuridica2 = new SchedulerInit();
+        schedulerJuridica2.setOrganizacion(entidadJuridica2);
+        schedulerJuridica2.setValidadorDeTransparencia(validador);
+        entidadJuridica2.setSchedulerInit(schedulerJuridica2);
 
+        /************Creacion de una segunda entidad base para una segunda juridica ********************/
         EntidadBase entidadBase2 = new EntidadBase();
-        entidadBase2.setEntidadJuridica(entidadJuridica2);
         entidadBase2.setNombreFicticio("Monoas");
+        entidadBase2.setNombre("Esther piscore y asociados - COMPANIA");
+        entidadBase2.setEntidadJuridica(entidadJuridica2);
+        SchedulerInit schedulerBase2 = new SchedulerInit();
+        entidadBase2.setSchedulerInit(schedulerBase2);
+        schedulerBase2.setOrganizacion(entidadBase2);
+        schedulerBase2.setValidadorDeTransparencia(validador);
 
         entidadJuridica2.addEntidadesBase(entidadBase2);
+        this.repoOrganizacion.modificar(entidadJuridica2);
 
-        this.repoEntidadJuridica.agregar(entidadJuridica);
-        this.repoEntidadJuridica.agregar(entidadJuridica2);
-
-        SchedulerInit schedulerInit = new SchedulerInit();
-        schedulerInit.setOrganizacion(entidadJuridica);
-        entidadJuridica.setSchedulerInit(schedulerInit);
-
-        SchedulerInit schedulerInit2 = new SchedulerInit();
-        schedulerInit2.setOrganizacion(entidadJuridica2);
-        entidadJuridica2.setSchedulerInit(schedulerInit2);
-
-        this.repoEntidadJuridica.modificar(entidadJuridica);
-        this.repoEntidadJuridica.modificar(entidadJuridica2);
         System.out.println("Numero " + entidadJuridica.getId());
+        System.out.println("Numero " + entidadJuridica2.getId());
     }
 
 
@@ -148,7 +165,7 @@ public class TestDominio {
         Assert.assertEquals("Surcos CS",pymeJuridica.getRazonSocial());
 
         Empresa pyme = (Empresa) pymeJuridica.getTipoEntidadJuridica();
-        Assert.assertEquals("Construcciones",pyme.getActividad());
+        Assert.assertEquals("Servicio de Alojamiento",pyme.getActividad());
     }
 
     @Test
@@ -328,31 +345,6 @@ public class TestDominio {
         Assert.assertEquals(1,unaCompra.getPresupuestos().get(1).getId());
         Assert.assertEquals(1,unaCompra.getRevisores().get(0).getId());
 
-    }
-
-    @Test
-    public void T8persistirValidadorAPepsi (){
-        EntidadJuridica pepsi = this.repoEntidadJuridica.buscar(1);
-
-        /**Creacion de los validadores*/
-        ValidarCantidadMinima validacionMinima = new ValidarCantidadMinima();
-        ValidarConPresupuesto validacionPresupuesto = new ValidarConPresupuesto();
-        ValidarMenorValor validacionMenorValor = new ValidarMenorValor();
-
-        ValidadorDeTransparencia validador = new ValidadorDeTransparencia(validacionMinima,validacionPresupuesto,validacionMenorValor);
-        this.repoValidadores.agregar(validador);
-
-        SchedulerInit schedulerInit = pepsi.getSchedulerInit();
-
-        schedulerInit.setValidadorDeTransparencia(validador);
-        pepsi.setSchedulerInit(schedulerInit);
-        this.repoEntidadJuridica.modificar(pepsi);
-        //schedulerInit.arrancarTarea();
-
-        //List<Egreso> egresos = pepsi.getEgresos().stream().filter(a -> a.isValidado() == false).collect(Collectors.toList()); //Lo egresos que no han sido validados o no pasaron las pruebas anteriormente
-        //egresos.forEach(egreso -> validador.validarEgreso(egreso));
-
-        //Assert.assertEquals(true,pepsi.getEgresos().get(0).isValidado());
     }
 
     @Test
