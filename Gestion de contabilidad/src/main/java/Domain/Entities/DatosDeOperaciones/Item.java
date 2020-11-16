@@ -8,6 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import Domain.Entities.Organizacion.Organizacion;
 import com.google.gson.annotations.Expose;
 
 import Domain.Entities.EntidadPersistente.EntidadPersistente;
@@ -23,11 +24,16 @@ public class Item extends EntidadPersistente{
 	 	@JoinColumn(name= "tipo_item_id",referencedColumnName = "id")
 	 	private TipoItem tipoItem;
 
+		@ManyToOne
+		@JoinColumn(name = "organizacion_id", referencedColumnName = "id")
+		protected Organizacion organizacion;
+
 	 	public Item() {}
 
-	    public Item(String descripcion, TipoItem tipoItem) {
+	    public Item(String descripcion, TipoItem tipoItem, Organizacion organizacion) {
 			this.descripcion = descripcion;
 			this.tipoItem = tipoItem;
+			this.organizacion = organizacion;
 		}
 
 		public TipoItem getTipoItem() {
@@ -46,4 +52,7 @@ public class Item extends EntidadPersistente{
 	        this.descripcion = descripcion;
 	    }
 
+		public Organizacion getOrganizacion() {	return organizacion; }
+
+		public void setOrganizacion(Organizacion organizacion) { this.organizacion = organizacion;	}
 }

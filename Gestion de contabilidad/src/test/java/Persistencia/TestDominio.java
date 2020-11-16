@@ -180,12 +180,16 @@ public class TestDominio {
     @Test
     public void T5persistir2Items() {
         TipoItem producto=repoTipoItem.buscar(1);
-    	Item RAM = new Item("Memoria RAM 4GB DDR3",producto);
+        List<EntidadJuridica> entidadesJuridicas = repoEntidadJuridica.buscarTodos();
+        EntidadJuridica entidadJuridica = null;
+        try {
+            entidadJuridica = entidadesJuridicas.get(0);
+    	    Item RAM = new Item("Memoria RAM 4GB DDR3", producto, entidadJuridica);
+            Item placaDeVideo = new Item("Placa de video 4GB DDR5", producto, entidadJuridica);
 
-        Item placaDeVideo = new Item("Placa de video 4GB DDR5",producto);
-
-        this.repoItem.agregar(RAM);
-        this.repoItem.agregar(placaDeVideo);
+            this.repoItem.agregar(RAM);
+            this.repoItem.agregar(placaDeVideo);
+        } catch (Exception exception) {}
     }
 
     @Test

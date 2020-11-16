@@ -49,15 +49,6 @@ public class TestPrincipal {
     @Before
     public void antesDeTestear() throws IOException, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, contraseniaCorta{
 
-        /**Creacion de los datos de egreso*/
-        this.producto= new TipoItem("producto");
-        this.servicio= new TipoItem("servicio");
-    	this.ram  = new Item("4GB DDR3",this.producto);
-        this.rams = new ItemEgreso(this.ram, 1, 3000);
-
-        this.placaDeVideo  = new Item("4GB DDR5",this.producto);
-        this.placasDeVideo = new ItemEgreso(this.placaDeVideo, 2, 5000);
-
         TipoDocumento facturaA = new TipoDocumento("Factura A");
         this.factura = new DocumentoComercial(facturaA, 11111);
         this.rapiPago = new MedioDePago("rapipago");
@@ -76,6 +67,15 @@ public class TestPrincipal {
         this.pymeJuridica.setTipoEntidadJuridica(this.miPyme);
 
         this.lautaroIturregui = new Proveedor("Lautaro Iturregui",2, this.pymeJuridica);
+
+        /**Creacion de los datos de egreso*/
+        this.producto= new TipoItem("producto");
+        this.servicio= new TipoItem("servicio");
+        this.ram  = new Item("4GB DDR3",this.producto, pymeJuridica);
+        this.rams = new ItemEgreso(this.ram, 1, 3000);
+
+        this.placaDeVideo  = new Item("4GB DDR5",this.producto, pymeJuridica);
+        this.placasDeVideo = new ItemEgreso(this.placaDeVideo, 2, 5000);
 
         /**Creacion de un usuario estandar*/
         this.fernando = new Estandar(pymeJuridica,"Fer","Fernando", "Yerbas","1234JHBHJVHJ", "fernando@herbas.com");

@@ -279,7 +279,7 @@ public class EgresosRestController extends GenericController {
         
         List<ItemEgreso> items = egresoRequest.items
                 .stream()
-                .map(item->mapearItem(item, egreso))
+                .map(item->mapearItem(item, egreso, organizacion))
                 .collect(Collectors.toList());
 
         egreso.agregarItems(items);
@@ -291,7 +291,7 @@ public class EgresosRestController extends GenericController {
         return egreso;
     }
 
-    private ItemEgreso mapearItem(ItemRequest itemRequest,Egreso egreso) {
+    private ItemEgreso mapearItem(ItemRequest itemRequest,Egreso egreso, Organizacion organizacion) {
         ItemEgreso itemEgreso = new ItemEgreso();
         Item item=null;
         itemEgreso.setPrecio(itemRequest.precio);
@@ -312,7 +312,7 @@ public class EgresosRestController extends GenericController {
 
         if (item == null) {
             TipoItem tipoItem = repoTipoItem.buscar(itemRequest.tipoItem);
-            item = new Item(itemRequest.descripcion, tipoItem);
+            item = new Item(itemRequest.descripcion, tipoItem, organizacion);
             repoItem.agregar(item);
         }
        

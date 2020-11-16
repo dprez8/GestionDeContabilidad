@@ -1,12 +1,15 @@
 package Services.ProcesoVinculacionServices;
 
 
+import Domain.Entities.CategorizadorDeEmpresas.Sector;
 import Domain.Entities.DatosDeOperaciones.Item;
 import Domain.Entities.DatosDeOperaciones.ItemEgreso;
 import Domain.Entities.DatosDeOperaciones.TipoItem;
 import Domain.Entities.Operaciones.Egreso.BuilderEgresoConcreto;
 import Domain.Entities.Operaciones.Egreso.Egreso;
 import Domain.Entities.Operaciones.Ingreso;
+import Domain.Entities.Organizacion.Empresa;
+import Domain.Entities.Organizacion.EntidadJuridica;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -20,10 +23,21 @@ public class VinculacionMain {
     public static void main(String[] args) throws IOException {
         //PREPARACION DE EGRESOS E INGRESOS (ESTOS VENDRIAN DE ALGUNA PARTE DEL SISTEMA)
 
+        /**Creacion de una organizacion ejemplo*/
+
+        Sector construccion = new Sector("Construccion");
+        Empresa miPyme = new Empresa();
+        miPyme.setSector(construccion);
+        miPyme.setActividad("Construccion");
+        miPyme.setVentasAnuales(50000003.0);
+        miPyme.setCantidadDePersonal(3);
+        EntidadJuridica unaEntidad = new EntidadJuridica();
+        unaEntidad.setTipoEntidadJuridica(miPyme);
+
     	TipoItem producto= new TipoItem("producto");
-        Item ram = new Item("4GB DDR4",producto);
-        Item placaDeVideo = new Item("RTX 3090",producto);
-        Item monitor = new Item("4k 144hz",producto);
+        Item ram = new Item("4GB DDR4", producto, unaEntidad);
+        Item placaDeVideo = new Item("RTX 3090", producto, unaEntidad);
+        Item monitor = new Item("4k 144hz", producto, unaEntidad);
         ItemEgreso rams = new ItemEgreso(ram, 1, 1000.0);
         ItemEgreso placasDeVideo = new ItemEgreso(placaDeVideo, 1, 2500.0);
         ItemEgreso monitores = new ItemEgreso(monitor, 1, 5000.0);

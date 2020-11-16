@@ -23,12 +23,26 @@ public class SchedulerTest {
 
         ValidadorDeTransparencia validador = new ValidadorDeTransparencia(validacionMinima, validacionPresupuesto, validacionMenorValor);
 
+        /**Creacion de una organizacion ejemplo*/
+
+        Sector construccion = new Sector("Construccion");
+        Empresa miPyme = new Empresa();
+        miPyme.setSector(construccion);
+        miPyme.setActividad("Construccion");
+        miPyme.setVentasAnuales(50000003.0);
+        miPyme.setCantidadDePersonal(3);
+        EntidadJuridica unaEntidad = new EntidadJuridica();
+        unaEntidad.setTipoEntidadJuridica(miPyme);
+
+        Proveedor lautaroRobles = new Proveedor("Lautaro Robles", 41424242, unaEntidad);
+        Proveedor lautaroIturregui = new Proveedor("Lautaro Iturregui", 2224222, unaEntidad);
+
         /**Creacion de los datos de egreso y sus presupuestos, ejemplo*/
         TipoItem producto= new TipoItem("producto");
-        Item RAM = new Item("Ram",producto);
+        Item RAM = new Item("Ram", producto, unaEntidad);
         ItemEgreso RAMs = new ItemEgreso(RAM, 1, 3000);
 
-        Item placaDeVideo = new Item("4GB DDR5",producto);
+        Item placaDeVideo = new Item("4GB DDR5", producto, unaEntidad);
         ItemEgreso placasDeVideo = new ItemEgreso(placaDeVideo, 2, 5000);
 
         TipoDocumento FacturaA = new TipoDocumento("Factura A");
@@ -43,20 +57,6 @@ public class SchedulerTest {
 
         ItemPresupuesto RAM2presupuesto = new ItemPresupuesto(RAM, RAMs, 1, 3500);
         ItemPresupuesto placaVide2Presupuesto = new ItemPresupuesto(placaDeVideo, placasDeVideo, 2, 6000);
-
-        /**Creacion de una organizacion ejemplo*/
-
-        Sector construccion = new Sector("Construccion");
-        Empresa miPyme = new Empresa();
-        miPyme.setSector(construccion);
-        miPyme.setActividad("Construccion");
-        miPyme.setVentasAnuales(50000003.0);
-        miPyme.setCantidadDePersonal(3);
-        EntidadJuridica unaEntidad = new EntidadJuridica();
-        unaEntidad.setTipoEntidadJuridica(miPyme);
-
-        Proveedor lautaroRobles = new Proveedor("Lautaro Robles", 41424242, unaEntidad);
-        Proveedor lautaroIturregui = new Proveedor("Lautaro Iturregui", 2224222, unaEntidad);
 
         /**Construccion del egreso*/
         BuilderEgresoConcreto egresoBuilder = new BuilderEgresoConcreto();
