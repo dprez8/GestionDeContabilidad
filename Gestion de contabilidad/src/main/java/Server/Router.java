@@ -71,7 +71,8 @@ public class Router {
         DireccionPostalController direccionController = new DireccionPostalController();
         ProveedorController proveedorController = new ProveedorController();
         MedioDePagoController medioController = new MedioDePagoController();
-
+        DocumentoComercialController documentoController = new DocumentoComercialController();
+        
         CriteriosCategoriasController categoriasController = new CriteriosCategoriasController();
         PresupuestoRestController presupuestoRestController = new PresupuestoRestController();
         ItemsController itemsController = new ItemsController();
@@ -99,6 +100,10 @@ public class Router {
         Spark.post("/api/proveedor",proveedorController::crearProveedor);
         Spark.get("/api/proveedores",proveedorController::listadoProveedores);
 
+        /****  DocumentoComercialController   ********/
+        Spark.get("/api/tipodocumento",documentoController::listadoTiposDocumento);
+        
+        
         /****  MedioDePagoController    ********/
         Spark.get("/api/medios",medioController::listadoMediosDePago);
 

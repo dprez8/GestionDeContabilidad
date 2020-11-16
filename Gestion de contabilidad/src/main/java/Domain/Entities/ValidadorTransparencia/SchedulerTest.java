@@ -56,7 +56,7 @@ public class SchedulerTest {
         miPyme.setVentasAnuales(50000003.0);
         miPyme.setCantidadDePersonal(3);
         EntidadJuridica unaEntidad = new EntidadJuridica();
-        unaEntidad.setTipoEntidadJuridica(miPyme);
+        miPyme.setEntidadJuridica(unaEntidad);;
 
         /**Construccion del egreso*/
         BuilderEgresoConcreto egresoBuilder = new BuilderEgresoConcreto();
