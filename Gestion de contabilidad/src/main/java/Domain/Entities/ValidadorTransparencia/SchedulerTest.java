@@ -72,13 +72,11 @@ public class SchedulerTest {
 
         /**Creacion de dos presupuestos con un egreso*/
         Presupuesto primerPresupuesto = new Presupuesto(4000, unaCompra);
-        primerPresupuesto.setDocumento(unDocumento);
         primerPresupuesto.setFechaVigente(LocalDate.of(2020, Month.AUGUST, 14));
         primerPresupuesto.setProveedor(lautaroIturregui);
         primerPresupuesto.addItems(placaVideoPresupuesto, RAMpresupuesto);
 
         Presupuesto segundoPresupuesto = new Presupuesto(4210, unaCompra);
-        segundoPresupuesto.setDocumento(unDocumento);
         segundoPresupuesto.setFechaVigente(LocalDate.of(2020, Month.AUGUST, 14));
         segundoPresupuesto.setProveedor(lautaroRobles);
         segundoPresupuesto.addItems(placaVide2Presupuesto, RAM2presupuesto);

@@ -16,6 +16,7 @@ import Domain.Repositories.Daos.DaoHibernate;
 import Domain.Repositories.Repositorio;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 
 import db.EntityManagerHelper;
@@ -39,12 +40,13 @@ import Domain.Controllers.Utils.FormFileManager;
 public class EgresosRestController extends GenericController {
     private Repositorio<EntidadJuridica> repoEntidadJuridica;
     private Repositorio<EntidadBase> repoEntidadBase;
+    private Repositorio<Egreso> repoEgresos;
 
     public EgresosRestController(TokenService tokenService,String tokenPrefix){
         super(tokenService,tokenPrefix);
         this.repoEntidadJuridica = new Repositorio<>(new DaoHibernate<>(EntidadJuridica.class));
         this.repoEntidadBase     = new Repositorio<>(new DaoHibernate<>(EntidadBase.class));
-
+        this.repoEgresos         = new Repositorio<>(new DaoHibernate<>(Egreso.class));
     }
 
     private static List<String> tiposDocumentoComercial = Arrays.asList("application/pdf",
@@ -190,8 +192,7 @@ public class EgresosRestController extends GenericController {
                 .serializeNulls()
                 .create();
 
-        Repositorio<Egreso> repoEgresos = new Repositorio<>(new DaoHibernate<>(Egreso.class));
-        egreso = repoEgresos.buscar(new Integer(request.params("egresoId")));
+        egreso = this.repoEgresos.buscar(new Integer(request.params("egresoId")));
 
         if(egreso == null) {
             Gson gson = new Gson();
@@ -212,6 +213,22 @@ public class EgresosRestController extends GenericController {
         response.body(jsonResponse);
 
         return jsonResponse;
+    }
+
+    public String suscribirse(Request request, Response response) {
+        JsonObject jsonRequest = gson.fromJson(request.body(), JsonObject.class);
+        Estandar estandar = (Estandar) getUsuarioDesdeRequest(request);
+        try {
+            Egreso egreso = this.repoEgresos.buscar(jsonRequest.get("egresoId").getAsInt());
+            if(verificarSuscripcion(estandar,egreso))
+                return error(response,"El usuario ya esta suscrito al egreso");
+            egreso.addRevisores(estandar);
+            this.repoEgresos.modificar(egreso);
+            return respuesta(response,200,"Suscripcion exitosa");
+        }
+        catch (Exception ex) {
+            return error(response,ex.getMessage());
+        }
     }
 
     /***************Private methods***************************************/

@@ -49,14 +49,9 @@ public class OrganizacionController extends GenericController{
 	}
 
 	public String listadoSectores(Request request, Response response){
-		
 		 	Gson gson = new Gson();
-	        List<Sector> listadoSectores=new ArrayList<>();
+	        List<Sector> listadoSectores;
 	        SectorRespuesta sectorRespuesta= new SectorRespuesta();
-			Administrador usuario = (Administrador) PermisosRestController.verificarSesion(request,response);
-			if(usuario == null) {
-				return response.body();
-			}
 	   	 	
 	        try {
 		        listadoSectores= this.repoSector.buscarTodos();
@@ -65,39 +60,29 @@ public class OrganizacionController extends GenericController{
 		        
 		        List<SectorDato> sectoresAEnviar = listadoSectores.stream().map(this::mapSector).collect(Collectors.toList());      
 		        sectorRespuesta.sectores= sectoresAEnviar;
-		        response.status(200);
 	        }
 	        catch (NullPointerException ex){
 	            sectorRespuesta.code=404;
 	            sectorRespuesta.message="No se logró cargar los sectores";
-	            response.status(404);
 	         }
 	        
 	        catch(NoResultException nf){
 	        	sectorRespuesta.code=404;
 	            sectorRespuesta.message="Ningun sector registrado, por favor crearlo";
-	            response.status(404);
 	        }
 	       
 	       
 	        String jsonSectores= gson.toJson(sectorRespuesta);
 	       
-	        response.type("application/json");
 	        response.body(jsonSectores);
 
 	        return response.body();
 	}
 	
 	public String listadoJuridicas(Request request, Response response){
-		
 	 	Gson gson = new Gson();
-        List<EntidadJuridica> listadoJuridicas=new ArrayList<>();
+        List<EntidadJuridica> listadoJuridicas;
         JuridicaRespuesta juridicaRespuesta= new JuridicaRespuesta();
-		Administrador usuario = (Administrador) PermisosRestController.verificarSesion(request,response);
-		if(usuario == null) {
-			return response.body();
-		}
-   	 	
         try {
 	        listadoJuridicas= this.repoEntidad.buscarTodos();
 	        juridicaRespuesta.code = 200;
@@ -105,42 +90,30 @@ public class OrganizacionController extends GenericController{
 	        
 	        List<EntidadJuridicaDato> juridicasAEnviar = listadoJuridicas.stream().map(this::mapJuridica).collect(Collectors.toList());      
 	        juridicaRespuesta.juridicas= juridicasAEnviar;
-	        response.status(200);
         }
         catch (NullPointerException ex){
         	juridicaRespuesta.code=404;
         	juridicaRespuesta.message="No se logró cargar las entidades";
-            response.status(404);
          }
         
         catch(NoResultException nf){
         	juridicaRespuesta.code=404;
         	juridicaRespuesta.message="Ninguna entidad registrada, por favor crearla";
-            response.status(404);
         }
        
        
         String jsonJuridicas= gson.toJson(juridicaRespuesta);
        
-        response.type("application/json");
         response.body(jsonJuridicas);
 
         return response.body();
 }
-	
-	
-	
-	
+
 	public String crearEntidadBase(Request request,Response response){
-		
 		Gson gson2 = new Gson();
-	
-		Administrador usuario = (Administrador) PermisosRestController.verificarSesion(request,response);
-		if(usuario == null) {
-			return response.body();
-		}
+
 		EntidadBaseNueva entidadDato = gson2.fromJson(request.body(),EntidadBaseNueva.class);
-		EntidadBase entidad=null;
+		EntidadBase entidad;
 		OrganizacionRespuesta organizacionCreada= new OrganizacionRespuesta();
 		try{
 			 entidad=mapEntidadBase(entidadDato);
@@ -153,16 +126,16 @@ public class OrganizacionController extends GenericController{
         	 organizacionCreada.code =  400;
         	 organizacionCreada.message =  "No se logro crear la entidad base";
         }
-		
+
 
         String jsonOrganizacion = gson2.toJson(organizacionCreada);
-    	response.type("application/json");
+
         response.body(jsonOrganizacion);
 
         return response.body();
 	}
 	
-public String crearEntidadJuridica(Request request,Response response){
+	public String crearEntidadJuridica(Request request,Response response){
 		
 		Gson gson2 = new Gson();
 
@@ -213,7 +186,6 @@ public String crearEntidadJuridica(Request request,Response response){
 		}
 
         String jsonOrganizacion = gson2.toJson(organizacionPropia);
-    	response.type("application/json");
         response.body(jsonOrganizacion);
 
         return response.body();
@@ -239,7 +211,6 @@ public String crearEntidadJuridica(Request request,Response response){
 	public EntidadBase mapEntidadBase(EntidadBaseNueva entidadBase){
 		EntidadBase base= new EntidadBase();
 		base.setNombre(entidadBase.nombre);
-		base.setDescripcion(entidadBase.descripcion);
 		EntidadJuridica juridica=repoEntidad.buscar(entidadBase.entidadJuridica);
 		base.setEntidadJuridica(juridica);
 		

@@ -37,9 +37,11 @@ public class EntidadJuridica extends Organizacion {
 	@Column(name = "codigo_igj")
     private int codigoDeInscripcionDefinitivaEnIGJ;
 
+	@Expose
 	@OneToMany(mappedBy = "entidadJuridica",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<EntidadBase> entidadesBase;
 
+	@Expose
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "tipo_entidad_id")
     private CategoriaEntidadJuridica tipoEntidadJuridica;
