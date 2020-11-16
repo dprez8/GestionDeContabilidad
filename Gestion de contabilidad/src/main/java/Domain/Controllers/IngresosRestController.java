@@ -26,9 +26,6 @@ import java.util.stream.Collectors;
 
 public class IngresosRestController extends GenericController {
     private Repositorio<Ingreso> repoIngresos;
-    private Repositorio<EntidadJuridica> repoEntidadJuridica;
-    private Repositorio<EntidadBase> repoEntidadBase;
-    private Repositorio<Organizacion> repoOrganizacion;
 
     private Repositorio<Moneda> repoMoneda;
     private Respuesta respuesta;
@@ -37,9 +34,6 @@ public class IngresosRestController extends GenericController {
     public IngresosRestController(TokenService tokenService, String tokenPrefix) {
         super(tokenService,tokenPrefix);
         this.repoIngresos        = new Repositorio<>(new DaoHibernate<>(Ingreso.class));
-        this.repoEntidadJuridica = new Repositorio<>(new DaoHibernate<>(EntidadJuridica.class));
-        this.repoEntidadBase     = new Repositorio<>(new DaoHibernate<>(EntidadBase.class));
-        this.repoOrganizacion    = new Repositorio<>(new DaoHibernate<>(Organizacion.class));
         this.repoMoneda       	 = new Repositorio<>(new DaoHibernate<>(Moneda.class));
         this.respuesta           = new Respuesta();
     }

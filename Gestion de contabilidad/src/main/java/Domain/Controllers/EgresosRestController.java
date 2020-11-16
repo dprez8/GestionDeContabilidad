@@ -19,6 +19,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 
+import com.sun.org.apache.xpath.internal.operations.Or;
 import db.EntityManagerHelper;
 import spark.Request;
 import spark.Response;
@@ -38,14 +39,10 @@ import Domain.Controllers.Utils.FormFileManager;
 
 /*****************************************************************/
 public class EgresosRestController extends GenericController {
-    private Repositorio<EntidadJuridica> repoEntidadJuridica;
-    private Repositorio<EntidadBase> repoEntidadBase;
     private Repositorio<Egreso> repoEgresos;
 
     public EgresosRestController(TokenService tokenService,String tokenPrefix){
         super(tokenService,tokenPrefix);
-        this.repoEntidadJuridica = new Repositorio<>(new DaoHibernate<>(EntidadJuridica.class));
-        this.repoEntidadBase     = new Repositorio<>(new DaoHibernate<>(EntidadBase.class));
         this.repoEgresos         = new Repositorio<>(new DaoHibernate<>(Egreso.class));
     }
 
@@ -120,7 +117,7 @@ public class EgresosRestController extends GenericController {
 
         EgresoRequest egresoRequest    = this.gson.fromJson(request.body(),EgresoRequest.class);
 
-        Egreso egreso = asignarEgresoDesde(egresoRequest);
+        Egreso egreso = asignarEgresoDesde(request, egresoRequest);
 
         if(egreso == null) {
             this.respuesta.setCode(400);
@@ -233,7 +230,7 @@ public class EgresosRestController extends GenericController {
 
     /***************Private methods***************************************/
 
-    private Egreso asignarEgresoDesde (EgresoRequest egresoRequest) {
+    private Egreso asignarEgresoDesde (Request request, EgresoRequest egresoRequest) {
         Proveedor proveedor;
         MedioDePago medioDePago;
         TipoDocumento tipoDocumento;
@@ -275,24 +272,14 @@ public class EgresosRestController extends GenericController {
                 .agregarPago(pago)
                 .agregarDocumentoComercial(documentoComercial)
                 .build();
-       
 
-        if(egresoRequest.organizacion_id!=0){
-        	if(egresoRequest.tipo==0) {
-        		EntidadJuridica entidadJuridica=repoEntidadJuridica.buscar(egresoRequest.organizacion_id);
-        		egreso.setOrganizacion(entidadJuridica);
-        	}
-        	else {
-        		EntidadBase entidadBase= repoEntidadBase.buscar(egresoRequest.organizacion_id);
-        		egreso.setOrganizacion(entidadBase);
-        	}
-        }
-        else
-            return null;
+        Estandar usuario = (Estandar) getUsuarioDesdeRequest(request);
+        Organizacion organizacion = usuario.getMiOrganizacion();
+        egreso.setOrganizacion(organizacion);
         
         List<ItemEgreso> items = egresoRequest.items
                 .stream()
-                .map(item->mapearItem(item,egreso))
+                .map(item->mapearItem(item, egreso))
                 .collect(Collectors.toList());
 
         egreso.agregarItems(items);
@@ -313,14 +300,20 @@ public class EgresosRestController extends GenericController {
         Repositorio<Item> repoItem = new Repositorio<>(new DaoHibernate<>(Item.class));
         Repositorio<TipoItem> repoTipoItem = new Repositorio<>(new DaoHibernate<>(TipoItem.class));
 
-        
-        if(itemRequest.itemId==0) {//si el item es nuevo
-        	TipoItem tipoItem=repoTipoItem.buscar(itemRequest.tipoItem);
-        	item=new Item(itemRequest.descripcion,tipoItem);
-        	repoItem.agregar(item);
+        List<Item> items = repoItem.buscarTodos();
+
+        try {
+            item = items.stream()
+                    .filter(unItem -> unItem.getDescripcion().equals(itemRequest.descripcion))
+                    .findFirst().get();
+        } catch (Exception exception) {
+            System.out.println("oof falle al obtener un item");
         }
-        else{//si eligio un item que ya se encontraba en la base de datos
-        	item=repoItem.buscar(itemRequest.itemId);
+
+        if (item == null) {
+            TipoItem tipoItem = repoTipoItem.buscar(itemRequest.tipoItem);
+            item = new Item(itemRequest.descripcion, tipoItem);
+            repoItem.agregar(item);
         }
        
         itemEgreso.setItem(item);
