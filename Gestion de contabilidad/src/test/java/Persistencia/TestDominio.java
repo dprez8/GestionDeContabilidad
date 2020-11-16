@@ -423,6 +423,7 @@ public class TestDominio {
         EntidadJuridica entidadJuridica = repoEntidadJuridica.buscar(1);
         Administrador usuario = new Administrador("Fer","Fernando","Herbas","una_contrasenia_insegura","feer@gmail.com",entidadJuridica);
         repoUsuarios.agregar(usuario);
+        entidadJuridica.setAdministrador(usuario);
         repoEntidadJuridica.modificar(entidadJuridica);
     }
 }
