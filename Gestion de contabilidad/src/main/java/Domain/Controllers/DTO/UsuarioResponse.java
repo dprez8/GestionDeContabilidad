@@ -1,6 +1,5 @@
 package Domain.Controllers.DTO;
 
-import Domain.Entities.Organizacion.Organizacion;
 import com.google.gson.annotations.Expose;
 
 public class UsuarioResponse {
@@ -9,7 +8,11 @@ public class UsuarioResponse {
         @Expose
         public String message;
         @Expose
-        public Organizacion organizacion;
-        @Expose
         public String nombre;
+        @Expose
+        public String username;
+        @Expose
+        public String apellido;
+        @Expose
+        public String gmail;
 }
