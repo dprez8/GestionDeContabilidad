@@ -127,6 +127,8 @@ public class Router {
         Spark.get("/api/operaciones/egreso/:egresoId", egresosRestController::mostrarEgreso);
         Spark.post("/api/operaciones/egreso/cargarArchivos",egresosRestController::cargarArchivoDocumentoComercial);
         Spark.post("/api/operaciones/egreso/suscribirse",egresosRestController::suscribirse);
+        Spark.post("/api/operaciones/egreso/suscribirse",egresosRestController::suscribirse);
+        Spark.patch("/api/operaciones/egreso/modificarPathAdjunto", egresosRestController::modificarEgreso);
 
         /****  ItemsController    ********/
         Spark.get("/api/items",itemsController::listadoDeItems);
