@@ -321,8 +321,34 @@ export default {
         },
         confirmarNuevoPresupuesto(data) {
             this.$bvModal.hide('modal-agregar-presupuesto');
-            console.log(data);
+            var presupuesto = data;
+            presupuesto.egreso = this.egreso.id;
+            console.log(presupuesto);
             // PROXIMAMENTE
+
+            RequestHelper.post(`/api/operaciones/presupuesto`, presupuesto, {
+                success: (data) => {
+                    this.cargarEgresoAPI();
+                },
+                notLoggedIn: () => {
+                    this.showLoginModal(true);
+                },
+                failed: (data) => {
+                    this.falloCarga = true;
+                    this.falloCargaDetalles = data.message;
+                },
+                forbidden: (error) => {
+                    this.falloCarga = true;
+                    this.errorHandling(error);
+                },
+                error: (error) => {
+                    this.falloCarga = true;
+                    this.errorHandling(error);
+                },
+                always: () => {
+                    this.egresoLoading = false;
+                }
+            });
         },
         cancelarNuevoPresupuesto() {
             this.$bvModal.hide('modal-agregar-presupuesto');
