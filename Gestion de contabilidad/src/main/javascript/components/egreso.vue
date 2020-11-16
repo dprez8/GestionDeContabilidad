@@ -42,12 +42,25 @@
             </div>
             <div class="row m-0 pt-2">
                 <div class="col p-0 rounded overflow-hidden border">
-                    <b-table borderless foot class="m-0 border-0"
+                    <b-table borderless foot-clone class="m-0 border-0"
                         :fields="campos_items" 
                         :items="egreso.items"
                     >
                         <template #cell(precio)="data">
                             <span>{{ "$" + data.item.precio }}</span>
+                        </template>
+
+                        <template #foot(tipoItem)>
+                            <span></span>
+                        </template>
+                        <template #foot(descripcion)>
+                            <span></span>
+                        </template>
+                        <template #foot(cantidad)>
+                            <span>Total</span>
+                        </template>
+                        <template #foot(precio)>
+                            <span>{{ '$' + egreso.valorTotal }}</span>
                         </template>
                     </b-table>
                 </div>
@@ -209,14 +222,6 @@ export default {
                 cantidad: item.cantidad,
                 precio: item.precio
             }
-        },
-        // Cargar presupuestos
-        cargarPresupuestosAPI() {
-            if(!this.egreso.presupuestos.length)
-                return;
-            
-            // Falta una ruta para cargar un presupuesto o una ruta para cargar todos los presupuestos de un egreso
-            // O que nos devuelvan mas datos sobre los presupuestos cuando nos envian el egreso
         },
         // Ingreso
         confirmarAsociarIngreso(data) {

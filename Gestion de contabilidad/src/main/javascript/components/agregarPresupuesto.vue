@@ -50,7 +50,13 @@
                 <span class="mr-2"><strong>Fecha Vigente</strong></span>
             </div>
             <div class="col px-2">
-                <b-form-datepicker placeholder="Seleccione fecha de vigencia" v-model="presupuesto.fechaVigente" class="mb-2"></b-form-datepicker>
+                <b-collapse :visible="(!presupuesto.fechaVigente && falloInput)">
+                    <b-badge variant="danger">Seleccione una fecha</b-badge>
+                </b-collapse>
+                <b-form-datepicker 
+                    :state="(!presupuesto.fechaVigente && falloInput) ? false : null"
+                    placeholder="Seleccione fecha de vigencia" v-model="presupuesto.fechaVigente" class="mb-2"
+                ></b-form-datepicker>
             </div>
         </div>
         <div class="row mb-4 mx-2">
@@ -58,7 +64,13 @@
                 <span class="mr-2"><strong>Número operación</strong></span>
             </div>
             <div class="col px-2">
-                <b-form-input placeholder="Ingrese número de operacion" v-model="presupuesto.numeroOperacion"></b-form-input>
+                <b-collapse :visible="(!presupuesto.numeroOperacion && falloInput)">
+                    <b-badge variant="danger">Ingrese el número de operación</b-badge>
+                </b-collapse>
+                <b-form-input 
+                    :state="(!presupuesto.fechaVigente && falloInput) ? false : null"
+                    placeholder="Ingrese número de operacion" v-model="presupuesto.numeroOperacion"
+                ></b-form-input>
             </div>
         </div>
         <div class="row mb-4 mx-2">
@@ -114,6 +126,18 @@ export default {
     inject: ['showLoginModal', 'errorHandling'],
     methods: {
         confirmar() {
+
+            var todosLosCamposRellenos = 
+                this.presupuesto.proveedor          &&
+                this.presupuesto.fechaVigente       &&
+                this.presupuesto.numeroOperacion    &&
+                this.presupuesto.items.length > 1
+
+            this.falloInput = !todosLosCamposRellenos;
+            if(this.falloInput) {
+                return;
+            }
+
             if(this.confirmarAccion != undefined && this.cancelarAccion != undefined) {
                 this.confirmarAccion(this.presupuesto);
                 return;

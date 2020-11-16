@@ -148,7 +148,11 @@ export default {
         },
         precioTotal() {
             var precio = 0;
-            this.items.forEach(item => {
+            var items = this.items;
+            if(this.itemsReadOnly)
+                items = this.itemsReadOnly;
+                
+            items.forEach(item => {
                 var itemPrecio = parseFloat(item.precio);
                 var itemCantidad = parseInt(item.cantidad);
 
@@ -195,7 +199,8 @@ export default {
         }
     },
     mounted() {
-        this.addItem();
+        if(this.itemsReadOnly)
+            this.actualizarItems(this.itemsReadOnly);
     }
 }
 </script>
