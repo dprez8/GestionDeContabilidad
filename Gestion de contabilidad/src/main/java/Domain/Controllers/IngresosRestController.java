@@ -50,11 +50,11 @@ public class IngresosRestController extends GenericController {
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter().nullSafe())
                 .create();
-        EntidadJuridica entidadJuridica = this.repoEntidadJuridica.buscar(usuario.getMiOrganizacion().getId());
+        Organizacion organizacion = usuario.getMiOrganizacion();
         List<IngresoResponse> ingresosAEnviar;
         String jsonResponse;
 
-        ingresosAEnviar = entidadJuridica.getIngresos()
+        ingresosAEnviar = organizacion.getIngresos()
                 .stream()
                 .map(this::mapearIngresos)
                 .collect(Collectors.toList());
@@ -118,8 +118,7 @@ public class IngresosRestController extends GenericController {
         ingreso.setMontoTotal(ingresoRequest.montoTotal);
 
         Estandar usuario = (Estandar) getUsuarioDesdeRequest(request);
-        Organizacion organizacion = this.repoOrganizacion.buscar(usuario.getMiOrganizacion().getId());
-        ingreso.setOrganizacion(organizacion);
+        ingreso.setOrganizacion(usuario.getMiOrganizacion());
         
         if(ingresoRequest.moneda_id!=0) {
             Moneda moneda=repoMoneda.buscar(ingresoRequest.moneda_id);
