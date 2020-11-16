@@ -100,7 +100,7 @@ public class Router {
 
         /****  BandejaDeMensajeController *******/
         Spark.get("/api/bandeja",bandejaDeMensajesRestController::mostrarMensajes);
-        Spark.get("/api/bandeja/configuracion",bandejaDeMensajesRestController::mostrarConfiguracion);
+        Spark.get("/api/bandeja/configuracion/:organizacionId",bandejaDeMensajesRestController::mostrarConfiguracion);
         Spark.post("/api/admin/bandeja/configurar", bandejaDeMensajesRestController::configurar);
         Spark.post("/api/bandeja/visto", bandejaDeMensajesRestController::mensajeVisto);
 

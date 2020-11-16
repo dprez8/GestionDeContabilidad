@@ -31,7 +31,8 @@ public class BandejaDeMensajes{
     }
 
     public void addMensajesString(List<String> variosMensajes){
-        variosMensajes.forEach(unCuerpo->crearMensaje(unCuerpo));
+        String cuerpo = variosMensajes.stream().map(Object::toString).collect(Collectors.joining("\n"));
+        crearMensaje(cuerpo);
     }
     public void ordenarPorFechaRecienteUltimo(){
         mensajes.sort(Comparator.comparing(Mensaje::getFecha));

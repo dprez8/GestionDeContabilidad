@@ -56,23 +56,15 @@ public class AuthFilter implements Filter {
             String token = authorizationHeader.replace(TOKEN_PREFIX, "");
             if(isAuthRequest(request))
                 return;
-            if(isEstandar(token)) {
-                if(isAdminRequests(request)){
+            if(isAdminRequests(request)) {
+                if(isEstandar(token)){
                     this.respuesta.setCode(403);
                     this.respuesta.setMessage("No posees permisos de administrador");
                     String jsonResponseError = gson.toJson(this.respuesta);
                     response.body(jsonResponseError);
                     Spark.halt(200, response.body());
                 }
-
-            }else if(isAdmin(token)) {
-                if(!isAdminRequests(request)) {
-                    this.respuesta.setCode(403);
-                    this.respuesta.setMessage("No posees permisos de estandar");
-                    String jsonResponseError = gson.toJson(this.respuesta);
-                    response.body(jsonResponseError);
-                    Spark.halt(200, response.body());
-                }
+                return;
             }
         }
     }
