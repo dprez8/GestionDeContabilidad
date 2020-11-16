@@ -1,11 +1,9 @@
 <template>
-    <b-table small responsive hover bordered class="mb-0 rounded" :fields="campos_items" :items="items"
+    <b-table small responsive hover bordered class="mb-0 rounded" v-if="!itemsReadOnly" :fields="campos_items" :items="items"
         head-variant="dark" foot-variant="light" foot-clone>
         <template #cell(tipoItem)="row">
             <b-form-select class="border-0 px-2 bg-transparent" v-model="row.item.tipoItem" @input="addItem">
                 <b-form-select-option :value="null">--Tipo--</b-form-select-option>
-                <b-form-select-option value="1">Producto</b-form-select-option>
-                <b-form-select-option value="0">Servicio</b-form-select-option>
             </b-form-select>
         </template>
         <template #cell(descripcion)="row">
@@ -37,19 +35,46 @@
             <span class="text-danger">{{ '$' + precioTotal() }}</span>
         </template>
     </b-table>
+    
+    <b-table small responsive hover bordered class="mb-0 rounded" v-else :fields="campos_items" :items="itemsReadOnly"
+        head-variant="dark" foot-variant="light" foot-clone>
+        <template #cell(precio)="row">
+            <b-form-input class="border-0 px-2 bg-transparent text-center" v-model="row.item.precio" @input="addItem"></b-form-input>
+        </template>
+        <template #cell(delete)="row">
+            <b-button variant="outline" class="px-2 m-0 text-danger" @click="deleteItem(row.index)">
+                <b-icon-x></b-icon-x>
+            </b-button>
+        </template>
+
+        
+        <template #foot(tipoItem)>
+            <span class="text-danger"></span>
+        </template>
+        <template #foot(descripcion)>
+            <span class="text-danger"></span>
+        </template>
+        <template #foot(cantidad)>
+            <span class="text-danger">Total</span>
+        </template>
+        <template #foot(precio)>
+            <span class="text-danger">{{ '$' + precioTotal() }}</span>
+        </template>
+    </b-table>
 </template>
 
 <script>
 import { RequestHelper } from '../util/utils';
 export default {
     props: {
+        itemsReadOnly: Array,
         actualizarItems: Function
     },
     data() {
         return {
             items: [
                 {
-                    tipoItem: 0,
+                    tipoItem: null,
                     descripcion: "",
                     cantidad: "",
                     precio: ""
@@ -58,28 +83,30 @@ export default {
             campos_items: [{
                     key: 'tipoItem',
                     label: 'Tipo',
+                    tdClass: ['align-middle', 'text-center'],
                     thClass: ['tipo-th']
                 },{
                     key: 'descripcion',
                     label: 'Descripcion',
+                    tdClass: ['align-middle'],
                     thClass: ['w-75']
                 },
                 {
                     key: 'cantidad',
                     label: 'Cantidad',
-                    tdClass: [],
+                    tdClass: ['align-middle', 'text-center'],
                     thClass: ['text-center']
                 },
                 {
                     key: 'precio',
                     label: 'Precio',
-                    tdClass: [],
+                    tdClass: ['align-middle'],
                     thClass: ['text-center', 'precio-th']
                 },
                 {
                     key: 'delete',
                     label: '',
-                    tdClass: [],
+                    tdClass: ['align-middle'],
                     thClass: ['text-center']
                 }
             ]
@@ -110,7 +137,10 @@ export default {
                     precio: ""
                 });
             }
-            this.actualizarItems(this.items);
+            if(this.itemsReadOnly)
+                this.actualizarItems(this.itemsReadOnly);
+            else
+                this.actualizarItems(this.items);
         },
         deleteItem(index) {
             this.items.splice(index, 1);
@@ -142,10 +172,30 @@ export default {
                     this.errorHandling(error);
                 },
                 always: () => {
-                    //this.egresosLoading = false;
+                }
+            });
+        },
+        searchTipoItemAPI() {
+            RequestHelper.get('/api/items', {
+                success: (data) => {
+                    console.log(data);
+                },
+                notLoggedIn: () => {
+                    this.showLoginModal(true);
+                },
+                error: (error) => {
+                    this.errorHandling(error);
+                },
+                forbidden: (error) => {
+                    this.errorHandling(error);
+                },
+                always: () => {
                 }
             });
         }
+    },
+    mounted() {
+        this.addItem();
     }
 }
 </script>

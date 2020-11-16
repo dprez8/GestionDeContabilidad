@@ -110,9 +110,9 @@
             ></asociar-categoria>
         </b-modal>
 
-        <b-modal id="modal-agregar-presupuesto" size="xl" hide-footer scrollable centered title="Crear nuevo Presupuesto">
+        <b-modal id="modal-agregar-presupuesto" size="xl" v-if="egreso" hide-footer scrollable centered title="Crear nuevo Presupuesto">
             <agregar-presupuesto
-                :buscarEgresos="false"
+                :itemsReadOnly="JSON.parse(JSON.stringify(egreso.items))"
                 :confirmarAccion="confirmarNuevoPresupuesto"
                 :cancelarAccion="cancelarNuevoPresupuesto"
             ></agregar-presupuesto>
@@ -143,7 +143,7 @@ export default {
             showPresupuesto: false,
             campos_items: [
                 {
-                    key: 'tipo',
+                    key: 'tipoItem',
                     label: 'Tipo',
                     tdClass: [],
                     thClass: []
@@ -203,7 +203,8 @@ export default {
         itemEgresoAPIConverter(item) {
             // Arreglar cuando se cambien los items en backend
             return {
-                tipo: item.item.tipoItem.nombre,
+                id: item.id,
+                tipoItem: item.item.tipoItem.nombre,
                 descripcion: item.item.descripcion,
                 cantidad: item.cantidad,
                 precio: item.precio

@@ -123,6 +123,28 @@ export default {
         cargarDatosAPI() {
             this.loading = true;
 
+            RequestHelper.get('/api/auth/me', {
+                success: (data) => {
+                    // DATOS INCOMPLETOS
+
+                    //this.usuario.username = data.nombre;
+                    //this.entidad = data.organizacion;
+                    console.log(data);
+                },
+                notLoggedIn: () => {
+                    this.showLoginModal(true);
+                },
+                forbidden: (error) => {
+                    this.errorHandling(error);
+                },
+                error: (error) => {
+                    this.errorHandling(error);
+                },
+                always: () => {
+                    this.loading = false;
+                }
+            });
+
             RequestHelper.get('/api/usuario/organizaciones', {
                 success: (data) => {
                     // DATOS INCOMPLETOS
