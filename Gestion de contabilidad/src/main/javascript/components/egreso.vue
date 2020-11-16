@@ -239,7 +239,7 @@ export default {
 
             RequestHelper.get(`/api/operaciones/egreso/${id}`, {
                 success: (data) => {
-                    console.log(data.egreso);
+                    console.log(data);
                     this.egreso = data.egreso;
                     this.egreso.items = data.egreso.items.map(this.itemEgresoAPIConverter);
                     this.egreso.estaSuscrito = data.estaSuscrito;

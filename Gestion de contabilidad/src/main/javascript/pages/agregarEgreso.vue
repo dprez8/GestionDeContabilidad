@@ -7,7 +7,7 @@
                     <div class="d-flex justify-content-center">
                         <b-spinner variant="light" class="flex-shrink-0"></b-spinner>
                     </div>
-                    <div class="mt-4" v-if="egreso.archivo">
+                    <div class="mt-4" v-if="archivo">
                         <p class="text-light">Subiendo archivo</p>
                         <b-progress class="progress-min-width bg-transparent" variant="light"  max="100" height="2rem">
                             <b-progress-bar :value="archivoProgress">
@@ -189,17 +189,14 @@
                             <b-col class="px-0 mx-0">
                                 <b-input-group >
                                     <b-form-file
-                                        v-model="egreso.archivo"
+                                        v-model="archivo"
                                         placeholder="Seleccione un archivo o sueltelo aqui"
                                         drop-placeholder="Suelta el archivo aqui..."
                                         browse-text="Buscar"
                                     ></b-form-file>
                                     <template #append>
-                                        <b-button variant="outline-secondary" @click="egreso.archivo = null">
+                                        <b-button variant="outline-secondary" @click="archivo = null">
                                             <b-icon-x />
-                                        </b-button>
-                                        <b-button variant="outline-primary" @click="uploadFileTest">
-                                            <b-icon-upload />
                                         </b-button>
                                     </template>
                                 </b-input-group>
@@ -373,12 +370,13 @@ export default {
                     numeroDocumento: null,
                     fechaDePedido: null,
                     fechaDeEntrega: null,
-                    descripcion: null
+                    descripcion: null,
+                    nombreFicheroDocumento: null
                 },
                 items: [],
-                presupuestosMinimos: null,
-                archivo: null
+                presupuestosMinimos: null
             },
+            archivo: null,
             requierePresupuestos: false,
             idEgreso: null,
             falloInput: false,
@@ -446,18 +444,18 @@ export default {
     },
     inject: ['errorHandling', 'createToast', 'showLoginModal'],
     watch: {
-        'egreso.archivo'() {
-            if(this.egreso.archivo) {
+        'archivo'() {
+            if(this.archivo) {
                 // Si es imagen mostrar la imagen
-                if( this.egreso.archivo.type == "image/png"   ||
-                    this.egreso.archivo.type == "image/jpeg"  ||
-                    this.egreso.archivo.type == "image/gif") {
+                if( this.archivo.type == "image/png"   ||
+                    this.archivo.type == "image/jpeg"  ||
+                    this.archivo.type == "image/gif") {
                         var reader = new FileReader();
                         reader.onload = () => {
                             var dataURL = reader.result;
                             this.archivoImagenUrl = dataURL;
                         };
-                        reader.readAsDataURL(this.egreso.archivo);
+                        reader.readAsDataURL(this.archivo);
                     }
             } else {
                 this.archivoImagenUrl = "";
@@ -477,46 +475,6 @@ export default {
             nuevosItems.pop();
 
             return nuevosItems;
-        },
-        uploadFileTest() {
-
-            var request = new FormData();
-            request.append('arhivo', this.egreso.archivo);
-
-            const config = {
-                onUploadProgress: (progressEvent) => {
-                var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-                    this.archivoProgress = percentCompleted;
-                }
-            }
-
-            this.egresoLoading = true;
-
-            RequestHelper.post('/api/operaciones/egreso/cargarArchivos', request, {
-                success: (data) => {
-                    console.log(data);
-                },
-                notLoggedIn: (data) => {
-                    this.showLoginModal(false);
-                },
-                failed: (data) => {
-                    console.log(data);
-                },
-                forbidden: (error) => {
-                    this.errorHandling(error);
-                },
-                error: (error) => {
-                    this.errorHandling(error);
-                },
-                always: () => {
-                    this.egresoLoading = false;
-                    this.archivoProgress = 0;
-                },
-                default: (data) => {
-                    console.log(data);
-                }
-            }, config);
-
         },
         confirmar() {
 
@@ -557,7 +515,7 @@ export default {
                     success: (data) => {
                         this.createToast('Guardado exitoso', 'Se creó el proveedor exitosamente', 'success');
                         this.egreso.proveedor = data.id;
-                        this.crearEgresoAPI();
+                        this.uploadFileAPI();
                     },
                     notLoggedIn: () => {
                         this.showLoginModal(true);
@@ -576,8 +534,60 @@ export default {
                     }
                 });
             } else {
-                this.crearEgresoAPI()
+                this.uploadFileAPI()
             }
+        },
+        uploadFileAPI() {
+            
+            if(this.archivo) {
+                var request = new FormData();
+                request.append('arhivo', this.archivo);
+
+                const config = {
+                    onUploadProgress: (progressEvent) => {
+                    var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                        this.archivoProgress = percentCompleted;
+                    }
+                }
+
+                console.log("file is");
+                console.log(this.archivo);
+
+                RequestHelper.post('/api/operaciones/egreso/cargarArchivos', request, {
+                    success: (data) => {
+                        console.log(data);
+                        console.log(data.paths);
+                        console.log(data.paths[0]);
+                        console.log(data.paths["archivo"]);
+                        console.log(data.paths.archivo);
+                        this.egreso.documentoComercial.nombreFicheroDocumento = data.paths.archivo;
+                        this.crearEgresoAPI();
+                    },
+                    notLoggedIn: (data) => {
+                        this.showLoginModal(false);
+                    },
+                    failed: (data) => {
+                        console.log(data);
+                    },
+                    forbidden: (error) => {
+                        this.errorHandling(error);
+                    },
+                    error: (error) => {
+                        this.errorHandling(error);
+                    },
+                    always: () => {
+                        this.egresoLoading = false;
+                        this.archivoProgress = 0;
+                    },
+                    default: (data) => {
+                        console.log("NO RESPONSE CODE");
+                        console.log(data);
+                    }
+                }, config);
+            } else {
+                this.crearEgresoAPI();
+            }
+
         },
         crearEgresoAPI() {
             var egresoToSend = JSON.parse(JSON.stringify(this.egreso));

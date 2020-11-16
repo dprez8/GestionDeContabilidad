@@ -29,7 +29,7 @@ public class FormFileManager {
         String uploaded_file_name = getFileName(part);
         // creo el fichero temporal, con un nombre generico generado y la extension del archivo que fue subido
         Path tempFile = null;
-        tempFile = Files.createTempFile(uploadDir.toPath(), "", "." + getExtension(uploaded_file_name));
+        tempFile = Files.createTempFile(uploadDir.toPath(), "", "." + getExtensionLocal(uploaded_file_name));
 
         // copiar el stream de lo que me pasaron al fichero temporal
         InputStream input = part.getInputStream();
@@ -62,7 +62,7 @@ public class FormFileManager {
         return rutaFicheros + "/" + nombreFichero;
     }
 
-    public static String getExtension(String path) {
+    public static String getExtensionLocal(String path) {
         return getExtension(path);
     }
 }
