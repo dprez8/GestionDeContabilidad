@@ -131,7 +131,7 @@ export default {
                 this.presupuesto.proveedor          &&
                 this.presupuesto.fechaVigente       &&
                 this.presupuesto.numeroOperacion    &&
-                this.presupuesto.items.length > 1
+                this.presupuesto.items.length > 0
 
             this.falloInput = !todosLosCamposRellenos;
             if(this.falloInput) {

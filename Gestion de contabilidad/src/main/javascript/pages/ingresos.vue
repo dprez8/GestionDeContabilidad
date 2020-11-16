@@ -51,7 +51,9 @@ export default {
 
             RequestHelper.get('/api/operaciones/ingresos', {
                 success: (data) => {
+                    console.log(data.ingresos);
                     this.ingresos = data.ingresos.map(this.ingresosAPIConverter);
+                    console.log(this.ingresos);
                 },
                 notLoggedIn: () => {
                     this.showLoginModal(true);
@@ -73,7 +75,7 @@ export default {
                 name: 'Ingreso ' + ingresoAPI.id,
                 descripcion: ingresoAPI.descripcion,
                 montoTotal: ingresoAPI.montoTotal,
-                fechaOperacion: convertDate(ingresoAPI.fechaOperacion),
+                fechaOperacion: `${ingresoAPI.fechaOperacion.day}/${ingresoAPI.fechaOperacion.month}/${ingresoAPI.fechaOperacion.year}`,
                 _showDetails: true,
                 showEgreso: false
             }

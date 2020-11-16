@@ -10,13 +10,13 @@
                 </b-form-select>
             </template>
             <template #cell(descripcion)="row">
-                <b-form-input class="border-0 px-2 bg-transparent" v-model="row.item.descripcion" debounce="500" list="items-list" @input="addItem();"></b-form-input>
+                <b-form-input class="border-0 px-2 bg-transparent" v-model="row.item.descripcion" list="items-list" @input="addItem();"></b-form-input>
             </template>
             <template #cell(precio)="row">
-                <b-form-input class="border-0 px-2 bg-transparent text-center" v-model="row.item.precio" @input="addItem"></b-form-input>
+                <b-form-input type="number" class="border-0 px-2 bg-transparent text-center" v-model="row.item.precio" @input="addItem"></b-form-input>
             </template>
             <template #cell(cantidad)="row">
-                <b-form-input class="border-0 px-2 bg-transparent text-center" v-model="row.item.cantidad" @input="addItem"></b-form-input>
+                <b-form-input type="number" class="border-0 px-2 bg-transparent text-center" v-model="row.item.cantidad" @input="addItem"></b-form-input>
             </template>
             <template #cell(delete)="row">
                 <b-button variant="outline" class="px-2 m-0 text-danger" @click="deleteItem(row.index)">
@@ -41,7 +41,7 @@
         <b-table small responsive hover bordered class="mb-0 rounded" v-else :fields="campos_items" :items="itemsReadOnly"
             head-variant="dark" foot-variant="light" foot-clone>
             <template #cell(precio)="row">
-                <b-form-input class="border-0 px-2 bg-transparent text-center" v-model="row.item.precio" @input="addItem"></b-form-input>
+                <b-form-input type="number" class="border-0 px-2 bg-transparent text-center" v-model="row.item.precio" @input="addItem"></b-form-input>
             </template>
             <template #cell(delete)="row">
                 <b-button variant="outline" class="px-2 m-0 text-danger" @click="deleteItem(row.index)">
@@ -126,10 +126,11 @@ export default {
             var lastItemIndex = items.length - 1;
             var lastItem = items[lastItemIndex];
 
-            if (lastItem == undefined ||
-                lastItem.nombreProducto != "" ||
-                lastItem.cantidad != "" ||
-                lastItem.precio != ""
+            if (lastItem == undefined       ||
+                lastItem.descripcion != ""  ||
+                lastItem.cantidad != ""     ||
+                lastItem.precio != ""       ||
+                lastItem.tipoItem != null
             ) {
                 return true;
             }
@@ -139,13 +140,14 @@ export default {
             if (this.checkIfAddItem()) {
                 this.items.push({
                     tipoItem: null,
-                    nombreProducto: "",
+                    descripcion: "",
                     cantidad: "",
                     precio: ""
                 });
             }
-            if(this.itemsReadOnly)
+            if(this.itemsReadOnly) {
                 this.actualizarItems(this.itemsReadOnly);
+            }
             else
                 this.actualizarItems(this.items);
         },
@@ -196,7 +198,10 @@ export default {
                     this.tipoItemsOptions = data.tipoItems.map((tipo) => {
                         return {
                             text: tipo.nombre,
-                            value: tipo.id
+                            value: {
+                                id: tipo.id,
+                                nombre: tipo.nombre
+                            }
                         }
                     })
                 },

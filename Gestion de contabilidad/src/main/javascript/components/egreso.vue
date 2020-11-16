@@ -81,6 +81,48 @@
                     </b-list-group>
                 </div>
             </div>
+            <div class="row m-0 pt-2" v-if="egreso.presupuestos.length">
+                <div class="col p-0">
+                    <b-list-group>
+                        <b-list-group-item class="p-2 text-center" :class="{'bg-secondary': showPresupuestos, 'border-bottom-0': showPresupuestos, 'text-light': showPresupuestos}" @click="showPresupuestos = !showPresupuestos" button><strong>Presupuestos</strong></b-list-group-item>
+                        <b-list-group-item class="p-0 border-0 overflow-hidden">
+                            <b-collapse :visible="showPresupuestos">
+                                <div class="px-2 pb-2 bg-secondary" :key="key" v-for="(presupuesto, key) in egreso.presupuestos">
+                                    <b-list-group>
+                                        <b-list-group-item class="p-2 d-flex justify-content-between">
+                                            <span><strong>Proveedor</strong> {{presupuesto.proveedor.nombre}} </span>
+                                            <span><strong>Fecha Vigente</strong> {{convertDate(presupuesto.fechaVigente)}} </span>
+                                        </b-list-group-item>
+                                        <div class="p-0 bg-light overflow-hidden">
+                                            <b-table borderless foot-clone class="m-0 border-0"
+                                                :fields="campos_items" 
+                                                :items="presupuesto.items.map(itemEgresoAPIConverter)"
+                                            >
+                                                <template #cell(precio)="data">
+                                                    <span>{{ "$" + data.item.precio }}</span>
+                                                </template>
+
+                                                <template #foot(tipoItem)>
+                                                    <span></span>
+                                                </template>
+                                                <template #foot(descripcion)>
+                                                    <span></span>
+                                                </template>
+                                                <template #foot(cantidad)>
+                                                    <span>Total</span>
+                                                </template>
+                                                <template #foot(precio)>
+                                                    <span>{{ '$' + presupuesto.valorTotal }}</span>
+                                                </template>
+                                            </b-table>
+                                        </div>
+                                    </b-list-group>
+                                </div>
+                            </b-collapse>
+                        </b-list-group-item>
+                    </b-list-group>
+                </div>
+            </div>
             <div class="row m-0">
                 <div class="col p-0 pt-2">
                     <b-collapse :visible="falloCarga">
@@ -91,10 +133,14 @@
                             <template v-if="!egreso.ingresoAsociado">
                                 <b-button v-b-modal.modal-asociar-ingreso variant="outline-secondary">Asociar a Ingreso</b-button>
                             </template>
-                            <template v-if="!egreso.categorias.length">
-                                <b-button v-b-modal.modal-asociar-categoria variant="outline-secondary">Asociar a categorias</b-button>
-                            </template>
+                            <b-button v-b-modal.modal-asociar-categoria variant="outline-secondary">Asociar a categorias</b-button>
                             <b-button v-b-modal.modal-agregar-presupuesto variant="outline-secondary">Agregar Presupuesto</b-button>
+                            <template v-if="!egreso.estaSuscrito">
+                                <b-button variant="outline-danger" @click="suscribirseAPI">Suscribirse</b-button>
+                            </template>
+                            <template v-else>
+                                <b-button v-b-modal.modal-asociar-ingreso variant="danger" disabled><b-icon-check/> Suscrito</b-button>
+                            </template>
                         </b-button-group>
                     </b-button-toolbar>
                 </div>
@@ -148,12 +194,10 @@ export default {
     data() {
         return {
             egreso: null,
-            ingresos: [],
-            presupuestos: [],
             showDatosProveedor: false,
             showDatosFactura: false,
             showIngreso: false,
-            showPresupuesto: false,
+            showPresupuestos: false,
             campos_items: [
                 {
                     key: 'tipoItem',
@@ -198,6 +242,7 @@ export default {
                     console.log(data.egreso);
                     this.egreso = data.egreso;
                     this.egreso.items = data.egreso.items.map(this.itemEgresoAPIConverter);
+                    this.egreso.estaSuscrito = data.estaSuscrito;
                 },
                 notLoggedIn: () => {
                     this.showLoginModal(true);
@@ -329,7 +374,6 @@ export default {
             var presupuesto = data;
             presupuesto.egreso = this.egreso.id;
             console.log(presupuesto);
-            // PROXIMAMENTE
 
             RequestHelper.post(`/api/operaciones/presupuesto`, presupuesto, {
                 success: (data) => {
@@ -357,6 +401,34 @@ export default {
         },
         cancelarNuevoPresupuesto() {
             this.$bvModal.hide('modal-agregar-presupuesto');
+        },
+        suscribirseAPI() {
+            this.egresoLoading = true;
+
+            RequestHelper.post(`/api/operaciones/egreso/suscribirse`, {egresoId: this.egreso.id}, {
+                success: (data) => {
+                    console.log(data);
+                    this.cargarEgresoAPI();
+                },
+                notLoggedIn: () => {
+                    this.showLoginModal(true);
+                },
+                failed: (data) => {
+                    this.falloCarga = true;
+                    this.falloCargaDetalles = data.message;
+                },
+                forbidden: (error) => {
+                    this.falloCarga = true;
+                    this.errorHandling(error);
+                },
+                error: (error) => {
+                    this.falloCarga = true;
+                    this.errorHandling(error);
+                },
+                always: () => {
+                    this.egresoLoading = false;
+                }
+            });
         }
     },
     mounted() {

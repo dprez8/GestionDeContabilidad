@@ -21,40 +21,26 @@
                     </b-row>
                 </b-card>
                 <b-card no-body class="mb-2">
-                    <b-card-body class="py-2">Entidades</b-card-body>
+                    <b-card-body class="py-2">Organización</b-card-body>
                 </b-card>
-                <b-card no-body class="overflow-hidden mb-4">
+                <b-card v-if="organizacion" no-body class="overflow-hidden mb-4">
                     <b-row no-gutters>
                         <b-col md="2" class="d-flex justify-content-center align-items-center p-2 entity-card-skew">
                             <b-avatar size="5rem" variant="secondary" icon="bar-chart-fill"></b-avatar>
                         </b-col>
                         <b-col>
-                            <b-card-body :title="`${entidad.nombreFicticio}`" :sub-title="`Entidad ${entidad.tipo}`">
+                            <b-card-body v-if="organizacion.tipo == 'Jurídica'" :title="`${organizacion.nombreFicticio}`" :sub-title="`Entidad ${organizacion.tipo}`">
                                 <b-row no-gutters class="mb-2">
                                     <b-col md="4">
                                         <b-card-text>
                                             <div class="text-truncate">
-                                                <span v-b-tooltip.html :title="`Razon Social<br><em>${entidad.razonSocial}`">
-                                                    <b-icon-card-text class="mr-2"/>{{entidad.razonSocial}}
+                                                <span v-b-tooltip.html :title="`Razon Social<br><em>${organizacion.razonSocial}`">
+                                                    <b-icon-card-text class="mr-2"/>{{organizacion.razonSocial}}
                                                 </span>
                                             </div>
                                             <div class="text-truncate">
-                                                <span v-b-tooltip.html :title="`CUIT<br><em>${entidad.cuit}`">
-                                                    <b-icon-credit-card2-front class="mr-2"/>{{entidad.cuit}}
-                                                </span>
-                                            </div>
-                                        </b-card-text>
-                                    </b-col>
-                                    <b-col md="4">
-                                        <b-card-text>
-                                            <div class="text-truncate">
-                                                <span v-b-tooltip.html :title="`Dirección Postal<br><em>${entidad.direccionPostal}`">
-                                                    <b-icon-globe class="mr-2"/>{{entidad.direccionPostal}}
-                                                </span>
-                                            </div>
-                                            <div class="text-truncate">
-                                                <span v-b-tooltip.html :title="`Actividad<br><em>${entidad.actividad}`">
-                                                    <b-icon-tools class="mr-2"/>{{entidad.actividad}}
+                                                <span v-b-tooltip.html :title="`CUIT<br><em>${organizacion.cuit}`">
+                                                    <b-icon-credit-card2-front class="mr-2"/>{{organizacion.cuit}}
                                                 </span>
                                             </div>
                                         </b-card-text>
@@ -62,18 +48,34 @@
                                     <b-col md="4">
                                         <b-card-text>
                                             <div class="text-truncate">
-                                                <span v-b-tooltip.html :title="`Cantidad de personal<br><em>${entidad.cantPersonal}`">
-                                                    <b-icon-person-lines-fill class="mr-2"/>{{entidad.cantPersonal}}
+                                                <span v-b-tooltip.html :title="`Dirección Postal<br><em>${organizacionDireccionPostal}`">
+                                                    <b-icon-globe class="mr-2"/>{{organizacionDireccionPostal}}
                                                 </span>
                                             </div>
                                             <div class="text-truncate">
-                                                <span v-b-tooltip.html :title="`Promedio de ventas anuales<br><em>${ventasAnualesFormat(entidad.promVentasAnuales)}`">
-                                                    <b-icon-cash-stack class="mr-2"/>{{ventasAnualesFormat(entidad.promVentasAnuales)}}
+                                                <span v-b-tooltip.html :title="`Actividad<br><em>${organizacion.tipoEntidadJuridica.actividad}`">
+                                                    <b-icon-tools class="mr-2"/>{{organizacion.tipoEntidadJuridica.actividad}}
+                                                </span>
+                                            </div>
+                                        </b-card-text>
+                                    </b-col>
+                                    <b-col md="4">
+                                        <b-card-text>
+                                            <div class="text-truncate">
+                                                <span v-b-tooltip.html :title="`Cantidad de personal<br><em>${organizacion.tipoEntidadJuridica.cantidadDePersonal}`">
+                                                    <b-icon-person-lines-fill class="mr-2"/>{{organizacion.tipoEntidadJuridica.cantidadDePersonal}}
+                                                </span>
+                                            </div>
+                                            <div class="text-truncate">
+                                                <span v-b-tooltip.html :title="`Promedio de ventas anuales<br><em>${ventasAnualesFormat(organizacion.tipoEntidadJuridica.ventasAnuales)}`">
+                                                    <b-icon-cash-stack class="mr-2"/>{{ventasAnualesFormat(organizacion.tipoEntidadJuridica.ventasAnuales)}}
                                                 </span>
                                             </div>
                                         </b-card-text>
                                     </b-col>
                                 </b-row>
+                            </b-card-body>
+                            <b-card-body v-else :title="`${organizacion.nombreFicticio}`" :sub-title="`Entidad ${organizacion.tipo}`">
                             </b-card-body>
                         </b-col>
                     </b-row>
@@ -105,17 +107,7 @@ export default {
                 username: "",
                 email: "",
             },
-            entidad: {
-                id: 1,
-                nombreFicticio: "Oficina Central Buenos Aires",
-                razonSocial: "EAAF BA",
-                cuit: "30-15269857-2",
-                direccionPostal: "Av. Medrano 951, Almagro, CABA, BA, Argentina",
-                tipo: "Jurídica",
-                cantPersonal: 150,
-                actividad: "Construcción",
-                promVentasAnuales: 600000000.0
-            },
+            organizacion: null,
             loading: false
         }
     },
@@ -145,8 +137,18 @@ export default {
                 }
             });
 
-            RequestHelper.get('/api/usuario/organizaciones', {
+            RequestHelper.get('/api/entidades', {
                 success: (data) => {
+                    
+                    if(data.organizacion.tipoEntidadJuridica) {
+                        // ES una entidad Jurídica
+                        this.organizacion = data.organizacion;
+                        this.organizacion.tipo = "Jurídica";
+                    } else {
+                        // ES una entidad Base
+                        this.organizacion = data.organizacion;
+                        this.organizacion.tipo = "Base";
+                    }
                     // DATOS INCOMPLETOS
 
                     //this.usuario.username = data.nombre;
@@ -170,6 +172,15 @@ export default {
         ventasAnualesFormat(prom) {
             return `$ ${prom.toLocaleString()}`;
         },
+    },
+    computed: {
+        organizacionDireccionPostal() {
+            return `
+            ${this.organizacion.calle} ${this.organizacion.altura}
+            ${this.organizacion.ciudad ? ',' + this.organizacion.ciudad : ''} 
+            ${this.organizacion.provincia ? ',' + this.organizacion.provincia : ''} 
+            ${this.organizacion.pais ?  ',' + this.organizacion.pais : ''}`;
+        }
     },
     mounted() {
         this.cargarDatosAPI();
