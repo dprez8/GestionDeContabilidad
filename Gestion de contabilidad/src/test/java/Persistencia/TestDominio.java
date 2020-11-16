@@ -105,6 +105,8 @@ public class TestDominio {
         entidadBase.setEntidadJuridica(entidadJuridica);
         entidadBase.setNombreFicticio("Andhes");
 
+        entidadJuridica.addEntidadesBase(entidadBase);
+
         EntidadJuridica entidadJuridica2 = new EntidadJuridica();
         entidadJuridica2.setNombreFicticio("Ardor");
         entidadJuridica2.setRazonSocial("Ardor sa");
@@ -118,14 +120,16 @@ public class TestDominio {
         entidadBase2.setEntidadJuridica(entidadJuridica2);
         entidadBase2.setNombreFicticio("Monoas");
 
-        entidadJuridica.addEntidadesBase(entidadBase);
+        entidadJuridica2.addEntidadesBase(entidadBase2);
 
         this.repoEntidadJuridica.agregar(entidadJuridica);
+        this.repoEntidadJuridica.agregar(entidadJuridica2);
+
         SchedulerInit schedulerInit = new SchedulerInit();
         schedulerInit.setOrganizacion(entidadJuridica);
         entidadJuridica.setSchedulerInit(schedulerInit);
         this.repoEntidadJuridica.modificar(entidadJuridica);
-        System.out.println("Numero "+ entidadJuridica.getId());
+        System.out.println("Numero " + entidadJuridica.getId());
     }
 
 
