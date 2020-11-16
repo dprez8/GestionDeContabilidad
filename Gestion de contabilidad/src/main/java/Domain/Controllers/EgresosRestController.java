@@ -13,6 +13,7 @@ import Domain.Entities.Organizacion.EntidadJuridica;
 import Domain.Entities.Organizacion.Organizacion;
 import Domain.Entities.Usuarios.Estandar;
 import Domain.Exceptions.ExcepcionCreacionEgreso;
+import Domain.Entities.ValidadorTransparencia.ValidarConPresupuesto;
 import Domain.Repositories.Daos.DaoHibernate;
 import Domain.Repositories.Repositorio;
 import com.google.gson.Gson;
@@ -208,6 +209,13 @@ public class EgresosRestController extends GenericController {
         egresoDetallado.egreso       = egreso;
         egresoDetallado.estaSuscrito = verificarSuscripcion(usuario,egreso);
 
+        ValidarConPresupuesto validador = new ValidarConPresupuesto();
+        validador.validarEgreso(egreso);
+        if (validador.getPresupuestoElegido() != null) {
+            egresoDetallado.presupuesto = validador.getPresupuestoElegido().getId();
+        }
+
+
         jsonResponse = this.gson.toJson(egresoDetallado);
         response.body(jsonResponse);
 
@@ -388,5 +396,7 @@ public class EgresosRestController extends GenericController {
         public Egreso egreso;
         @Expose
         public boolean estaSuscrito;
+        @Expose
+        public int presupuesto;
     }
 }
