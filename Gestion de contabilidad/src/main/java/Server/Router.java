@@ -122,6 +122,7 @@ public class Router {
 
         /****  ItemsController    ********/
         Spark.get("/api/items",itemsController::listadoDeItems);
+        Spark.get("/api/tipoItems",itemsController::listadoDeTipoItems);
 
         /****  IngresosRestController     ********/
         Spark.get("/api/operaciones/ingresos",ingresosRestController::listadoDeIngresos);
