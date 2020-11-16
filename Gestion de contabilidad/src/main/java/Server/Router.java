@@ -71,7 +71,7 @@ public class Router {
         EntidadRestController entidadRestController = new EntidadRestController(tokenService,TOKEN_PREFIX);
 
         DireccionPostalController direccionController = new DireccionPostalController();
-        ProveedorController proveedorController = new ProveedorController();
+        ProveedorController proveedorController = new ProveedorController(tokenService, TOKEN_PREFIX);
         MedioDePagoController medioController = new MedioDePagoController();
 
         PresupuestoRestController presupuestoRestController = new PresupuestoRestController(tokenService, TOKEN_PREFIX);

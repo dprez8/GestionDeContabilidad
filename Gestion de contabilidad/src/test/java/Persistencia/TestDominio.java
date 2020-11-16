@@ -85,7 +85,7 @@ public class TestDominio {
     }
     
     @Test
-    public void T1persistirUnaEntidadJuridicaYUnaEntidadBase (){
+    public void T1persistirDosEntidadesJuridicasConCadaBase (){
 
         Empresa pyme = new Empresa();
         pyme.setCantidadDePersonal(8);
@@ -104,6 +104,19 @@ public class TestDominio {
         EntidadBase entidadBase = new EntidadBase();
         entidadBase.setEntidadJuridica(entidadJuridica);
         entidadBase.setNombreFicticio("Andhes");
+
+        EntidadJuridica entidadJuridica2 = new EntidadJuridica();
+        entidadJuridica2.setNombreFicticio("Ardor");
+        entidadJuridica2.setRazonSocial("Ardor sa");
+        entidadJuridica2.setCuit("30-25434897-8");
+        entidadJuridica2.setCalle("Figueroa");
+        entidadJuridica2.setAltura(280);
+        entidadJuridica2.setTipoEntidadJuridica(pyme);
+        entidadJuridica2.setNombre("Esther piscore y asociados - COMPANIA");
+
+        EntidadBase entidadBase2 = new EntidadBase();
+        entidadBase2.setEntidadJuridica(entidadJuridica2);
+        entidadBase2.setNombreFicticio("Monoas");
 
         entidadJuridica.addEntidadesBase(entidadBase);
 
@@ -202,11 +215,16 @@ public class TestDominio {
 
         this.repoPagos.agregar(unPago);
 
-        Proveedor lautaroRobles = new Proveedor("Lautaro Robles", 41424242);
-        Proveedor lautaroIturregui = new Proveedor("Lautaro Iturregui", 2224222);
+        EntidadJuridica ej1 = this.repoEntidadJuridica.buscar(1);
+        EntidadJuridica ej2 = this.repoEntidadJuridica.buscar(2);
+
+        Proveedor lautaroRobles = new Proveedor("Lautaro Robles", 41424242, ej1);
+        Proveedor lautaroIturregui = new Proveedor("Lautaro Iturregui", 2224222, ej1);
+        Proveedor julianCasablancas = new Proveedor("Julian Casablancas", 41244441, ej2);
 
         this.repoProveedores.agregar(lautaroRobles);
         this.repoProveedores.agregar(lautaroIturregui);
+        this.repoProveedores.agregar(julianCasablancas);
 
         ItemPresupuesto RAMpresupuesto = new ItemPresupuesto(producto1, RAMs, 1, 3000);
         ItemPresupuesto placaVideoPresupuesto = new ItemPresupuesto(producto2, placasDeVideo, 2, 5000);
@@ -222,14 +240,12 @@ public class TestDominio {
         /*******************************************************************/
         BuilderEgresoConcreto egresoBuilder = new BuilderEgresoConcreto();
 
-        EntidadJuridica pepsi = this.repoEntidadJuridica.buscar(1);
-
         Egreso unaCompra = egresoBuilder.agregarProveedor(lautaroIturregui)
                 .agregarFechaOperacion(LocalDate.now())
                 .agregarPago(unPago)
                 .agregarCantidadPresupuestos(1)
                 .agregarDocumentoComercial(unDocumento)
-                .agregarDatosOrganizacion(pepsi)
+                .agregarDatosOrganizacion(ej1)
                 .agregarItems(RAMs,placasDeVideo)
                 .build();
 

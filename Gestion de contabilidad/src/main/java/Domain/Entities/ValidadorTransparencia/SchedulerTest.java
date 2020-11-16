@@ -38,9 +38,6 @@ public class SchedulerTest {
         MedioDePago efectivo = new MedioDePago("efectivo");
         Pago unPago = new Pago("1231231", efectivo);
 
-        Proveedor lautaroRobles = new Proveedor("Lautaro Robles", 41424242);
-        Proveedor lautaroIturregui = new Proveedor("Lautaro Iturregui", 2224222);
-
         ItemPresupuesto RAMpresupuesto = new ItemPresupuesto(RAM, RAMs, 1, 3000);
         ItemPresupuesto placaVideoPresupuesto = new ItemPresupuesto(placaDeVideo, placasDeVideo, 2, 5000);
 
@@ -57,6 +54,9 @@ public class SchedulerTest {
         miPyme.setCantidadDePersonal(3);
         EntidadJuridica unaEntidad = new EntidadJuridica();
         unaEntidad.setTipoEntidadJuridica(miPyme);
+
+        Proveedor lautaroRobles = new Proveedor("Lautaro Robles", 41424242, unaEntidad);
+        Proveedor lautaroIturregui = new Proveedor("Lautaro Iturregui", 2224222, unaEntidad);
 
         /**Construccion del egreso*/
         BuilderEgresoConcreto egresoBuilder = new BuilderEgresoConcreto();
