@@ -40,10 +40,6 @@ public class EntidadJuridica extends Organizacion {
 	@OneToMany(mappedBy = "entidadJuridica",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<EntidadBase> entidadesBase;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "tipo_entidad_id")
-    private CategoriaEntidadJuridica tipoEntidadJuridica;
-
 	@Expose
 	@ManyToOne
 	@JoinColumn(name="pais_id", referencedColumnName = "pais_id")
@@ -81,9 +77,6 @@ public class EntidadJuridica extends Organizacion {
     }
 
     /**Setters & Getters*/
-    public void setTipoEntidadJuridica(CategoriaEntidadJuridica tipoEntidadJuridica){
-        this.tipoEntidadJuridica = tipoEntidadJuridica;
-    }
 
 	public String getRazonSocial() {
 		return razonSocial;
@@ -115,10 +108,6 @@ public class EntidadJuridica extends Organizacion {
 
 	public void setEntidadesBase(List<EntidadBase> entidadesBase) {
 		this.entidadesBase = entidadesBase;
-	}
-
-	public CategoriaEntidadJuridica getTipoEntidadJuridica() {
-		return tipoEntidadJuridica;
 	}
 
 	public Administrador getAdministrador() {

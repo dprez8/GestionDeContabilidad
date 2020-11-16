@@ -75,7 +75,7 @@ public class TestPrincipal {
         this.miPyme.setCantidadDePersonal(3);
 
         this.pymeJuridica       = new EntidadJuridica();
-        this.pymeJuridica.setTipoEntidadJuridica(this.miPyme);
+        this.miPyme.setEntidadJuridica(this.pymeJuridica);;
 
         /**Creacion de un usuario estandar*/
         this.fernando = new Estandar(pymeJuridica, "Fernando", "1234JHBHJVHJ", "fernando@herbas.com");

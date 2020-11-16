@@ -16,11 +16,14 @@ import Domain.Entities.CategorizadorDeEmpresas.Sector;
 import Domain.Entities.ClasesParciales.EntidadBaseDato;
 import Domain.Entities.ClasesParciales.EntidadBaseNueva;
 import Domain.Entities.ClasesParciales.EntidadJuridicaDato;
-import Domain.Entities.ClasesParciales.EntidadJuridicaNueva;
+import Domain.Entities.ClasesParciales.EntidadJuridicaEmpresaNueva;
+import Domain.Entities.ClasesParciales.EntidadJuridicaOscNueva;
 import Domain.Entities.ClasesParciales.OrganizacionPropia;
 import Domain.Entities.ClasesParciales.SectorDato;
+import Domain.Entities.Organizacion.Empresa;
 import Domain.Entities.Organizacion.EntidadBase;
 import Domain.Entities.Organizacion.EntidadJuridica;
+import Domain.Entities.Organizacion.Osc;
 import Domain.Entities.Usuarios.Administrador;
 import Domain.Entities.Usuarios.Estandar;
 import Domain.Repositories.Repositorio;
@@ -33,6 +36,8 @@ public class OrganizacionController extends GenericController{
 
 	private Repositorio<Sector> repoSector;
 	private Repositorio<EntidadJuridica> repoEntidad;
+	private Repositorio<Osc> repoOsc;
+	private Repositorio<Empresa> repoEmpresa;
 	private Repositorio<EntidadBase> repoEntidadBase;
 	private Repositorio<Pais> repoPais;
 	private Repositorio<Provincia> repoProvincia;
@@ -42,6 +47,8 @@ public class OrganizacionController extends GenericController{
 		super(tokenService,tokenPrefix);
 		this.repoSector = new Repositorio<Sector>(new DaoHibernate<Sector>(Sector.class));
 		this.repoEntidad = new Repositorio<EntidadJuridica>(new DaoHibernate<EntidadJuridica>(EntidadJuridica.class));
+		this.repoOsc = new Repositorio<Osc>(new DaoHibernate<Osc>(Osc.class));
+		this.repoEmpresa = new Repositorio<Empresa>(new DaoHibernate<Empresa>(Empresa.class));
 		this.repoEntidadBase= new Repositorio<EntidadBase>(new DaoHibernate<EntidadBase>(EntidadBase.class));
 		this.repoPais = new Repositorio<Pais>(new DaoHibernate<Pais>(Pais.class));
 		this.repoProvincia = new Repositorio<Provincia>(new DaoHibernate<Provincia>(Provincia.class));
@@ -135,10 +142,7 @@ public class OrganizacionController extends GenericController{
 		
 		Gson gson2 = new Gson();
 	
-		Administrador usuario = (Administrador) PermisosRestController.verificarSesion(request,response);
-		if(usuario == null) {
-			return response.body();
-		}
+	
 		EntidadBaseNueva entidadDato = gson2.fromJson(request.body(),EntidadBaseNueva.class);
 		EntidadBase entidad=null;
 		OrganizacionRespuesta organizacionCreada= new OrganizacionRespuesta();
@@ -162,18 +166,24 @@ public class OrganizacionController extends GenericController{
         return response.body();
 	}
 	
-public String crearEntidadJuridica(Request request,Response response){
+public String crearEntidadJuridicaOsc(Request request,Response response){
 		
 		Gson gson2 = new Gson();
 
 		this.repoEntidad= new Repositorio<EntidadJuridica>(new DaoHibernate<EntidadJuridica>(EntidadJuridica.class));
-		EntidadJuridicaNueva organizacionDato = gson2.fromJson(request.body(),EntidadJuridicaNueva.class);
-		EntidadJuridica entidad=mapOrganizacion(organizacionDato);
+		EntidadJuridicaOscNueva organizacionDato = gson2.fromJson(request.body(),EntidadJuridicaOscNueva.class);
+		EntidadJuridica entidad=mapOrganizacionOsc(organizacionDato);
+		
+		Osc osc=new Osc();
+		osc.setCodigoOsc(organizacionDato.codigoOsc);
+		osc.setEntidadJuridica(entidad);
+		
 		OrganizacionRespuesta organizacionCreada= new OrganizacionRespuesta();
 		try{
 			 repoEntidad.agregar(entidad);
+			 repoOsc.agregar(osc);
              organizacionCreada.code = 200;
-             organizacionCreada.message = "Organizacion Creada";
+             organizacionCreada.message = "Organizacion Osc Creada";
              organizacionCreada.organizacionId=entidad.getId();
 		}
         catch (NullPointerException ex){
@@ -187,6 +197,42 @@ public String crearEntidadJuridica(Request request,Response response){
 
         return response.body();
 	}
+
+public String crearEntidadJuridicaEmpresa(Request request,Response response){
+	
+	Gson gson2 = new Gson();
+
+	this.repoEntidad= new Repositorio<EntidadJuridica>(new DaoHibernate<EntidadJuridica>(EntidadJuridica.class));
+	EntidadJuridicaEmpresaNueva organizacionDato = gson2.fromJson(request.body(),EntidadJuridicaEmpresaNueva.class);
+	EntidadJuridica entidad=mapOrganizacionEmpresa(organizacionDato);
+	Sector sector= repoSector.buscar(organizacionDato.sectorId);
+	Empresa empresa=new Empresa();
+	empresa.setActividad(organizacionDato.actividad);
+	empresa.setCantidadDePersonal(organizacionDato.cantidadDePersonal);
+	empresa.setSector(sector);
+	empresa.setVentasAnuales(organizacionDato.ventasAnuales);
+	empresa.setEntidadJuridica(entidad);
+	
+	
+	OrganizacionRespuesta organizacionCreada= new OrganizacionRespuesta();
+	try{
+		 repoEntidad.agregar(entidad);
+		 repoEmpresa.agregar(empresa);
+         organizacionCreada.code = 200;
+         organizacionCreada.message = "Organizacion Empresa Creada";
+         organizacionCreada.organizacionId=entidad.getId();
+	}
+    catch (NullPointerException ex){
+    	 organizacionCreada.code =  400;
+    	 organizacionCreada.message =  "No se logro crear la organizacion";
+    }
+	
+
+    String jsonOrganizacion = gson2.toJson(organizacionCreada);
+    response.body(jsonOrganizacion);
+
+    return response.body();
+}
 	
 //para mostrar la lista de organizaciones pertenecientes a un usuario
 	@SuppressWarnings("unchecked")
@@ -246,7 +292,7 @@ public String crearEntidadJuridica(Request request,Response response){
 		return base;
 	}
 	
-	public EntidadJuridica mapOrganizacion(EntidadJuridicaNueva organizacionDato){
+	public EntidadJuridica mapOrganizacionOsc(EntidadJuridicaOscNueva organizacionDato){
 		EntidadJuridica entidad= new EntidadJuridica();
         
 		entidad.setRazonSocial(organizacionDato.razonSocial);
@@ -267,7 +313,32 @@ public String crearEntidadJuridica(Request request,Response response){
 		entidad.setAltura(organizacionDato.altura);
 		entidad.setPiso(organizacionDato.piso);
 		entidad.setZipcode(organizacionDato.zipcode);
+		
+        return entidad;
+	}
+	
+	public EntidadJuridica mapOrganizacionEmpresa(EntidadJuridicaEmpresaNueva organizacionDato){
+		EntidadJuridica entidad= new EntidadJuridica();
         
+		entidad.setRazonSocial(organizacionDato.razonSocial);
+        entidad.setCuit(organizacionDato.cuit);
+        entidad.setNombre(organizacionDato.nombreFicticio);
+        entidad.setCodigoDeInscripcionDefinitivaEnIGJ(organizacionDato.codigoDeInscripcionDefinitivaEnIGJ);
+    
+		Pais paisElegido = repoPais.buscar(organizacionDato.pais);
+		Provincia provinciaElegida = repoProvincia.buscar(organizacionDato.provincia);
+		
+		if(organizacionDato.ciudad!=0) {
+			Ciudad ciudadElegida = repoCiudad.buscar(organizacionDato.ciudad);
+			entidad.setCiudad(ciudadElegida);
+		}	
+		entidad.setPais(paisElegido);
+		entidad.setProvincia(provinciaElegida);
+		entidad.setCalle(organizacionDato.calle);
+		entidad.setAltura(organizacionDato.altura);
+		entidad.setPiso(organizacionDato.piso);
+		entidad.setZipcode(organizacionDato.zipcode);
+		
         return entidad;
 	}
 	

@@ -90,7 +90,7 @@ public class TestDominio {
         entidadJuridica.setCuit("1234");
         entidadJuridica.setAltura(1234);
         entidadJuridica.setRazonSocial("Entidad Juridica");
-        entidadJuridica.setTipoEntidadJuridica(pyme);
+        pyme.setEntidadJuridica(entidadJuridica);
         entidadJuridica.setNombre("Organizacion");
 
         this.repoEntidadJuridica.agregar(entidadJuridica);
@@ -108,8 +108,10 @@ public class TestDominio {
 
         Assert.assertEquals("Entidad Juridica",pymeJuridica.getRazonSocial());
 
-        Empresa pyme = (Empresa) pymeJuridica.getTipoEntidadJuridica();
-        Assert.assertEquals("Construcciones",pyme.getActividad());
+        //Lo comento pq ahora es la empresa quien tiene como atributo a la EntidadJuridica 
+        //para el orden a la hora de persistir
+       //Empresa pyme = (Empresa) pymeJuridica.getTipoEntidadJuridica();
+       // Assert.assertEquals("Construcciones",pyme.getActividad());
     }
 
     @Test
