@@ -219,8 +219,16 @@ public class TestDominio {
 
         this.repoPagos.agregar(unPago);
 
-        EntidadJuridica ej1 = this.repoEntidadJuridica.buscar(1);
-        EntidadJuridica ej2 = this.repoEntidadJuridica.buscar(2);
+        List<EntidadJuridica> entidadesJuridicas = repoEntidadJuridica.buscarTodos();
+        EntidadJuridica ej1 = null;
+        EntidadJuridica ej2 = null;
+        try {
+            ej1 = entidadesJuridicas.get(0);
+            ej2 = entidadesJuridicas.get(1);
+        } catch (Exception ex) {
+            System.out.println("no se encontro ninguna entidad juridica :I");
+            return;
+        }
 
         Proveedor lautaroRobles = new Proveedor("Lautaro Robles", 41424242, ej1);
         Proveedor lautaroIturregui = new Proveedor("Lautaro Iturregui", 2224222, ej1);
