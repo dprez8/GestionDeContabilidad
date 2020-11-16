@@ -8,7 +8,7 @@ import javax.persistence.NoResultException;
 
 import com.google.gson.Gson;
 
-
+import Domain.Controllers.DTO.ConfigSchedulerRequest;
 import Domain.Controllers.DTO.Respuesta;
 
 import Domain.Entities.ClasesParciales.CategoriaDato;
@@ -70,10 +70,21 @@ public class CriteriosCategoriasController {
 	
  		Gson gson = new Gson();
     	CriterioNuevo criterioRequest;
-    	criterioRequest = gson.fromJson(request.body(),CriterioNuevo.class);
+    	CriterioResponse criResponse= new CriterioResponse();
+    	  try {
+    		  criterioRequest = gson.fromJson(request.body(),CriterioNuevo.class);  
+    		  }
+          catch(Exception ex){
+              	criResponse.code=404;
+              	criResponse.message="No se logro mapear el json";
+                   String jsonResponse = gson.toJson(criResponse);
+                   response.body(jsonResponse);
+                   return response.body();
+              }
+    	
 	 	this.repoCriterio = new Repositorio<>(new DaoHibernate<>(CriterioOperacion.class));
 	 	
-	 	CriterioResponse criResponse= new CriterioResponse();
+	 	
 	 	
 	 	try {
        		CriterioOperacion criterio=mapCriterioNuevo(criterioRequest);

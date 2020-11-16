@@ -2,6 +2,7 @@ package Domain.Controllers;
 
 import Domain.Controllers.AdaptersJson.LocalDateAdapter;
 import Domain.Controllers.AdaptersJson.LocalDateTimeAdapter;
+import Domain.Controllers.DTO.EgresoRequest;
 import Domain.Controllers.DTO.IngresoRequest;
 import Domain.Controllers.DTO.IngresoResponse;
 import Domain.Controllers.DTO.Respuesta;
@@ -67,12 +68,24 @@ public class IngresosRestController extends GenericController {
 
     public String cargarNuevoIngreso(Request request, Response response) {
 
+    	IngresoRequest ingresoRequest;
+    	
         this.gson  = new GsonBuilder()
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())
                 .create();
 
-        IngresoRequest ingresoRequest    = this.gson.fromJson(request.body(), IngresoRequest.class);
+        try {
+        	ingresoRequest    = this.gson.fromJson(request.body(), IngresoRequest.class);
 
+            }
+            catch(Exception ex){
+            	 this.respuesta.setCode(404);
+                 this.respuesta.setMessage("No se logro mapear el json con el ingreso");
+                 this.jsonResponse = gson.toJson(this.respuesta);
+                 response.body(this.jsonResponse);
+                 return response.body();
+            }
+        
         Ingreso ingreso = asignarIngresoDesde(request, ingresoRequest);
 
         if(ingreso == null) {

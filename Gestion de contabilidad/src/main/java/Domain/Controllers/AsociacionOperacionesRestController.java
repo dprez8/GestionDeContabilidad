@@ -27,7 +27,16 @@ public class AsociacionOperacionesRestController extends GenericController{
 
     public String asociarManualmente(Request request, Response response) {
         this.gson = new Gson();
-        AsociacionRequest asociacionRequest = gson.fromJson(request.body(),AsociacionRequest.class);
+        AsociacionRequest asociacionRequest=null;
+        try {
+        asociacionRequest = gson.fromJson(request.body(),AsociacionRequest.class);
+        }
+        catch(Exception ex){
+        	 this.respuesta.setCode(404);
+             this.respuesta.setMessage("No se logro mapear el json");
+             this.jsonRespose = gson.toJson(this.respuesta);
+             return jsonRespose;
+        }
         Ingreso ingreso;
         Egreso egreso;
 

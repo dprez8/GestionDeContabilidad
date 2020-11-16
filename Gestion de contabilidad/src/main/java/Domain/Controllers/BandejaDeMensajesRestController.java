@@ -63,7 +63,18 @@ public class BandejaDeMensajesRestController extends GenericController{
         Administrador usuario = (Administrador) getUsuarioDesdeRequest(request);
         //Estandar usuario = (Estandar) getUsuarioDesdeRequest(request);
         Gson gson = new Gson();
-        ConfigSchedulerRequest configSchedulerRequest = gson.fromJson(request.body(),ConfigSchedulerRequest.class);
+        ConfigSchedulerRequest configSchedulerRequest=null;
+        try {
+        	configSchedulerRequest = gson.fromJson(request.body(),ConfigSchedulerRequest.class);
+            }
+            catch(Exception ex){
+            	 this.respuesta.setCode(404);
+                 this.respuesta.setMessage("No se logro mapear el json");
+                 this.jsonResponse = gson.toJson(this.respuesta);
+                 response.body(this.jsonResponse);
+                 return response.body();
+            }
+       
 
         SchedulerInit schedulerInit = this.repoScheduler.buscar(1);
 
@@ -112,8 +123,19 @@ public class BandejaDeMensajesRestController extends GenericController{
 
     public String mensajeVisto(Request request, Response response) {
         Gson gson = new Gson();
-        MensajeId idMensaje = gson.fromJson(request.body(),MensajeId.class);
-
+        MensajeId idMensaje = null;
+        try {
+        	 idMensaje = gson.fromJson(request.body(),MensajeId.class);
+            }
+            catch(Exception ex){
+            	 this.respuesta.setCode(404);
+                 this.respuesta.setMessage("No se logro mapear el mensaje json");
+                 this.jsonResponse = gson.toJson(this.respuesta);
+                 response.body(this.jsonResponse);
+                 return response.body();
+            }
+       
+        
         try {
             Mensaje mensaje = this.repoMensajes.buscar(idMensaje.id);
             mensaje.setLeido(true);

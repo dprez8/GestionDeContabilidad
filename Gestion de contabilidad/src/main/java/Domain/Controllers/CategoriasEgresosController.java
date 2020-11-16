@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import Domain.Controllers.jwt.TokenService;
 import com.google.gson.Gson;
 
+import Domain.Controllers.DTO.ConfigSchedulerRequest;
 import Domain.Controllers.DTO.Respuesta;
 import Domain.Entities.Operaciones.CategoriaOperacion;
 import Domain.Entities.Operaciones.CriterioOperacion;
@@ -77,7 +78,17 @@ public class CategoriasEgresosController extends GenericController{
 		Gson gson = new Gson();
 		Respuesta respuesta= new Respuesta();
 		CategoriaRequest categoriaRequest;
-		categoriaRequest = gson.fromJson(request.body(),CategoriaRequest.class);
+		  try {
+			  categoriaRequest = gson.fromJson(request.body(),CategoriaRequest.class);
+	            }
+	            catch(Exception ex){
+	            	 this.respuesta.setCode(404);
+	                 this.respuesta.setMessage("No se logro mapear el json");
+	                 this.jsonResponse = gson.toJson(this.respuesta);
+	                 response.body(this.jsonResponse);
+	                 return response.body();
+	            }
+		
 		this.repoCategoria = new Repositorio<>(new DaoHibernate<>(CategoriaOperacion.class));
 		this.repoEgreso = new Repositorio<>(new DaoHibernate<>(Egreso.class));
 

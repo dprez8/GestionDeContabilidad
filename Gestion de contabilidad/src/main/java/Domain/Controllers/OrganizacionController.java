@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import javax.persistence.NoResultException;
 
+import Domain.Controllers.DTO.EgresoRequest;
+import Domain.Controllers.DTO.IngresoRequest;
 import Domain.Controllers.jwt.TokenService;
 import com.google.gson.Gson;
 
@@ -122,8 +124,18 @@ public class OrganizacionController extends GenericController{
 
 	public String crearEntidadBase(Request request,Response response){
 		Gson gson2 = new Gson();
-
-		EntidadBaseNueva entidadDato = gson2.fromJson(request.body(),EntidadBaseNueva.class);
+		EntidadBaseNueva entidadDato;
+		try {
+			entidadDato = gson2.fromJson(request.body(),EntidadBaseNueva.class);
+			
+	        }
+	        catch(Exception ex){
+	        	 this.respuesta.setCode(404);
+	             this.respuesta.setMessage("No se logro mapear el json con la entidad");
+	             this.jsonResponse = gson.toJson(this.respuesta);
+	             response.body(this.jsonResponse);
+	             return response.body();
+	        }
 		EntidadBase entidad;
 		OrganizacionRespuesta organizacionCreada= new OrganizacionRespuesta();
 		try{
@@ -150,9 +162,20 @@ public String crearEntidadJuridicaOsc(Request request,Response response){
 
 		
 		Gson gson2 = new Gson();
+		EntidadJuridicaOscNueva organizacionDato;
 
 		this.repoEntidad= new Repositorio<EntidadJuridica>(new DaoHibernate<EntidadJuridica>(EntidadJuridica.class));
-		EntidadJuridicaOscNueva organizacionDato = gson2.fromJson(request.body(),EntidadJuridicaOscNueva.class);
+		try {
+			organizacionDato = gson2.fromJson(request.body(),EntidadJuridicaOscNueva.class);
+			
+	        }
+	        catch(Exception ex){
+	        	 this.respuesta.setCode(404);
+	             this.respuesta.setMessage("No se logro mapear el json con la entidad");
+	             this.jsonResponse = gson.toJson(this.respuesta);
+	             response.body(this.jsonResponse);
+	             return response.body();
+	        }
 		EntidadJuridica entidad=mapOrganizacionOsc(organizacionDato);
 		
 		Osc osc=new Osc();
@@ -182,9 +205,20 @@ public String crearEntidadJuridicaOsc(Request request,Response response){
 public String crearEntidadJuridicaEmpresa(Request request,Response response){
 	
 	Gson gson2 = new Gson();
+	EntidadJuridicaEmpresaNueva organizacionDato;
 
-	this.repoEntidad= new Repositorio<EntidadJuridica>(new DaoHibernate<EntidadJuridica>(EntidadJuridica.class));
-	EntidadJuridicaEmpresaNueva organizacionDato = gson2.fromJson(request.body(),EntidadJuridicaEmpresaNueva.class);
+		try {
+		organizacionDato = gson2.fromJson(request.body(),EntidadJuridicaEmpresaNueva.class);
+		
+        }
+        catch(Exception ex){
+        	 this.respuesta.setCode(404);
+             this.respuesta.setMessage("No se logro mapear el json con la empresa");
+             this.jsonResponse = gson.toJson(this.respuesta);
+             response.body(this.jsonResponse);
+             return response.body();
+        }
+	
 	EntidadJuridica entidad=mapOrganizacionEmpresa(organizacionDato);
 	Sector sector= repoSector.buscar(organizacionDato.sectorId);
 	Empresa empresa=new Empresa();
