@@ -76,6 +76,9 @@ public class Router {
 
         PresupuestoRestController presupuestoRestController = new PresupuestoRestController(tokenService, TOKEN_PREFIX);
         ItemsController itemsController = new ItemsController(tokenService, TOKEN_PREFIX);
+
+        FilesController filesController = new FilesController(tokenService, TOKEN_PREFIX);
+
         /****  Verificacion de credenciales  ******/
         Spark.before("/api/*",authFilter);
 
@@ -139,6 +142,8 @@ public class Router {
         Spark.post("/api/admin/entidadBase",organizacionController::crearEntidadBase);
         /****  EntidadBaseRestController ********/
         Spark.get("/api/entidades", entidadRestController::listarEntidades);
+        /*** Descargar archivos               ***/
+        Spark.get("/files/:filename", filesController::descargarArchivo);
 
         /**** Cierre de entityManager    ********/
         Spark.after("/api/*",(request, response) -> {

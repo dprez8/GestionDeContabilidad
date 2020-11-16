@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 import static org.apache.commons.io.FilenameUtils.getExtension;
@@ -36,6 +37,11 @@ public class FormFileManager {
         return tempFile.getFileName().toString();
     }
 
+    public static byte[] obtenerFicheroPorFilename(String filename) throws IOException {
+        byte[] bytes = Files.readAllBytes(Paths.get(rutaFicheros + "/" + filename));
+        return bytes;
+    }
+
     public static File crearDirectorio() {
         uploadDir = new File(rutaFicheros);
         uploadDir.mkdir(); // create the upload directory if it doesn't exist
@@ -54,5 +60,9 @@ public class FormFileManager {
     public static String realPath(String nombreFichero) {
         // TODO: verificar que en verdad este archivo existe, sino lanzar excepcion
         return rutaFicheros + "/" + nombreFichero;
+    }
+
+    public static String getExtension(String path) {
+        return getExtension(path);
     }
 }

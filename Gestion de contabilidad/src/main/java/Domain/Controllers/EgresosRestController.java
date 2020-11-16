@@ -50,7 +50,8 @@ public class EgresosRestController extends GenericController {
             "text/html",
             "text/plain",
             "image/jpeg",
-            "image/x-png",
+            "image/png",
+            "image/bmp",
             "application/msword");
 
 
