@@ -31,4 +31,11 @@ public class CategorizadorDeEmpresas {
     public static void addCategoriasPorSector(CategoriaPorSector... categoria_sector){
         Collections.addAll(categoriasPorSector, categoria_sector);
     }
+    
+    public static void agregarCategorias(List<CategoriaPorSector> categorias){
+    	for(CategoriaPorSector categoria: categorias){
+    		addCategoriasPorSector(categoria);
+    	}
+   
+    }
 }

@@ -12,6 +12,8 @@ import com.google.gson.Gson;
 import Domain.Entities.ApiPaises.Ciudad;
 import Domain.Entities.ApiPaises.Pais;
 import Domain.Entities.ApiPaises.Provincia;
+import Domain.Entities.CategorizadorDeEmpresas.CategoriaPorSector;
+import Domain.Entities.CategorizadorDeEmpresas.CategorizadorDeEmpresas;
 import Domain.Entities.CategorizadorDeEmpresas.Sector;
 import Domain.Entities.ClasesParciales.EntidadBaseDato;
 import Domain.Entities.ClasesParciales.EntidadBaseNueva;
@@ -42,6 +44,7 @@ public class OrganizacionController extends GenericController{
 	private Repositorio<Pais> repoPais;
 	private Repositorio<Provincia> repoProvincia;
 	private Repositorio<Ciudad> repoCiudad;
+	private Repositorio<CategoriaPorSector> repoCategoria;
 
 	public OrganizacionController(TokenService tokenService, String tokenPrefix) {
 		super(tokenService,tokenPrefix);
@@ -53,6 +56,7 @@ public class OrganizacionController extends GenericController{
 		this.repoPais = new Repositorio<Pais>(new DaoHibernate<Pais>(Pais.class));
 		this.repoProvincia = new Repositorio<Provincia>(new DaoHibernate<Provincia>(Provincia.class));
 		this.repoCiudad = new Repositorio<Ciudad>(new DaoHibernate<Ciudad>(Ciudad.class));
+		this.repoCategoria= new Repositorio<CategoriaPorSector>(new DaoHibernate<CategoriaPorSector>(CategoriaPorSector.class));
 	}
 
 	public String listadoSectores(Request request, Response response){
@@ -188,8 +192,16 @@ public String crearEntidadJuridicaEmpresa(Request request,Response response){
 	empresa.setCantidadDePersonal(organizacionDato.cantidadDePersonal);
 	empresa.setSector(sector);
 	empresa.setVentasAnuales(organizacionDato.ventasAnuales);
-	
 	entidad.setTipoEntidadJuridica(empresa);
+	
+	//Importante haberPersistido las CategoriaPorSector
+	List<CategoriaPorSector> categorias=repoCategoria.buscarTodos();
+	if(!categorias.isEmpty()){
+		CategorizadorDeEmpresas.agregarCategorias(categorias);
+	}
+	//calcula la categoria de la empresa
+	empresa.cacularCategoria();
+	
 	
 	OrganizacionRespuesta organizacionCreada= new OrganizacionRespuesta();
 	try{
