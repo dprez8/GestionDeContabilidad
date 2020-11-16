@@ -4,6 +4,7 @@ import Domain.Controllers.AdaptersJson.LocalDateAdapter;
 import Domain.Controllers.DTO.EgresoRequest;
 import Domain.Controllers.DTO.EgresoResponse;
 import Domain.Controllers.DTO.ItemRequest;
+import Domain.Controllers.DTO.ModificarEgresoRequest;
 import Domain.Controllers.jwt.TokenService;
 import Domain.Entities.DatosDeOperaciones.*;
 import Domain.Entities.Operaciones.Egreso.BuilderEgresoConcreto;
@@ -117,16 +118,18 @@ public class EgresosRestController extends GenericController {
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())
                 .create();
 
-        EgresoRequest egresoRequest    = this.gson.fromJson(request.body(),EgresoRequest.class);
+        EgresoRequest egresoRequest = null;
+        try {
+            egresoRequest = this.gson.fromJson(request.body(),EgresoRequest.class);
+        }
+        catch (Exception exception) {
+            return error(response, "Error en el tipo de datos al cargar egreso");
+        }
 
         Egreso egreso = asignarEgresoDesde(request, egresoRequest);
 
         if(egreso == null) {
-            this.respuesta.setCode(400);
-            this.respuesta.setMessage("Problema al cargar el egreso");
-            jsonResponse = this.gson.toJson(this.respuesta);
-            response.body(jsonResponse);
-            return response.body();
+            return error(response, "Problema al cargar el egreso");
         }
         this.respuesta.setCode(200);
         this.respuesta.setMessage("Egreso cargado exitosamente");
@@ -140,6 +143,35 @@ public class EgresosRestController extends GenericController {
         response.body(jsonResponse);
 
         return response.body();
+    }
+
+    public String modificarEgreso(Request request, Response response) {
+        String jsonResponse;
+        this.gson  = new GsonBuilder()
+                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())
+                .create();
+
+        ModificarEgresoRequest egresoRequest = null;
+        try {
+            egresoRequest = this.gson.fromJson(request.body(), ModificarEgresoRequest.class);
+        } catch (Exception exception) {
+            return error(response, "Error en el tipo de datos al modificar egreso");
+        }
+
+        Egreso egreso = this.repoEgresos.buscar(egresoRequest.egreso);
+
+        if(egreso == null) {
+            return error(response, "No se encontro el egreso");
+        }
+
+        try {
+            egreso.getDocumento().setPathAdjunto(egresoRequest.pathAdjuntoDocumentoComercial);
+            this.repoEgresos.modificar(egreso);
+        } catch (Exception exception) {
+            return error(response, "Error al cambiar el path adjunto");
+        }
+
+        return respuesta(response, 200,"Egreso modificado exitosamente");
     }
 
     public String listadoDeEgresos(Request request, Response response) {
@@ -239,7 +271,6 @@ public class EgresosRestController extends GenericController {
     }
 
     /***************Private methods***************************************/
-
     private Egreso asignarEgresoDesde (Request request, EgresoRequest egresoRequest) {
         Proveedor proveedor;
         MedioDePago medioDePago;
