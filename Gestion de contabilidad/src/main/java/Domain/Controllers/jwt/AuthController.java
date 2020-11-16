@@ -2,12 +2,8 @@ package Domain.Controllers.jwt;
 
 import Domain.Controllers.DTO.Respuesta;
 import Domain.Controllers.DTO.UsuarioResponse;
-import Domain.Controllers.LoginRestController;
-import Domain.Controllers.PermisosRestController;
 import Domain.Entities.Usuarios.Administrador;
-import Domain.Entities.Usuarios.Estandar;
 import Domain.Entities.Usuarios.Usuario;
-import Domain.Repositories.Daos.DaoHibernate;
 import Domain.Repositories.Repositorio;
 import com.google.common.hash.Hashing;
 import com.google.gson.Gson;

@@ -60,7 +60,6 @@ public class Router {
         AuthFilter authFilter = new AuthFilter("/api/auth",tokenService);
 
         AuthController authController           = new AuthController(tokenService);
-        LoginRestController loginRestController = new LoginRestController();
 
         EgresosRestController egresosRestController = new EgresosRestController(tokenService,TOKEN_PREFIX);
         IngresosRestController ingresosRestController = new IngresosRestController(tokenService,TOKEN_PREFIX);
@@ -85,10 +84,6 @@ public class Router {
         Spark.post("/api/auth/login",authController::login );
         Spark.get("/api/auth/me", authController::me);
         Spark.post("/api/auth/token", authController::refresh);
-
-        /****  Deprecated               ********/
-        Spark.post("/api/login",loginRestController::login);
-        Spark.get("/api/login",loginRestController::sessionStatus);
 
         /****  DireccionPostalController *******/
         Spark.get("/api/pais",direccionController::listadoDePaises);

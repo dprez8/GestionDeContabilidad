@@ -14,6 +14,7 @@
                             <b-card-body :title="`${usuario.nombre} ${usuario.apellido}`">
                                 <b-card-text>
                                     <div><b-icon-person class="mr-2"/>{{usuario.username}}</div>
+                                    <div><b-icon-envelope class="mr-2"/>{{usuario.email}}</div>
                                 </b-card-text>
                             </b-card-body>
                         </b-col>
@@ -99,10 +100,10 @@ export default {
     data() {
         return {
             usuario: {
-                nombre: "Javier",
-                apellido: "Robles",
-                username: "javier",
-                tipo: "Estandar"
+                nombre: "",
+                apellido: "",
+                username: "",
+                email: "",
             },
             entidad: {
                 id: 1,
@@ -125,11 +126,10 @@ export default {
 
             RequestHelper.get('/api/auth/me', {
                 success: (data) => {
-                    // DATOS INCOMPLETOS
-
-                    //this.usuario.username = data.nombre;
-                    //this.entidad = data.organizacion;
-                    console.log(data);
+                    this.usuario.username = data.username;
+                    this.usuario.nombre = data.nombre;
+                    this.usuario.apellido = data.apellido;
+                    this.usuario.email = data.gmail; // ACTUALIZAR
                 },
                 notLoggedIn: () => {
                     this.showLoginModal(true);

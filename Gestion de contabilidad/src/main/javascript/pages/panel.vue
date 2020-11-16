@@ -138,7 +138,6 @@ export default {
             RequestHelper.get('/api/auth/me', {
                 success: (data) => {
                     this.userData.nombre = data.nombre;
-                    this.userData.organizacion = data.organizacion.razonSocial;
                 },
                 notLoggedIn: (data) => {
                     this.showLoginModal(true);

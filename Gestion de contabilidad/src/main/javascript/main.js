@@ -10,7 +10,7 @@ Vue.use(IconsPlugin)
 // Install Router
 Vue.use(VueRouter)
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -18,6 +18,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 // Importamos el componente base
 import App from './App.vue'
 import router from './router.js'
+import jwtDecode from 'jwt-decode'
 
 new Vue({
 	el: "#app",
