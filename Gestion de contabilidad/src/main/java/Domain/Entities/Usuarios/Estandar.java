@@ -24,7 +24,7 @@ public class Estandar extends Usuario {
 	@ManyToOne
 	@JoinColumn(name = "organizacion_id", referencedColumnName = "id")
 	@Cascade(CascadeType.ALL)
-	private EntidadJuridica miOrganizacion; // Conoce su organizacion
+	private Organizacion miOrganizacion; // Conoce su organizacion
 	@Transient
 	private BandejaDeMensajes bandejaDeMensajes;
 
@@ -42,11 +42,11 @@ public class Estandar extends Usuario {
 		return bandejaDeMensajes;
 	}
 
-	public EntidadJuridica getMiOrganizacion() {
+	public Organizacion getMiOrganizacion() {
 		return miOrganizacion;
 	}
 
-	public void setMiOrganizacion(EntidadJuridica miOrganizacion) {
+	public void setMiOrganizacion(Organizacion miOrganizacion) {
 		this.miOrganizacion = miOrganizacion;
 	}
 

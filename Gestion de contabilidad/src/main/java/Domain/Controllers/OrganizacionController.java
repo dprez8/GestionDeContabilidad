@@ -171,7 +171,7 @@ public class OrganizacionController extends GenericController{
 
 		OrganizacionPropia organizacionPropia= new OrganizacionPropia();
 		Estandar usuario = (Estandar) getUsuarioDesdeRequest(request);
-		EntidadJuridica entidadJuridica=usuario.getMiOrganizacion();
+		EntidadJuridica entidadJuridica= (EntidadJuridica) usuario.getMiOrganizacion();
 		
 		organizacionPropia.juridica_id=entidadJuridica.getId();
 		organizacionPropia.juridica_name=entidadJuridica.getNombre();
