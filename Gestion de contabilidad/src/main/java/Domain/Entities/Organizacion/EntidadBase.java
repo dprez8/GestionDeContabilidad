@@ -20,6 +20,14 @@ public class EntidadBase extends Organizacion {
         return entidadJuridica;
     }
 
+    public String getNombreFicticio() {
+        return nombreFicticio;
+    }
+
+    public void setNombreFicticio(String nombreFicticio) {
+        this.nombreFicticio = nombreFicticio;
+    }
+
     public void setEntidadJuridica(EntidadJuridica entidadJuridica) {
         this.entidadJuridica = entidadJuridica;
     }

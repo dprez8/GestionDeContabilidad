@@ -71,7 +71,9 @@ export default {
         return {
             userData: {
                 nombre: "",
-                organizacion: ""
+                apellido: "",
+                username: "",
+                email: ""
             },
             sidebarShow: true,
             reloadPage: false,
@@ -137,7 +139,10 @@ export default {
         getUserData() {
             RequestHelper.get('/api/auth/me', {
                 success: (data) => {
+                    this.userData.username = data.username;
                     this.userData.nombre = data.nombre;
+                    this.userData.apellido = data.apellido;
+                    this.userData.email = data.email;
                 },
                 notLoggedIn: (data) => {
                     this.showLoginModal(true);

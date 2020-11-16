@@ -8,6 +8,7 @@ import Domain.Entities.Operaciones.Egreso.Egreso;
 import Domain.Entities.Operaciones.Ingreso;
 import Domain.Entities.Operaciones.Presupuesto;
 import Domain.Entities.Organizacion.Empresa;
+import Domain.Entities.Organizacion.EntidadBase;
 import Domain.Entities.Organizacion.EntidadJuridica;
 import Domain.Entities.Usuarios.Administrador;
 import Domain.Entities.Usuarios.Estandar;
@@ -81,19 +82,27 @@ public class TestDominio {
     }
     
     @Test
-    public void T1persistirUnaEntidadJuridica (){
+    public void T1persistirUnaEntidadJuridicaYUnaEntidadBase (){
 
         Empresa pyme = new Empresa();
-        pyme.setCantidadDePersonal(3);
-        pyme.setVentasAnuales(5000000.3);
-        pyme.setActividad("Construcciones");
+        pyme.setCantidadDePersonal(8);
+        pyme.setVentasAnuales(8000000);
+        pyme.setActividad("Servicio de Alojamiento");
 
         EntidadJuridica entidadJuridica = new EntidadJuridica();
-        entidadJuridica.setCuit("1234");
-        entidadJuridica.setAltura(1234);
-        entidadJuridica.setRazonSocial("Entidad Juridica");
+        entidadJuridica.setNombreFicticio("Surcos");
+        entidadJuridica.setRazonSocial("Surcos CS");
+        entidadJuridica.setCuit("30-25888897-8");
+        entidadJuridica.setCalle("Jerónimo Salguero");
+        entidadJuridica.setAltura(2800);
         entidadJuridica.setTipoEntidadJuridica(pyme);
-        entidadJuridica.setNombre("Organizacion");
+        entidadJuridica.setNombre("Colectivo de Derechos de Infancia y Adolescencia - CDIA");
+
+        EntidadBase entidadBase = new EntidadBase();
+        entidadBase.setEntidadJuridica(entidadJuridica);
+        entidadBase.setNombreFicticio("Andhes");
+
+        entidadJuridica.addEntidadesBase(entidadBase);
 
         this.repoEntidadJuridica.agregar(entidadJuridica);
         SchedulerInit schedulerInit = new SchedulerInit();
@@ -108,7 +117,7 @@ public class TestDominio {
     public void T2obtenerAPepsi () {
         EntidadJuridica pymeJuridica = this.repoEntidadJuridica.buscar(1);
 
-        Assert.assertEquals("Entidad Juridica",pymeJuridica.getRazonSocial());
+        Assert.assertEquals("Surcos CS",pymeJuridica.getRazonSocial());
 
         Empresa pyme = (Empresa) pymeJuridica.getTipoEntidadJuridica();
         Assert.assertEquals("Construcciones",pyme.getActividad());
@@ -250,7 +259,7 @@ public class TestDominio {
         Assert.assertEquals(1,primerPresupuesto.getEgresoAsociado().getId());
         Assert.assertEquals(1,segundoPresupuesto.getEgresoAsociado().getId());
         Assert.assertEquals("Factura A",unaCompra.getDocumento().getTipo().getNombreTipoDeDocumento());
-        Assert.assertEquals("Entidad Juridica",pepsiCompra.getRazonSocial());
+        Assert.assertEquals("Surcos CS",pepsiCompra.getRazonSocial());
         Assert.assertEquals("Placa de video 4GB DDR5",unaCompra.getItems().get(1).getItem().getDescripcion());
         Assert.assertEquals("Memoria RAM 4GB DDR3",unaCompra.getItems().get(0).getItem().getDescripcion());
         Assert.assertEquals(2,unaCompra.getPresupuestos().get(0).getId());

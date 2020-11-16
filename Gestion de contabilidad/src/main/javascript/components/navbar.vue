@@ -21,7 +21,7 @@
         >
             <b-list-group flush>
                 <b-list-group-item :to="miCuenta()" @click="userPanelShow = false">
-                    <b-icon-person-fill class="mr-2"></b-icon-person-fill> {{userData.nombre}}
+                    <b-icon-person-fill class="mr-2"></b-icon-person-fill> {{userData.nombre}} {{userData.apellido}}
                 </b-list-group-item>
                 <b-list-group-item button @click="logout">
                     <b-icon-box-arrow-left class="mr-2"></b-icon-box-arrow-left> Cerrar sesión

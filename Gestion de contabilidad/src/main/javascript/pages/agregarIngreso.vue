@@ -11,7 +11,18 @@
                 <span class="mr-2"><strong>Entidad</strong></span>
             </div>
             <div class="col">
-                <b-select :options="entidadesOptions" v-model="ingreso.organizacion_id"></b-select>
+                <b-collapse :visible="(!ingreso.entidad && falloInput)">
+                    <b-badge variant="danger">Seleccione una Entidad</b-badge>
+                </b-collapse>
+                <b-overlay spinner-variant="primary" :show="entidadesLoading" rounded="sm">
+                    <b-select 
+                        :state="(!ingreso.entidad && falloInput) ? false : null"
+                        :options="entidadesOptions" v-model="ingreso.entidad">
+                        <template #first>
+                            <b-form-select-option :value="null" disabled>-- Selecciona una Entidad --</b-form-select-option>
+                        </template>
+                    </b-select>
+                </b-overlay>
             </div>
             <div class="col-lg-1 col-xl-3"></div>
         </div>
@@ -44,15 +55,31 @@
         </div>
         <div class="row mb-4 mx-2">
             <div class="col-sm-4 col-lg-3 text-sm-right py-2">
+                <span class="mr-2"><strong>Fecha límite de aceptabilidad de egresos</strong></span>
+            </div>
+            <div class="col">
+                <b-collapse :visible="(!ingreso.fechaAceptacionEgresos && falloInput)">
+                    <b-badge variant="danger">Ingrese fecha límite</b-badge>
+                </b-collapse>
+                <b-form-datepicker placeholder="Seleccione fecha de la Operación" class="mb-2"
+                    :state="(!ingreso.fechaAceptacionEgresos && falloInput) ? false : null" v-model="ingreso.fechaAceptacionEgresos"></b-form-datepicker>
+            </div>
+            <div class="col-lg-1 col-xl-3"></div>
+        </div>
+        <div class="row mb-4 mx-2">
+            <div class="col-sm-4 col-lg-3 text-sm-right py-2">
                 <span class="mr-2"><strong>Monto Total</strong></span>
             </div>
             <div class="col">
                 <b-collapse :visible="(!ingreso.montoTotal && falloInput)">
                     <b-badge variant="danger">Ingrese el monto total</b-badge>
                 </b-collapse>
-                <b-form-input placeholder="Ingrese monto total"
-                    :state="(!ingreso.montoTotal && falloInput) ? false : null"
-                    v-model="ingreso.montoTotal"></b-form-input>
+                <b-input-group prepend="$"> 
+                    <b-form-input placeholder="Ingrese monto total"
+                        :state="(!ingreso.montoTotal && falloInput) ? false : null"
+                        v-model="ingreso.montoTotal">
+                    </b-form-input>
+                </b-input-group>
             </div>
             <div class="col-lg-1 col-xl-3"></div>
         </div>
@@ -86,24 +113,19 @@ export default {
     data() {
         return {
             ingreso: {
-                organizacion_id: null,
+                entidad: null,
                 fechaOperacion: null,
                 fechaAceptacionEgresos: null,
                 descripcion: null,
                 montoTotal: null
             },
+            entidadesLoading: false,
             entidadesOptions: [
-                {text: "xd", value: 1}
+                {text: "Una entidad prueba", value: 1}
             ],
             falloInput: false,
             falloCargarIngreso: false,
             ingresoLoading: false
-        }
-    },
-    computed: {
-        state(data) {
-            console.log(data);
-            return false;
         }
     },
     inject: ['errorHandling', 'createToast', 'showLoginModal'],
@@ -112,7 +134,9 @@ export default {
         confirmar() {
             // Creo el ingreso
             var todosLosCamposRellenos = 
-                this.ingreso.fechaOperacion &&
+                this.ingreso.entidad                &&
+                this.ingreso.fechaOperacion         &&
+                this.ingreso.fechaAceptacionEgresos &&
                 this.ingreso.montoTotal                          
 
             this.falloInput = !todosLosCamposRellenos;
@@ -150,6 +174,40 @@ export default {
                 }
             });
         },
+        cargarEntidadesAPI() {
+            this.entidadesLoading = true;
+
+            RequestHelper.get('/api/entidades', {
+                success: (data) => {
+                    console.log(data);
+                    this.entidadesOptions = [{
+                        text: `${data.organizacion.razonSocial} - Entidad Jurídica`,
+                        value: data.organizacion.id,
+                    }];
+                    data.organizacion.entidadesBase.forEach((base) => {
+                        this.entidadesOptions.push({
+                            text: `${base.nombreFicticio} - Entidad Base`,
+                            value: base.id
+                        })
+                    })
+                },
+                notLoggedIn: () => {
+                    this.showLoginModal(true);
+                },
+                forbidden: (error) => {
+                    this.errorHandling(error);
+                },
+                error: (error) => {
+                    this.errorHandling(error);
+                },
+                always: () => {
+                    this.entidadesLoading = false;
+                }
+            });
+        }
+    },
+    mounted() {
+        this.cargarEntidadesAPI();
     }
 }
 </script>

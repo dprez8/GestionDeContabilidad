@@ -1,6 +1,7 @@
 package Domain.Entities.Organizacion;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import Domain.Entities.ApiPaises.Ciudad;
@@ -117,6 +118,10 @@ public class EntidadJuridica extends Organizacion {
 
 	public void setEntidadesBase(List<EntidadBase> entidadesBase) {
 		this.entidadesBase = entidadesBase;
+	}
+
+	public void addEntidadesBase(EntidadBase ...entidadesBase) {
+		Collections.addAll(this.entidadesBase, entidadesBase);
 	}
 
 	public CategoriaEntidadJuridica getTipoEntidadJuridica() {

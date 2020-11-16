@@ -310,7 +310,7 @@
                     <b-badge variant="danger">Hay problemas en los campos</b-badge>
                 </b-collapse>
                 <b-collapse :visible="(falloCarga)">
-                    <b-badge variant="danger">Hubo un problema al cargar el egreso</b-badge>
+                    <b-badge variant="danger">{{falloCargaMessage}}</b-badge>
                 </b-collapse>
                 <b-button-group>
                     <b-button variant="primary" @click="confirmar">Confirmar</b-button>
@@ -363,6 +363,7 @@ export default {
     data() {
         return {
             egreso: {
+                entidad: null,
                 fechaOperacion: null,
                 proveedor: null,
                 medioDePago: {
@@ -382,6 +383,7 @@ export default {
             idEgreso: null,
             falloInput: false,
             falloCarga: false,
+            falloCargaMessage: "Hubo un problema al cargar el egreso",
             proveedoresSelect: [],
             mediosDePagoSelect: [],
             mediosDePagoType: {
@@ -511,6 +513,7 @@ export default {
             
             // Verifico que los input sean correctos
             var todosLosCamposRellenos = 
+                this.egreso.entidad                            &&
                 this.egreso.fechaOperacion                      &&
                 this.egreso.proveedor                           &&
                 this.egreso.medioDePago.id                      &&
@@ -549,7 +552,8 @@ export default {
                     notLoggedIn: () => {
                         this.showLoginModal(true);
                     },
-                    failed: () => {
+                    failed: (data) => {
+                        this.falloCargaMessage = data;
                         this.falloCarga = true;
                     },
                     forbidden: (error) => {
@@ -581,7 +585,8 @@ export default {
                 notLoggedIn: () => {
                     this.showLoginModal(true);
                 },
-                failed: () => {
+                failed: (data) => {
+                    this.falloCargaMessage = data.message;
                     this.falloCarga = true;
                 },
                 forbidden: (error) => {
@@ -596,6 +601,7 @@ export default {
         },
         crearPresupuestosAPI() {
             // Proximamente
+            console.log("tried");
             this.asociarCategoriasAPI();
         },
         asociarCategoriasAPI() {
