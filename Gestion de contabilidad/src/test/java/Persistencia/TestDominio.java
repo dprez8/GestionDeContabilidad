@@ -10,6 +10,7 @@ import Domain.Entities.Operaciones.Presupuesto;
 import Domain.Entities.Organizacion.Empresa;
 import Domain.Entities.Organizacion.EntidadBase;
 import Domain.Entities.Organizacion.EntidadJuridica;
+import Domain.Entities.Organizacion.Organizacion;
 import Domain.Entities.Usuarios.Administrador;
 import Domain.Entities.Usuarios.Estandar;
 import Domain.Entities.Usuarios.Usuario;
@@ -29,6 +30,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestDominio {
@@ -55,8 +57,8 @@ public class TestDominio {
 
     @Before
     public void antesDePersistir() {
-        this.repoEntidadJuridica = new Repositorio<EntidadJuridica>(new DaoHibernate<EntidadJuridica>(EntidadJuridica.class));
-        this.repoEntidadBase     = new Repositorio<EntidadBase>(new DaoHibernate<EntidadBase>(EntidadBase.class));
+        this.repoEntidadJuridica = new Repositorio<>(new DaoHibernate<>(EntidadJuridica.class));
+        this.repoEntidadBase     = new Repositorio<>(new DaoHibernate<>(EntidadBase.class));
         this.repoUsuarios        = new Repositorio<>(new DaoHibernate<>(Usuario.class));
         this.repoEgresos         = new Repositorio<>(new DaoHibernate<>(Egreso.class));
         this.repoItems           = new Repositorio<>(new DaoHibernate<>(ItemEgreso.class));
@@ -150,27 +152,26 @@ public class TestDominio {
     }
 
     @Test
-    public void T3persistirAUnUsuarioEstandarConEntidadJuridica () throws contraseniaCorta, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, IOException {
-        //EntidadJuridica entidadJuridica = repoEntidadJuridica.buscar(1);
+    public void T3UsuariosConCadaCaso () throws contraseniaCorta, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, IOException {
         List<EntidadJuridica> entidadesJuridicas = repoEntidadJuridica.buscarTodos();
-        EntidadJuridica entidadJuridica = null;
-        try {
-            entidadJuridica = entidadesJuridicas.get(0);
-            Estandar usuario = new Estandar(entidadJuridica,"javier","javier","King","una_contrasenia_segura", "javier@gmail.com");
-            repoUsuarios.agregar(usuario);
-        } catch (Exception ex) {
-            System.out.println("no se encontro ninguna entidad juridica :I");
-        }
-    }
-
-    @Test
-    public void T3persistirAUnUsuarioEstandarConEntidadBase () throws contraseniaCorta, contraseniaMuyComun, repiteContraseniaEnMailOUsuario, IOException {
         List<EntidadBase> entidadesBase = repoEntidadBase.buscarTodos();
+        EntidadJuridica entidadJuridica = null;
+        EntidadJuridica entidadJuridica2 = null;
         EntidadBase entidadBase = null;
         try {
-            entidadBase = entidadesBase.get(0);
-            Estandar usuario = new Estandar(entidadBase,"julian","julian","joestar","12345678", "julian@gmail.com");
+            entidadJuridica = entidadesJuridicas.get(0);
+            Estandar usuario = new Estandar(entidadJuridica,"juridica1","Julian","De Juridica 1","juridica1", "julian@gmail.com");
             repoUsuarios.agregar(usuario);
+
+            entidadJuridica2 = entidadesJuridicas.get(1);
+            Estandar usuario2 = new Estandar(entidadJuridica2,"juridica2","Javier","De Juridica 2","juridica2", "javier@gmail.com");
+            repoUsuarios.agregar(usuario2);
+
+            EntidadJuridica finalEntidadJuridica = entidadJuridica;
+            entidadesBase = entidadesBase.stream().filter(unaEntidadBase -> unaEntidadBase.getEntidadJuridica().equals(finalEntidadJuridica)).collect(Collectors.toList());
+            entidadBase = entidadesBase.get(0);
+            Estandar usuario3 = new Estandar(entidadBase,"base1juridica1","Jonas","De Base 1 De Juridica 1","base1juridica1", "jonas@gmail.com");
+            repoUsuarios.agregar(usuario3);
         } catch (Exception ex) {
             System.out.println("no se encontro ninguna entidad juridica :I");
         }
