@@ -2,7 +2,11 @@ package Domain.Controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import Domain.Controllers.jwt.TokenService;
+import Domain.Entities.Organizacion.Organizacion;
+import Domain.Entities.Usuarios.Estandar;
 import com.google.gson.Gson;
 
 import Domain.Controllers.DTO.Respuesta;
@@ -16,11 +20,15 @@ import com.google.gson.annotations.Expose;
 import spark.Request;
 import spark.Response;
 
-public class ItemsController {
+public class ItemsController extends GenericController {
 
-private Repositorio<Item> repoItem;
-private Repositorio<TipoItem> repoTipoItem;
-	
+    private Repositorio<Item> repoItem;
+    private Repositorio<TipoItem> repoTipoItem;
+
+    public ItemsController(TokenService tokenService, String tokenPrefix) {
+        super(tokenService, tokenPrefix);
+    }
+
 	public String listadoDeItems(Request request, Response response) {
         Gson gson = new GsonBuilder()
                         .excludeFieldsWithoutExposeAnnotation()
@@ -34,8 +42,11 @@ private Repositorio<TipoItem> repoTipoItem;
 
         VinculadorItem vinculadorItem = new VinculadorItem();
 
+        Estandar usuario = (Estandar) getUsuarioDesdeRequest(request);
+        Organizacion organizacion = usuario.getMiOrganizacion();
         try {
-        	items= this.repoItem.buscarTodos();
+        	items = this.repoItem.buscarTodos();
+        	items = items.stream().filter(unItem -> unItem.getOrganizacion().equals(organizacion)).collect(Collectors.toList());
 
 	        vinculadorItem.code    = 200;
 	        vinculadorItem.message = "Items cargados exitosamente";

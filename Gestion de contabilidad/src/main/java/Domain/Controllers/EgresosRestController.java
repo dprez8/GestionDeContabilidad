@@ -301,7 +301,13 @@ public class EgresosRestController extends GenericController {
         Repositorio<TipoItem> repoTipoItem = new Repositorio<>(new DaoHibernate<>(TipoItem.class));
 
         List<Item> items = repoItem.buscarTodos();
-
+        // filtro los items por organizacion
+        try {
+            items = items.stream().filter(unItem -> unItem.getOrganizacion().equals(organizacion)).collect(Collectors.toList());
+        } catch (Exception exception) {
+            System.out.println("oof falle al obtener items");
+        }
+        // filtro por descripcion
         try {
             item = items.stream()
                     .filter(unItem -> unItem.getDescripcion().equals(itemRequest.descripcion))

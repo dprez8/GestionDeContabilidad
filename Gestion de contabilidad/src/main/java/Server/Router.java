@@ -75,7 +75,7 @@ public class Router {
         MedioDePagoController medioController = new MedioDePagoController();
 
         PresupuestoRestController presupuestoRestController = new PresupuestoRestController(tokenService, TOKEN_PREFIX);
-        ItemsController itemsController = new ItemsController();
+        ItemsController itemsController = new ItemsController(tokenService, TOKEN_PREFIX);
         /****  Verificacion de credenciales  ******/
         Spark.before("/api/*",authFilter);
 
