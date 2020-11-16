@@ -67,12 +67,13 @@ public class Router {
         AsociacionOperacionesRestController asociacionOperacionesRestController = new AsociacionOperacionesRestController(tokenService,TOKEN_PREFIX);
         BandejaDeMensajesRestController bandejaDeMensajesRestController= new BandejaDeMensajesRestController(tokenService,TOKEN_PREFIX);
         OrganizacionController organizacionController = new OrganizacionController(tokenService,TOKEN_PREFIX);
+        CategoriasEgresosController categoriasEgresosController = new CategoriasEgresosController(tokenService,TOKEN_PREFIX);
+        CriteriosCategoriasController criteriosCategoriasController = new CriteriosCategoriasController();
 
         DireccionPostalController direccionController = new DireccionPostalController();
         ProveedorController proveedorController = new ProveedorController();
         MedioDePagoController medioController = new MedioDePagoController();
 
-        CriteriosCategoriasController categoriasController = new CriteriosCategoriasController();
         PresupuestoRestController presupuestoRestController = new PresupuestoRestController();
         ItemsController itemsController = new ItemsController();
 
@@ -109,10 +110,12 @@ public class Router {
         Spark.post("/api/bandeja/visto", bandejaDeMensajesRestController::mensajeVisto);
 
         /****  CriteriosCategoriasController  ******/
-        Spark.get("/api/criterios",categoriasController::listadoCriterios);
-        Spark.post("/api/admin/categoria",categoriasController::crearCategoria);
-        Spark.post("/api/admin/criterio",categoriasController::crearCriterio);
-        Spark.post("/api/categorias/asociar",categoriasController::asociarCategoriaEgreso);
+        Spark.get("/api/criterios",criteriosCategoriasController::listadoCriterios);
+        Spark.post("/api/admin/criterio",criteriosCategoriasController::crearCriterio);
+
+        /**** CategoriasEgresosController  ******/
+        Spark.post("/api/admin/categoria",categoriasEgresosController::crearCategoria);
+        Spark.post("/api/categorias/asociar",categoriasEgresosController::asociarCategoriaEgreso);
         //Spark.post("/api/admin/darJerarquiaCriterio",categoriasController::darJerarquiaACriterio);
 
         /****  EgresosRestController       ********/
@@ -121,12 +124,14 @@ public class Router {
         Spark.get("/api/operaciones/egreso/:egresoId", egresosRestController::mostrarEgreso);
         Spark.post("/api/operaciones/egreso/cargarArchivos",egresosRestController::cargarArchivoDocumentoComercial);
 
+        /****  ItemsController    ********/
+        Spark.get("/api/items",itemsController::listadoDeItems);
+
         /****  IngresosRestController     ********/
         Spark.get("/api/operaciones/ingresos",ingresosRestController::listadoDeIngresos);
         Spark.post("/api/operaciones/ingreso",ingresosRestController::cargarNuevoIngreso);
 
         /****  AsociacionRestController    ********/
-        Spark.get("/api/items",itemsController::listadoDeItems);
         Spark.post("/api/operaciones/asociarManualmente",asociacionOperacionesRestController::asociarManualmente);
 
         /****  PresupuestoRestController    ********/
