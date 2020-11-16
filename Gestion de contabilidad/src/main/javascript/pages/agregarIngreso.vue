@@ -8,26 +8,6 @@
         </div>
         <div class="row mb-4 mx-2">
             <div class="col-sm-4 col-lg-3 text-sm-right py-2">
-                <span class="mr-2"><strong>Entidad</strong></span>
-            </div>
-            <div class="col">
-                <b-collapse :visible="(!ingreso.entidad && falloInput)">
-                    <b-badge variant="danger">Seleccione una Entidad</b-badge>
-                </b-collapse>
-                <b-overlay spinner-variant="primary" :show="entidadesLoading" rounded="sm">
-                    <b-select 
-                        :state="(!ingreso.entidad && falloInput) ? false : null"
-                        :options="entidadesOptions" v-model="ingreso.entidad">
-                        <template #first>
-                            <b-form-select-option :value="null" disabled>-- Selecciona una Entidad --</b-form-select-option>
-                        </template>
-                    </b-select>
-                </b-overlay>
-            </div>
-            <div class="col-lg-1 col-xl-3"></div>
-        </div>
-        <div class="row mb-4 mx-2">
-            <div class="col-sm-4 col-lg-3 text-sm-right py-2">
                 <span class="mr-2"><strong>Descripción</strong></span>
             </div>
             <div class="col">
@@ -76,6 +56,7 @@
                 </b-collapse>
                 <b-input-group prepend="$"> 
                     <b-form-input placeholder="Ingrese monto total"
+                        type="number"
                         :state="(!ingreso.montoTotal && falloInput) ? false : null"
                         v-model="ingreso.montoTotal">
                     </b-form-input>
@@ -113,16 +94,11 @@ export default {
     data() {
         return {
             ingreso: {
-                entidad: null,
                 fechaOperacion: null,
                 fechaAceptacionEgresos: null,
                 descripcion: null,
                 montoTotal: null
             },
-            entidadesLoading: false,
-            entidadesOptions: [
-                {text: "Una entidad prueba", value: 1}
-            ],
             falloInput: false,
             falloCargarIngreso: false,
             ingresoLoading: false
@@ -134,7 +110,6 @@ export default {
         confirmar() {
             // Creo el ingreso
             var todosLosCamposRellenos = 
-                this.ingreso.entidad                &&
                 this.ingreso.fechaOperacion         &&
                 this.ingreso.fechaAceptacionEgresos &&
                 this.ingreso.montoTotal                          
@@ -174,40 +149,6 @@ export default {
                 }
             });
         },
-        cargarEntidadesAPI() {
-            this.entidadesLoading = true;
-
-            RequestHelper.get('/api/entidades', {
-                success: (data) => {
-                    console.log(data);
-                    this.entidadesOptions = [{
-                        text: `${data.organizacion.razonSocial} - Entidad Jurídica`,
-                        value: data.organizacion.id,
-                    }];
-                    data.organizacion.entidadesBase.forEach((base) => {
-                        this.entidadesOptions.push({
-                            text: `${base.nombreFicticio} - Entidad Base`,
-                            value: base.id
-                        })
-                    })
-                },
-                notLoggedIn: () => {
-                    this.showLoginModal(true);
-                },
-                forbidden: (error) => {
-                    this.errorHandling(error);
-                },
-                error: (error) => {
-                    this.errorHandling(error);
-                },
-                always: () => {
-                    this.entidadesLoading = false;
-                }
-            });
-        }
-    },
-    mounted() {
-        this.cargarEntidadesAPI();
     }
 }
 </script>

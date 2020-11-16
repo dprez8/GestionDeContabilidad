@@ -25,15 +25,6 @@
         </div>
         <div class="row mb-4 mx-2">
             <div class="col-sm-4 col-lg-3 text-sm-right py-2">
-                <span class="mr-2"><strong>Organización</strong></span>
-            </div>
-            <div class="col bg-light p-2">
-                <span class="ml-2">{{getCookie("organizacion")}}</span>
-            </div>
-            <div class="col-lg-1 col-xl-3"></div>
-        </div>
-        <div class="row mb-4 mx-2">
-            <div class="col-sm-4 col-lg-3 text-sm-right py-2">
                 <span class="mr-2"><strong>Fecha Operación</strong></span>
             </div>
             <div class="col">
@@ -363,7 +354,6 @@ export default {
     data() {
         return {
             egreso: {
-                entidad: null,
                 fechaOperacion: null,
                 proveedor: null,
                 medioDePago: {
@@ -513,7 +503,6 @@ export default {
             
             // Verifico que los input sean correctos
             var todosLosCamposRellenos = 
-                this.egreso.entidad                            &&
                 this.egreso.fechaOperacion                      &&
                 this.egreso.proveedor                           &&
                 this.egreso.medioDePago.id                      &&
@@ -674,6 +663,37 @@ export default {
             } else {
                 this.$router.push('/operaciones/egreso');
             }
+        },
+        cargarEntidadesAPI() {
+            this.entidadesLoading = true;
+
+            RequestHelper.get('/api/entidades', {
+                success: (data) => {
+                    console.log(data);
+                    this.entidadesOptions = [{
+                        text: `${data.organizacion.razonSocial} - Entidad Jurídica`,
+                        value: data.organizacion.id,
+                    }];
+                    data.organizacion.entidadesBase.forEach((base) => {
+                        this.entidadesOptions.push({
+                            text: `${base.nombreFicticio} - Entidad Base`,
+                            value: base.id
+                        })
+                    })
+                },
+                notLoggedIn: () => {
+                    this.showLoginModal(true);
+                },
+                forbidden: (error) => {
+                    this.errorHandling(error);
+                },
+                error: (error) => {
+                    this.errorHandling(error);
+                },
+                always: () => {
+                    this.entidadesLoading = false;
+                }
+            });
         },
         cargarProveedoresAPI() {
             this.proveedoresLoading = true;
