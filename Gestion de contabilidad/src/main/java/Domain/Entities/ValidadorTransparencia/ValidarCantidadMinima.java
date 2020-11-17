@@ -16,7 +16,7 @@ public class ValidarCantidadMinima extends ValidacionDeTransparencia {
 	public String validarEgreso(Egreso egreso){
 		String cuerpo;
 		if(egreso.getPresupuestos().isEmpty())
-			return "El egreso no posee presupuestos asociados para la validacion.";
+			return "no posee presupuestos asociados para la validacion.";
 		if(egreso.getCantidadPresupuestos()==0){
 			cuerpo = "Ningun presupuesto es requerido para su validacion.";
 		}

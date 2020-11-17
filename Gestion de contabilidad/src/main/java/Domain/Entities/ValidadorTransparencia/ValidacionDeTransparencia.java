@@ -6,6 +6,8 @@ import Domain.Entities.Operaciones.Presupuesto;
 import Domain.Entities.DatosDeOperaciones.*;
 
 import javax.persistence.*;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 
 
 @Entity
@@ -15,9 +17,6 @@ import javax.persistence.*;
 public abstract class ValidacionDeTransparencia extends EntidadPersistente {
 
 	public abstract String validarEgreso(Egreso egreso);
-	public String getIngresoString(Egreso egreso) {
-		return 	"El egreso " + egreso.getId() + ", " + egreso.getFechaOperacion();
-	}
 
 	protected boolean validarPresupuesto(Egreso egreso, Presupuesto presupuesto) {
 	if (coincideProveedor(egreso, presupuesto) &&

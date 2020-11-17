@@ -24,7 +24,7 @@ public class ValidarConPresupuesto extends ValidacionDeTransparencia {
 	public String validarEgreso(Egreso egreso) {
 		String cuerpo;
 		if(egreso.getPresupuestos().size() == 0)
-			return "El egreso no tiene presupuestos";
+			return "no tiene presupuestos";
 
 		Presupuesto presupuestoElegido = egreso.getPresupuestos().stream()
 											.filter(unPresupuesto->
@@ -33,13 +33,13 @@ public class ValidarConPresupuesto extends ValidacionDeTransparencia {
 												.orElse(null);
 
 		if (presupuestoElegido != null) {
-			cuerpo = "Se validó el egreso con uno de los presupuestos.";
+			cuerpo = "Se validó con uno de los presupuestos.";
 			// actualizo el validador
 			egreso.setPresupuestoValidado(presupuestoElegido);
 			repoEgresos.modificar(egreso);
 		}
 		else 
-			cuerpo = "No se validó el egreso con alguno de los presupuesto.";
+			cuerpo = "No se validó con ninguno de los presupuestos.";
 		
 		return cuerpo;
 	}

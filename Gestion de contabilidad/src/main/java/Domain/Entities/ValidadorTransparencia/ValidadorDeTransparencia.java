@@ -1,5 +1,7 @@
 package Domain.Entities.ValidadorTransparencia;
 
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.*;
 
 import Domain.Entities.EntidadPersistente.EntidadPersistente;
@@ -26,11 +28,17 @@ public class ValidadorDeTransparencia extends EntidadPersistente {
 
 	public void validarEgreso (Egreso egreso) {
 		List<String> resultados = new ArrayList<>();
+
+		resultados.add(getIngresoString(egreso));
 		validaciones.forEach(unaValidacion->
 							 resultados.add(validarYConcatenarResultado(egreso,unaValidacion)));
 		depositarEnLaBandeja(egreso,resultados);
 		egreso.setValidado(true);
 		resultados.clear();
+	}
+
+	public String getIngresoString(Egreso egreso) {
+		return 	"El egreso " + egreso.getId() + ", " + DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(egreso.getFechaOperacion()) + ": \n";
 	}
 
 	private void depositarEnLaBandeja(Egreso egreso,List<String> mensajes){
@@ -41,7 +49,7 @@ public class ValidadorDeTransparencia extends EntidadPersistente {
 	}
 
 	private String validarYConcatenarResultado(Egreso egreso, ValidacionDeTransparencia unaValidacion){
-		return unaValidacion.getIngresoString(egreso) + unaValidacion.validarEgreso(egreso) + " Número de egreso: " + egreso.getId();
+		return unaValidacion.validarEgreso(egreso);
 	}
 	public List<ValidacionDeTransparencia> getValidaciones() {
 		return validaciones;

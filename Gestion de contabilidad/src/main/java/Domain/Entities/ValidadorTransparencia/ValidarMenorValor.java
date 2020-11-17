@@ -15,12 +15,12 @@ public class ValidarMenorValor extends ValidacionDeTransparencia {
 	public String validarEgreso(Egreso egreso) {
 
 		if(egreso.getPresupuestos().isEmpty()){
-			return "El egreso no tiene presupuestos asociados";
+			return "no tiene presupuestos asociados";
 		}
 
 		String cuerpo;
 		if(egreso.getPresupuestos().size() == 0)
-			return "El egreso no tiene presupuestos";
+			return "no tiene presupuestos";
 
 		Presupuesto presupuestoObtenido = egreso.getPresupuestos().stream()
 											.filter(unPresupuesto->
