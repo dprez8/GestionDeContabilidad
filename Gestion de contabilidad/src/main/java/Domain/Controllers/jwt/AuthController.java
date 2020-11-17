@@ -2,6 +2,7 @@ package Domain.Controllers.jwt;
 
 import Domain.Controllers.DTO.Respuesta;
 import Domain.Controllers.DTO.UsuarioResponse;
+import Domain.Entities.Organizacion.EntidadJuridica;
 import Domain.Entities.Usuarios.Administrador;
 import Domain.Entities.Usuarios.Usuario;
 import Domain.Repositories.Repositorio;
@@ -16,6 +17,7 @@ import spark.Response;
 import javax.persistence.NoResultException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class AuthController extends AbstractTokenController{
@@ -28,11 +30,6 @@ public class AuthController extends AbstractTokenController{
     private TokenService tokenService;
     private Respuesta respuesta;
     private Repositorio<Usuario> repoUsuarios;
-
-    /*
-    private static final String FIRST_NAME_PROPERTY = "firstName";
-    private static final String LAST_NAME_PROPERTY = "lastName";
-    private static final String ROLE_PROPERTY = "role";*/
 
     public AuthController(TokenService tokenService) {
         super(tokenService);
@@ -113,115 +110,28 @@ public class AuthController extends AbstractTokenController{
         return "";
     }
 
+    public String listadoUsuarios(Request request, Response response) {
+        this.gson = new GsonBuilder()
+                .excludeFieldsWithoutExposeAnnotation()
+                .serializeNulls()
+                .create();
+        Administrador administrador = (Administrador) getUserDesdeToken(request);
+
+        //List<UsuariosResponse> usuariosResponse = asignarUsuariosDesde(administrador.getJuridicas());
+        return response.body();
+    }
+
     private boolean isAdmin(Usuario usuario) {
         return usuario.getClass().equals(Administrador.class);
     }
 
     /*
-    private void mostrarDatosDeEstandar(Response response,Estandar estandar) {
-        Gson gson = new GsonBuilder()
-                .excludeFieldsWithoutExposeAnnotation()
-                .serializeNulls()
-                .create();
-
-        UsuarioResponse usuarioResponse = new UsuarioResponse();
-        usuarioResponse.code            = 200;
-        usuarioResponse.message         = "Ok";
-        usuarioResponse.organizacion    = estandar.getMiOrganizacion();
-        usuarioResponse.nombre          = estandar.getNombre();
-        String jsonLogin = gson.toJson(usuarioResponse);
-
-        response.body(jsonLogin);
+    private List<UsuariosResponse> asignarUsuariosDesde(List<EntidadJuridica> entidadesJuridicas) {
+        List<UsuariosResponse> usuariosResponse = entidadesJuridicas.stream().map(entidad->mapearUsuarios(entidad.getUsuarios()));
     }
 
-    private void mostrarDatosDeAdministrador(Response response, Administrador administrador) {
-        Gson gson = new GsonBuilder()
-                .excludeFieldsWithoutExposeAnnotation()
-                .serializeNulls()
-                .create();
-
-        UsuarioResponse usuarioResponse = new UsuarioResponse();
-        usuarioResponse.code            = 200;
-        usuarioResponse.message         = "Ok";
-        usuarioResponse.organizacion    = estandar.getMiOrganizacion();
-        usuarioResponse.nombre          = estandar.getNombre();
-        String jsonLogin = gson.toJson(usuarioResponse);
-
-        response.body(jsonLogin);
-    }
-
-
-
-    //public void init() {
-
-        // AUTH FILTER
-        //before(new AuthFilter(AUTH_ENDPOINT_PREFIX, tokenService));
-
-        // REGISTRATION ENDPOINT
-        /**post(AUTH_ENDPOINT_PREFIX + "/registration", (request, response) -> register(request, response));*/
-
-        // LOGIN ENDPOINT
-        //post(AUTH_ENDPOINT_PREFIX + "/login", (request, response) -> login(request, response));
-
-        // LOGOUT ENDPOINT
-        //post(AUTH_ENDPOINT_PREFIX + "/logout", (request, response) -> logout(request));
-
-        // REFRESH ENDPOINT
-        //post(AUTH_ENDPOINT_PREFIX + "/token", (request, response) -> refresh(request, response));
-
-        // ME ENDPOINT
-        //get(AUTH_ENDPOINT_PREFIX + "/me", (request, response) -> me(request, response));
-
-        // ASSIGN ROLE_PROPERTY
-        /**post(AUTH_ENDPOINT_PREFIX + "/roles", (request, response) -> assignRole(request));
-
-        // REVOKE ROLE_PROPERTY
-        Spark.delete(AUTH_ENDPOINT_PREFIX + "/roles", (request, response) -> revokeRole(request));*/
-
-   // }
+    private UsuariosResponse mapearUsuarios(List<>)
     /*
-    private String revokeRole(Request request) throws IOException {
-        if (hasRole(request, new Role[]{Role.ADMIN})) {
-            String json = request.raw().getReader().lines().collect(Collectors.joining());
-            JsonObject jsonRequest = this.gson.fromJson(json, JsonObject.class);
-            if (jsonRequest.has(USER_NAME_PROPERTY) && jsonRequest.has(ROLE_PROPERTY)) {
-                Role role = Role.valueOf(jsonRequest.get(ROLE_PROPERTY).getAsString());
-                if (role != null) {
-                    User user = this.userService.get(jsonRequest.get(USER_NAME_PROPERTY).getAsString());
-                    if (user != null) {
-                        user.revokeRole(role);
-                        this.userService.update(user);
-                    }
-                }
-            }
-        } else {
-            halt(401);
-        }
-
-        return "";
-    }
-
-    private String assignRole(Request request) throws IOException {
-        if (hasRole(request, new Role[]{Role.ADMIN})) {
-            String json = request.raw().getReader().lines().collect(Collectors.joining());
-            JsonObject jsonRequest = gson.fromJson(json, JsonObject.class);
-            if (jsonRequest.has(USER_NAME_PROPERTY) && jsonRequest.has(ROLE_PROPERTY)) {
-                Role role = Role.valueOf(jsonRequest.get(ROLE_PROPERTY).getAsString());
-                if (role != null) {
-                    User user = userService.get(jsonRequest.get(USER_NAME_PROPERTY).getAsString());
-                    if (user != null) {
-                        user.assignRole(role);
-                        userService.update(user);
-                    }
-                }
-            }
-        } else {
-            halt(401);
-        }
-
-        return "";
-    }
-
     private String register(Request request, Response response) throws IOException {
         String json = request.raw().getReader().lines().collect(Collectors.joining());
         JsonObject jsonRequest = gson.fromJson(json, JsonObject.class);
@@ -251,6 +161,13 @@ public class AuthController extends AbstractTokenController{
 
     private boolean validatePost(JsonObject jsonRequest) {
         return jsonRequest != null && jsonRequest.has(USER_NAME_PROPERTY) && jsonRequest.has(PASSWORD_PROPERTY);
+    }
+
+    private class UsuariosResponse{
+        public Integer code;
+        public String message;
+        public Usuario usuario;
+
     }
 
 }

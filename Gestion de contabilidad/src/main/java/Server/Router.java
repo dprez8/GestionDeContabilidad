@@ -90,6 +90,7 @@ public class Router {
         Spark.post("/api/auth/login",authController::login );
         Spark.get("/api/auth/me", authController::me);
         Spark.post("/api/auth/token", authController::refresh);
+        Spark.get("/api/admin/users",authController::listadoUsuarios);
 
         /****  DireccionPostalController *******/
         Spark.get("/api/pais",direccionController::listadoDePaises);
