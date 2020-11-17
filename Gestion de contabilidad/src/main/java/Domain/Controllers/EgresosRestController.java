@@ -245,11 +245,12 @@ public class EgresosRestController extends GenericController {
         egresoDetallado.message      = "Ok";
         egresoDetallado.egreso       = egreso;
         egresoDetallado.estaSuscrito = verificarSuscripcion(usuario,egreso);
+        egresoDetallado.presupuesto  = null;
 
         ValidarConPresupuesto validador = new ValidarConPresupuesto();
         validador.validarEgreso(egreso);
         if (validador.getPresupuestoElegido() != null) {
-            egresoDetallado.presupuesto = validador.getPresupuestoElegido().getId();
+            egresoDetallado.presupuesto = new Integer(validador.getPresupuestoElegido().getId());
         }
 
 
@@ -433,6 +434,6 @@ public class EgresosRestController extends GenericController {
         @Expose
         public boolean estaSuscrito;
         @Expose
-        public int presupuesto;
+        public Integer presupuesto;
     }
 }
