@@ -143,6 +143,8 @@ public class Router {
 
         /****  AsociacionRestController    ********/
         Spark.post("/api/operaciones/asociarManualmente",asociacionOperacionesRestController::asociarManualmente);
+        Spark.get("/api/operaciones/asociarAutomaticamente",asociacionOperacionesRestController::asociarAutomaticamente);
+        Spark.post("/api/admin/configurarVinculador",asociacionOperacionesRestController::configurarVinculador);
 
         /****  PresupuestoRestController    ********/
         Spark.post("/api/operaciones/presupuesto", presupuestoRestController::cargarNuevoPresupuesto);

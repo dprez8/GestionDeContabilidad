@@ -34,20 +34,18 @@ public class VinculacionApi {
 
             if(ingreso != null) {
                 egreso.setIngresoAsociado(ingreso);
-                //ingreso.setEgresos(egreso);
+                ingreso.setEgresos(egreso);
             }
         });
     }
-    public void configurarVinculador(Integer diasDesde, Integer diasHasta, String criterio, Properties properties) throws IOException {
-        enviarConfigurarVinculador(diasDesde, diasHasta, criterio, properties);
+    public void configurarVinculador(String criterio, Properties properties) throws IOException {
+        enviarConfigurarVinculador(criterio, properties);
     }
-    public void configurarVinculador(Integer diasDesde, Integer diasHasta, List<String> criterios, Properties properties) throws IOException {
-        enviarConfigurarVinculador(diasDesde, diasHasta, criterios, properties);
+    public void configurarVinculador(List<String> criterios, Properties properties) throws IOException {
+        enviarConfigurarVinculador(criterios, properties);
     }
-    private void enviarConfigurarVinculador(Integer diasDesde, Integer diasHasta, Object criterio, Properties properties) throws IOException {
+    private void enviarConfigurarVinculador(Object criterio, Properties properties) throws IOException {
         ConfigurarVinculadorRequest configurarVinculadorRequest = new ConfigurarVinculadorRequest();
-        configurarVinculadorRequest.diasDesde = diasDesde;
-        configurarVinculadorRequest.diasHasta = diasHasta;
         configurarVinculadorRequest.criterio = criterio;
 
         ServicioVinculacion
@@ -60,6 +58,7 @@ public class VinculacionApi {
         ingresoAEnviar.numeroIngreso = ingreso.getId();
         ingresoAEnviar.monto = ingreso.montoSobrante();
         ingresoAEnviar.fecha = ingreso.getFechaOperacion().toString();
+        ingresoAEnviar.fechaAceptacionEgreso =ingreso.getFechaAceptacionEgreso().toString();
         return ingresoAEnviar;
     }
     private EgresoAEnviar mapEgresos(Egreso egreso) {

@@ -65,9 +65,11 @@ public class VinculacionMain {
         Ingreso donacion = new Ingreso("Donacion", 5000.0);
                 donacion.setId(5);
                 donacion.setFechaOperacion(LocalDate.of(2020, 9, 26));
+                donacion.setFechaAceptacionEgreso(LocalDate.of(2020,10,1));
         Ingreso venta = new Ingreso("Venta de computadora", 10000.0);
                 venta.setId(7);
                 venta.setFechaOperacion(LocalDate.of(2020, 9, 25));
+                venta.setFechaAceptacionEgreso(LocalDate.of(2020,11,1));
 
         List<Ingreso> ingresos = new ArrayList<>();
         List<Egreso> egresos = new ArrayList<>();
@@ -85,7 +87,7 @@ public class VinculacionMain {
 
         VinculacionApi vinculacionApi = new VinculacionApi();
 
-        vinculacionApi.configurarVinculador(-3, 3, "OrdenValorPrimeroEgreso", prop);
+        vinculacionApi.configurarVinculador("OrdenValorPrimeroEgreso", prop);
         vinculacionApi.vincularEgresosIngresos(ingresos, egresos, prop);
 
         printTest(ingresos, egresos);

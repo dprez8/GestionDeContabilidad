@@ -63,8 +63,6 @@ public class TestPrincipal {
 
         /***************Creacion de condiciones*************/
         this.condicionEntreFechas = new CondicionEntreFechas();
-        condicionEntreFechas.setDiasDesde(-3);
-        condicionEntreFechas.setDiasHasta(3);
 
         this.condicionValor = new CondicionValor();
 

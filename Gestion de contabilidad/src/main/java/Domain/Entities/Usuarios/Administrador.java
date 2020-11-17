@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import Domain.Entities.ApiVinculador.ConfiguracionVinculador;
 import Domain.Entities.BandejaDeMensajes.BandejaDeMensajes;
 import Domain.Entities.Operaciones.CriterioOperacion;
 import Domain.Entities.Organizacion.*;
@@ -20,7 +21,7 @@ public class Administrador extends Usuario{
 
 	@OneToMany(mappedBy = "administrador",fetch = FetchType.LAZY)
 	List<EntidadJuridica> juridicas;
-	
+
 	public Administrador(){
 		this.juridicas= new ArrayList<>();
 	}
@@ -43,4 +44,5 @@ public class Administrador extends Usuario{
 	public void setJuridicas(List<EntidadJuridica> juridicas) {
 		this.juridicas = juridicas;
 	}
+
 }

@@ -9,6 +9,7 @@ public class Ingreso {
     private Integer numeroIngreso;
     private Double monto;
     private LocalDate fecha;
+    private LocalDate fechaAceptacionEgreso;
     private List<Egreso> egresosAsociados;
 
     public Ingreso(){
@@ -55,4 +56,11 @@ public class Ingreso {
         return this.egresosAsociados.stream().collect(Collectors.summingDouble(unEgreso->unEgreso.getMonto()));
     }
 
+    public LocalDate getFechaAceptacionEgreso() {
+        return fechaAceptacionEgreso;
+    }
+
+    public void setFechaAceptacionEgreso(LocalDate fechaAceptacionEgreso) {
+        this.fechaAceptacionEgreso = fechaAceptacionEgreso;
+    }
 }

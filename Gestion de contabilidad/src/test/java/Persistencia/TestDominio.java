@@ -1,5 +1,6 @@
 package Persistencia;
 
+import Domain.Entities.ApiVinculador.ConfiguracionVinculador;
 import Domain.Entities.DatosDeOperaciones.*;
 import Domain.Entities.Operaciones.CategoriaOperacion;
 import Domain.Entities.Operaciones.CriterioOperacion;
@@ -113,6 +114,7 @@ public class TestDominio {
         schedulerJuridica1.setOrganizacion(entidadJuridica);
         schedulerJuridica1.setValidadorDeTransparencia(validador);
         entidadJuridica.setSchedulerInit(schedulerJuridica1);
+        entidadJuridica.setConfiguracionVinculador(new ConfiguracionVinculador());
 
         /************Creacion de una entidad base para una juridica ********************/
         EntidadBase entidadBase = new EntidadBase();
@@ -123,6 +125,7 @@ public class TestDominio {
         entidadBase.setSchedulerInit(schedulerBase1);
         schedulerBase1.setOrganizacion(entidadBase);
         schedulerBase1.setValidadorDeTransparencia(validador);
+        entidadBase.setConfiguracionVinculador(new ConfiguracionVinculador());
 
         entidadJuridica.addEntidadesBase(entidadBase);
         this.repoOrganizacion.modificar(entidadJuridica);
@@ -140,6 +143,7 @@ public class TestDominio {
         schedulerJuridica2.setOrganizacion(entidadJuridica2);
         schedulerJuridica2.setValidadorDeTransparencia(validador);
         entidadJuridica2.setSchedulerInit(schedulerJuridica2);
+        entidadJuridica2.setConfiguracionVinculador(new ConfiguracionVinculador());
 
         /************Creacion de una segunda entidad base para una segunda juridica ********************/
         EntidadBase entidadBase2 = new EntidadBase();
@@ -150,6 +154,7 @@ public class TestDominio {
         entidadBase2.setSchedulerInit(schedulerBase2);
         schedulerBase2.setOrganizacion(entidadBase2);
         schedulerBase2.setValidadorDeTransparencia(validador);
+        entidadBase2.setConfiguracionVinculador(new ConfiguracionVinculador());
 
         entidadJuridica2.addEntidadesBase(entidadBase2);
         this.repoOrganizacion.modificar(entidadJuridica2);
@@ -356,7 +361,8 @@ public class TestDominio {
         ingreso.setDescripcion("Pago de afiliaciones");
         ingreso.setMontoTotal(20000.0);
         ingreso.setOrganizacion(pepsi);
-        ingreso.setFechaOperacion(LocalDate.now());
+        ingreso.setFechaOperacion(LocalDate.of(2020,11,15));
+        ingreso.setFechaAceptacionEgreso(LocalDate.of(2020,11,20));
         this.repoIngresos.agregar(ingreso);
     }
 

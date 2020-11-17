@@ -80,12 +80,7 @@ public class OperacionesRestController {
         Vinculador vinculador = Vinculador.instancia();
         vinculador.setCriterio(criterio);
 
-        Integer diasDesde = configuracionRequest.getDiasDesde();
-        Integer diasHasta = configuracionRequest.getDiasHasta();
-
         CondicionEntreFechas condicionEntreFechas = new CondicionEntreFechas();
-        condicionEntreFechas.setDiasDesde(diasDesde);
-        condicionEntreFechas.setDiasHasta(diasHasta);
         CondicionSinIngresoAsociado condicionSinIngresoAsociado = new CondicionSinIngresoAsociado();
         CondicionValor condicionValor = new CondicionValor();
 

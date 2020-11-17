@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import Domain.Entities.ApiVinculador.ConfiguracionVinculador;
 import Domain.Entities.EntidadPersistente.EntidadPersistente;
 import Domain.Entities.Operaciones.*;
 import Domain.Entities.Operaciones.Egreso.Egreso;
@@ -32,6 +33,10 @@ public abstract class Organizacion extends EntidadPersistente {
 
 	@OneToOne(mappedBy = "organizacion", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	protected SchedulerInit schedulerInit;
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name="configuracion_vinculador_id", referencedColumnName = "id")
+	private ConfiguracionVinculador configuracionVinculador;
 
     public Organizacion(){
     	this.operaciones = new ArrayList<>();
@@ -90,5 +95,13 @@ public abstract class Organizacion extends EntidadPersistente {
 
 	public void setSchedulerInit(SchedulerInit schedulerInit) {
 		this.schedulerInit = schedulerInit;
+	}
+
+	public ConfiguracionVinculador getConfiguracionVinculador() {
+		return configuracionVinculador;
+	}
+
+	public void setConfiguracionVinculador(ConfiguracionVinculador configuracionVinculador) {
+		this.configuracionVinculador = configuracionVinculador;
 	}
 }
