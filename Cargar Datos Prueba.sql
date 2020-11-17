@@ -1,4 +1,5 @@
 USE gestiondecontabilidad;
+SET autocommit = 0;
 
 SET FOREIGN_KEY_CHECKS = 0;
 TRUNCATE TABLE ingreso;
@@ -22,9 +23,31 @@ TRUNCATE TABLE organizacion;
 TRUNCATE TABLE categoria_x_sector;
 TRUNCATE TABLE categoria_empresa;
 TRUNCATE TABLE sector;
+TRUNCATE TABLE tipo_de_documento;
+TRUNCATE TABLE validador_x_validaciones;
+TRUNCATE TABLE validacion_de_transparencia;
+TRUNCATE TABLE validador_de_transparencia;
 SET FOREIGN_KEY_CHECKS = 1;
 
 START TRANSACTION;
+
+INSERT INTO validador_de_transparencia (id) VALUES
+('1');
+
+INSERT INTO validacion_de_transparencia (id, tipo_de_validacion) VALUES
+('1', 'validacion_cantidad_minima'),
+('2', 'validacion_con_presupuesto'),
+('3', 'validacion_menor_valor');
+
+INSERT INTO validador_x_validaciones (ValidadorDeTransparencia_id, validaciones_id) VALUES
+('1', '1'),
+('1', '2'),
+('1', '3');
+
+INSERT INTO tipo_de_documento (id, nombre_tipo) VALUES
+('1', 'Factura A'),
+('2', 'Factura B'),
+('3', 'Factura C');
 
 INSERT INTO sector (sector_id, nombre) VALUES
 ('1', 'Construcción'),
@@ -60,17 +83,42 @@ ON DUPLICATE KEY UPDATE
 name = VALUES(name),
 provincia_id = VALUES(provincia_id);
 
-INSERT INTO categoria_x_sector (categoria_id, sector_id, monto_max, monto_min, personal_max, personal_min) VALUES
-('3', '1', '643710000.0', '115370000.0', '200', '45'),
-('4', '1', '965460000.0', '643710000.0', '590', '200'),
-('2', '2', '59710000.0', '9900000.0', '30', '7');
+INSERT INTO categoria_x_sector (categoria_id, sector_id, monto_min, monto_max, personal_min, personal_max) VALUES
+('1', '1', 0.0,	19450000.0, 1, 12),
+('2', '1', 19450000.0, 115370000.0, 12, 45),
+('3', '1', '115370000.0', '643710000.0', '45', '200'),
+('4', '1', '643710000.0', '965460000.0', '200', '590'),
+('1', '2', 0.0, 9900000.0, 1, 7),
+('2', '2', '9900000.0', '59710000.0', '7', '30'),
+('3', '2', 59710000.0, 494200000.0, 30, 165),
+('4', '2', 494200000.0, 705790000.0, 165, 535),
+('1', '3', 0.0, 36320000.0, 1, 7),
+('2', '3', 36320000.0, 247200000.0, 7, 35),
+('3', '3', 247200000.0, 1821760000.0, 35, 125),
+('4', '3', 1821760000.0, 2602540000.0, 125, 345),
+('1', '4', 0.0, 33920000.0, 1, 15),
+('2', '4', 33920000.0, 243290000.0, 15, 60),
+('3', '4', 243290000.0, 1651750000.0, 60, 235),
+('4', '4', 643710000.0, 2540380000.0, 235, 655),
+('1', '5', 0.0, 17260000.0, 1, 5),
+('2', '5', 17260000.0, 71960000.0, 5, 10),
+('3', '5', 71960000.0, 426720000.0, 10, 50),
+('4', '5', 426720000.0, 676810000.0, 50, 215);
 
 /*ORGANIZACION, si la organizacion esta compuesta por entidades cambiar la relacion organizacion-entidad a uno a muchos, y todo lo que afecte*/
 INSERT INTO organizacion (id, nombre) VALUES
 ('1', 'Equipo Argentino de Antropología Forense - EAAF'), 
 ('2', 'Equipo Argentino de Antropología Forense - EAAF'), 
 ('3', 'Equipo Argentino de Antropología Forense - EAAF'), 
-('4', 'Colectivo de Derechos de Infancia y Adolescencia - CDIA');
+('4', 'Colectivo de Derechos de Infancia y Adolescencia - CDIA'),
+('5', 'Colectivo de Derechos de Infancia y Adolescencia - CDIA');
+
+/*Falta la columna REVISOR y USERNAME(temporalmente lo cargo en mail), y no hay mail en los datos de prueba, el usuario esta asociado a una entidad juridica*/
+INSERT INTO usuario (tipo_usuario, id, contrasenia, username, apellido, nombre, mail, organizacion_id) VALUES
+('administrador', '69', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'admin', 'super', 'admin', 'admin@gmail.com', null),
+('estandar', '1', 'd254a492d8dc4e91cacd0152269012c6b6179fda56d7d4194bf26f6016f8e27e', 'aroco', 'Roco', 'Alejandro', 'aroco@gmail.com', '1'),
+('estandar', '2', 'e90e5d79e28558d4aa5e6e8b77359a9dbe257f30c250f6600c40ab846d07da8b', 'rrojas', 'Rojas', 'Rocío', 'rrojas@gmail.com', '1'),
+('estandar', '3', 'd6ff9b6954cda745c1dcfbd06a94435023ea022633a6c4129ce0d452278aa7fe', 'jazul', 'Azul', 'Julieta', 'jazul@gmail.com', '4');
 
 INSERT INTO categoria_juridica (tipo_juridica, id, /*codigo_osc,*/ actividad, cantidad_personal, ventas_anuales, categoria_id, sector_id) VALUES
 ('empresa', '1', 'Construcción', '150', '600000000.0', '3', '1'),
@@ -79,26 +127,23 @@ INSERT INTO categoria_juridica (tipo_juridica, id, /*codigo_osc,*/ actividad, ca
 ('empresa', '4', 'Servicio de Alojamiento', '8', '8000000.0', '2', '2');
 
 /*Entidad Juridica, falta agregar localidad, nombre de la entidad(la agregue pero no en el get ni en el post), hay ciudades/paises/provincias que no estan en la lista traida de la pagina de mercado libre*/
-INSERT INTO entidad_juridica (nombre_ficticio, altura, calle, /*codigo_igj,*/ cuit, /*piso,*/ razon_social, /*zipcode,*/ id, ciudad_id, pais_id, provincia_id, tipo_entidad_id) VALUES 
-('Oficina Central Buenos Aires', '951', 'Av. Medrano', '30-15269857-2', 'EAAF BA', '1', '172', '1', '7', '1'),
-('Oficina Central Nueva York', '720', 'Liberty Ave', '30-15789655-7', 'EAAF NY', '2', '16447', '25', '411', '2'),
-('Oficina Central México', '55', 'Roberto Gayol', '30-77896583-9', 'EAAF M', '3', '16448', '13', '412', '3'),
-('Surcos', '2800', 'Jerónimo Salguero', '30-25888897-8', 'Surcos CS', '4', '172', '1', '7', '4');
+INSERT INTO entidad_juridica (id, administrador_id, nombre_ficticio, altura, calle, /*codigo_igj,*/ cuit, /*piso,*/ razon_social, /*zipcode,*/ciudad_id, pais_id, provincia_id, tipo_entidad_id) VALUES 
+('1', '69', 'Oficina Central Buenos Aires', '951', 'Av. Medrano', '30-15269857-2', 'EAAF BA', '172', '1', '7', '1'),
+('2', '69', 'Oficina Central Nueva York', '720', 'Liberty Ave', '30-15789655-7', 'EAAF NY', '16447', '25', '411', '2'),
+('3', '69', 'Oficina Central México', '55', 'Roberto Gayol', '30-77896583-9', 'EAAF M', '16448', '13', '412', '3'),
+('4', '69', 'Surcos', '2800', 'Jerónimo Salguero', '30-25888897-8', 'Surcos CS', '172', '1', '7', '4');
 
 /*Hubo un malentendido del tp asi que la asociamos a la entidad juridica por como lo tenemos modelado*/
-INSERT INTO entidad_base (nombre_ficticio, /*descripcion,*/ id, juridica_id) VALUES
-('Andhes' , '1', '4');
-
-/*Falta la columna REVISOR y USERNAME(temporalmente lo cargo en mail), y no hay mail en los datos de prueba, el usuario esta asociado a una entidad juridica*/
-INSERT INTO usuario (tipo_usuario, id, contrasenia, username, apellido, nombre, /*mail,*/ organizacion_id) VALUES
-('estandar', '1', 'd254a492d8dc4e91cacd0152269012c6b6179fda56d7d4194bf26f6016f8e27e', 'aroco', 'Roco', 'Alejandro', '1'),
-('estandar', '2', 'e90e5d79e28558d4aa5e6e8b77359a9dbe257f30c250f6600c40ab846d07da8b', 'rrojas', 'Rojas', 'Rocío', '1'),
-('estandar', '3', 'd6ff9b6954cda745c1dcfbd06a94435023ea022633a6c4129ce0d452278aa7fe', 'jazul', 'Azul', 'Julieta', '4');
+INSERT INTO entidad_base (nombre_ficticio,  id, juridica_id) VALUES
+('Andhes' , '5', '4');
 
 INSERT INTO medio_de_pago (id, medio_de_pago) VALUES
 ('1', 'Efectivo'),
 ('2', 'Tarjeta de Crédito - 3 pagos s/i'),
-('3', 'Tarjeta de Débito');
+('3', 'Tarjeta de Débito'),
+('4', 'Cheque'),
+('5', 'Ticket'),
+('6', 'ATM');
 
 INSERT INTO pago (id, codigo_asociado, medio_id) VALUES
 ('1', '4509 9535 6623 3704', '2'),
@@ -112,19 +157,21 @@ INSERT INTO pago (id, codigo_asociado, medio_id) VALUES
 ('9', null, '1'),
 ('10', null, '1');
 
-INSERT INTO proveedor (proveedor_id, /*altura, calle, documento_proveedor,*/ nombre/*, piso, zipcode, ciudad_id, pais_id, provincia_id*/) VALUES
-('1', 'Pinturerías Serrentino'),
-('2', 'Edesur'),
-('3', 'Metrogas'),
-('4', 'Mitoas SA'),
-('5', 'Ingeniería Comercial SRL'),
-('6', 'Corralón Laprida SRL'),
-('7', 'Telas ZN'),
-('8', 'Pinturerías REX'),
-('9', 'Pinturerías San Jorge'),
-('10', 'La casa del Audio'),
-('11', 'Garbarino'),
-('12', 'Corralón San Juan SRL');
+INSERT INTO proveedor (proveedor_id, /*altura, calle, documento_proveedor,*/ nombre/*, piso, zipcode, ciudad_id, pais_id, provincia_id*/, organizacion_id) VALUES
+('1', 'Pinturerías Serrentino', '1'),
+('2', 'Edesur', '1'),
+('3', 'Metrogas', '1'),
+('4', 'Mitoas SA', '1'),
+('5', 'Ingeniería Comercial SRL', '1'),
+('6', 'Corralón Laprida SRL', '1'),
+('7', 'Telas ZN', '4'),
+('8', 'Pinturerías REX', '1'),
+('9', 'Pinturerías San Jorge', '1'),
+('10', 'La casa del Audio', '1'),
+('11', 'Garbarino', '1'),
+('12', 'Corralón San Juan SRL', '1'),
+('13', 'Edesur', '4'),
+('14', 'Metrogas', '4');
 
 /*FALTAN DATOS DE DE PRUEBA*/
 INSERT INTO egreso (id, fecha_carga, fecha_operacion, organizacion_id, cantidadPresupuestos, /*validado,*/ valorTotal, /*documento_comercial_id, ingreso_asociado,*/ pago_id, proveedor_id) VALUES
@@ -135,8 +182,8 @@ INSERT INTO egreso (id, fecha_carga, fecha_operacion, organizacion_id, cantidadP
 ('5', '2020-09-27 00:00:00', '2020-09-27', '1', '6', '8500.00', '5', '5'),
 ('6', '2020-10-01 00:00:00', '2020-10-01', '1', '4', '4922.40', '6', '6'),
 ('7', '2020-10-05 00:00:00', '2020-10-05', '1', null, '250.00', '7', '6'),
-('8', '2020-07-10 00:00:00', '2020-07-10', '4', null, '1100.00', '8', '2'),
-('9', '2020-07-10 00:00:00', '2020-07-10', '4', null, '800.00', '9', '3'),
+('8', '2020-07-10 00:00:00', '2020-07-10', '4', null, '1100.00', '8', '13'),
+('9', '2020-07-10 00:00:00', '2020-07-10', '4', null, '800.00', '9', '14'),
 ('10', '2020-09-25 00:00:00', '2020-09-25', '4', null, '4200.00', '10', '7');
 
 INSERT INTO criterio_operacion (id, descripcion, criterio_padre_id) VALUES
@@ -188,20 +235,22 @@ INSERT INTO tipo_item (id, nombre) VALUES
 ('1', 'Producto'),
 ('2', 'Servicio');
 
-INSERT INTO item (id, descripcion, tipo_item_id) VALUES
-('1', 'PINTURA Z10 LATEX SUPERCUBRITIVO 20L', '1'),
-('2', 'PINTURA LOXON FTES IMPERMEABILIZANTE 10L', '1'),
-('3', 'PINTURA BRIKOL PISOS NEGRO 4L', '1'),
-('4', 'FACTURA SERVICIO DE LUZ PERIODO JUNIO 2020', '2'),
-('5', 'FACTURA SERVICIO DE GAS PERIODO JUNIO 2020', '2'),
-('6', 'PAVA ELECTRICA SMARTLIFE 1,5 LTS 1850W', '1'),
-('7', 'CAFETERA SMARTLIFE 1095 ACERO INOX.', '1'),
-('8', 'TELEFONOS INALAMBRICOS MOTOROLA DUO BLANCO', '1'),
-('9', 'CEMENTO LOMA NEGRA', '1'),
-('10', 'ARENA FINA EN BOLSÓN X M30', '1'),
-('11', 'HIERRO ACINDAR', '1'),
-('12', 'BLOQUE LADRILLO CEMENTO', '1'),
-('13', 'CORTINAS BLACKOUT VINILICO 2 PAÑOS', '1');
+INSERT INTO item (id, descripcion, organizacion_id, tipo_item_id) VALUES
+('1', 'PINTURA Z10 LATEX SUPERCUBRITIVO 20L', '1', '1'),
+('2', 'PINTURA LOXON FTES IMPERMEABILIZANTE 10L', '1', '1'),
+('3', 'PINTURA BRIKOL PISOS NEGRO 4L', '1', '1'),
+('4', 'FACTURA SERVICIO DE LUZ PERIODO JUNIO 2020', '1', '2'),
+('5', 'FACTURA SERVICIO DE GAS PERIODO JUNIO 2020', '1', '2'),
+('6', 'PAVA ELECTRICA SMARTLIFE 1,5 LTS 1850W', '1', '1'),
+('7', 'CAFETERA SMARTLIFE 1095 ACERO INOX.', '1', '1'),
+('8', 'TELEFONOS INALAMBRICOS MOTOROLA DUO BLANCO', '1', '1'),
+('9', 'CEMENTO LOMA NEGRA', '1', '1'),
+('10', 'ARENA FINA EN BOLSÓN X M30', '1', '1'),
+('11', 'HIERRO ACINDAR', '1', '1'),
+('12', 'BLOQUE LADRILLO CEMENTO', '1', '1'),
+('13', 'CORTINAS BLACKOUT VINILICO 2 PAÑOS', '4','1'),
+('14', 'FACTURA SERVICIO DE LUZ PERIODO JUNIO 2020', '4', '2'),
+('15', 'FACTURA SERVICIO DE GAS PERIODO JUNIO 2020', '4', '2');
 
 INSERT INTO item_egreso (id, cantidad, precio, egreso_id, item_id) VALUES
 ('1', '1', '9625.00', '1', '1'),
@@ -217,19 +266,19 @@ INSERT INTO item_egreso (id, cantidad, precio, egreso_id, item_id) VALUES
 ('11', '4', '891.00', '6', '11'),
 ('12', '800', '227.00', '6', '12'),
 ('13', '800', '250.00', '7', '12'),
-('14', '1', '1100.00', '8', '4'),
-('15', '1', '800.00', '9', '5'),
+('14', '1', '1100.00', '8', '14'),
+('15', '1', '800.00', '9', '15'),
 ('16', '5', '4200.00', '10', '13');
 
 INSERT INTO presupuesto (id, fecha_vigente, /*operacion_numero,*/ valor_total, /*documento_comercial_id,*/ egreso_asociado, proveedor_id) VALUES
 ('1', '2020-02-25', '21451.60', '1', '8'),
 ('2', '2020-02-26', '20300.80', '1', '9'),
 ('3', '2020-02-27', '19952.69', '1', '1'),
-('4', '2020-09-10', '8950.00', '1', '10'),
-('5', '2020-09-11', '8830.00', '1', '11'),
-('6', '2020-09-12', '8500.00', '1', '5'),
-('7', '2020-09-15', '4980.00', '1', '12'),
-('8', '2020-09-15', '4922.40', '1', '6');
+('4', '2020-09-10', '8950.00', '5', '10'),
+('5', '2020-09-11', '8830.00', '5', '11'),
+('6', '2020-09-12', '8500.00', '5', '5'),
+('7', '2020-09-15', '4980.00', '6', '12'),
+('8', '2020-09-15', '4922.40', '6', '6');
 
 INSERT INTO item_presupuesto (id, cantidad, precio, item_id, item_egreso_id, presupuesto_id) VALUES
 ('1', '1', '9900.80', '1', '1', '1'),
@@ -260,3 +309,5 @@ INSERT INTO ingreso (id, fecha_carga, fecha_operacion, organizacion_id, descripc
 ('4', '2020-05-01 00:00:00', '2020-05-01', '4', 'Donación Gabino SRL', '2020-10-01', '10000.00', '4');
 
 COMMIT;
+
+SET autocommit = 1;
