@@ -23,7 +23,8 @@
                 <b-collapse :visible="(!proveedor.documento && falloInput)">
                     <b-badge variant="danger">Ingrese documento del proveedor</b-badge>
                 </b-collapse>
-                <b-form-input placeholder="Ingrese documento del proveedor" 
+                <b-form-input placeholder="Ingrese documento del proveedor"
+                    type="number" 
                     v-model="proveedor.documento"
                     :state="(!proveedor.documento && falloInput) ? false : null"
                 ></b-form-input>

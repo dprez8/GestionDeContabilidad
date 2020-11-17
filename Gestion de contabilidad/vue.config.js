@@ -18,7 +18,7 @@ module.exports = {
                 target: 'http://localhost:80',
                 changeOrigin: true
             },
-            '^/auth': {
+            '^/files': {
                 target: 'http://localhost:80',
                 changeOrigin: true
             }

@@ -1,7 +1,23 @@
 <template>
     <div class="px-2 pb-2 egreso_container">
         <b-card v-if="egreso">
-            <b-overlay spinner-variant="light" variant="primary" rounded="sm" :show="egresoLoading" no-wrap></b-overlay>
+            <b-overlay spinner-variant="light" variant="primary" :show="egresoLoading" no-wrap>
+                <template #overlay>
+                    <div>
+                        <div class="d-flex justify-content-center">
+                            <b-spinner variant="light" class="flex-shrink-0"></b-spinner>
+                        </div>
+                        <div class="mt-4" v-if="archivo">
+                            <p class="text-light">Subiendo archivo</p>
+                            <b-progress class="progress-min-width bg-transparent" variant="light"  max="100" height="2rem">
+                                <b-progress-bar :value="archivoProgress">
+                                    <strong class="text-secondary">{{ archivoProgress }}%</strong>
+                                </b-progress-bar>
+                            </b-progress>
+                        </div>
+                    </div>
+                </template>
+            </b-overlay>
             <div class="row m-0">
                 <div class="col p-0 pr-1">
                     <b-list-group>
@@ -24,9 +40,40 @@
                         <b-list-group-item class="p-0 overflow-hidden">
                             <b-collapse :visible="showDatosFactura">
                                 <b-list-group flush>
+                                    <b-list-group-item class="p-2"><strong>Número Documento: </strong>{{ egreso.documento.numDocumento }}</b-list-group-item>
                                     <b-list-group-item class="p-2"><strong>Fecha Pedido: </strong>{{ convertDate(egreso.documento.fechaDePedido) }}</b-list-group-item>
                                     <b-list-group-item class="p-2"><strong>Fecha Entrega: </strong>{{ convertDate(egreso.documento.fechaDeEntrega) }}</b-list-group-item>
                                     <b-list-group-item class="p-2"><strong>Descripcion: </strong>{{ egreso.documento.descripcion }}</b-list-group-item>
+                                    <!--tiene un archivo-->
+                                    <b-list-group-item class="p-2" 
+                                    :href="`/files/${egreso.documento.pathAdjunto}`" target="_blank" 
+                                    v-if="egreso.documento.pathAdjunto">
+                                        <span class="text-primary">
+                                            Archivo adjunto 
+                                            <b-icon-box-arrow-in-up-right/>
+                                        </span>
+                                    </b-list-group-item>
+                                    <!--no tiene archivo, dar la posibilidad de agregar uno-->
+                                    <b-list-group-item class="p-2" v-else>
+                                        <b-input-group >
+                                            <b-form-file
+                                                v-model="archivo"
+                                                placeholder="Seleccione un archivo o sueltelo aqui"
+                                                drop-placeholder="Suelta el archivo aqui..."
+                                                browse-text="Buscar"
+                                            ></b-form-file>
+                                            <template #append>
+                                                <b-button variant="outline-secondary" @click="archivo = null">
+                                                    <b-icon-x />
+                                                </b-button>
+                                                <transition name="fade">
+                                                    <b-button variant="outline-primary" v-if="archivo" @click="uploadFileAPI">
+                                                        <b-icon-upload />
+                                                    </b-button>
+                                                </transition>
+                                            </template>
+                                        </b-input-group>
+                                    </b-list-group-item>
                                 </b-list-group>
                             </b-collapse>
                         </b-list-group-item>
@@ -84,7 +131,9 @@
             <div class="row m-0 pt-2" v-if="egreso.presupuestos.length">
                 <div class="col p-0">
                     <b-list-group>
-                        <b-list-group-item class="p-2 text-center" :class="{'bg-secondary': showPresupuestos, 'border-bottom-0': showPresupuestos, 'text-light': showPresupuestos}" @click="showPresupuestos = !showPresupuestos" button><strong>Presupuestos</strong></b-list-group-item>
+                        <b-list-group-item class="p-2 text-center" :class="{'bg-secondary': showPresupuestos, 'border-bottom-0': showPresupuestos, 'text-light': showPresupuestos}" @click="showPresupuestos = !showPresupuestos" button>
+                            <strong>Presupuestos</strong><b-badge class="ml-2" variant="light"><strong>{{egreso.presupuestos.length}}</strong></b-badge>
+                        </b-list-group-item>
                         <b-list-group-item class="p-0 border-0 overflow-hidden">
                             <b-collapse :visible="showPresupuestos">
                                 <div class="px-2 pb-2 bg-secondary" :key="key" v-for="(presupuesto, key) in egreso.presupuestos">
@@ -194,6 +243,9 @@ export default {
     data() {
         return {
             egreso: null,
+            archivo: null,
+            archivoImagenUrl: "",
+            archivoProgress: 0,
             showDatosProveedor: false,
             showDatosFactura: false,
             showIngreso: false,
@@ -229,7 +281,7 @@ export default {
             falloCargaDetalles: ""
         }
     },
-    inject: ['showLoginModal', 'errorHandling'],
+    inject: ['showLoginModal', 'errorHandling', 'createToast'],
     methods: {
         convertDate: convertDate,
         cargarEgresoAPI() {
@@ -375,8 +427,11 @@ export default {
             presupuesto.egreso = this.egreso.id;
             console.log(presupuesto);
 
+            this.falloCarga = false;
+
             RequestHelper.post(`/api/operaciones/presupuesto`, presupuesto, {
                 success: (data) => {
+                    this.createToast('Guardado exitoso', 'Se creó el presupuesto exitosamente', 'success');
                     this.cargarEgresoAPI();
                 },
                 notLoggedIn: () => {
@@ -393,9 +448,6 @@ export default {
                 error: (error) => {
                     this.falloCarga = true;
                     this.errorHandling(error);
-                },
-                always: () => {
-                    this.egresoLoading = false;
                 }
             });
         },
@@ -427,6 +479,80 @@ export default {
                 },
                 always: () => {
                     this.egresoLoading = false;
+                }
+            });
+        },
+        uploadFileAPI() {
+            if(this.archivo) {
+                this.egresoLoading = true;
+
+                var request = new FormData();
+                request.append('archivo', this.archivo);
+
+                const config = {
+                    onUploadProgress: (progressEvent) => {
+                    var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                        this.archivoProgress = percentCompleted;
+                    }
+                }
+
+                RequestHelper.post('/api/operaciones/egreso/cargarArchivos', request, {
+                    success: (data) => {
+                        console.log(data.paths.archivo);
+                        this.updateArchivoEgresoAPI(data.paths.archivo);
+                    },
+                    notLoggedIn: (data) => {
+                        this.showLoginModal(false);
+                    },
+                    failed: (data) => {
+                        console.log(data);
+                    },
+                    forbidden: (error) => {
+                        this.errorHandling(error);
+                    },
+                    error: (error) => {
+                        this.errorHandling(error);
+                    },
+                    always: () => {
+                        this.archivoProgress = 0;
+                    },
+                    default: (data) => {
+                        console.log("NO RESPONSE CODE");
+                        console.log(data);
+                    }
+                }, config);
+            } else {
+                this.createToast("No hay archivo", "Elija un archivo para agregar al Egreso", "warning");
+            }
+        },
+        updateArchivoEgresoAPI(archivo) {
+            var request = {
+                egreso: this.egreso.id,
+                pathAdjuntoDocumentoComercial: archivo
+            }
+
+            RequestHelper.patch('/api/operaciones/egreso/modificarPathAdjunto', request, {
+                success: (data) => {
+                    this.cargarEgresoAPI();
+                },
+                notLoggedIn: (data) => {
+                    this.showLoginModal(false);
+                },
+                failed: (data) => {
+                    console.log(data);
+                },
+                forbidden: (error) => {
+                    this.errorHandling(error);
+                },
+                error: (error) => {
+                    this.errorHandling(error);
+                },
+                always: () => {
+                    this.egresoLoading = false;
+                },
+                default: (data) => {
+                    console.log("NO RESPONSE CODE");
+                    console.log(data);
                 }
             });
         }

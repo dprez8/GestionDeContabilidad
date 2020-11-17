@@ -31,6 +31,7 @@ public class DocumentoComercial extends EntidadPersistente {
     @Column
     private String descripcion;
 
+	@Expose
     @Column(name="path_adjunto")
     private String pathAdjunto;
 

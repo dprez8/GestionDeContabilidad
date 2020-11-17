@@ -43,10 +43,7 @@
             <template #cell(precio)="row">
                 <b-form-input type="number" class="border-0 px-2 bg-transparent text-center" v-model="row.item.precio" @input="addItem"></b-form-input>
             </template>
-            <template #cell(delete)="row">
-                <b-button variant="outline" class="px-2 m-0 text-danger" @click="deleteItem(row.index)">
-                    <b-icon-x></b-icon-x>
-                </b-button>
+            <template #cell(delete)>
             </template>
             
             <template #foot(tipoItem)>
@@ -106,7 +103,7 @@ export default {
                 },
                 {
                     key: 'precio',
-                    label: 'Precio',
+                    label: 'Precio Unitario',
                     tdClass: ['align-middle'],
                     thClass: ['text-center', 'precio-th']
                 },
@@ -194,7 +191,6 @@ export default {
         searchTipoItemAPI() {
             RequestHelper.get('/api/tipoItems', {
                 success: (data) => {
-                    console.log(data);
                     this.tipoItemsOptions = data.tipoItems.map((tipo) => {
                         return {
                             text: tipo.nombre,

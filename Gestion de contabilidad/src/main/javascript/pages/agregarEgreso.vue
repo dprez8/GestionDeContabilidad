@@ -501,47 +501,15 @@ export default {
                 return;
             }
             
-            // Comienzo cargando el proveedor
-            this.crearProveedorAPI();
+            // Comienzo cargando el archivo
+            this.uploadFileAPI();
 
-        },
-        crearProveedorAPI() {
-            if (this.proveedorAAgregar != null) {
-                // Hay que agregar un proveedor antes de agregar el egreso
-                console.log("POST '/api/proveedor'");
-                console.log(JSON.stringify(this.proveedorAAgregar, null, 4));
-
-                RequestHelper.post('/api/proveedor', this.proveedorAAgregar, {
-                    success: (data) => {
-                        this.createToast('Guardado exitoso', 'Se creó el proveedor exitosamente', 'success');
-                        this.egreso.proveedor = data.id;
-                        this.uploadFileAPI();
-                    },
-                    notLoggedIn: () => {
-                        this.showLoginModal(true);
-                    },
-                    failed: (data) => {
-                        this.falloCargaDetalles = data;
-                        this.falloCarga = true;
-                    },
-                    forbidden: (error) => {
-                        this.errorHandling(error);
-                        this.falloCarga = true;
-                    },
-                    error: (error) => {
-                        this.errorHandling(error);
-                        this.falloCarga = true;
-                    }
-                });
-            } else {
-                this.uploadFileAPI()
-            }
         },
         uploadFileAPI() {
             
             if(this.archivo) {
                 var request = new FormData();
-                request.append('arhivo', this.archivo);
+                request.append('archivo', this.archivo);
 
                 const config = {
                     onUploadProgress: (progressEvent) => {
@@ -550,18 +518,11 @@ export default {
                     }
                 }
 
-                console.log("file is");
-                console.log(this.archivo);
-
                 RequestHelper.post('/api/operaciones/egreso/cargarArchivos', request, {
                     success: (data) => {
-                        console.log(data);
-                        console.log(data.paths);
-                        console.log(data.paths[0]);
-                        console.log(data.paths["archivo"]);
                         console.log(data.paths.archivo);
                         this.egreso.documentoComercial.nombreFicheroDocumento = data.paths.archivo;
-                        this.crearEgresoAPI();
+                        this.crearProveedorAPI();
                     },
                     notLoggedIn: (data) => {
                         this.showLoginModal(false);
@@ -585,9 +546,41 @@ export default {
                     }
                 }, config);
             } else {
-                this.crearEgresoAPI();
+                this.crearProveedorAPI();
             }
 
+        },
+        crearProveedorAPI() {
+            if (this.proveedorAAgregar != null) {
+                // Hay que agregar un proveedor antes de agregar el egreso
+                console.log("POST '/api/proveedor'");
+                console.log(JSON.stringify(this.proveedorAAgregar, null, 4));
+
+                RequestHelper.post('/api/proveedor', this.proveedorAAgregar, {
+                    success: (data) => {
+                        this.createToast('Guardado exitoso', 'Se creó el proveedor exitosamente', 'success');
+                        this.egreso.proveedor = data.id;
+                        this.crearEgresoAPI();
+                    },
+                    notLoggedIn: () => {
+                        this.showLoginModal(true);
+                    },
+                    failed: (data) => {
+                        this.falloCargaDetalles = data;
+                        this.falloCarga = true;
+                    },
+                    forbidden: (error) => {
+                        this.errorHandling(error);
+                        this.falloCarga = true;
+                    },
+                    error: (error) => {
+                        this.errorHandling(error);
+                        this.falloCarga = true;
+                    }
+                });
+            } else {
+                this.crearEgresoAPI()
+            }
         },
         crearEgresoAPI() {
             var egresoToSend = JSON.parse(JSON.stringify(this.egreso));

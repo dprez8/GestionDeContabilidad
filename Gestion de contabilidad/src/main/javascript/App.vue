@@ -23,6 +23,28 @@ export default {}
     opacity: 0
 }
 
+.slide-leave-active ,
+.slide-enter-active {
+    transition: 0.3s;
+}
+.slide-enter {
+    transform: translate(100%, 0);
+}
+.slide-leave-to {
+    transform: translate(-100%, 0);
+}
+
+.slide-back-leave-active ,
+.slide-back-enter-active {
+    transition: 0.3s;
+}
+.slide-back-enter {
+    transform: translate(-100%, 0);
+}
+.slide-back-leave-to {
+    transform: translate(100%, 0);
+}
+
 .shake {
     animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
     transform: translate3d(0, 0, 0);
