@@ -2,8 +2,6 @@ USE gestiondecontabilidad;
 SET autocommit = 0;
 
 SET FOREIGN_KEY_CHECKS = 0;
-TRUNCATE TABLE configuracionvinculador_criterios;
-TRUNCATE TABLE configuracion_vinculador;
 TRUNCATE TABLE schedulerinit_dias;
 TRUNCATE TABLE scheduler;
 TRUNCATE TABLE ingreso;
@@ -32,9 +30,25 @@ TRUNCATE TABLE tipo_de_documento;
 TRUNCATE TABLE validador_x_validaciones;
 TRUNCATE TABLE validacion_de_transparencia;
 TRUNCATE TABLE validador_de_transparencia;
+TRUNCATE TABLE configuracionvinculador_criterios;
+TRUNCATE TABLE configuracion_vinculador;
 SET FOREIGN_KEY_CHECKS = 1;
 
 START TRANSACTION;
+
+INSERT INTO configuracion_vinculador (id) VALUES
+('1'),
+('2'),
+('3'),
+('4'),
+('5');
+
+INSERT INTO configuracionvinculador_criterios (ConfiguracionVinculador_id, criterios) VALUES
+('1', 'OrdenValorPrimeroEgreso'),
+('2', 'OrdenValorPrimeroEgreso'),
+('3', 'OrdenValorPrimeroEgreso'),
+('4', 'OrdenValorPrimeroEgreso'),
+('5', 'OrdenValorPrimeroEgreso');
 
 INSERT INTO validador_de_transparencia (id) VALUES
 ('1');
@@ -368,20 +382,6 @@ INSERT INTO schedulerinit_dias (SchedulerInit_id, dias) VALUES
 ('5', '5'),
 ('5', '6'),
 ('5', '7');
-
-INSERT INTO configuracion_vinculador (id) VALUES
-('1'),
-('2'),
-('3'),
-('4'),
-('5');
-
-INSERT INTO configuracionvinculador_criterios (ConfiguracionVinculador_id, criterios) VALUES
-('1', 'OrdenValorPrimeroEgreso'),
-('2', 'OrdenValorPrimeroEgreso'),
-('3', 'OrdenValorPrimeroEgreso'),
-('4', 'OrdenValorPrimeroEgreso'),
-('5', 'OrdenValorPrimeroEgreso');
 
 COMMIT;
 
