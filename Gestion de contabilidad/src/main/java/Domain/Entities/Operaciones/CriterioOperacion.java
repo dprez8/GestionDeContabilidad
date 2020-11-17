@@ -1,6 +1,7 @@
 package Domain.Entities.Operaciones;
 
 import Domain.Entities.EntidadPersistente.EntidadPersistente;
+import Domain.Entities.Organizacion.Organizacion;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -21,8 +22,15 @@ public class CriterioOperacion extends EntidadPersistente{
     private CriterioOperacion criterioPadre;
     @Column
     private String descripcion;
+    @ManyToOne
+    @JoinColumn(name = "organizacion_id", referencedColumnName = "id")
+    protected Organizacion organizacion;
 
     public CriterioOperacion(){
+    }
+
+    public CriterioOperacion(Organizacion organizacion) {
+        this.organizacion = organizacion;
     }
 
     public CriterioOperacion(String descrip){
@@ -54,4 +62,8 @@ public class CriterioOperacion extends EntidadPersistente{
     public void addCategorias(CategoriaOperacion ... categorias){
         Collections.addAll(this.categorias, categorias);
     }
+
+    public Organizacion getOrganizacion() {	return organizacion; }
+
+    public void setOrganizacion(Organizacion organizacion) { this.organizacion = organizacion;	}
 }

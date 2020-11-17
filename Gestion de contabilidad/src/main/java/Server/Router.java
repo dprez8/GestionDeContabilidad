@@ -69,7 +69,7 @@ public class Router {
         BandejaDeMensajesRestController bandejaDeMensajesRestController= new BandejaDeMensajesRestController(tokenService,TOKEN_PREFIX);
         OrganizacionController organizacionController = new OrganizacionController(tokenService,TOKEN_PREFIX);
         CategoriasEgresosController categoriasEgresosController = new CategoriasEgresosController(tokenService,TOKEN_PREFIX);
-        CriteriosCategoriasController criteriosCategoriasController = new CriteriosCategoriasController();
+        CriteriosCategoriasController criteriosCategoriasController = new CriteriosCategoriasController(tokenService,TOKEN_PREFIX);
         EntidadRestController entidadRestController = new EntidadRestController(tokenService,TOKEN_PREFIX);
         DireccionPostalController direccionController = new DireccionPostalController();
         ProveedorController proveedorController = new ProveedorController(tokenService, TOKEN_PREFIX);

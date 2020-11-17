@@ -6,6 +6,9 @@ import java.util.stream.Collectors;
 
 import javax.persistence.NoResultException;
 
+import Domain.Controllers.jwt.TokenService;
+import Domain.Entities.Organizacion.Organizacion;
+import Domain.Entities.Usuarios.Estandar;
 import com.google.gson.Gson;
 
 import Domain.Controllers.DTO.ConfigSchedulerRequest;
@@ -23,14 +26,18 @@ import db.EntityManagerHelper;
 import spark.Request;
 import spark.Response;
 
-public class CriteriosCategoriasController {
+public class CriteriosCategoriasController extends GenericController {
 
 
 	private Repositorio<CriterioOperacion> repoCriterio;
 	private Repositorio<CategoriaOperacion> repoCategoria;
 	private Repositorio<Egreso> repoEgreso;
 	private Repositorio<Presupuesto> repoPresupuesto;
-	
+
+
+	public CriteriosCategoriasController(TokenService tokenService, String tokenPrefix){
+		super(tokenService,tokenPrefix);
+	}
 	
 	public String listadoCriterios(Request request, Response response){
 		
@@ -38,10 +45,19 @@ public class CriteriosCategoriasController {
 	        List<CriterioOperacion> criterios;
 	        CriterioRespuesta criterioRespuesta= new CriterioRespuesta();
 	   	 	this.repoCriterio = new Repositorio<>(new DaoHibernate<>(CriterioOperacion.class));
-	   	 	
+
+
+			Estandar usuario = (Estandar) getUsuarioDesdeRequest(request);
+			Organizacion organizacion = usuario.getMiOrganizacion();
 	        try {
-		        criterios= this.repoCriterio.buscarTodos();
-		        
+		        criterios = this.repoCriterio.buscarTodos();
+
+				try {
+					criterios = criterios.stream().filter(unItem -> unItem.getOrganizacion().equals(organizacion)).collect(Collectors.toList());
+				} catch (Exception exception) {
+					System.out.println("oof falle al obtener criterios filtrados por una organizacion");
+				}
+
 		        List<CriterioDato> criteriosAEnviar = criterios.stream().map(this::mapCriterio).collect(Collectors.toList());
 		        
 		        criterioRespuesta.code = 200;
@@ -83,11 +99,12 @@ public class CriteriosCategoriasController {
               }
     	
 	 	this.repoCriterio = new Repositorio<>(new DaoHibernate<>(CriterioOperacion.class));
-	 	
-	 	
-	 	
+
+
+		Estandar usuario = (Estandar) getUsuarioDesdeRequest(request);
+		Organizacion organizacion = usuario.getMiOrganizacion();
 	 	try {
-       		CriterioOperacion criterio=mapCriterioNuevo(criterioRequest);
+       		CriterioOperacion criterio = mapCriterioNuevo(criterioRequest, organizacion);
   
       		repoCriterio.agregar(criterio);
        
@@ -140,8 +157,8 @@ public class CriteriosCategoriasController {
    		}
    	
 		
-	public CriterioOperacion mapCriterioNuevo(CriterioNuevo criterioNuevo){
-		CriterioOperacion criterio= new CriterioOperacion();
+	public CriterioOperacion mapCriterioNuevo(CriterioNuevo criterioNuevo, Organizacion organizacion){
+		CriterioOperacion criterio = new CriterioOperacion(organizacion);
 		CriterioOperacion criterioPadre;
 	
 		if(criterioNuevo.criterioPadreId!= 0) {
