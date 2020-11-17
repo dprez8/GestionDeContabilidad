@@ -20,7 +20,7 @@
                         </b-col>
                     </b-row>
                 </b-card>
-                <b-card no-body class="mb-2">
+                <b-card v-if="organizacion" no-body class="mb-2">
                     <b-card-body class="py-2">Organización</b-card-body>
                 </b-card>
                 <b-card v-if="organizacion" no-body class="overflow-hidden mb-4">

@@ -2,7 +2,7 @@
     <b-overlay class="w-100 h-100" spinner-variant="light" variant="primary" :show="loading">
         <div class="p-4 d-flex justify-content-center" style="background: #eee; min-height: 100%">
             <div class="w-100" style="max-width: 425px;">
-                <b-select :options="entidadesOptions" v-model="scheduler.entidad">
+                <b-select :options="entidadesOptions" v-model="scheduler.entidad" @change="cargarConfiguracionAPI">
                     <template #first>
                         <b-select-option disabled :value="null">--Seleccione Entidad--</b-select-option>
                     </template>
@@ -93,12 +93,55 @@ export default {
     },
     inject: ['showLoginModal', 'errorHandling', 'createToast'],
     methods: {
-        cargarConfiguracionAPI() {
+        cargarEntidadesAPI() {
             this.loading = true;
 
-            RequestHelper.get('/api/bandeja/configuracion', {
+            RequestHelper.get('/api/admin/entidades', {
                 success: (data) => {
-                    this.scheduler = data.schedulerInit;
+                    // Cargo las entidades jurídicas y despues las base
+                    this.entidadesOptions = data.entidadesJuridicas.map((juridica) => {
+                        return {
+                            text: `${juridica.nombreFicticio} - Entidad Jurídica`,
+                            value: juridica.id
+                        }
+                    });
+
+                    data.entidadesJuridicas.forEach((juridica) => {
+                        juridica.entidadesBase.forEach((base) => {
+                            this.entidadesOptions.push({
+                                text: `${base.nombreFicticio} - Entidad Base`,
+                                value: base.id
+                            });
+                        })
+                    })
+                },
+                notLoggedIn: () => {
+                    this.showLoginModal(true);
+                },
+                forbidden: (error) => {
+                    this.errorHandling(error);
+                },
+                error: (error) => {
+                    this.errorHandling(error);
+                },
+                always: () => {
+                    this.loading = false;
+                }
+            });
+        },
+        cargarConfiguracionAPI() {
+
+            if(!this.scheduler.entidad)
+                return;
+
+            this.loading = true;
+
+            RequestHelper.get(`/api/bandeja/configuracion/${this.scheduler.entidad}`, {
+                success: (data) => {
+                    this.scheduler.dias = data.schedulerInit.dias;
+                    this.scheduler.horaInicio = data.schedulerInit.horaInicio;
+                    this.scheduler.minutoInicio = data.schedulerInit.minutoInicio;
+
                     this.updateHoraYMinuto();
                 },
                 notLoggedIn: () => {
@@ -117,6 +160,9 @@ export default {
         },
         guardarConfiguracionAPI() {
             this.loading = true;
+
+            this.scheduler.organizacionId = this.scheduler.entidad;
+            console.log(this.scheduler);
 
             RequestHelper.post('/api/admin/bandeja/configurar', this.scheduler, {
                 success: (data) => {
@@ -178,7 +224,7 @@ export default {
         }
     },
     mounted() {
-        this.cargarConfiguracionAPI()
+        this.cargarEntidadesAPI()
     },
     watch: {
         'scheduler.horaInicio'(hora) {

@@ -9,10 +9,10 @@
                                 <b-avatar size="5rem" variant="secondary" icon="bar-chart-fill"></b-avatar>
                             </b-col>
                             <b-col>
-                                <b-card-body :title="`${entidad.nombreFicticio}`" :sub-title="`Entidad ${entidad.tipo}`">
+                                <b-card-body v-if="entidad.tipo == 'Jurídica'" :title="`${entidad.nombreFicticio}`" :sub-title="`Entidad ${entidad.tipo}`">
                                     <b-row no-gutters class="mb-2">
                                         <b-col md="4">
-                                            <b-card-text>
+                                            <b-card-text class="mr-2">
                                                 <div class="text-truncate">
                                                     <span v-b-tooltip.html :title="`Razon Social<br><em>${entidad.razonSocial}`">
                                                         <b-icon-card-text class="mr-2"/>{{entidad.razonSocial}}
@@ -26,15 +26,15 @@
                                             </b-card-text>
                                         </b-col>
                                         <b-col md="4">
-                                            <b-card-text>
+                                            <b-card-text class="mr-2">
                                                 <div class="text-truncate">
-                                                    <span v-b-tooltip.html :title="`Dirección Postal<br><em>${entidad.direccionPostal}`">
-                                                        <b-icon-globe class="mr-2"/>{{entidad.direccionPostal}}
+                                                    <span v-b-tooltip.html :title="`Dirección Postal<br><em>${organizacionDireccionPostal(entidad)}`">
+                                                        <b-icon-globe class="mr-2"/>{{organizacionDireccionPostal(entidad)}}
                                                     </span>
                                                 </div>
                                                 <div class="text-truncate">
-                                                    <span v-b-tooltip.html :title="`Actividad<br><em>${entidad.actividad}`">
-                                                        <b-icon-tools class="mr-2"/>{{entidad.actividad}}
+                                                    <span v-b-tooltip.html :title="`Actividad<br><em>${entidad.tipoEntidadJuridica.actividad}`">
+                                                        <b-icon-tools class="mr-2"/>{{entidad.tipoEntidadJuridica.actividad}}
                                                     </span>
                                                 </div>
                                             </b-card-text>
@@ -42,21 +42,23 @@
                                         <b-col md="4">
                                             <b-card-text>
                                                 <div class="text-truncate">
-                                                    <span v-b-tooltip.html :title="`Cantidad de personal<br><em>${entidad.cantPersonal}`">
-                                                        <b-icon-person-lines-fill class="mr-2"/>{{entidad.cantPersonal}}
+                                                    <span v-b-tooltip.html :title="`Cantidad de personal<br><em>${entidad.tipoEntidadJuridica.cantidadDePersonal}`">
+                                                        <b-icon-person-lines-fill class="mr-2"/>{{entidad.tipoEntidadJuridica.cantidadDePersonal}}
                                                     </span>
                                                 </div>
                                                 <div class="text-truncate">
-                                                    <span v-b-tooltip.html :title="`Promedio de ventas anuales<br><em>${ventasAnualesFormat(entidad.promVentasAnuales)}`">
-                                                        <b-icon-cash-stack class="mr-2"/>{{ventasAnualesFormat(entidad.promVentasAnuales)}}
+                                                    <span v-b-tooltip.html :title="`Promedio de ventas anuales<br><em>${ventasAnualesFormat(entidad.tipoEntidadJuridica.ventasAnuales)}`">
+                                                        <b-icon-cash-stack class="mr-2"/>{{ventasAnualesFormat(entidad.tipoEntidadJuridica.ventasAnuales)}}
                                                     </span>
                                                 </div>
                                             </b-card-text>
                                         </b-col>
                                     </b-row>
                                 </b-card-body>
+                                <b-card-body v-else :title="`${entidad.nombreFicticio}`" :sub-title="`Entidad ${entidad.tipo}`">
+                                </b-card-body>
                             </b-col>
-                            <b-col>
+                            <b-col md="4">
                                 <b-card-body class="d-flex h-100 justify-content-end align-items-end">
                                     <b-button variant="primary" size="sm" class="mr-2"><b-icon-pencil class="mr-2"/>Editar</b-button>
                                     <b-button variant="danger" size="sm"><b-icon-x class="mr-2"/>Borrar</b-button>
@@ -71,29 +73,63 @@
 </template>
 
 <script>
+import {RequestHelper} from '../util/utils'
+
 export default {
     data() {
         return {
-            entidades: [
-                {
-                    id: 1,
-                    nombreFicticio: "Oficina Central Buenos Aires",
-                    razonSocial: "EAAF BA",
-                    cuit: "30-15269857-2",
-                    direccionPostal: "Av. Medrano 951, Almagro, CABA, BA, Argentina",
-                    tipo: "Jurídica",
-                    cantPersonal: 150,
-                    actividad: "Construcción",
-                    promVentasAnuales: 600000000.0
-                }
-            ],
+            entidades: [],
             loading: false
         }
     },
     methods: {
+        cargarEntidadesAPI() {
+            this.loading = true;
+
+            RequestHelper.get('/api/admin/entidades', {
+                success: (data) => {
+                    // Cargo las entidades jurídicas y despues las base
+                    this.entidades = data.entidadesJuridicas.map((juridica) => {
+                        juridica.tipo = "Jurídica";
+                        return juridica;
+                    });
+
+                    data.entidadesJuridicas.forEach((juridica) => {
+                        juridica.entidadesBase.forEach((base) => {
+                            base.tipo = "Base";
+                            this.entidades.push(base);
+                        })
+                    })
+
+                    console.log(data);
+                },
+                notLoggedIn: () => {
+                    this.showLoginModal(true);
+                },
+                forbidden: (error) => {
+                    this.errorHandling(error);
+                },
+                error: (error) => {
+                    this.errorHandling(error);
+                },
+                always: () => {
+                    this.loading = false;
+                }
+            });
+        },
         ventasAnualesFormat(prom) {
             return `$ ${prom.toLocaleString()}`;
+        },
+        organizacionDireccionPostal(entidad) {
+            return `
+            ${entidad.calle} ${entidad.altura}
+            ${entidad.ciudad ? ',' + entidad.ciudad : ''} 
+            ${entidad.provincia ? ',' + entidad.provincia : ''} 
+            ${entidad.pais ?  ',' + entidad.pais : ''}`;
         }
+    },
+    mounted() {
+        this.cargarEntidadesAPI();
     }
 }
 </script>
