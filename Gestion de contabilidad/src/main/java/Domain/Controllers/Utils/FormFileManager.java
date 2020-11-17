@@ -43,10 +43,11 @@ public class FormFileManager {
         return tempFile.getFileName().toString();
     }
 
-    public static String reemplazarFicheroParte(Part part, String path) throws Exception {
+    public static String reemplazarFicheroParte(Part part) throws Exception {
         if (uploadDir == null) {
             throw new Exception("llame crearDirectorio antes de procesar un fichero");
         }
+        String path = getFileName(part);
         File file = new File(realPath(path));
         if (!file.exists()) {
             throw new FileNotFoundException("fichero no existente");

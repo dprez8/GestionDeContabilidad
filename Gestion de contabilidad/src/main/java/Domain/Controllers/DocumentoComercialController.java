@@ -111,7 +111,7 @@ public class DocumentoComercialController extends GenericController {
 			if (tiposDocumentoComercial.contains(contentType)){
 				String path = "";
 				try {
-					path = FormFileManager.procesarFicheroParte(part);
+					path = FormFileManager.reemplazarFicheroParte(part);
 				} catch (FileNotFoundException exception) {
 					return error(response, "No se encontro el fichero a reemplazar");
 				} catch (Exception exception) {
