@@ -44,6 +44,11 @@ public class Egreso extends Operacion {
 	private Proveedor proveedor;
 
 	@Expose
+	@ManyToOne
+	@JoinColumn(name = "presupuestoValidado", referencedColumnName = "id")
+	private Presupuesto presupuestoValidado;
+
+	@Expose
 	@OneToMany(mappedBy = "egresoAsociado",cascade = CascadeType.ALL)
 	private List<Presupuesto> presupuestos;
 
@@ -166,7 +171,9 @@ public class Egreso extends Operacion {
 		this.cantidadPresupuestos = cantidadPresupuestos;
 	}
 
+	public Presupuesto getPresupuestoValidado() { return presupuestoValidado;}
 
+	public void setPresupuestoValidado(Presupuesto presupuestoValidado) { this.presupuestoValidado = presupuestoValidado; }
 	/************************************************/
 	public double calcularValorTotal () {
 		return  this.items.stream().collect(Collectors.summingDouble(unItem->unItem.valorTotal()));

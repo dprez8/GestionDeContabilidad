@@ -182,11 +182,11 @@ public class EgresosRestController extends GenericController {
         egresoDetallado.estaSuscrito = verificarSuscripcion(usuario,egreso);
         egresoDetallado.presupuesto  = null;
 
-        ValidarConPresupuesto validador = new ValidarConPresupuesto();
-        validador.validarEgreso(egreso);
-        if (validador.getPresupuestoElegido() != null) {
-            egresoDetallado.presupuesto = new Integer(validador.getPresupuestoElegido().getId());
-        }
+        //ValidarConPresupuesto validador = new ValidarConPresupuesto();
+        //validador.validarEgreso(egreso);
+        //if (validador.getPresupuestoElegido() != null) {
+        //    egresoDetallado.presupuesto = new Integer(validador.getPresupuestoElegido().getId());
+        //}
 
 
         jsonResponse = this.gson.toJson(egresoDetallado);
