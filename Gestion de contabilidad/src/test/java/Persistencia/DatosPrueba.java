@@ -664,5 +664,63 @@ public class DatosPrueba {
         this.repoEgresos.agregar(egreso5);
         hierroIE.setEgresoAsociado(egreso5);
         this.repoItems.modificar(hierroIE);
+   
+        
+        
+        Proveedor pintureriaRex = new Proveedor("Pintureria Rex",3256789,eaafBa);
+        pintureriaRex.setAltura(12658);
+        pintureriaRex.setCiudad(ciudad);
+        pintureriaRex.setProvincia(provincia);
+        pintureriaRex.setPais(pais);
+        pintureriaRex.setCalle("Campus");
+        pintureriaRex.setPiso("0");
+        pintureriaRex.setZipcode(55557);
+        
+        Proveedor pintureriaSanJorge = new Proveedor("Pintureria Rex",9956789,eaafBa);
+        pintureriaSanJorge.setAltura(126458);
+        pintureriaSanJorge.setCiudad(ciudad);
+        pintureriaSanJorge.setProvincia(provincia);
+        pintureriaSanJorge.setPais(pais);
+        pintureriaSanJorge.setCalle("San Jorge");
+        pintureriaSanJorge.setPiso("0");
+        pintureriaSanJorge.setZipcode(55557);
+        
+        Proveedor casaDelAudio = new Proveedor("Casa Del Audio",8856789,eaafBa);
+        casaDelAudio.setAltura(826458);
+        casaDelAudio.setCiudad(ciudad);
+        casaDelAudio.setProvincia(provincia);
+        casaDelAudio.setPais(pais);
+        casaDelAudio.setCalle("Pasarela");
+        casaDelAudio.setPiso("1b");
+        casaDelAudio.setZipcode(55557);
+        
+        Proveedor garbarino = new Proveedor("Garbarino",43489,eaafBa);
+        garbarino.setAltura(53453);
+        garbarino.setCiudad(ciudad);
+        garbarino.setProvincia(provincia);
+        garbarino.setPais(pais);
+        garbarino.setCalle("Monserrat");
+        garbarino.setPiso("3j");
+        garbarino.setZipcode(32322);
+        
+        /*Proveedor ingeComerical = new Proveedor("Ingenieria Comercial SRL",498789,eaafBa);
+        ingeComerical.setAltura(45346);
+        ingeComerical.setCiudad(ciudad);
+        ingeComerical.setProvincia(provincia);
+        ingeComerical.setPais(pais);
+        ingeComerical.setCalle("Carapita");
+        ingeComerical.setPiso("3d");
+        ingeComerical.setZipcode(33422);*/
+        
+        Proveedor corralonSanJuan = new Proveedor("Corralon San Juan SRL",843489,eaafBa);
+        garbarino.setAltura(35443);
+        garbarino.setCiudad(ciudad);
+        garbarino.setProvincia(provincia);
+        garbarino.setPais(pais);
+        garbarino.setCalle("Corralon");
+        garbarino.setPiso("4e");
+        garbarino.setZipcode(322);
+        
     }
+ 
 }
