@@ -18,10 +18,6 @@ import javax.persistence.*;
 @Entity
 @Table(name="presupuesto")
 public class Presupuesto extends EntidadPersistente {
-
-    @Column(name="operacion_numero")
-    private int operacionNumero;
-
     @Expose
     @OneToMany(mappedBy = "presupuesto",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<ItemPresupuesto> items;
@@ -48,8 +44,7 @@ public class Presupuesto extends EntidadPersistente {
 
 
     public Presupuesto(){}
-    public Presupuesto(int operacionNumero, Egreso unEgreso){
-        this.operacionNumero = operacionNumero;
+    public Presupuesto(Egreso unEgreso){
         this.egresoAsociado = unEgreso;
         this.categorias = new ArrayList<>();
         this.items = new ArrayList<>();
@@ -62,9 +57,6 @@ public class Presupuesto extends EntidadPersistente {
         return proveedor;
     }
 
-    public int getOperacionNumero() {
-        return operacionNumero;
-    }
     public Double getValorTotal() {
         return valorTotal;
     }
@@ -93,10 +85,6 @@ public class Presupuesto extends EntidadPersistente {
 
     public void setProveedor(Proveedor proveedor) {
         this.proveedor = proveedor;
-    }
-
-    public void setOperacionNumero(int operacionNumero) {
-        this.operacionNumero = operacionNumero;
     }
 
     public void setItems(List<ItemPresupuesto> items) {

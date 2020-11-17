@@ -79,10 +79,10 @@ public class PresupuestoRestController extends GenericController {
     }
 
     private Presupuesto asignarPresupuestoDesde(PresupuestoRequest presupuestoRequest, Egreso egreso) {
-        if(presupuestoRequest.items.isEmpty() || presupuestoRequest.fechaVigente == null || presupuestoRequest.numeroOperacion == 0 ){
+        if(presupuestoRequest.items.isEmpty() || presupuestoRequest.fechaVigente == null){
             return null;
         }
-        Presupuesto presupuesto = new Presupuesto(presupuestoRequest.numeroOperacion, egreso);
+        Presupuesto presupuesto = new Presupuesto(egreso);
         presupuesto.setFechaVigente(presupuestoRequest.fechaVigente);
         // FIXME: explota hibernate con esto
         //presupuesto.setCategorias(egreso.getCategorias());

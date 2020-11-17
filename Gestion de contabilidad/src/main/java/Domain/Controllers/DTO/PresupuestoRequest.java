@@ -9,7 +9,6 @@ import java.util.List;
 public class PresupuestoRequest {
     public LocalDate fechaVigente;
     public int proveedor;
-    public int numeroOperacion;
     public int egreso;
     public List<ItemPresupuestoRequest> items;
 
