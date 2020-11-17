@@ -14,8 +14,9 @@
                             <div class="border-top p-3" style="background-color: #eee;">
                                 <b-form-group label="Ordenar por">
                                     <b-form-select v-model="ordenar">
-                                        <b-form-select-option :value="null" selected>Sin ordenar</b-form-select-option>
-                                        <b-form-select-option value="fecha">Fecha</b-form-select-option>
+                                        <b-form-select-option :value="null">Sin ordenar</b-form-select-option>
+                                        <b-form-select-option value="fecha" selected>Fecha</b-form-select-option>
+                                        <b-form-select-option value="no leidos">No Leidos</b-form-select-option>
                                     </b-form-select>
                                 </b-form-group>
                                 <b-form-group label="Filtrar por" class="m-0">
@@ -46,14 +47,14 @@
                     </b-list-group>
                 </div>
             </div>
-            <div class="col overflow-auto h-100 p-0">
+            <div class="col overflow-auto d-flex flex-column h-100 p-0">
                 <transition name="fade" mode="out-in">
                     <div class="d-flex h-100 justify-content-center align-items-center" v-if="!getMessageSelected()">
                         <div class="text-secondary text-center">
                             <p>Seleccione algún mensaje para verlo aquí</p>
                         </div>
                     </div>
-                    <div class="container-fluid" v-bind:key="selected" v-else>
+                    <div class="container-fluid h-100" v-bind:key="selected" v-else>
                         <div class="row">
                             <div class="d-flex bg-primary justify-content-between align-items-center col-12 p-3">
                                 <h4 class="text-light m-0">Mensaje {{getMessageSelected().id}}</h4>
@@ -65,6 +66,9 @@
                         </div>
                     </div>
                 </transition>
+                <div class="border-top py-4 px-3 text-secondary bg-light">
+                    La validación de egresos se realiza los días <strong>{{diasFormat}}</strong> a las <strong>{{horaFormat}}:{{minutoFormat}}</strong>
+                </div>
             </div>
         </div>
         <template #overlay>
@@ -82,11 +86,12 @@ import {convertDate, RequestHelper} from '../util/utils.js'
 export default {
     data() {
         return {
+            scheduler: null,
             mensajes: [],
             mensajesFiltradosOrdenados: [],
             selected: null,
             loading: true,
-            ordenar: null,
+            ordenar: "fecha",
             filtrar: null
         }
     },
@@ -207,6 +212,64 @@ export default {
             var bandejaOrdenada = bandejaFiltrada.sort(ordenador);
 
             this.mensajesFiltradosOrdenados = bandejaOrdenada;
+        },
+        cargarVinculacionConfigAPI() {
+
+            this.loading = true;
+
+            RequestHelper.get(`/api/bandeja/configuracion/1`, {
+                success: (data) => {
+                    console.log(data);
+                    this.scheduler = data.schedulerInit;
+                },
+                notLoggedIn: () => {
+                    this.showLoginModal(true);
+                },
+                forbidden: (error) => {
+                    this.errorHandling(error);
+                },
+                error: (error) => {
+                    this.errorHandling(error);
+                },
+                always: () => {
+                    this.loading = false;
+                }
+            });
+        }
+    },
+    computed: {
+        diasFormat() {
+            var text = "";
+            var dias = ["", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sabado", "Domingo"];
+            if(this.scheduler) {
+                var diasScheduler = JSON.parse(JSON.stringify(this.scheduler.dias));
+                diasScheduler.sort();
+
+                for(var i = 0; i < diasScheduler.length; i++) {
+                    if(i == 0) {
+                        text += dias[diasScheduler[i]];
+                    }
+                    else if(i < diasScheduler.length - 1) {
+                        text += ", " + dias[diasScheduler[i]];
+                    } 
+                    else {
+                        text += " y " + dias[diasScheduler[i]];
+                    }
+                }
+            }
+            return text;
+        },
+        horaFormat() {
+            var text = "";
+            if(this.scheduler)
+                text = ('0' + this.scheduler.horaInicio).slice(-2);
+            return text;
+        },
+        minutoFormat() {
+            var text = "";
+            if(this.scheduler)
+                text = ('0' + this.scheduler.minutoInicio).slice(-2);
+            return text;
         }
     },
     watch: {
@@ -222,6 +285,7 @@ export default {
     },
     mounted() {
         this.cargarMensajesAPI();
+        this.cargarVinculacionConfigAPI();
         this.seleccionarMensaje();
     }
 }

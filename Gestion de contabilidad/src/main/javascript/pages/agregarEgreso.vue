@@ -518,7 +518,7 @@ export default {
                     }
                 }
 
-                RequestHelper.post('/api/operaciones/egreso/cargarArchivos', request, {
+                RequestHelper.post('/api/operaciones/documentoComercial/archivo', request, {
                     success: (data) => {
                         console.log(data.paths.archivo);
                         this.egreso.documentoComercial.nombreFicheroDocumento = data.paths.archivo;

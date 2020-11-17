@@ -44,11 +44,8 @@ export default {
                 return this.$route.name == item.routeName;
             } 
         },
-        hasBandeja() {
-            return this.sidebar.find((item) => item.bandeja) ? true : false
-        },
         cargarMensajesAPI() {
-            if(this.hasBandeja())
+            if(sessionStorage.getItem('authRol') != "Administrador")
             {
                 RequestHelper.get('/api/bandeja', {
                     success: (data) => {

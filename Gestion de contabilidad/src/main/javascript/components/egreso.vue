@@ -53,7 +53,26 @@
                                             <b-icon-box-arrow-in-up-right/>
                                         </span>
                                     </b-list-group-item>
-                                    <!--no tiene archivo, dar la posibilidad de agregar uno-->
+                                    <b-list-group-item class="p-2" v-if="egreso.documento.pathAdjunto">
+                                        <b-input-group >
+                                            <b-form-file
+                                                v-model="archivo"
+                                                placeholder="Seleccione un archivo o sueltelo aqui"
+                                                drop-placeholder="Suelta el archivo aqui..."
+                                                browse-text="Buscar"
+                                            ></b-form-file>
+                                            <template #append>
+                                                <b-button variant="outline-secondary" @click="archivo = null">
+                                                    <b-icon-x />
+                                                </b-button>
+                                                <transition name="fade">
+                                                    <b-button variant="outline-primary" v-if="archivo" @click="updateFileAPI">
+                                                        <b-icon-arrow-bar-up />
+                                                    </b-button>
+                                                </transition>
+                                            </template>
+                                        </b-input-group>
+                                    </b-list-group-item>
                                     <b-list-group-item class="p-2" v-else>
                                         <b-input-group >
                                             <b-form-file
@@ -482,12 +501,14 @@ export default {
                 }
             });
         },
-        uploadFileAPI() {
+        updateFileAPI() {
             if(this.archivo) {
                 this.egresoLoading = true;
 
                 var request = new FormData();
-                request.append('archivo', this.archivo);
+                request.append(this.egreso.documento.pathAdjunto, this.archivo);
+
+                console.log(this.egreso.documento.pathAdjunto);
 
                 const config = {
                     onUploadProgress: (progressEvent) => {
@@ -496,10 +517,9 @@ export default {
                     }
                 }
 
-                RequestHelper.post('/api/operaciones/egreso/cargarArchivos', request, {
+                RequestHelper.patch('/api/operaciones/documentoComercial/archivo', request, {
                     success: (data) => {
                         console.log(data.paths.archivo);
-                        this.updateArchivoEgresoAPI(data.paths.archivo);
                     },
                     notLoggedIn: (data) => {
                         this.showLoginModal(false);
@@ -515,6 +535,52 @@ export default {
                     },
                     always: () => {
                         this.archivoProgress = 0;
+                        this.egresoLoading = false;
+                    },
+                    default: (data) => {
+                        console.log("NO RESPONSE CODE");
+                        console.log(data);
+                    }
+                }, config);
+            } else {
+                this.createToast("No hay archivo", "Elija un archivo para actualizar el Egreso", "warning");
+            }
+        },
+        uploadFileAPI(archivo) {
+            
+            if(this.archivo) {
+
+                this.egresoLoading = true;
+
+                var request = new FormData();
+                request.append('archivo', this.archivo);
+
+                const config = {
+                    onUploadProgress: (progressEvent) => {
+                    var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                        this.archivoProgress = percentCompleted;
+                    }
+                }
+
+                RequestHelper.post('/api/operaciones/documentoComercial/archivo', request, {
+                    success: (data) => {
+                        console.log(data);
+                        this.updateArchivoEgresoAPI(data.paths.archivo);
+                    },
+                    notLoggedIn: (data) => {
+                        this.showLoginModal(false);
+                    },
+                    failed: (data) => {
+                        console.log(data);
+                    },
+                    forbidden: (error) => {
+                        this.errorHandling(error);
+                    },
+                    error: (error) => {
+                        this.errorHandling(error);
+                    },
+                    always: () => {
+                        this.egresoLoading = false;
                     },
                     default: (data) => {
                         console.log("NO RESPONSE CODE");
@@ -530,7 +596,6 @@ export default {
                 egreso: this.egreso.id,
                 pathAdjuntoDocumentoComercial: archivo
             }
-
             RequestHelper.patch('/api/operaciones/egreso/modificarPathAdjunto', request, {
                 success: (data) => {
                     this.cargarEgresoAPI();

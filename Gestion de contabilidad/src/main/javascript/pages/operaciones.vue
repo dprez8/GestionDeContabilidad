@@ -13,6 +13,7 @@
                 </div>
                 <router-view></router-view>
             </transition>
+            <b-button variant="outline-primary" class="mt-2">Vinculación de Egresos e Ingresos <b-icon-vr/></b-button>
         </div>
     </div>
 </template>
