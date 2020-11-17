@@ -33,9 +33,11 @@ public class DocumentoComercialController extends GenericController {
 
 	public DocumentoComercialController(TokenService tokenService, String tokenPrefix) {
 		super(tokenService,tokenPrefix);
+		repoDocumentoComercial = new Repositorio<>(new DaoHibernate<>(DocumentoComercial.class));
 	}
 
 	private Repositorio<TipoDocumento> repoTipo;
+	private Repositorio<DocumentoComercial> repoDocumentoComercial;
 
 	private static List<String> tiposDocumentoComercial = Arrays.asList("application/pdf",
 			"text/html",
@@ -140,6 +142,17 @@ public class DocumentoComercialController extends GenericController {
 			return error(response, "Datos erroneos para borrar archivos");
 		}
 
+		DocumentoComercial documentoComercial = null;
+		try {
+			documentoComercial = this.repoDocumentoComercial.buscar(archivosBorrarRequest.documentoComercial);
+		} catch (Exception exception) {
+
+		}
+
+		if (documentoComercial == null) {
+			return error(response, "No se encontro el documento comercial");
+		}
+
 		for (String path : archivosBorrarRequest.paths) {
 			try {
 				FormFileManager.borrarFichero(path);
@@ -150,7 +163,10 @@ public class DocumentoComercialController extends GenericController {
 			}
 		}
 
-		return response.body();
+		documentoComercial.setPathAdjunto(null);
+		this.repoDocumentoComercial.modificar(documentoComercial);
+
+		return respuesta(response, 200, "Se borró correctamente el fichero");
 	}
 
 	public String listadoTiposDocumento(Request request, Response response){
@@ -200,6 +216,7 @@ public class DocumentoComercialController extends GenericController {
 	}
 
 	private class ArchivosBorrarRequest {
+		public int documentoComercial;
 		public String[] paths;
 	}
 
