@@ -268,11 +268,11 @@
                     <b-button v-b-modal.modal-asociar-categoria>Asociar a Categorías</b-button>
                 </b-button-group>
                 <div class="pt-2" v-if="ingresoAAsociar">
-                    <b-collapse v-if="ingresoAAsociar" :visible="precioTotal() > ingresoAAsociar.montoTotal">
+                    <b-collapse v-if="ingresoAAsociar" :visible="precioTotal() > ingresoAAsociar.montoRestante">
                         <b-badge variant="danger">El egreso supera el monto del ingreso</b-badge>
                     </b-collapse>
                     <span>El egreso se asociará al siguiente ingreso: </span>
-                    <b-badge>{{ ingresoAAsociar.descripcion + ' - $' + ingresoAAsociar.montoTotal}}</b-badge>
+                    <b-badge>{{ ingresoAAsociar.descripcion + ' - $' + ingresoAAsociar.montoRestante + '/$' + ingresoAAsociar.montoTotal}}</b-badge>
                 </div>
                 <div class="pt-2" v-if="categoriasAAsociar.length">
                     <span>El egreso se asociará a las siguientes categorías: </span>
@@ -413,11 +413,6 @@ export default {
             presupuestosAAgregarCampos: [
                 {
                     key: 'fechaVigente',
-                    tdClass: ['w-50'],
-                    thClass: ['w-50']
-                },
-                {
-                    key: 'numeroOperacion',
                     tdClass: ['w-50'],
                     thClass: ['w-50']
                 },
@@ -806,7 +801,6 @@ export default {
             }
         },
         actualizarItems(items) {
-            console.log(items);
             this.egreso.items = items;
         },
         // Proveedores

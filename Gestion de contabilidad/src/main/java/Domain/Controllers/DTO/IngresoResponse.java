@@ -10,5 +10,6 @@ public class IngresoResponse {
     public LocalDateTime fechaCarga;
     public String descripcion;
     public Double montoTotal;
+    public Double montoRestante;
     public List<Integer> egresos;
 }

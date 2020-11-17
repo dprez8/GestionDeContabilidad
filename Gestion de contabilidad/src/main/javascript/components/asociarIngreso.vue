@@ -1,13 +1,6 @@
 <template>
     <div>
         <p>Seleccione el Ingreso para asociar a este Egreso</p>
-        <b-input-group class="my-2" style="flex-wrap: nowrap">
-            <b-input-group-prepend>
-                <b-button variant="outline" class="border-secondary" 
-                ><b-icon-search></b-icon-search></b-button>
-            </b-input-group-prepend>
-            <b-form-input class="border-secondary" placeholder="Buscar Ingreso"></b-form-input>
-        </b-input-group>
         <b-overlay spinner-variant="primary" :show="ingresosLoading" rounded="sm">
             <b-form-select class="border-secondary" :options="ingresosSelect" v-model="ingresoSelected">
                 <template #first>
@@ -66,9 +59,10 @@ export default {
                 value: {
                     id: ingresoAPI.id, 
                     montoTotal: ingresoAPI.montoTotal, 
+                    montoRestante: ingresoAPI.montoRestante, 
                     descripcion: ingresoAPI.descripcion
                 },
-                text: ingresoAPI.descripcion + ' - $' + ingresoAPI.montoTotal
+                text: ingresoAPI.descripcion + ' - $' + ingresoAPI.montoRestante + '/$' + ingresoAPI.montoTotal
             }
         }
     },

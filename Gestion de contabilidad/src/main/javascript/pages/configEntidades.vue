@@ -58,12 +58,6 @@
                                 <b-card-body v-else :title="`${entidad.nombreFicticio}`" :sub-title="`Entidad ${entidad.tipo}`">
                                 </b-card-body>
                             </b-col>
-                            <b-col md="4">
-                                <b-card-body class="d-flex h-100 justify-content-end align-items-end">
-                                    <b-button variant="primary" size="sm" class="mr-2"><b-icon-pencil class="mr-2"/>Editar</b-button>
-                                    <b-button variant="danger" size="sm"><b-icon-x class="mr-2"/>Borrar</b-button>
-                                </b-card-body>
-                            </b-col>
                         </b-row>
                     </b-card>
                 </template>
@@ -82,6 +76,7 @@ export default {
             loading: false
         }
     },
+    inject: ["errorHandling", "showLoginModal"],
     methods: {
         cargarEntidadesAPI() {
             this.loading = true;

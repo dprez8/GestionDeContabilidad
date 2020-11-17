@@ -72,21 +72,6 @@
                 </div>
                 <div class="row mb-4 mx-2">
                     <div class="col-sm-4 text-sm-right py-2">
-                        <span class="mr-2"><strong>Número operación</strong></span>
-                    </div>
-                    <div class="col px-2">
-                        <b-collapse :visible="(!presupuesto.numeroOperacion && falloInput)">
-                            <b-badge variant="danger">Ingrese el número de operación</b-badge>
-                        </b-collapse>
-                        <b-form-input 
-                            type="number"
-                            :state="(!presupuesto.fechaVigente && falloInput) ? false : null"
-                            placeholder="Ingrese número de operacion" v-model="presupuesto.numeroOperacion"
-                        ></b-form-input>
-                    </div>
-                </div>
-                <div class="row mb-4 mx-2">
-                    <div class="col-sm-4 text-sm-right py-2">
                         <span class="mr-2"><strong>Items</strong></span>
                     </div>
                     <div class="col p-2">
@@ -135,7 +120,6 @@ export default {
                 proveedor: null,
                 egreso: null,
                 fechaVigente: null,
-                numeroOperacion: null,
                 items: []
             },
             cargandoProveedor: false,
@@ -154,7 +138,6 @@ export default {
             var todosLosCamposRellenos = 
                 this.presupuesto.proveedor          &&
                 this.presupuesto.fechaVigente       &&
-                this.presupuesto.numeroOperacion    &&
                 this.presupuesto.items.length > 0
 
             this.falloInput = !todosLosCamposRellenos;

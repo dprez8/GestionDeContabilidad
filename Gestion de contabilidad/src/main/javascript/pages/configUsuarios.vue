@@ -12,14 +12,8 @@
                                 <b-card-body :title="`${usuario.nombre} ${usuario.apellido}`" :sub-title="`Usuario ${usuario.tipo}`">
                                     <b-card-text>
                                         <div><b-icon-person class="mr-2"/>{{usuario.username}}</div>
-                                        <div><b-icon-lock class="mr-2"/><b-link>cambiar contraseña</b-link></div>
+                                        <div><b-icon-bar-chart class="mr-2"/><b-link to="/admin/entidades">Entidad</b-link></div>
                                     </b-card-text>
-                                </b-card-body>
-                            </b-col>
-                            <b-col>
-                                <b-card-body class="d-flex h-100 justify-content-end align-items-end">
-                                    <b-button variant="primary" size="sm" class="mr-2"><b-icon-pencil class="mr-2"/>Editar</b-button>
-                                    <b-button variant="danger" size="sm"><b-icon-x class="mr-2"/>Borrar</b-button>
                                 </b-card-body>
                             </b-col>
                         </b-row>

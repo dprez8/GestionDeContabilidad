@@ -13,6 +13,7 @@ import Domain.Entities.Operaciones.Egreso.Egreso;
 import Domain.Entities.Usuarios.Estandar;
 import Domain.Entities.ValidadorTransparencia.SchedulerInit;
 import com.google.gson.annotations.Expose;
+import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
 
@@ -34,7 +35,7 @@ public abstract class Organizacion extends EntidadPersistente {
 	@OneToOne(mappedBy = "organizacion", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	protected SchedulerInit schedulerInit;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name="configuracion_vinculador_id", referencedColumnName = "id")
 	private ConfiguracionVinculador configuracionVinculador;
 

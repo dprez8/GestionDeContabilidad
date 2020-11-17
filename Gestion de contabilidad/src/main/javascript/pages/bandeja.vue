@@ -89,6 +89,7 @@ export default {
             scheduler: null,
             mensajes: [],
             mensajesFiltradosOrdenados: [],
+            mensajesFormated: [],
             selected: null,
             loading: true,
             ordenar: "fecha",
@@ -132,6 +133,7 @@ export default {
             RequestHelper.get('/api/bandeja', {
                 success: (data) => {
                     this.mensajes = data.mensajes;
+                    this.formatMensajes(data.mensajes);
                     this.ordenarFiltrarMensajes();
                 },
                 notLoggedIn: () => {
@@ -152,6 +154,8 @@ export default {
             })
         },
         formatMensajes(mensajes) {
+            mensajes.forEach(mensaje => {
+            })
             console.log(mensajes);
         },
         getMessageSelected() {

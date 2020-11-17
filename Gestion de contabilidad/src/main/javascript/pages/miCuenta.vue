@@ -121,7 +121,7 @@ export default {
                     this.usuario.username = data.username;
                     this.usuario.nombre = data.nombre;
                     this.usuario.apellido = data.apellido;
-                    this.usuario.email = data.gmail; // ACTUALIZAR
+                    this.usuario.email = data.email;
                 },
                 notLoggedIn: () => {
                     this.showLoginModal(true);

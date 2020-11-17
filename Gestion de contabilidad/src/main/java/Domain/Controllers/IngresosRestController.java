@@ -106,7 +106,8 @@ public class IngresosRestController extends GenericController {
         ingresoAEnviar.fechaOperacion  = ingreso.getFechaOperacion();
         ingresoAEnviar.fechaCarga      = ingreso.getFechaCarga();
         ingresoAEnviar.descripcion     = ingreso.getDescripcion();
-        ingresoAEnviar.montoTotal      = ingreso.montoSobrante();
+        ingresoAEnviar.montoTotal      = ingreso.getMontoTotal();
+        ingresoAEnviar.montoRestante   = ingreso.montoSobrante();
         ingresoAEnviar.egresos         = ingreso.getEgresos()
                                                 .stream()
                                                 .map(unEgreso->unEgreso.getId())

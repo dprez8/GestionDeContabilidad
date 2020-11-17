@@ -170,7 +170,6 @@ export default {
         searchItemAPI() {
             RequestHelper.get('/api/items', {
                 success: (data) => {
-                    console.log(data);
                     this.itemsOptions = data.items.map((item) => {
                         return item.descripcion;
                     })

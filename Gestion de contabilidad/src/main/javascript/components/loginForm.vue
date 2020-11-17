@@ -5,12 +5,17 @@
             <b-collapse :visible="userState == false">
                 <p class="text-danger text-left m-0"><span>Completa el campo usuario</span></p>
             </b-collapse>
-            <b-form-input class="mb-2" v-model="user" :state="userState" type="text" placeholder="Usuario"></b-form-input>
+            <b-form-input class="mb-2 border-secondary" v-model="user" :state="userState" type="text" placeholder="Usuario"></b-form-input>
 
             <b-collapse :visible="passState == false">
                 <p class="text-danger text-left m-0"><span>Completa el campo contraseña</span></p>
             </b-collapse>
-            <b-form-input v-model="pass" :state="passState" type="password" placeholder="Contraseña"></b-form-input>
+            <b-input-group>
+                <b-form-input v-model="pass" :state="passState" :type="showPassword ? 'text' : 'password'" class="border-secondary" placeholder="Contraseña"></b-form-input>
+                <template #append>
+                    <b-button variant="outline-secondary"><b-icon :icon="showPassword ? 'eye-slash' : 'eye'" @click="showPassword = !showPassword"/></b-button>
+                </template>
+            </b-input-group>
 
             <b-collapse :visible="loginState == false" class="mt-2">
                 <p class="text-danger text-left m-0"><span>Usuario y/o contraseña no coinciden</span></p>
@@ -33,7 +38,8 @@ export default {
             loginState: null,
             userState: null,
             passState: null,
-            loginLoading: false
+            loginLoading: false,
+            showPassword: false
         }
     },
     methods: {

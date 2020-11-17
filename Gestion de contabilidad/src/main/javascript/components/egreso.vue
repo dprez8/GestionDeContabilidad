@@ -34,7 +34,7 @@
                         </b-list-group-item>
                     </b-list-group>
                 </div>
-                <div class="col p-0 pl-1">
+                <div class="col p-0 pl-1" v-if="egreso.documento">
                     <b-list-group>
                         <b-list-group-item class="p-2 text-center" :class="{'bg-secondary': showDatosFactura, 'text-light': showDatosFactura}" @click="showDatosFactura = !showDatosFactura" button><strong>Documento</strong> {{ egreso.documento.tipo.nombreTipoDeDocumento }}</b-list-group-item>
                         <b-list-group-item class="p-0 overflow-hidden">
