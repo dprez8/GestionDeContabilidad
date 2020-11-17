@@ -80,17 +80,6 @@
                         </b-col>
                     </b-row>
                 </b-card>
-                <b-card title="Cambiar contraseña">
-                    <div class="mt-2">Contraseña actual</div>
-                    <b-form-input type="password" placeholder="Ingrese su contraseña"></b-form-input>
-                    <div class="mt-2">Nueva contraseña</div>
-                    <b-form-input type="password" placeholder="Ingrese nueva contraseña"></b-form-input>
-                    <div class="mt-2">Repita la nueva contraseña</div>
-                    <b-form-input type="password" placeholder="Repita contraseña"></b-form-input>
-                    <div class="mt-2">
-                        <b-button variant="primary">Confirmar</b-button>
-                    </div>
-                </b-card>
             </div>
         </div>
     </b-overlay>
