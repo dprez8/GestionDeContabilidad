@@ -74,7 +74,7 @@ public class Router {
         DireccionPostalController direccionController = new DireccionPostalController();
         ProveedorController proveedorController = new ProveedorController(tokenService, TOKEN_PREFIX);
         MedioDePagoController medioController = new MedioDePagoController();
-        DocumentoComercialController documentoController = new DocumentoComercialController();
+        DocumentoComercialController documentoController = new DocumentoComercialController(tokenService, TOKEN_PREFIX);
 
         PresupuestoRestController presupuestoRestController = new PresupuestoRestController(tokenService, TOKEN_PREFIX);
         ItemsController itemsController = new ItemsController(tokenService, TOKEN_PREFIX);
@@ -127,7 +127,9 @@ public class Router {
         Spark.post("/api/operaciones/egreso", egresosRestController::cargarNuevoEgreso);
         Spark.get("/api/operaciones/egresos", egresosRestController::listadoDeEgresos);
         Spark.get("/api/operaciones/egreso/:egresoId", egresosRestController::mostrarEgreso);
-        Spark.post("/api/operaciones/egreso/cargarArchivos",egresosRestController::cargarArchivoDocumentoComercial);
+        Spark.post("/api/operaciones/documentoComercial/archivo", documentoController::cargarArchivo);
+        Spark.patch("/api/operaciones/documentoComercial/archivo", documentoController::modificarArchivo);
+        Spark.delete("/api/operaciones/documentoComercial/archivo", documentoController::borrarArchivo);
         Spark.post("/api/operaciones/egreso/suscribirse",egresosRestController::suscribirse);
         Spark.patch("/api/operaciones/egreso/modificarPathAdjunto", egresosRestController::modificarEgreso);
 

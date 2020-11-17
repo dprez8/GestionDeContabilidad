@@ -48,71 +48,6 @@ public class EgresosRestController extends GenericController {
         this.repoEgresos         = new Repositorio<>(new DaoHibernate<>(Egreso.class));
     }
 
-    private static List<String> tiposDocumentoComercial = Arrays.asList("application/pdf",
-            "text/html",
-            "text/plain",
-            "image/jpeg",
-            "image/png",
-            "image/bmp",
-            "application/msword");
-
-
-    public String cargarArchivoDocumentoComercial(Request request, Response response) throws IOException, ServletException {
-        this.gson  = new GsonBuilder().create();
-        String jsonResponse;
-
-        File uploadDir = null;
-        try {
-            uploadDir = FormFileManager.crearDirectorio();
-        } catch (Exception exception) {
-            return error(response, "Error interno del servidor al crear directorio para la carga de ficheros");
-        }
-
-        String location = "temp";          // the directory location where files will be stored temporarily
-        long maxFileSize = 12000000;       // the maximum size allowed for uploaded files
-        long maxRequestSize = 12000000;    // the maximum size allowed for multipart/form-data requests
-        int fileSizeThreshold = 1024;       // the size threshold after which files will be written to disk
-
-        // configuracion standard
-        MultipartConfigElement multipartConfigElement = new MultipartConfigElement(
-                location, maxFileSize, maxRequestSize, fileSizeThreshold);
-        request.raw().setAttribute("org.eclipse.jetty.multipartConfig",
-                multipartConfigElement);
-
-        HashMap<String, String> filePaths = new HashMap<>();
-        for (Part part : request.raw().getParts()) {
-            String contentType = part.getContentType();
-            if (tiposDocumentoComercial.contains(contentType)){
-                String path = "";
-                try {
-                    path = FormFileManager.procesarFicheroParte(part);
-                } catch (Exception exception) {
-                    return error(response, "Problema al procesar el fichero");
-                }
-
-                if (path != "") {
-                    filePaths.put(part.getName(), path);
-                } else {
-                    return error(response, "Problema al subir un fichero");
-                }
-            } else {
-                return error(response, "Se encontró un tipo de archivo no válido");
-            }
-        }
-
-        this.respuesta.setCode(200);
-        this.respuesta.setMessage("Se produjo exitosamente la carga de archivos.");
-
-        ArchivosSubidosResponse archivosSubidosResponse = new ArchivosSubidosResponse();
-
-        archivosSubidosResponse.code    = this.respuesta.getCode();
-        archivosSubidosResponse.message = this.respuesta.getMessage();
-        archivosSubidosResponse.paths = filePaths;
-        jsonResponse = this.gson.toJson(archivosSubidosResponse);
-        response.body(jsonResponse);
-        return response.body();
-    }
-
     public String cargarNuevoEgreso(Request request, Response response) {
         String jsonResponse;
         EgresoRequest egresoRequest = null;
@@ -406,12 +341,6 @@ public class EgresosRestController extends GenericController {
     }
 
     /*********************DTOs(Inner Class)******************************/
-    private class ArchivosSubidosResponse {
-        public int code;
-        public String message;
-        public HashMap<String, String> paths;
-    }
-
     private class CargaEgresoResponse {
         public int code;
         public String message;
