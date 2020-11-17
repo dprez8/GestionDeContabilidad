@@ -307,7 +307,7 @@ public class DatosPrueba {
         pinturaLoxon.setOrganizacion(eaafBa);
         pinturaLoxon.setTipoItem(producto);
 
-        this.repoItem.agregar(pinturaz10);
+        this.repoItem.agregar(pinturaLoxon);
 
         ItemEgreso pinturaLoxonI = new ItemEgreso();
         pinturaLoxonI.setCantidad(1);
@@ -344,6 +344,7 @@ public class DatosPrueba {
                             .agregarPago(pago)
                             .agregarFechaOperacion(LocalDate.of(2020,3,10))
                             .agregarCantidadPresupuestos(3)
+                            .agregarProveedor(pintureriasSorrentino)
                             .agregarDocumentoComercial(documentoComercial)
                             .build();
         this.repoEgresos.agregar(egreso);
@@ -403,6 +404,7 @@ public class DatosPrueba {
                 .agregarPago(pago2)
                 .agregarFechaOperacion(LocalDate.of(2020,7,8))
                 .agregarCantidadPresupuestos(0)
+                .agregarProveedor(edesur)
                 .agregarDocumentoComercial(documentoComercial2)
                 .build();
         this.repoEgresos.agregar(egreso2);
@@ -454,6 +456,7 @@ public class DatosPrueba {
                 .agregarPago(pago3)
                 .agregarFechaOperacion(LocalDate.of(2020,7,9))
                 .agregarCantidadPresupuestos(0)
+                .agregarProveedor(metrogas)
                 .agregarDocumentoComercial(documentoComercial3)
                 .build();
         this.repoEgresos.agregar(egreso3);
@@ -523,6 +526,7 @@ public class DatosPrueba {
                 .agregarPago(pago4)
                 .agregarFechaOperacion(LocalDate.of(2020,8,3))
                 .agregarCantidadPresupuestos(0)
+                .agregarProveedor(mitoasSA)
                 .agregarDocumentoComercial(documentoComercial4)
                 .build();
         this.repoEgresos.agregar(egreso4);
@@ -576,6 +580,7 @@ public class DatosPrueba {
                 .agregarItems(telefonoIE)
                 .agregarPago(pago5)
                 .agregarFechaOperacion(LocalDate.of(2020,9,27))
+                .agregarProveedor(ingenieriaComercial)
                 .agregarCantidadPresupuestos(6)
                 .agregarDocumentoComercial(documentoComercial5)
                 .build();
@@ -644,6 +649,20 @@ public class DatosPrueba {
 
         this.repoItems.agregar(hierroIE);
         /*************************************************/
+        Item ladrilloItem = new Item();
+        ladrilloItem.setDescripcion("BLOQUE LADRILLO CEMENTO");
+        ladrilloItem.setOrganizacion(eaafBa);
+        ladrilloItem.setTipoItem(producto);
+
+        this.repoItem.agregar(ladrilloItem);
+
+        ItemEgreso ladrilloIE = new ItemEgreso();
+        ladrilloIE.setCantidad(800);
+        ladrilloIE.setPrecio(227);
+        ladrilloIE.setItem(ladrilloItem);
+
+        this.repoItems.agregar(ladrilloIE);
+        /*************************************************/
 
         DocumentoComercial documentoComercial6 = new DocumentoComercial();
         documentoComercial6.setDescripcion("Pago efectivo");
@@ -652,17 +671,225 @@ public class DatosPrueba {
         documentoComercial6.setTipo(facturaA);
         documentoComercial6.setNumDocumento(122322245);
         /********************************************/
-        Egreso egreso5 = new BuilderEgresoConcreto()
+        Egreso egreso6 = new BuilderEgresoConcreto()
                 .agregarDatosOrganizacion(eaafBa)
-                .agregarItems(hierroIE)
+                .agregarItems(ladrilloIE,arenaIE,hierroIE,cementoIE)
                 .agregarPago(pago6)
-                .agregarFechaOperacion(LocalDate.of(2020,9,27))
-                .agregarCantidadPresupuestos(6)
+                .agregarFechaOperacion(LocalDate.of(2020,10,1))
+                .agregarCantidadPresupuestos(4)
+                .agregarProveedor(corralonLaprida)
                 .agregarDocumentoComercial(documentoComercial6)
                 .build();
 
-        this.repoEgresos.agregar(egreso5);
-        hierroIE.setEgresoAsociado(egreso5);
+        this.repoEgresos.agregar(egreso6);
+        hierroIE.setEgresoAsociado(egreso6);
+        cementoIE.setEgresoAsociado(egreso6);
+        arenaIE.setEgresoAsociado(egreso6);
+        ladrilloIE.setEgresoAsociado(egreso6);
+        this.repoItems.modificar(ladrilloIE);
         this.repoItems.modificar(hierroIE);
+        this.repoItems.modificar(arenaIE);
+        this.repoItems.modificar(ladrilloIE);
+        /*************************************************************************************/
+
+        Pago pago7 = new Pago();
+        pago7.setCodigoAsociado("0605S");
+        pago7.setMedioDePago(efectivo);
+
+        this.repoPagos.agregar(pago7);
+        /********************************************/
+
+        ItemEgreso bloqueIE = new ItemEgreso();
+        bloqueIE.setCantidad(800);
+        bloqueIE.setPrecio(250);
+        bloqueIE.setItem(cementoItem);
+
+        this.repoItems.agregar(bloqueIE);
+        /*************************************************/
+
+        DocumentoComercial documentoComercial7 = new DocumentoComercial();
+        documentoComercial7.setDescripcion("Pago efectivo");
+        documentoComercial7.setFechaDeEntrega(LocalDate.now());
+        documentoComercial7.setFechaDePedido(LocalDate.now());
+        documentoComercial7.setTipo(facturaA);
+        documentoComercial7.setNumDocumento(1223246);
+        /********************************************/
+        Egreso egreso7 = new BuilderEgresoConcreto()
+                .agregarDatosOrganizacion(eaafBa)
+                .agregarItems(bloqueIE)
+                .agregarPago(pago7)
+                .agregarFechaOperacion(LocalDate.of(2020,10,5))
+                .agregarProveedor(corralonLaprida)
+                .agregarCantidadPresupuestos(0)
+                .agregarDocumentoComercial(documentoComercial7)
+                .build();
+
+        this.repoEgresos.agregar(egreso7);
+        bloqueIE.setEgresoAsociado(egreso7);
+        this.repoItems.modificar(bloqueIE);
+        /********************** CDIA - Surcos *****************************************/
+
+        EntidadJuridica surcos = this.repoEntidadJuridica.buscar(5);
+
+        Proveedor edesurSurcos = new Proveedor("Edesur",12345678,surcos);
+        edesurSurcos.setAltura(15);
+        edesurSurcos.setCiudad(ciudad);
+        edesurSurcos.setProvincia(provincia);
+        edesurSurcos.setPais(pais);
+        edesurSurcos.setCalle("Colombres");
+        edesurSurcos.setPiso("0");
+        edesurSurcos.setZipcode(1234);
+
+        this.repoProveedores.agregar(edesurSurcos);
+
+        Pago pago8 = new Pago();
+        pago8.setCodigoAsociado("0505S");
+        pago8.setMedioDePago(efectivo);
+
+        this.repoPagos.agregar(pago8);
+        /********************************************/
+        Item edesurCItem = new Item();
+        edesurCItem.setDescripcion("FACTURA SERVICIO DE LUZ PERIODO JUNIO 2020");
+        edesurCItem.setOrganizacion(surcos);
+        edesurCItem.setTipoItem(servicio);
+        this.repoItem.agregar(edesurCItem);
+
+        ItemEgreso edesurCIE = new ItemEgreso();
+        edesurCIE.setCantidad(1);
+        edesurCIE.setPrecio(800);
+        edesurCIE.setItem(edesurCItem);
+
+        this.repoItems.agregar(edesurCIE);
+        /*************************************************/
+
+        DocumentoComercial documentoComercial8 = new DocumentoComercial();
+        documentoComercial8.setDescripcion("Pago efectivo");
+        documentoComercial8.setFechaDeEntrega(LocalDate.now());
+        documentoComercial8.setFechaDePedido(LocalDate.now());
+        documentoComercial8.setTipo(facturaA);
+        documentoComercial8.setNumDocumento(1223246);
+        /********************************************/
+        Egreso egreso8 = new BuilderEgresoConcreto()
+                .agregarDatosOrganizacion(surcos)
+                .agregarItems(edesurCIE)
+                .agregarPago(pago8)
+                .agregarFechaOperacion(LocalDate.of(2020,7,10))
+                .agregarProveedor(edesurSurcos)
+                .agregarCantidadPresupuestos(0)
+                .agregarDocumentoComercial(documentoComercial8)
+                .build();
+
+        this.repoEgresos.agregar(egreso8);
+        edesurCIE.setEgresoAsociado(egreso8);
+        this.repoItems.modificar(edesurCIE);
+        /***********************************************************************/
+
+        Proveedor metrogasSurcos = new Proveedor("Metrogas",1234567,surcos);
+        metrogasSurcos.setAltura(152);
+        metrogasSurcos.setCiudad(ciudad);
+        metrogasSurcos.setProvincia(provincia);
+        metrogasSurcos.setPais(pais);
+        metrogasSurcos.setCalle("Sarasa");
+        metrogasSurcos.setPiso("0");
+        metrogasSurcos.setZipcode(1234);
+        this.repoProveedores.agregar(metrogasSurcos);
+
+        Pago pago9 = new Pago();
+        pago9.setCodigoAsociado("0605S");
+        pago9.setMedioDePago(efectivo);
+
+        this.repoPagos.agregar(pago9);
+        /********************************************/
+        Item metrogasCItem = new Item();
+        metrogasCItem.setDescripcion("FACTURA SERVICIO DE GAS PERIODO JUNIO 2020");
+        metrogasCItem.setOrganizacion(surcos);
+        metrogasCItem.setTipoItem(servicio);
+
+        this.repoItem.agregar(metrogasCItem);
+
+        ItemEgreso metrogasCIE = new ItemEgreso();
+        metrogasCIE.setCantidad(1);
+        metrogasCIE.setPrecio(800);
+        metrogasCIE.setItem(metrogasCItem);
+
+        this.repoItems.agregar(metrogasCIE);
+        /*************************************************/
+
+        DocumentoComercial documentoComercial9 = new DocumentoComercial();
+        documentoComercial9.setDescripcion("Pago efectivo");
+        documentoComercial9.setFechaDeEntrega(LocalDate.now());
+        documentoComercial9.setFechaDePedido(LocalDate.now());
+        documentoComercial9.setTipo(facturaA);
+        documentoComercial9.setNumDocumento(1223246);
+        /********************************************/
+        Egreso egreso9 = new BuilderEgresoConcreto()
+                .agregarDatosOrganizacion(surcos)
+                .agregarItems(metrogasCIE)
+                .agregarPago(pago9)
+                .agregarFechaOperacion(LocalDate.of(2020,7,10))
+                .agregarProveedor(metrogasSurcos)
+                .agregarCantidadPresupuestos(0)
+                .agregarDocumentoComercial(documentoComercial9)
+                .build();
+
+        this.repoEgresos.agregar(egreso9);
+        metrogasCIE.setEgresoAsociado(egreso9);
+        this.repoItems.modificar(metrogasCIE);
+
+        /***********************************************************************/
+
+        Proveedor telasZN = new Proveedor("Telas ZN",1235567,surcos);
+        telasZN.setAltura(153);
+        telasZN.setCiudad(ciudad);
+        telasZN.setProvincia(provincia);
+        telasZN.setPais(pais);
+        telasZN.setCalle("Molino");
+        telasZN.setPiso("0");
+        telasZN.setZipcode(1254);
+
+        this.repoProveedores.agregar(telasZN);
+
+        Pago pago10 = new Pago();
+        pago10.setCodigoAsociado("0805S");
+        pago10.setMedioDePago(efectivo);
+
+        this.repoPagos.agregar(pago10);
+        /********************************************/
+        Item cortinasItem = new Item();
+        cortinasItem.setDescripcion("CORTINAS BLACKOUT VINILICO 2 PAÑOS");
+        cortinasItem.setOrganizacion(surcos);
+        cortinasItem.setTipoItem(producto);
+
+        this.repoItem.agregar(cortinasItem);
+
+        ItemEgreso cortinasIE = new ItemEgreso();
+        cortinasIE.setCantidad(5);
+        cortinasIE.setPrecio(4200);
+        cortinasIE.setItem(cortinasItem);
+
+        this.repoItems.agregar(cortinasIE);
+        /*************************************************/
+
+        DocumentoComercial documentoComercial10 = new DocumentoComercial();
+        documentoComercial10.setDescripcion("Pago efectivo");
+        documentoComercial10.setFechaDeEntrega(LocalDate.now());
+        documentoComercial10.setFechaDePedido(LocalDate.now());
+        documentoComercial10.setTipo(facturaA);
+        documentoComercial10.setNumDocumento(122346);
+        /********************************************/
+        Egreso egreso10 = new BuilderEgresoConcreto()
+                .agregarDatosOrganizacion(surcos)
+                .agregarItems(cortinasIE)
+                .agregarPago(pago10)
+                .agregarFechaOperacion(LocalDate.of(2020,7,10))
+                .agregarProveedor(telasZN)
+                .agregarCantidadPresupuestos(0)
+                .agregarDocumentoComercial(documentoComercial10)
+                .build();
+
+        this.repoEgresos.agregar(egreso10);
+        cortinasIE.setEgresoAsociado(egreso10);
+        this.repoItems.modificar(cortinasIE);
+
     }
 }
