@@ -139,7 +139,7 @@
             <div class="pt-2" v-if="egreso.cantidadPresupuestos">
                 <b-alert :variant="(egreso.presupuestos.length >= egreso.cantidadPresupuestos ? 'info' : 'warning')" 
                     class="m-0" size="sm" show>
-                    Este egreso tiene <strong>{{egreso.presupuestos.length}}</strong> de <strong>{{egreso.cantidadPresupuestos}}</strong> presupuestos requeridos
+                    Este egreso tiene <strong>{{egreso.presupuestos.length}}</strong> de <strong>{{egreso.cantidadPresupuestos}}</strong> presupuestos minimos
                 </b-alert>
             </div>
             <div class="row m-0 pt-2" v-if="egreso.presupuestos.length">
