@@ -2,6 +2,10 @@ USE gestiondecontabilidad;
 SET autocommit = 0;
 
 SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE configuracionvinculador_criterios;
+TRUNCATE TABLE configuracion_vinculador;
+TRUNCATE TABLE schedulerinit_dias;
+TRUNCATE TABLE scheduler;
 TRUNCATE TABLE ingreso;
 TRUNCATE TABLE item_presupuesto;
 TRUNCATE TABLE presupuesto;
@@ -127,11 +131,11 @@ INSERT INTO categoria_juridica (tipo_juridica, id, /*codigo_osc,*/ actividad, ca
 ('empresa', '4', 'Servicio de Alojamiento', '8', '8000000.0', '2', '2');
 
 /*Entidad Juridica, falta agregar localidad, nombre de la entidad(la agregue pero no en el get ni en el post), hay ciudades/paises/provincias que no estan en la lista traida de la pagina de mercado libre*/
-INSERT INTO entidad_juridica (id, administrador_id, nombre_ficticio, altura, calle, /*codigo_igj,*/ cuit, /*piso,*/ razon_social, /*zipcode,*/ciudad_id, pais_id, provincia_id, tipo_entidad_id) VALUES 
-('1', '69', 'Oficina Central Buenos Aires', '951', 'Av. Medrano', '30-15269857-2', 'EAAF BA', '172', '1', '7', '1'),
-('2', '69', 'Oficina Central Nueva York', '720', 'Liberty Ave', '30-15789655-7', 'EAAF NY', '16447', '25', '411', '2'),
-('3', '69', 'Oficina Central México', '55', 'Roberto Gayol', '30-77896583-9', 'EAAF M', '16448', '13', '412', '3'),
-('4', '69', 'Surcos', '2800', 'Jerónimo Salguero', '30-25888897-8', 'Surcos CS', '172', '1', '7', '4');
+INSERT INTO entidad_juridica (id, administrador_id, nombre_ficticio, altura, calle, codigo_igj, cuit, /*piso,*/ razon_social, zipcode, ciudad_id, pais_id, provincia_id, tipo_entidad_id) VALUES 
+('1', '69', 'Oficina Central Buenos Aires', '951', 'Av. Medrano', '0', '30-15269857-2', 'EAAF BA', '0', '172', '1', '7', '1'),
+('2', '69', 'Oficina Central Nueva York', '720', 'Liberty Ave', '0', '30-15789655-7', 'EAAF NY', '0', '16447', '25', '411', '2'),
+('3', '69', 'Oficina Central México', '55', 'Roberto Gayol', '0', '30-77896583-9', 'EAAF M', '0', '16448', '13', '412', '3'),
+('4', '69', 'Surcos', '2800', 'Jerónimo Salguero', '0', '30-25888897-8', 'Surcos CS', '0', '172', '1', '7', '4');
 
 /*Hubo un malentendido del tp asi que la asociamos a la entidad juridica por como lo tenemos modelado*/
 INSERT INTO entidad_base (nombre_ficticio,  id, juridica_id) VALUES
@@ -147,44 +151,44 @@ INSERT INTO medio_de_pago (id, medio_de_pago) VALUES
 
 INSERT INTO pago (id, codigo_asociado, medio_id) VALUES
 ('1', '4509 9535 6623 3704', '2'),
-('2', null, '1'),
-('3', null, '1'),
+('2', '0', '1'),
+('3', '0', '1'),
 ('4', '5031 7557 3453 0604', '3'),
-('5', null, '1'),
-('6', null, '1'),
-('7', null, '1'),
-('8', null, '1'),
-('9', null, '1'),
-('10', null, '1');
+('5', '0', '1'),
+('6', '0', '1'),
+('7', '0', '1'),
+('8', '0', '1'),
+('9', '0', '1'),
+('10', '0', '1');
 
-INSERT INTO proveedor (proveedor_id, /*altura, calle, documento_proveedor,*/ nombre/*, piso, zipcode, ciudad_id, pais_id, provincia_id*/, organizacion_id) VALUES
-('1', 'Pinturerías Serrentino', '1'),
-('2', 'Edesur', '1'),
-('3', 'Metrogas', '1'),
-('4', 'Mitoas SA', '1'),
-('5', 'Ingeniería Comercial SRL', '1'),
-('6', 'Corralón Laprida SRL', '1'),
-('7', 'Telas ZN', '4'),
-('8', 'Pinturerías REX', '1'),
-('9', 'Pinturerías San Jorge', '1'),
-('10', 'La casa del Audio', '1'),
-('11', 'Garbarino', '1'),
-('12', 'Corralón San Juan SRL', '1'),
-('13', 'Edesur', '4'),
-('14', 'Metrogas', '4');
+INSERT INTO proveedor (proveedor_id, altura, calle, documento_proveedor, nombre, /*piso,*/ zipcode, /*ciudad_id, pais_id, provincia_id,*/ organizacion_id) VALUES
+('1', '1100', 'Avenida Nazca', '1524451', 'Pinturerías Serrentino', '0', '1'),
+('2', '245', 'Avenida Avellaneda', '38757', 'Edesur', '0', '1'),
+('3', '123', 'Helguera', '12755765', 'Metrogas', '0', '1'),
+('4', '757', 'Gaona', '3767565', 'Mitoas SA', '0', '1'),
+('5', '3857', 'Albert', '4575378', 'Ingeniería Comercial SRL', '0', '1'),
+('6', '2224', 'Corrientes', '987354', 'Corralón Laprida SRL', '0', '1'),
+('7', '127', 'Avenida Nazca', '2742786', 'Telas ZN', '0', '4'),
+('8', '23', 'Avenida 9 de Julio', '27827', 'Pinturerías REX', '0', '1'),
+('9', '887', 'Juan B. Justo', '1273752', 'Pinturerías San Jorge', '0', '1'),
+('10', '98', 'Don Quijote', '111757', 'La casa del Audio', '0', '1'),
+('11', '3572', 'J. M. Rosas', '1972322', 'Garbarino', '0', '1'),
+('12', '1074', 'Wicked', '675324', 'Corralón San Juan SRL', '0', '1'),
+('13', '10545', 'Yhipor', '237385', 'Edesur', '0', '4'),
+('14', '4385', 'Cuenca', '3767865', 'Metrogas', '0', '4');
 
 /*FALTAN DATOS DE DE PRUEBA*/
-INSERT INTO egreso (id, fecha_carga, fecha_operacion, organizacion_id, cantidadPresupuestos, /*validado,*/ valorTotal, /*documento_comercial_id, ingreso_asociado,*/ pago_id, proveedor_id) VALUES
-('1', '2020-03-10 00:00:00', '2020-03-10', '1', '3', '19952.69', '1', '1'),
-('2', '2020-07-08 00:00:00', '2020-07-08', '1', null, '2100.00', '2', '2'),
-('3', '2020-07-09 00:00:00', '2020-07-09', '1', null, '3500.00', '3', '3'),
-('4', '2020-03-08 00:00:00', '2020-03-08', '1', null, '10800.00', '4', '4'),
-('5', '2020-09-27 00:00:00', '2020-09-27', '1', '6', '8500.00', '5', '5'),
-('6', '2020-10-01 00:00:00', '2020-10-01', '1', '4', '4922.40', '6', '6'),
-('7', '2020-10-05 00:00:00', '2020-10-05', '1', null, '250.00', '7', '6'),
-('8', '2020-07-10 00:00:00', '2020-07-10', '4', null, '1100.00', '8', '13'),
-('9', '2020-07-10 00:00:00', '2020-07-10', '4', null, '800.00', '9', '14'),
-('10', '2020-09-25 00:00:00', '2020-09-25', '4', null, '4200.00', '10', '7');
+INSERT INTO egreso (id, fecha_carga, fecha_operacion, organizacion_id, cantidadPresupuestos, validado, valorTotal, /*documento_comercial_id, ingreso_asociado,*/ pago_id, proveedor_id) VALUES
+('1', '2020-03-10 00:00:00', '2020-03-10', '1', '3', 0, '19952.69', '1', '1'),
+('2', '2020-07-08 00:00:00', '2020-07-08', '1', '0', 0, '2100.00', '2', '2'),
+('3', '2020-07-09 00:00:00', '2020-07-09', '1', '0', 0, '3500.00', '3', '3'),
+('4', '2020-03-08 00:00:00', '2020-03-08', '1', '0', 0, '10800.00', '4', '4'),
+('5', '2020-09-27 00:00:00', '2020-09-27', '1', '6', 0, '8500.00', '5', '5'),
+('6', '2020-10-01 00:00:00', '2020-10-01', '1', '4', 0, '4922.40', '6', '6'),
+('7', '2020-10-05 00:00:00', '2020-10-05', '1', '0', 0, '250.00', '7', '6'),
+('8', '2020-07-10 00:00:00', '2020-07-10', '4', '0', 0, '1100.00', '8', '13'),
+('9', '2020-07-10 00:00:00', '2020-07-10', '4', '0', 0, '800.00', '9', '14'),
+('10', '2020-09-25 00:00:00', '2020-09-25', '4', '0', 0, '4200.00', '10', '7');
 
 INSERT INTO criterio_operacion (id, descripcion, criterio_padre_id) VALUES
 ('1', 'Gastos de mantenimiento', null),
@@ -270,7 +274,7 @@ INSERT INTO item_egreso (id, cantidad, precio, egreso_id, item_id) VALUES
 ('15', '1', '800.00', '9', '15'),
 ('16', '5', '4200.00', '10', '13');
 
-INSERT INTO presupuesto (id, fecha_vigente, /*operacion_numero,*/ valor_total, /*documento_comercial_id,*/ egreso_asociado, proveedor_id) VALUES
+INSERT INTO presupuesto (id, fecha_vigente, /*operacion_numero,*/ valor_total, egreso_asociado, proveedor_id) VALUES
 ('1', '2020-02-25', '21451.60', '1', '8'),
 ('2', '2020-02-26', '20300.80', '1', '9'),
 ('3', '2020-02-27', '19952.69', '1', '1'),
@@ -303,10 +307,68 @@ INSERT INTO item_presupuesto (id, cantidad, precio, item_id, item_egreso_id, pre
 ('20', '800', '227.00', '12', '12', '8');
 
 INSERT INTO ingreso (id, fecha_carga, fecha_operacion, organizacion_id, descripcion, fecha_acep_egreso, montoTotal, moneda_id) VALUES
-('1', '2020-02-25 00:00:00', '2020-02-25', '1', 'Donación de terceros', '2020-03-20', '20000.00', '1'),
-('2', '2020-05-02 00:00:00', '2020-05-02', '1', 'Donación de Rimoli SA', '2020-08-03', '10000.00', '1'),
-('3', '2020-08-03 00:00:00', '2020-08-03', '1', 'Donación de Gran Imperio', '2020-10-01', '980000.00', '1'),
-('4', '2020-05-01 00:00:00', '2020-05-01', '4', 'Donación Gabino SRL', '2020-10-01', '10000.00', '4');
+('11', '2020-02-25 00:00:00', '2020-02-25', '1', 'Donación de terceros', '2020-03-20', '20000.00', '1'),
+('12', '2020-05-02 00:00:00', '2020-05-02', '1', 'Donación de Rimoli SA', '2020-08-03', '10000.00', '1'),
+('13', '2020-08-03 00:00:00', '2020-08-03', '1', 'Donación de Gran Imperio', '2020-10-01', '980000.00', '1'),
+('14', '2020-05-01 00:00:00', '2020-05-01', '4', 'Donación Gabino SRL', '2020-10-01', '10000.00', '4');
+
+INSERT INTO scheduler (id, hora_inicio, minuto_inicio, periodo, organizacion_id, validador_id) VALUES
+('1', '20', '0', '86400000', '1', '1'),
+('2', '20', '0', '86400000', '2', '1'),
+('3', '20', '0', '86400000', '3', '1'),
+('4', '20', '0', '86400000', '4', '1'),
+('5', '20', '0', '86400000', '5', '1');
+
+INSERT INTO schedulerinit_dias (SchedulerInit_id, dias) VALUES
+('1', '1'),
+('1', '2'),
+('1', '3'),
+('1', '4'),
+('1', '5'),
+('1', '6'),
+('1', '7'),
+('2', '1'),
+('2', '2'),
+('2', '3'),
+('2', '4'),
+('2', '5'),
+('2', '6'),
+('2', '7'),
+('3', '1'),
+('3', '2'),
+('3', '3'),
+('3', '4'),
+('3', '5'),
+('3', '6'),
+('3', '7'),
+('4', '1'),
+('4', '2'),
+('4', '3'),
+('4', '4'),
+('4', '5'),
+('4', '6'),
+('4', '7'),
+('5', '1'),
+('5', '2'),
+('5', '3'),
+('5', '4'),
+('5', '5'),
+('5', '6'),
+('5', '7');
+
+INSERT INTO configuracion_vinculador (id) VALUES
+('1'),
+('2'),
+('3'),
+('4'),
+('5');
+
+INSERT INTO configuracionvinculador_criterios (ConfiguracionVinculador_id, criterios) VALUES
+('1', 'OrdenValorPrimeroEgreso'),
+('2', 'OrdenValorPrimeroEgreso'),
+('3', 'OrdenValorPrimeroEgreso'),
+('4', 'OrdenValorPrimeroEgreso'),
+('5', 'OrdenValorPrimeroEgreso');
 
 COMMIT;
 
