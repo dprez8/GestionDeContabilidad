@@ -62,7 +62,8 @@
                             </div>
                             <div class="col p-3 text-justify" >
                                 <div style="white-space: pre-wrap">{{ getFormattedMessageSelected().cuerpo }}</div>
-                                <b-button class="mt-2" variant="outline-primary" size="sm" :to="`/operaciones/egreso/${getFormattedMessageSelected().egresoId}`">Egreso {{getFormattedMessageSelected().egresoId}}</b-button>
+                                <br>
+                                <router-link variant="outline-primary" size="sm" :to="`/operaciones/egreso/${getFormattedMessageSelected().egresoId}`">ir al egreso</router-link>
                             </div>
                         </div>
                     </div>

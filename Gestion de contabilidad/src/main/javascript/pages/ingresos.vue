@@ -1,18 +1,37 @@
 <template>
     <div class="border border-top-0">
         <b-overlay variant="primary" spinner-variant="light" :show="ingresosLoading" class="border-bottom">
-            <b-table show-empty class="mb-0 border-0 border-bottom" head-variant="dark" sort-by="name" :fields="campos_ingresos"
-                :items="ingresos">
+            <b-table show-empty :tbody-tr-class="rowStyle" class="mb-0 border-0 border-bottom table-row-pointer" head-variant="dark" sort-by="name" :fields="campos_ingresos"
+                :items="ingresos"
+                @row-clicked="toggleIngreso"
+            >
                 <template #cell(descripcion)="data">
-                    <b-collapse :id="'ingreso-descripcion'+data.index" :visible="true">
-                        <div class="text-nowrap text-truncate" v-b-toggle="'ingreso-descripcion'+data.index">{{data.item.descripcion}}</div>
-                    </b-collapse>
-                    <b-collapse :id="'ingreso-descripcion'+data.index">
-                        <div style="overflow-wrap: break-word" v-b-toggle="'ingreso-descripcion'+data.index">{{data.item.descripcion}}</div>
-                    </b-collapse>
+                    <div class="text-nowrap text-truncate">{{data.item.descripcion}}</div>
                 </template>
                 <template #cell(montoTotal)="data">
                     <span>{{ "$" + data.item.montoTotal }}</span>
+                </template>
+
+                <template #row-details="data">
+                    <b-collapse :visible="data.item.showIngreso">
+                        <div class="px-2 pb-2 egreso_container">
+                            <b-card no-body>
+                                <b-card-body class="p-2">
+                                    <div v-if="data.item.egresos.length">
+                                        Este ingreso esta asociado a 
+                                        <template v-for="(egreso, key) in data.item.egresos">
+                                            <b-badge class="mr-2 py-1 px-2" :key="key" :to="`/operaciones/egreso/${egreso}`">
+                                                Egreso {{egreso}}
+                                            </b-badge>
+                                        </template>
+                                    </div>
+                                    <div>
+                                        Fecha límite de egresos <b-badge class="mr-2 py-1 px-2">{{data.item.fechaAceptacion}}</b-badge>
+                                    </div>
+                                </b-card-body>
+                            </b-card>
+                        </div>
+                    </b-collapse>
                 </template>
 
                 <template #empty>
@@ -46,12 +65,13 @@ export default {
     },
     inject: ['showLoginModal', 'errorHandling'],
     methods: {
+        convertDate: convertDate,
         cargarIngresosAPI(){
             this.ingresosLoading = true;
 
             RequestHelper.get('/api/operaciones/ingresos', {
                 success: (data) => {
-                    console.log(data.ingresos);
+                    console.log(data);
                     this.ingresos = data.ingresos.map(this.ingresosAPIConverter);
                     console.log(this.ingresos);
                 },
@@ -76,8 +96,31 @@ export default {
                 descripcion: ingresoAPI.descripcion,
                 montoTotal: ingresoAPI.montoTotal,
                 fechaOperacion: `${ingresoAPI.fechaOperacion.day}/${ingresoAPI.fechaOperacion.month}/${ingresoAPI.fechaOperacion.year}`,
+                fechaAceptacion: `${ingresoAPI.fechaAceptacion.day}/${ingresoAPI.fechaAceptacion.month}/${ingresoAPI.fechaAceptacion.year}`,
+                egresos: ingresoAPI.egresos,
                 _showDetails: true,
-                showEgreso: false
+                showIngreso: false
+            }
+        },
+        toggleIngreso(row) {
+            this.seleccionarIngreso(row.id);
+        },
+        seleccionarIngreso(id) {
+            this.ingresos.forEach(ingreso => {
+                if(ingreso.id != id)
+                    ingreso.showIngreso = false;
+                else
+                    ingreso.showIngreso = !ingreso.showIngreso;
+            });
+        },
+        rowStyle(item, type) {
+            if(type == 'row') {
+                if(item.showIngreso) {
+                    return ['bg-secondary', 'text-light'];
+                }
+            }
+            if(type == 'row-details') {
+                return ['bg-secondary']
             }
         }
     },
@@ -88,5 +131,16 @@ export default {
 </script>
 
 <style>
-
+    .b-table-details > td {
+        padding: 0 !important;
+    }
+    .mw-0{
+        max-width: 0;
+    }
+    table.table-row-pointer > tbody > tr{
+        cursor: pointer;
+    }
+    table.table-row-pointer > tbody > tr.b-table-details{
+        cursor: initial;
+    }
 </style>

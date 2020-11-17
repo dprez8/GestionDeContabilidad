@@ -18,6 +18,15 @@
                     </div>
                 </template>
             </b-overlay>
+            
+            <template v-if="egreso.categorias.length">
+                <div class="mb-2">
+                    Categorias: 
+                    <template v-for="(categoria, index) in egreso.categorias">
+                        <b-badge :key="index" class="mr-1">{{categoria.descripcion}}</b-badge>
+                    </template>
+                </div>
+            </template>
             <div class="row m-0">
                 <div class="col p-0 pr-1">
                     <b-list-group>
@@ -202,11 +211,6 @@
                     </b-button-toolbar>
                 </div>
             </div>
-            <template v-if="egreso.categorias">
-                <template v-for="(categoria, index) in egreso.categorias">
-                    <b-badge :key="index" class="mr-1">{{categoria.descripcion}}</b-badge>
-                </template>
-            </template>
         </b-card>
         <div v-else>
             

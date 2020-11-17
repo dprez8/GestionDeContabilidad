@@ -13,7 +13,7 @@
             <b-input-group>
                 <b-form-input v-model="pass" :state="passState" :type="showPassword ? 'text' : 'password'" class="border-secondary" placeholder="Contraseña"></b-form-input>
                 <template #append>
-                    <b-button variant="outline-secondary"><b-icon :icon="showPassword ? 'eye-slash' : 'eye'" @click="showPassword = !showPassword"/></b-button>
+                    <b-button variant="outline-secondary" @click="showPassword = !showPassword"><b-icon :icon="showPassword ? 'eye-slash' : 'eye'"/></b-button>
                 </template>
             </b-input-group>
 

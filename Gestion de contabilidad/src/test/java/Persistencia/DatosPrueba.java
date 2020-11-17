@@ -652,6 +652,7 @@ public class DatosPrueba {
         documentoComercial6.setTipo(facturaA);
         documentoComercial6.setNumDocumento(122322245);
         /********************************************/
+        /*
         Egreso egreso5 = new BuilderEgresoConcreto()
                 .agregarDatosOrganizacion(eaafBa)
                 .agregarItems(hierroIE)
@@ -664,5 +665,6 @@ public class DatosPrueba {
         this.repoEgresos.agregar(egreso5);
         hierroIE.setEgresoAsociado(egreso5);
         this.repoItems.modificar(hierroIE);
+         */
     }
 }

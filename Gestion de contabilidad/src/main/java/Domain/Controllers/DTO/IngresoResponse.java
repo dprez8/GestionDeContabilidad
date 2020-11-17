@@ -7,6 +7,7 @@ import java.util.List;
 public class IngresoResponse {
     public int id;
     public LocalDate fechaOperacion;
+    public LocalDate fechaAceptacion;
     public LocalDateTime fechaCarga;
     public String descripcion;
     public Double montoTotal;
