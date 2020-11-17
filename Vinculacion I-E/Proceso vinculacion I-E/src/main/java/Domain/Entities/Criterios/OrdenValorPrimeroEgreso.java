@@ -14,7 +14,6 @@ public class OrdenValorPrimeroEgreso extends CriterioUnico {
     @Override
     public void ordenar() {
         super.ordenar();
-        System.out.println("Entre valorPrimeroEgreso");
         this.egresos.sort(Comparator.comparing(Egreso::getMonto));
         this.ingresos.sort(Comparator.comparing(Ingreso::getMonto));
     }

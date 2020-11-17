@@ -33,16 +33,13 @@ public class Vinculador {
         while(!criterio.termino()) {
             Egreso egreso = this.criterio.getEgreso();
             Ingreso ingreso = this.criterio.getIngreso();
-            this.condiciones.stream().forEach(condicion -> System.out.println("Condicion: "+ condicion.getClass() +condicion.cumpleCondicion(egreso,ingreso)));
             if(this.condiciones.stream().allMatch(unaCondicion->unaCondicion.cumpleCondicion(egreso, ingreso))) {
                 // Se puede vincular el egreso al ingreso
-                System.out.println("Vincule");
                 ingreso.addEgresoAsociado(egreso);
                 egreso.setIngresoAsociado(ingreso);
             }
             this.criterio.siguiente();
         }
-        System.out.println("No Vincule");
     }
 
     /*******Getters & Setters******************/

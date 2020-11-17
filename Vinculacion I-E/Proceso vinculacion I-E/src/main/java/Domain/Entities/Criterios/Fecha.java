@@ -14,7 +14,6 @@ public class Fecha extends CriterioUnico {
     @Override
     public void ordenar() {
         super.ordenar();
-        System.out.println("Entre fecha");
         this.egresos.sort(Comparator.comparing(Egreso::getFecha));
         this.ingresos.sort(Comparator.comparing(Ingreso::getFecha));
     }
