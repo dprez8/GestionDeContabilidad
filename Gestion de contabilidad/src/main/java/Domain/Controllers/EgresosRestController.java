@@ -10,6 +10,7 @@ import Domain.Controllers.jwt.TokenService;
 import Domain.Entities.DatosDeOperaciones.*;
 import Domain.Entities.Operaciones.Egreso.BuilderEgresoConcreto;
 import Domain.Entities.Operaciones.Egreso.Egreso;
+import Domain.Entities.Operaciones.Presupuesto;
 import Domain.Entities.Organizacion.EntidadBase;
 import Domain.Entities.Organizacion.EntidadJuridica;
 import Domain.Entities.Organizacion.Organizacion;
@@ -181,6 +182,11 @@ public class EgresosRestController extends GenericController {
         egresoDetallado.egreso       = egreso;
         egresoDetallado.estaSuscrito = verificarSuscripcion(usuario,egreso);
         egresoDetallado.presupuesto  = null;
+
+        Presupuesto presupuestoValidado = egreso.getPresupuestoValidado();
+        if (presupuestoValidado != null) {
+            egresoDetallado.presupuesto = presupuestoValidado.getId();
+        }
 
         //ValidarConPresupuesto validador = new ValidarConPresupuesto();
         //validador.validarEgreso(egreso);

@@ -43,7 +43,6 @@ public class Egreso extends Operacion {
 	@JoinColumn(name = "proveedor_id", referencedColumnName = "proveedor_id")
 	private Proveedor proveedor;
 
-	@Expose
 	@ManyToOne
 	@JoinColumn(name = "presupuestoValidado", referencedColumnName = "id")
 	private Presupuesto presupuestoValidado;
