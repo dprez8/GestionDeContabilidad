@@ -11,6 +11,7 @@ import Domain.Entities.Organizacion.Organizacion;
 import Domain.Entities.Usuarios.Estandar;
 import com.google.gson.Gson;
 
+import Domain.Controllers.DTO.EgresoRequest;
 import Domain.Controllers.MedioDePagoController.MedioDePagoRespuesta;
 import Domain.Entities.ApiPaises.Ciudad;
 import Domain.Entities.ApiPaises.Pais;
@@ -96,10 +97,20 @@ public class ProveedorController extends GenericController {
 	public String crearProveedor(Request request,Response response){
 		
 		Gson gson2 = new Gson();
-		//Proveedor proveedor= new Proveedor();
+	
+		ProveedorNuevo proveedorNuevo;
 
 		this.repoProveedor = new Repositorio<Proveedor>(new DaoHibernate<Proveedor>(Proveedor.class));
-		ProveedorNuevo proveedorNuevo = gson2.fromJson(request.body(),ProveedorNuevo.class);
+		 try {
+			 proveedorNuevo = gson2.fromJson(request.body(),ProveedorNuevo.class);
+				 }
+	            catch(Exception ex){
+	            	 this.respuesta.setCode(404);
+	                 this.respuesta.setMessage("No se logro mapear el json con el proveedor");
+	                 this.jsonResponse = gson.toJson(this.respuesta);
+	                 response.body(this.jsonResponse);
+	                 return response.body();
+	            }
 		Proveedor proveedor = mapProveedor(request, proveedorNuevo);
 		ProveedorRespuesta proveedorCreado= new ProveedorRespuesta();
 		try{

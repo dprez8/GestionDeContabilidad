@@ -17,7 +17,9 @@ import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -149,6 +151,7 @@ public class Router {
         Spark.post("/api/admin/entidadBase",organizacionController::crearEntidadBase);
         /****  EntidadBaseRestController ********/
         Spark.get("/api/entidades", entidadRestController::listarEntidades);
+        Spark.get("/api/admin/entidades", entidadRestController::listarEntidadesAdmin);
         /*** Descargar archivos               ***/
         Spark.get("/files/:filename", filesController::descargarArchivo);
 
@@ -166,14 +169,8 @@ public class Router {
                 Tarea tarea = new Tarea();
                 Timer timer = new Timer();
 
-                HashMap<Integer, Tarea> schedulerHashMap = new HashMap<>();
-                schedulerHashMap.put(unaOrg.getSchedulerInit().getId(), tarea);
-
-                HashMap<Integer, Timer> timerHashMap = new HashMap<>();
-                timerHashMap.put(unaOrg.getSchedulerInit().getId(),timer);
-
-                TimersController.instancia().setSchedulerHashMap(schedulerHashMap);
-                TimersController.instancia().setTimerHashMap(timerHashMap);
+                TimersController.instancia().setScheduler(unaOrg.getSchedulerInit().getId(),tarea);
+                TimersController.instancia().setTimer(unaOrg.getSchedulerInit().getId(),timer);
 
                 unaOrg.getSchedulerInit().setTarea(tarea);
                 unaOrg.getSchedulerInit().setTimer(timer);

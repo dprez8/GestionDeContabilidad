@@ -1,6 +1,7 @@
 package Domain.Controllers;
 
 import Domain.Controllers.AdaptersJson.LocalDateAdapter;
+import Domain.Controllers.DTO.ConfigSchedulerRequest;
 import Domain.Controllers.DTO.EgresoRequest;
 import Domain.Controllers.DTO.EgresoResponse;
 import Domain.Controllers.DTO.ItemRequest;
@@ -114,17 +115,22 @@ public class EgresosRestController extends GenericController {
 
     public String cargarNuevoEgreso(Request request, Response response) {
         String jsonResponse;
-        this.gson  = new GsonBuilder()
+        EgresoRequest egresoRequest = null;
+        		this.gson  = new GsonBuilder()
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe())
                 .create();
 
-        EgresoRequest egresoRequest = null;
         try {
-            egresoRequest = this.gson.fromJson(request.body(),EgresoRequest.class);
-        }
-        catch (Exception exception) {
-            return error(response, "Error en el tipo de datos al cargar egreso");
-        }
+        	egresoRequest = this.gson.fromJson(request.body(),EgresoRequest.class);
+            }
+            catch(Exception ex){
+            	 this.respuesta.setCode(404);
+                 this.respuesta.setMessage("No se logro mapear el json con el egreso");
+                 this.jsonResponse = gson.toJson(this.respuesta);
+                 response.body(this.jsonResponse);
+                 return response.body();
+            }
+
 
         Egreso egreso = asignarEgresoDesde(request, egresoRequest);
 
