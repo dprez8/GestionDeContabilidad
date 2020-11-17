@@ -118,9 +118,9 @@ export default {
         organizacionDireccionPostal(entidad) {
             return `
             ${entidad.calle} ${entidad.altura}
-            ${entidad.ciudad ? ',' + entidad.ciudad : ''} 
-            ${entidad.provincia ? ',' + entidad.provincia : ''} 
-            ${entidad.pais ?  ',' + entidad.pais : ''}`;
+            ${entidad.ciudad ? ',' + entidad.ciudad.name : ''} 
+            ${entidad.provincia ? ',' + entidad.provincia.name : ''} 
+            ${entidad.pais ?  ',' + entidad.pais.name : ''}`;
         }
     },
     mounted() {

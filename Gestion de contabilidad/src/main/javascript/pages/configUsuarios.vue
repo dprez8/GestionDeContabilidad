@@ -68,8 +68,10 @@ export default {
                 success: (data) => {
                     this.usuarios = data.usuarios.map(usuario => {
                         usuario.entidad = usuario.organizacion.nombreFicticio;
+                        usuario.tipo = "Estandar";
                         return usuario;
                     });
+                    console.log(this.usuarios);
                 },
                 notLoggedIn: () => {
                     this.showLoginModal(true);

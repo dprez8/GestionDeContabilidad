@@ -166,9 +166,9 @@ export default {
         organizacionDireccionPostal() {
             return `
             ${this.organizacion.calle} ${this.organizacion.altura}
-            ${this.organizacion.ciudad ? ',' + this.organizacion.ciudad : ''} 
-            ${this.organizacion.provincia ? ',' + this.organizacion.provincia : ''} 
-            ${this.organizacion.pais ?  ',' + this.organizacion.pais : ''}`;
+            ${this.organizacion.ciudad ? ',' + this.organizacion.ciudad.name : ''} 
+            ${this.organizacion.provincia ? ',' + this.organizacion.provincia.name : ''} 
+            ${this.organizacion.pais ?  ',' + this.organizacion.pais.name : ''}`;
         }
     },
     mounted() {
