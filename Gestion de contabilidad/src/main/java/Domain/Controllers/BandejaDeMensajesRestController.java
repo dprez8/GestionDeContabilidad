@@ -5,6 +5,7 @@ import Domain.Controllers.DTO.ConfigSchedulerRequest;
 import Domain.Controllers.DTO.Respuesta;
 import Domain.Controllers.jwt.TokenService;
 import Domain.Entities.BandejaDeMensajes.Mensaje;
+import Domain.Entities.Organizacion.EntidadBase;
 import Domain.Entities.Organizacion.EntidadJuridica;
 import Domain.Entities.Organizacion.Organizacion;
 import Domain.Entities.Usuarios.Administrador;
@@ -172,7 +173,8 @@ public class BandejaDeMensajesRestController extends GenericController{
              List<EntidadJuridica> entidadJuridicas = administrador.getJuridicas();
              organizacion = this.repoOrganizacion.buscar(new Integer(request.params("organizacionId")));
              if(!(entidadJuridicas.stream().anyMatch(entidad->entidad.getId() == organizacion.getId()))){
-                 return respuesta(response,403,"No posees permisos para ver esta configuracion");
+                 if(!poseePermisosEnEntidadesBase(entidadJuridicas,organizacion))
+                     return respuesta(response,403,"No posees permisos para ver esta configuracion");
              }
         }catch (Exception ex) {
             return respuesta(response,404,"No existe la organizacion");
@@ -187,6 +189,16 @@ public class BandejaDeMensajesRestController extends GenericController{
         this.jsonResponse = gson1.toJson(configResponse);
         response.body(jsonResponse);
         return response.body();
+    }
+
+    private boolean poseePermisosEnEntidadesBase(List<EntidadJuridica> entidadesJuridicas, Organizacion organizacion) {
+        return entidadesJuridicas.stream().anyMatch(juridica->poseeEntidadesBase(juridica,organizacion.getId()));
+    }
+
+    private boolean poseeEntidadesBase(EntidadJuridica juridica , Integer id) {
+        if(!juridica.getEntidadesBase().isEmpty())
+            return juridica.getEntidadesBase().stream().anyMatch(base->base.getId() == id);
+        return false;
     }
 
     private void filtrarMensajesDeUsuario(Estandar usuario) {

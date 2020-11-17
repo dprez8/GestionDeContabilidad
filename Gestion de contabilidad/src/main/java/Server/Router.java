@@ -152,6 +152,7 @@ public class Router {
         Spark.post("/api/admin/entidadBase",organizacionController::crearEntidadBase);
         /****  EntidadBaseRestController ********/
         Spark.get("/api/entidades", entidadRestController::listarEntidades);
+        Spark.get("/api/admin/entidades", entidadRestController::listarEntidadesAdmin);
         /*** Descargar archivos               ***/
         Spark.get("/files/:filename", filesController::descargarArchivo);
 
