@@ -16,6 +16,7 @@ TRUNCATE TABLE egreso_categoria_operacion;
 TRUNCATE TABLE categoria_operacion;
 TRUNCATE TABLE criterio_operacion;
 TRUNCATE TABLE egreso;
+TRUNCATE TABLE documento_comercial;
 TRUNCATE TABLE proveedor;
 TRUNCATE TABLE pago;
 TRUNCATE TABLE medio_de_pago;
@@ -177,18 +178,30 @@ INSERT INTO proveedor (proveedor_id, altura, calle, documento_proveedor, nombre,
 ('13', '10545', 'Yhipor', '237385', 'Edesur', '0', '4'),
 ('14', '4385', 'Cuenca', '3767865', 'Metrogas', '0', '4');
 
+INSERT INTO documento_comercial (id, descripcion, fecha_entrega, fecha_pedido, numero_documento, /*path_adjunto,*/ tipo_documento_id) VALUES
+('1', 'nad7a', DATE_ADD(CURDATE(), INTERVAL 10 DAY), CURDATE(), '151', '1'),
+('2', 'na5da', DATE_ADD(CURDATE(), INTERVAL 5 DAY), CURDATE(), '16', '2'),
+('3', 'nad778a', DATE_ADD(CURDATE(), INTERVAL 2 DAY), CURDATE(), '158', '3'),
+('4', 'nada88', DATE_ADD(CURDATE(), INTERVAL 6 DAY), CURDATE(), '51', '1'),
+('5', 'nad24a', DATE_ADD(CURDATE(), INTERVAL 7 DAY), CURDATE(), '551', '2'),
+('6', 'nada2', DATE_ADD(CURDATE(), INTERVAL 1 DAY), CURDATE(), '519', '1'),
+('7', 'na4da', DATE_ADD(CURDATE(), INTERVAL 15 DAY), CURDATE(), '751', '3'),
+('8', 'na43da', DATE_ADD(CURDATE(), INTERVAL 7 DAY), CURDATE(), '484', '2'),
+('9', 'nada', DATE_ADD(CURDATE(), INTERVAL 1 DAY), CURDATE(), '111', '1'),
+('10', 'n2ada', DATE_ADD(CURDATE(), INTERVAL 15 DAY), CURDATE(), '87', '3');
+
 /*FALTAN DATOS DE DE PRUEBA*/
-INSERT INTO egreso (id, fecha_carga, fecha_operacion, organizacion_id, cantidadPresupuestos, validado, valorTotal, /*documento_comercial_id, ingreso_asociado,*/ pago_id, proveedor_id) VALUES
-('1', '2020-03-10 00:00:00', '2020-03-10', '1', '3', 0, '19952.69', '1', '1'),
-('2', '2020-07-08 00:00:00', '2020-07-08', '1', '0', 0, '2100.00', '2', '2'),
-('3', '2020-07-09 00:00:00', '2020-07-09', '1', '0', 0, '3500.00', '3', '3'),
-('4', '2020-03-08 00:00:00', '2020-03-08', '1', '0', 0, '10800.00', '4', '4'),
-('5', '2020-09-27 00:00:00', '2020-09-27', '1', '6', 0, '8500.00', '5', '5'),
-('6', '2020-10-01 00:00:00', '2020-10-01', '1', '4', 0, '4922.40', '6', '6'),
-('7', '2020-10-05 00:00:00', '2020-10-05', '1', '0', 0, '250.00', '7', '6'),
-('8', '2020-07-10 00:00:00', '2020-07-10', '4', '0', 0, '1100.00', '8', '13'),
-('9', '2020-07-10 00:00:00', '2020-07-10', '4', '0', 0, '800.00', '9', '14'),
-('10', '2020-09-25 00:00:00', '2020-09-25', '4', '0', 0, '4200.00', '10', '7');
+INSERT INTO egreso (id, fecha_carga, fecha_operacion, organizacion_id, cantidadPresupuestos, validado, valorTotal, documento_comercial_id, /*ingreso_asociado,*/ pago_id, proveedor_id) VALUES
+('1', '2020-03-10 00:00:00', '2020-03-10', '1', '3', 0, '19952.69', '1', '1', '1'),
+('2', '2020-07-08 00:00:00', '2020-07-08', '1', '0', 0, '2100.00', '2', '2', '2'),
+('3', '2020-07-09 00:00:00', '2020-07-09', '1', '0', 0, '3500.00', '3', '3', '3'),
+('4', '2020-03-08 00:00:00', '2020-03-08', '1', '0', 0, '10800.00', '4', '4', '4'),
+('5', '2020-09-27 00:00:00', '2020-09-27', '1', '6', 0, '8500.00', '5', '5', '5'),
+('6', '2020-10-01 00:00:00', '2020-10-01', '1', '4', 0, '4922.40', '6', '6', '6'),
+('7', '2020-10-05 00:00:00', '2020-10-05', '1', '0', 0, '250.00', '7', '7', '6'),
+('8', '2020-07-10 00:00:00', '2020-07-10', '4', '0', 0, '1100.00', '8', '8', '13'),
+('9', '2020-07-10 00:00:00', '2020-07-10', '4', '0', 0, '800.00', '9', '9', '14'),
+('10', '2020-09-25 00:00:00', '2020-09-25', '4', '0', 0, '4200.00', '10', '10', '7');
 
 INSERT INTO criterio_operacion (id, descripcion, criterio_padre_id) VALUES
 ('1', 'Gastos de mantenimiento', null),
@@ -274,7 +287,7 @@ INSERT INTO item_egreso (id, cantidad, precio, egreso_id, item_id) VALUES
 ('15', '1', '800.00', '9', '15'),
 ('16', '5', '4200.00', '10', '13');
 
-INSERT INTO presupuesto (id, fecha_vigente, /*operacion_numero,*/ valor_total, egreso_asociado, proveedor_id) VALUES
+INSERT INTO presupuesto (id, fecha_vigente, valor_total, egreso_asociado, proveedor_id) VALUES
 ('1', '2020-02-25', '21451.60', '1', '8'),
 ('2', '2020-02-26', '20300.80', '1', '9'),
 ('3', '2020-02-27', '19952.69', '1', '1'),
