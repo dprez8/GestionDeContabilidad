@@ -35,10 +35,8 @@ public class ValidarConPresupuesto extends ValidacionDeTransparencia {
 		if (presupuestoElegido != null) {
 			cuerpo = "Se validó el egreso con uno de los presupuestos.";
 			// actualizo el validador
-			if (!egreso.getPresupuestoValidado().equals(presupuestoElegido)) {
-				egreso.setPresupuestoValidado(presupuestoElegido);
-				repoEgresos.modificar(egreso);
-			}
+			egreso.setPresupuestoValidado(presupuestoElegido);
+			repoEgresos.modificar(egreso);
 		}
 		else 
 			cuerpo = "No se validó el egreso con alguno de los presupuesto.";

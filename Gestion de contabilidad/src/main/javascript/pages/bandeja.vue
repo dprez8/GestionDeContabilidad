@@ -151,6 +151,9 @@ export default {
                 }
             })
         },
+        formatMensajes(mensajes) {
+            console.log(mensajes);
+        },
         getMessageSelected() {
             var mensajeSeleccionado = null;
             for(var i = 0; i < this.mensajes.length; i++) {

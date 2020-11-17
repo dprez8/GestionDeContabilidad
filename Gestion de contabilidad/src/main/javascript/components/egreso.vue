@@ -53,26 +53,6 @@
                                             <b-icon-box-arrow-in-up-right/>
                                         </span>
                                     </b-list-group-item>
-                                    <b-list-group-item class="p-2" v-if="egreso.documento.pathAdjunto">
-                                        <b-input-group >
-                                            <b-form-file
-                                                v-model="archivo"
-                                                placeholder="Seleccione un archivo o sueltelo aqui"
-                                                drop-placeholder="Suelta el archivo aqui..."
-                                                browse-text="Buscar"
-                                            ></b-form-file>
-                                            <template #append>
-                                                <b-button variant="outline-secondary" @click="archivo = null">
-                                                    <b-icon-x />
-                                                </b-button>
-                                                <transition name="fade">
-                                                    <b-button variant="outline-primary" v-if="archivo" @click="updateFileAPI">
-                                                        <b-icon-arrow-bar-up />
-                                                    </b-button>
-                                                </transition>
-                                            </template>
-                                        </b-input-group>
-                                    </b-list-group-item>
                                     <b-list-group-item class="p-2" v-else>
                                         <b-input-group >
                                             <b-form-file
@@ -147,6 +127,12 @@
                     </b-list-group>
                 </div>
             </div>
+            <div class="pt-2" v-if="egreso.cantidadPresupuestos">
+                <b-alert :variant="(egreso.presupuestos.length >= egreso.cantidadPresupuestos ? 'info' : 'warning')" 
+                    class="m-0" size="sm" show>
+                    Este egreso tiene <strong>{{egreso.presupuestos.length}}</strong> de <strong>{{egreso.cantidadPresupuestos}}</strong> presupuestos requeridos
+                </b-alert>
+            </div>
             <div class="row m-0 pt-2" v-if="egreso.presupuestos.length">
                 <div class="col p-0">
                     <b-list-group>
@@ -156,35 +142,38 @@
                         <b-list-group-item class="p-0 border-0 overflow-hidden">
                             <b-collapse :visible="showPresupuestos">
                                 <div class="px-2 pb-2 bg-secondary" :key="key" v-for="(presupuesto, key) in egreso.presupuestos">
-                                    <b-list-group>
-                                        <b-list-group-item class="p-2 d-flex justify-content-between">
-                                            <span><strong>Proveedor</strong> {{presupuesto.proveedor.nombre}} </span>
-                                            <span><strong>Fecha Vigente</strong> {{convertDate(presupuesto.fechaVigente)}} </span>
-                                        </b-list-group-item>
-                                        <div class="p-0 bg-light overflow-hidden">
-                                            <b-table borderless foot-clone class="m-0 border-0"
-                                                :fields="campos_items" 
-                                                :items="presupuesto.items.map(itemEgresoAPIConverter)"
-                                            >
-                                                <template #cell(precio)="data">
-                                                    <span>{{ "$" + data.item.precio }}</span>
-                                                </template>
+                                    <div :class="{ 'presupuesto-elegido': presupuestoElegido(presupuesto)}">
+                                        <b-badge v-if="presupuestoElegido(presupuesto)" class="badge-elegido" variant="success">ELEGIDO</b-badge>
+                                        <b-list-group>
+                                            <b-list-group-item class="p-2 d-flex justify-content-between">
+                                                <span><strong>Proveedor</strong> {{presupuesto.proveedor.nombre}} </span>
+                                                <span><strong>Fecha Vigente</strong> {{convertDate(presupuesto.fechaVigente)}} </span>
+                                            </b-list-group-item>
+                                            <div class="p-0 bg-light overflow-hidden">
+                                                <b-table borderless foot-clone class="m-0 border-0"
+                                                    :fields="campos_items" 
+                                                    :items="presupuesto.items.map(itemEgresoAPIConverter)"
+                                                >
+                                                    <template #cell(precio)="data">
+                                                        <span>{{ "$" + data.item.precio }}</span>
+                                                    </template>
 
-                                                <template #foot(tipoItem)>
-                                                    <span></span>
-                                                </template>
-                                                <template #foot(descripcion)>
-                                                    <span></span>
-                                                </template>
-                                                <template #foot(cantidad)>
-                                                    <span>Total</span>
-                                                </template>
-                                                <template #foot(precio)>
-                                                    <span>{{ '$' + presupuesto.valorTotal }}</span>
-                                                </template>
-                                            </b-table>
-                                        </div>
-                                    </b-list-group>
+                                                    <template #foot(tipoItem)>
+                                                        <span></span>
+                                                    </template>
+                                                    <template #foot(descripcion)>
+                                                        <span></span>
+                                                    </template>
+                                                    <template #foot(cantidad)>
+                                                        <span>Total</span>
+                                                    </template>
+                                                    <template #foot(precio)>
+                                                        <span>{{ '$' + presupuesto.valorTotal }}</span>
+                                                    </template>
+                                                </b-table>
+                                            </div>
+                                        </b-list-group>
+                                    </div>
                                 </div>
                             </b-collapse>
                         </b-list-group-item>
@@ -314,6 +303,7 @@ export default {
                     this.egreso = data.egreso;
                     this.egreso.items = data.egreso.items.map(this.itemEgresoAPIConverter);
                     this.egreso.estaSuscrito = data.estaSuscrito;
+                    this.egreso.presupuestoElegido = data.presupuesto;
                 },
                 notLoggedIn: () => {
                     this.showLoginModal(true);
@@ -508,8 +498,6 @@ export default {
                 var request = new FormData();
                 request.append(this.egreso.documento.pathAdjunto, this.archivo);
 
-                console.log(this.egreso.documento.pathAdjunto);
-
                 const config = {
                     onUploadProgress: (progressEvent) => {
                     var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
@@ -620,6 +608,9 @@ export default {
                     console.log(data);
                 }
             });
+        },
+        presupuestoElegido(presupuesto) {
+            return presupuesto.id == this.egreso.presupuestoElegido;
         }
     },
     mounted() {
@@ -636,5 +627,18 @@ export default {
 <style>
 .egreso_container{
     background: var(--secondary);
+}
+.presupuesto-elegido{
+    position: relative;
+}
+.presupuesto-elegido > .badge-elegido{
+    position: absolute;
+    z-index: 1;
+    bottom: -5px;
+    right: -5px
+}
+.presupuesto-elegido > .list-group{
+    padding: 5px;
+    background: var(--success) !important;
 }
 </style>

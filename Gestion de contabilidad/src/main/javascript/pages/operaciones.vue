@@ -1,6 +1,7 @@
 <template>
     <div class="px-1 px-md-3 px-lg-5 py-4 d-flex justify-content-center">
         <div class="operaciones-wrapper">
+            <b-button variant="outline-primary" class="mb-4">Vinculación de Egresos e Ingresos <b-icon-vr/></b-button>
             <b-nav tabs>
                 <b-nav-item :active="egresoOpened()" to="/operaciones/egreso">Egresos</b-nav-item>
                 <b-nav-item :active="ingresoOpened()" to="/operaciones/ingreso">Ingresos</b-nav-item>
@@ -13,7 +14,6 @@
                 </div>
                 <router-view></router-view>
             </transition>
-            <b-button variant="outline-primary" class="mt-2">Vinculación de Egresos e Ingresos <b-icon-vr/></b-button>
         </div>
     </div>
 </template>

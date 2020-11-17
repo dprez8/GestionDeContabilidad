@@ -49,8 +49,10 @@ export default {
             {
                 RequestHelper.get('/api/bandeja', {
                     success: (data) => {
-                        this.mensajesCount = data.mensajes.map((unMensaje) => unMensaje.leido ? 0 : 1);
-                        this.mensajesCount = this.mensajesCount.reduce((valorAnterior, valorActual) => valorAnterior + valorActual);
+                        if(data.mensajes.length) {
+                            this.mensajesCount = data.mensajes.map((unMensaje) => unMensaje.leido ? 0 : 1);
+                            this.mensajesCount = this.mensajesCount.reduce((valorAnterior, valorActual) => valorAnterior + valorActual);
+                        }
                     },
                     notLoggedIn: () => {
                         this.showLoginModal(true);

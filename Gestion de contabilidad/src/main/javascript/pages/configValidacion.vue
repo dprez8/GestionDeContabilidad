@@ -76,9 +76,7 @@ export default {
                 minutoInicio: 0,
                 dias: []
             },
-            entidadesOptions: [
-                {text: "EEEEEE - Entidad Jurídica", value: 1}
-            ],
+            entidadesOptions: [],
             diasOptions: [
                 {value: 1, text: "Lu"},
                 {value: 2, text: "Ma"},

@@ -231,12 +231,12 @@
             <div class="col">
                 <div class="d-flex w-100 align-items-center">
                     <div class="p-2 w-100">
-                        <b-form-checkbox v-model="requierePresupuestos" @change="!requierePresupuestos ? egreso.presupuestosMinimos = '' : true" switch>
+                        <b-form-checkbox v-model="requierePresupuestos" @change="!requierePresupuestos ? egreso.cantidadPresupuestos = '' : 0" switch>
                             Requiere presupuestos
                         </b-form-checkbox>
                     </div>
                     <transition name="fade">
-                        <b-form-input type="number" class="w-50" v-if="requierePresupuestos" v-model="egreso.presupuestosMinimos" placeholder="Presupuestos mínimos"></b-form-input>
+                        <b-form-input type="number" class="w-50" v-if="requierePresupuestos" v-model="egreso.cantidadPresupuestos" placeholder="Presupuestos mínimos"></b-form-input>
                     </transition>
                 </div>
                 <div class="pt-2" v-if="presupuestosAAgregar.length">
@@ -374,7 +374,7 @@ export default {
                     nombreFicheroDocumento: null
                 },
                 items: [],
-                presupuestosMinimos: null
+                cantidadPresupuestos: null
             },
             archivo: null,
             requierePresupuestos: false,
@@ -597,7 +597,7 @@ export default {
                 success: (data) => {
                     this.createToast('Guardado exitoso', 'Se creó el egreso correctamente', 'success');
                     this.idEgreso = data.id;
-                    this.crearPresupuestosAPI();
+                    this.suscribirseAPI();
                 },
                 notLoggedIn: () => {
                     this.showLoginModal(true);
@@ -616,48 +616,36 @@ export default {
                 }
             });
         },
-        crearPresupuestosAPI() {
-            // Se hace muy complicado crear los presupuestos ni bien se carga un Egreso: 
-            // Los presupuestos ahora se tienen que cargar luego de haber cargado un Egreso.
+        suscribirseAPI() {
 
-            this.asociarCategoriasAPI();
-
-            // if (this.presupuestosAAgregar != null && this.presupuestosAAgregar.length) {
-
-            //     this.presupuestosAAgregar.forEach((presupuesto) => {
-
-            //         presupuesto.egreso = this.idEgreso;
-                    
-            //         console.log("POST '/api/operaciones/presupuesto'");
-            //         console.log(JSON.stringify(presupuesto, null, 4));
-
-            //         RequestHelper.post(`/api/operaciones/presupuesto`, presupuesto, {
-            //             success: (data) => {
-            //                 this.createToast('Guardado exitoso', 'Se creó el presupuesto correctamente', 'success');
-            //             },
-            //             notLoggedIn: () => {
-            //                 this.showLoginModal(true);
-            //             },
-            //             failed: (data) => {
-            //                 this.falloCarga = true;
-            //                 this.falloCargaDetalles = data.message;
-            //             },
-            //             forbidden: (error) => {
-            //                 this.falloCarga = true;
-            //                 this.errorHandling(error);
-            //             },
-            //             error: (error) => {
-            //                 this.errorHandling(error);
-            //                 this.falloCarga = true;
-            //             }
-            //         });
-            //     });
-                
-            //     this.asociarCategoriasAPI();
-
-            // } else {
-            //     this.asociarCategoriasAPI();
-            // }
+            if(this.suscribirse) {
+                RequestHelper.post(`/api/operaciones/egreso/suscribirse`, {egresoId: this.idEgreso}, {
+                    success: (data) => {
+                        console.log(data);
+                        this.asociarCategoriasAPI();
+                    },
+                    notLoggedIn: () => {
+                        this.showLoginModal(true);
+                    },
+                    failed: (data) => {
+                        this.falloCarga = true;
+                        this.falloCargaDetalles = data.message;
+                    },
+                    forbidden: (error) => {
+                        this.falloCarga = true;
+                        this.errorHandling(error);
+                    },
+                    error: (error) => {
+                        this.falloCarga = true;
+                        this.errorHandling(error);
+                    },
+                    default: (oof) => {
+                        console.log(oof);
+                    }
+                });
+            } else {
+                this.asociarCategoriasAPI();
+            }
         },
         asociarCategoriasAPI() {
             if(this.categoriasAAsociar.length) {

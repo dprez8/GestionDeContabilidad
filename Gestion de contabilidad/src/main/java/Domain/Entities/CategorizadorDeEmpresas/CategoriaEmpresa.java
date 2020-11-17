@@ -23,11 +23,13 @@ public class CategoriaEmpresa {
 
 	@OneToMany(mappedBy = "categoriaEmpresa")
     List<CategoriaPorSector> categoriasPorSector;
- 
-    public CategoriaEmpresa(String categoria){
+
+	public CategoriaEmpresa() {
+        this.categoriasPorSector = new ArrayList<>();
+    }
+    public CategoriaEmpresa(String categoria) {
         this.nombre      = categoria;
         this.categoriasPorSector = new ArrayList<>();
-
     }
 
     public String getNombre(){
