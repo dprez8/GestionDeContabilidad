@@ -111,12 +111,12 @@ INSERT INTO categoria_x_sector (categoria_id, sector_id, monto_min, monto_max, p
 ('4', '5', 426720000.0, 676810000.0, 50, 215);
 
 /*ORGANIZACION, si la organizacion esta compuesta por entidades cambiar la relacion organizacion-entidad a uno a muchos, y todo lo que afecte*/
-INSERT INTO organizacion (id, nombre) VALUES
-('1', 'Equipo Argentino de Antropología Forense - EAAF'), 
-('2', 'Equipo Argentino de Antropología Forense - EAAF'), 
-('3', 'Equipo Argentino de Antropología Forense - EAAF'), 
-('4', 'Colectivo de Derechos de Infancia y Adolescencia - CDIA'),
-('5', 'Colectivo de Derechos de Infancia y Adolescencia - CDIA');
+INSERT INTO organizacion (id, nombre, configuracion_vinculador_id) VALUES
+('1', 'Equipo Argentino de Antropología Forense - EAAF', '1'), 
+('2', 'Equipo Argentino de Antropología Forense - EAAF', '2'), 
+('3', 'Equipo Argentino de Antropología Forense - EAAF', '3'), 
+('4', 'Colectivo de Derechos de Infancia y Adolescencia - CDIA', '4'),
+('5', 'Colectivo de Derechos de Infancia y Adolescencia - CDIA', '5');
 
 /*Falta la columna REVISOR y USERNAME(temporalmente lo cargo en mail), y no hay mail en los datos de prueba, el usuario esta asociado a una entidad juridica*/
 INSERT INTO usuario (tipo_usuario, id, contrasenia, username, apellido, nombre, mail, organizacion_id) VALUES
