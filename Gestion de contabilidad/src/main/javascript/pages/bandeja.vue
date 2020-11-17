@@ -60,8 +60,9 @@
                                 <h4 class="text-light m-0">Mensaje {{getMessageSelected().id}}</h4>
                                 <b-badge pill variant="primary">{{ convertDate(getMessageSelected().fechaCreacion) }}</b-badge>
                             </div>
-                            <div class="col p-3 text-justify">
-                                {{ getMessageSelected().cuerpo }}
+                            <div class="col p-3 text-justify" >
+                                <div style="white-space: pre-wrap">{{ getFormattedMessageSelected().cuerpo }}</div>
+                                <b-button class="mt-2" variant="outline-primary" size="sm" :to="`/operaciones/egreso/${getFormattedMessageSelected().egresoId}`">Egreso {{getFormattedMessageSelected().egresoId}}</b-button>
                             </div>
                         </div>
                     </div>
@@ -155,6 +156,17 @@ export default {
         },
         formatMensajes(mensajes) {
             mensajes.forEach(mensaje => {
+                var mensajeFormated = {};
+                var egresoId = mensaje.cuerpo.match(/\d+/)[0];
+                var cuerpo = mensaje.cuerpo;
+
+                mensajeFormated.id = mensaje.id;
+                mensajeFormated.egresoId = egresoId;
+                mensajeFormated.cuerpo = cuerpo;
+
+                console.log(mensajeFormated);
+
+                this.mensajesFormated.push(mensajeFormated);
             })
             console.log(mensajes);
         },
@@ -163,6 +175,15 @@ export default {
             for(var i = 0; i < this.mensajes.length; i++) {
                 if(this.mensajes[i].id == this.selected) {
                     mensajeSeleccionado = this.mensajes[i];
+                }
+            }
+            return mensajeSeleccionado;
+        },
+        getFormattedMessageSelected() {
+            var mensajeSeleccionado = null;
+            for(var i = 0; i < this.mensajesFormated.length; i++) {
+                if(this.mensajesFormated[i].id == this.selected) {
+                    mensajeSeleccionado = this.mensajesFormated[i];
                 }
             }
             return mensajeSeleccionado;

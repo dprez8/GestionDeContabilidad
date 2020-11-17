@@ -3,6 +3,7 @@ package Domain.Controllers.jwt;
 import Domain.Controllers.DTO.Respuesta;
 import Domain.Controllers.DTO.UsuarioResponse;
 import Domain.Entities.Organizacion.EntidadJuridica;
+import Domain.Entities.Organizacion.Organizacion;
 import Domain.Entities.Usuarios.Administrador;
 import Domain.Entities.Usuarios.Usuario;
 import Domain.Repositories.Repositorio;
@@ -10,6 +11,7 @@ import com.google.common.hash.Hashing;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.google.gson.annotations.Expose;
 import db.EntityManagerHelper;
 import spark.Request;
 import spark.Response;
@@ -17,6 +19,7 @@ import spark.Response;
 import javax.persistence.NoResultException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -115,22 +118,43 @@ public class AuthController extends AbstractTokenController{
                 .excludeFieldsWithoutExposeAnnotation()
                 .serializeNulls()
                 .create();
+
         Administrador administrador = (Administrador) getUserDesdeToken(request);
 
-        //List<UsuariosResponse> usuariosResponse = asignarUsuariosDesde(administrador.getJuridicas());
+        List<EntidadJuridica> juridicas = administrador.getJuridicas();
+        UsuariosResponse usuariosResponse = new UsuariosResponse();
+        usuariosResponse.usuarios = new ArrayList<>();
+
+        juridicas.forEach(juridica -> {
+            usuariosResponse.usuarios.addAll(juridica.getUsuarios().stream().map(usuario -> mapUsuarioParaAdmin(usuario, juridica)).collect(Collectors.toList()));
+            juridica.getEntidadesBase().forEach(base -> {
+                usuariosResponse.usuarios.addAll(base.getUsuarios().stream().map(usuario -> mapUsuarioParaAdmin(usuario, base)).collect(Collectors.toList()));
+            });
+        });
+
+        usuariosResponse.code = 200;
+        usuariosResponse.message = "Usuarios cargados correctamente";
+
+        response.type("application/json");
+        response.body(gson.toJson(usuariosResponse));
+
         return response.body();
+    }
+
+    private UsuarioParaAdmin mapUsuarioParaAdmin(Usuario usuario, Organizacion organizacion) {
+        UsuarioParaAdmin usuarioParaAdmin = new UsuarioParaAdmin();
+        usuarioParaAdmin.apellido = usuario.getApellido();
+        usuarioParaAdmin.nombre = usuario.getNombre();
+        usuarioParaAdmin.username = usuario.getUsername();
+        usuarioParaAdmin.email = usuario.getMail();
+        usuarioParaAdmin.organizacion = organizacion;
+        return usuarioParaAdmin;
     }
 
     private boolean isAdmin(Usuario usuario) {
         return usuario.getClass().equals(Administrador.class);
     }
 
-    /*
-    private List<UsuariosResponse> asignarUsuariosDesde(List<EntidadJuridica> entidadesJuridicas) {
-        List<UsuariosResponse> usuariosResponse = entidadesJuridicas.stream().map(entidad->mapearUsuarios(entidad.getUsuarios()));
-    }
-
-    private UsuariosResponse mapearUsuarios(List<>)
     /*
     private String register(Request request, Response response) throws IOException {
         String json = request.raw().getReader().lines().collect(Collectors.joining());
@@ -164,10 +188,25 @@ public class AuthController extends AbstractTokenController{
     }
 
     private class UsuariosResponse{
+        @Expose
         public Integer code;
+        @Expose
         public String message;
-        public Usuario usuario;
+        @Expose
+        public List<UsuarioParaAdmin> usuarios;
+    }
 
+    private class UsuarioParaAdmin {
+        @Expose
+        public String nombre;
+        @Expose
+        public String username;
+        @Expose
+        public String apellido;
+        @Expose
+        public String email;
+        @Expose
+        public Organizacion organizacion;
     }
 
 }

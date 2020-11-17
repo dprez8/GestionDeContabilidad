@@ -12,7 +12,7 @@
                                 <b-card-body :title="`${usuario.nombre} ${usuario.apellido}`" :sub-title="`Usuario ${usuario.tipo}`">
                                     <b-card-text>
                                         <div><b-icon-person class="mr-2"/>{{usuario.username}}</div>
-                                        <div><b-icon-bar-chart class="mr-2"/><b-link to="/admin/entidades">Entidad</b-link></div>
+                                        <div><b-icon-bar-chart class="mr-2"/><b-link to="/admin/entidades">{{usuario.entidad}}</b-link></div>
                                     </b-card-text>
                                 </b-card-body>
                             </b-col>
@@ -25,6 +25,8 @@
 </template>
 
 <script>
+import {RequestHelper} from '../util/utils'
+
 export default {
     data() {
         return {
@@ -34,25 +36,58 @@ export default {
                     nombre: "Alejandro",
                     apellido: "Roco",
                     username: "aroco",
-                    tipo: "Estandar"
+                    tipo: "Estandar",
+                    entidad: "Sector"
                 },
                 {
                     id: 2,
                     nombre: "Rocío",
                     apellido: "Rojas",
                     username: "rrojas",
-                    tipo: "Estandar"
+                    tipo: "Estandar",
+                    entidad: "Sector"
                 },
                 {
                     id: 3,
                     nombre: "Julieta",
                     apellido: "Azul",
                     username: "jazul",
-                    tipo: "Estandar"
+                    tipo: "Estandar",
+                    entidad: "Sector"
                 }
             ],
             loading: false
         }
+    },
+    inject: ["errorHandling", "showLoginModal"],
+    methods: {
+        cargarEntidadesAPI() {
+            this.loading = true;
+
+            RequestHelper.get('/api/admin/users', {
+                success: (data) => {
+                    this.usuarios = data.usuarios.map(usuario => {
+                        usuario.entidad = usuario.organizacion.nombreFicticio;
+                        return usuario;
+                    });
+                },
+                notLoggedIn: () => {
+                    this.showLoginModal(true);
+                },
+                forbidden: (error) => {
+                    this.errorHandling(error);
+                },
+                error: (error) => {
+                    this.errorHandling(error);
+                },
+                always: () => {
+                    this.loading = false;
+                }
+            });
+        },
+    },
+    mounted() {
+        this.cargarEntidadesAPI();
     }
 }
 </script>
