@@ -41,7 +41,7 @@ public class ValidadorDeTransparencia extends EntidadPersistente {
 	}
 
 	private String validarYConcatenarResultado(Egreso egreso, ValidacionDeTransparencia unaValidacion){
-		return unaValidacion.validarEgreso(egreso) + " Número de egreso: " + egreso.getId();
+		return unaValidacion.getIngresoString(egreso) + unaValidacion.validarEgreso(egreso) + " Número de egreso: " + egreso.getId();
 	}
 	public List<ValidacionDeTransparencia> getValidaciones() {
 		return validaciones;
