@@ -8,6 +8,7 @@ import javax.persistence.NoResultException;
 
 import Domain.Controllers.jwt.TokenService;
 import Domain.Entities.Organizacion.Organizacion;
+import Domain.Entities.Usuarios.Administrador;
 import Domain.Entities.Usuarios.Estandar;
 import com.google.gson.Gson;
 
@@ -47,15 +48,16 @@ public class CriteriosCategoriasController extends GenericController {
 	   	 	this.repoCriterio = new Repositorio<>(new DaoHibernate<>(CriterioOperacion.class));
 
 
-			Estandar usuario = (Estandar) getUsuarioDesdeRequest(request);
-			Organizacion organizacion = usuario.getMiOrganizacion();
+
 	        try {
 		        criterios = this.repoCriterio.buscarTodos();
 
 				try {
+					Estandar usuario = (Estandar) getUsuarioDesdeRequest(request);
+					Organizacion organizacion = usuario.getMiOrganizacion();
 					criterios = criterios.stream().filter(unItem -> unItem.getOrganizacion().equals(organizacion)).collect(Collectors.toList());
 				} catch (Exception exception) {
-					System.out.println("oof falle al obtener criterios filtrados por una organizacion");
+					System.out.println("oof administrador no filtra criterios");
 				}
 
 		        List<CriterioDato> criteriosAEnviar = criterios.stream().map(this::mapCriterio).collect(Collectors.toList());
